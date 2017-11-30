@@ -6,6 +6,7 @@
 * Django - работа с БД
 * Tornado - websocket
 * Redis - нереляционная высокопроизводительная СУБД
+* Gunicorn - python WSGI HTTP сервер для UNIX
 #### Пуск:
 ***./start***
 
