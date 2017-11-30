@@ -1,0 +1,2 @@
+#!/bin/bash
+ redis-server --port 6380 --slaveof 127.0.0.1 6379&python manage.py starttornadoapp&python manage.py tornadocommentS&python manage.py tornadowallS&gunicorn app.wsgi:application --bind 192.168.1.50:8888

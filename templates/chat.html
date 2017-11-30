@@ -1,0 +1,34 @@
+
+{% block content %}
+{% load pluralize %}
+<div class="chat">
+    <div class="parchat">
+        <p class="name">{{ partner.username }}</p>
+        <p id="messages"><span id="total">{{ messages_total }}</span> {{ messages_total|rupluralize:"сообщение,сообщения,сообщений" }} (<span id="received">{{ messages_received }}</span> получено, <span id="sent">{{ messages_sent }}</span> отправлено)</p>
+    </div>
+    <div id="conver">
+{#    <a onclick="myPROFILE('{{ user.username }}')" style="display: block;">{{ user.username }}</a>#}
+{#    <a onclick="userPROFILE('{{ partner.id }}')" style="display: block;">{{ partner.username }}</a>#}
+        {% for message in thread_messages reversed %}
+        <div class="message">
+            {% if message.sender == user %}
+                <p class="author we"><img src="/media/{{ user.username }}_tm.png" class="usPr" onclick="myPROFILE('{{ user.username }}')" style="float:none;"><p class="txtmessage we">{{ message.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span></p></p>
+            {% else %}
+                <p class="author partner"><img src="/media/{{ partner.username }}_tm.png" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;"><p class="txtmessage partner">{{ message.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span></p></p>
+            {% endif %}
+
+
+        </div>
+        {% endfor %}
+    </div>
+    <form class="message_form">
+        <div class="compose">
+            <input id="message_textarea" placeholder="Введите ваше сообщение...">
+        </div>
+        <div class="send">
+            <button id="btn" type="button">ОТПРАВИТЬ</button>
+            <p>Вы также можете отправлять сообщения с помощью клавиш Ctrl + Enter.</p>
+        </div>
+    </form>
+</div>
+{% endblock content %}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+{% for us in user %}
+<li>Работник {{ us.name }}</li>
+{% endfor %}
+</body>
+</html>
+ <div id="video-placeholder"></div>
+<input type="range" id="progress-bar" value="0" style="width: 100%;" oninput="">
+<p><span id="current-time"></span> / <span id="duration"></span></p>
+<div id="play" class="material-icons">ИГРАТЬ</div>
+<div id="pause" class="material-icons">ПАУЗА</div>
+<script async src="http://www.youtube.com/iframe_api"></script>
+
+<script type="text/javascript">
+var player;
+var time_update_interval = 0;
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('video-placeholder', {
+        width: 600,
+        height: 400,
+        videoId: 'ngElkyQ6Rhs',
+        playerVars: {
+            color: 'white',
+            iv_load_policy : 3,
+            modestbranding : 1,
+            showinfo: 0
+{#            controls: 0#}
+        },
+        events: {
+            onReady: initialize
+        }
+    });
+}
+var pl = document.getElementById('play');
+pl.addEventListener('click', function () {
+    player.playVideo();
+});
+var pa = document.getElementById('pause');
+pa.addEventListener('click', function () {
+    player.pauseVideo();
+});
+function initialize(){
+    updateTimerDisplay();
+    updateProgressBar();
+clearInterval(time_update_interval);
+    time_update_interval = setInterval(function () {
+        updateTimerDisplay();
+        updateProgressBar();
+    }, 1000)
+
+}
+function updateTimerDisplay(){
+    document.getElementById('current-time').innerText = formatTime( player.getCurrentTime() );
+    document.getElementById('duration').innerText = formatTime( player.getDuration() );
+}
+function formatTime(time){
+    time = Math.round(time);
+    var minutes = Math.floor(time / 60),
+    seconds = time - minutes * 60;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    return minutes + ":" + seconds;
+}
+var pb = document.getElementById('progress-bar');
+pb.addEventListener('oninput', function (e) {
+    var newTime = player.getDuration() * (e.target.value / 100);
+    player.seekTo(newTime);
+
+});
+function updateProgressBar(){
+    var pb = document.getElementById('progress-bar');
+        pb.value  = (player.getCurrentTime() / player.getDuration()) * 100;
+}
+</script>

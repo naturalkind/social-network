@@ -1,0 +1,35 @@
+
+/* ---------- Basic Layout Styles ----------- */
+
+html,
+body,
+#page  {
+  height: 100%;
+}
+#header {
+  width: 100%;
+  margin: 0 auto;
+}
+#header div.section {
+  position: relative;
+}
+#main-wrapper {
+  /*top: 50px;*/
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  /*float: left;*/
+}
+#breadcrumb {
+  height: 40px;
+    /*margin-top: 10px;*/
+    /*margin-bottom: 10px;*/
+  text-align: center;
+    /*background: #507299;*/
+  /*color: #83a697;*/
+  color: #FFFFFF;
+  cursor: default;
+  font: normal normal normal 15pt/10pt 'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+

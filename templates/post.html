@@ -1,0 +1,179 @@
+
+{#{% extends 'base.html' %}#}
+{% block content %}
+    {% if username == post.user_post.username %}
+<a onclick="ool('{{post.id}}')">УДАЛИТЬ</a>
+    {% endif %}
+<div id="node">
+<div id="breadcrumb" style="background: #507299;"><div class="title">{{post.title}}</div><div class="user">
+Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> {{post.date_post|date:'d b o в H:i' }}</div></div>
+<div class="auto-images">
+{% if post.video != '' %}
+    <img src="/media/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">
+    {% else %}
+    <div id="video-placeholder" idv="{{ post.video }}">
+
+</div>
+    {% endif %}
+{#<div id="video-placeholder" idv="{{ post.video }}">#}
+{#<img src="/media/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">#}
+{#</div>#}
+
+{#<video controls="" autoplay="" id="id_video" style="display: block; margin: 0px auto; max-width: 600px;" src="/media/video/{{ post.video }}"><source id="source_video"></video>#}
+{#    <video id="video" width="480" height="270">#}
+{#        <source src="/media/video/{{ post.video }}" type='video/mp4;codecs="avc1.42E01E, mp4a.40.2, vorbis, vp8"' />#}
+{#    </video>#}
+{#    <div id="controls">#}
+{#    <span id="playpause" class="paused" onclick="playpause('{{ post.video }}')">ИГРАТЬ</span>#}
+{#</div>#}
+{#<div id="video-placeholder" idv="{{ post.video }}"></div>#}
+{#<img src="http://img.youtube.com/vi/{{ post.video }}/0.jpg" onclick="youps('{{ post.video }}')">#}
+
+</div>
+<div class="about">
+<!-- -->
+<p style="font-size: 26px;margin: 0 auto;padding: 10px 40px;text-align: left;color: #9a9a9a;">{{post.body|safe}}</p>
+{% if username %}
+    <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
+
+{#<button class="btn" type="button"  onclick="LIKENODE('{{post.id}}')">#}
+{#like | <strong id="like_count">{{ post.likes.count }}</strong>#}
+{#</button>#}
+{#<img src="/media/images/unn.png" width=auto height="60" onclick="comView('{{post.id}}')">#}
+<div id="box-com" style="margin: 0 auto;">
+<div id="field-comment" style="padding-bottom: 15px;padding-top: 15px">
+  {% for cm in comment %}
+      <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">
+  <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
+
+          <img src="/media/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">
+
+         <span style="display: block;text-align: center;">{{ cm.comment_text }}</span></div>
+  {% endfor %}
+
+{#    <button id="add" onclick="create_comment('{{post.id}}')">ОТПРАВИТЬ</button>#}
+
+</div>
+  <input id="comment_text" maxlength="400" placeholder="Введите Ваше сообщение...">
+{#    <input id="id_image" name="image" type="file" onchange="OnOn()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">#}
+{#   <label for="id_image" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>#}
+{#   <div id="cn"> <canvas id="canvas" width="0" height="0" style="max-width: 410px;"></canvas></div>#}
+<div id="results"></div>
+<button id="add_{{ post.id }}">ОТПРАВИТЬ</button>
+</div>
+</div>
+
+    <!-- -->
+{#<div class="signed">{% for op in post_user_likes %} <a onclick="userPROFILE('{{ op.id }}')">{{ op }}</a>{% endfor %}</div>#}
+
+{% else %}
+    <div class="user-post"><h3 style="color: #ffffff">- ПОДБОРКА АВТОРА -</h3>
+    <div id="pages" align="center" style="display: none;">
+        {% if post_user.has_next %}
+
+            <span id="IOPv" style="display: none">{{ post_user.next_page_number }}</span>
+
+        {% endif %}
+    </div>
+       <ul class="day-block" id="DOD" icon="{{ post.id }}">
+      {% for f in post_user %}
+       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/{{ f.image }}.png');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3></li>
+      {% endfor %}
+</ul>
+      </div>
+
+    {% endif %}
+{% endblock %}
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{##}
+{#{% extends 'base.html' %}#}
+{#{% block content %}#}
+{#    {% if username == post.user_post.username %}#}
+{##}
+{#    {% endif %}#}
+{#<div id="node">#}
+{#<div id="breadcrumb" style="background: #507299;"><div class="title">{{post.title}}</div><div class="user">#}
+{#Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> {{post.date_post|date:'d b o в H:i' }}</div></div>#}
+{#<div class="auto-images">#}
+{#<div id="video-placeholder" idv="{{ post.video }}">#}
+{#<img src="/media/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">#}
+{#</div>#}
+{#<video controls="" autoplay="" id="id_video" style="display: block; margin: 0px auto; max-width: 600px;" src="/media/video/{{ post.video }}"><source id="source_video"></video>#}
+{#    <video id="video" width="480" height="270">#}
+{#        <source src="/media/video/{{ post.video }}" type='video/mp4;codecs="avc1.42E01E, mp4a.40.2, vorbis, vp8"' />#}
+{#    </video>#}
+{#    <div id="controls">#}
+{#    <span id="playpause" class="paused" onclick="playpause('{{ post.video }}')">ИГРАТЬ</span>#}
+{#</div>#}
+{#<div id="video-placeholder" idv="{{ post.video }}"></div>#}
+{#<img src="http://img.youtube.com/vi/{{ post.video }}/0.jpg" onclick="youps('{{ post.video }}')">#}
+{##}
+{#</div>#}
+{#<div class="about">#}
+{#<!-- -->#}
+{#<p style="font-size: 26px;margin: 0 auto;padding: 10px 40px;text-align: left;color: #9a9a9a;">{{post.body|safe}}</p>#}
+{#{% if username %}#}
+{#    <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">#}
+{##}
+{#<button class="btn" type="button"  onclick="LIKENODE('{{post.id}}')">#}
+{#like | <strong id="like_count">{{ post.likes.count }}</strong>#}
+{#</button>#}
+{#<img src="/media/images/unn.png" width=auto height="60" onclick="comView('{{post.id}}')">#}
+{#<div id="box-com" style="margin: 0 auto;">#}
+{#<div id="field-comment" style="padding-bottom: 15px;padding-top: 15px">#}
+{#  {% for cm in comment %}#}
+{#      <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">#}
+{#  <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>#}
+{##}
+{#          <img src="/media/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">#}
+{##}
+{#         <span style="display: block;text-align: center;">{{ cm.comment_text }}</span></div>#}
+{#  {% endfor %}#}
+{##}
+{#    <button id="add" onclick="create_comment('{{post.id}}')">ОТПРАВИТЬ</button>#}
+{##}
+{#</div>#}
+{#  <input id="comment_text" maxlength="400" placeholder="Введите Ваше сообщение...">#}
+{#    <input id="id_image" name="image" type="file" onchange="OnOn()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">#}
+{#   <label for="id_image" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>#}
+{#   <div id="cn"> <canvas id="canvas" width="0" height="0" style="max-width: 410px;"></canvas></div>#}
+{#<div id="results"></div>#}
+{#<button id="add_{{ post.id }}">ОТПРАВИТЬ</button>#}
+{#</div>#}
+{#</div>#}
+{##}
+{#    <!-- -->#}
+{#<div class="signed">{% for op in post_user_likes %} <a onclick="userPROFILE('{{ op.id }}')">{{ op }}</a>{% endfor %}</div>#}
+{##}
+{#{% else %}#}
+{#    <div class="user-post"><h3 style="color: #ffffff">- ПОДБОРКА АВТОРА -</h3>#}
+{#    <div id="pages" align="center" style="display: none;">#}
+{#        {% if post_user.has_next %}#}
+{##}
+{#            <span id="IOPv" style="display: none">{{ post_user.next_page_number }}</span>#}
+{##}
+{#        {% endif %}#}
+{#    </div>#}
+{#       <ul class="day-block" id="DOD" icon="{{ post.id }}">#}
+{#      {% for f in post_user %}#}
+{#       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" src="/media/{{ f.image }}_tm.png" atribut="{{f.id}}"></h3></li>#}
+{#      {% endfor %}#}
+{#</ul>#}
+{#      </div>#}
+{##}
+{#    {% endif %}#}
+{#{% endblock %}#}
+{##}
+{##}
+{#</div>#}

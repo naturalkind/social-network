@@ -1,0 +1,75 @@
+
+<head>
+<title>FORMATICA</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="description" content="сообщество" id="description">
+<meta name="keywords" content="image, formatica, messages, fun, multimedia" id="keywords">
+<link rel="shortcut icon" href="media/images/unn.png" type="image/png">
+<link rel="stylesheet" type="text/css" media="all" href="media/css/layout.css" />
+<link rel="stylesheet" type="text/css" media="all" href="media/css/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="media/css/colors.css" />
+    <script src="media/js/node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
+    <script type="text/javascript" src="media/js/js.js"></script>
+    <script async src="http://www.youtube.com/iframe_api"></script>
+<!--[if lte IE 7]>
+
+<![endif]-->
+
+</head>
+{% if username %}
+<div class="butNav" id="butMen" style="display: none;">
+<a onclick="addPost()" id="addPost"></a>
+<a onclick="user()" id="userA"></a>
+{#<a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a>#}
+<img src="media/images/mesv4.png" onclick="privatMES()" id="mespr">
+{% if username.image_user != "/media/images/Fv2.png" %}
+<img onclick="myPROFILE('{{ username.username }}')" src="media/{{ username.username }}_tm.png" class="usPr"/>
+{% else %}
+<img onclick="myPROFILE('{{ username }}')" src="media/images/oneProf.png"  class="usPr" />
+{% endif %}
+</div>
+<img src="media/images/compasv3.png" class="compas" onclick="openMenu()" id="comps">
+<!--
+<div id="header" style="background-size: contain;display: block;">
+{#    onclick="updown()" #}
+<div class="butNav" id="butMen" style="display: none;">
+<a onclick="addPost()" id="addPost"></a>
+<a onclick="user()" id="userA"></a>
+{#<a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a>#}
+<img src="media/images/mesv4.png" onclick="privatMES()" id="mespr">
+{% if username.image_user != "/media/images/Fv2.png" %}
+<img onclick="myPROFILE('{{ username.username }}')" src="media/{{ username.username }}_tm.png" class="usPr"/>
+{% else %}
+<img onclick="myPROFILE('{{ username }}')" src="media/images/oneProf.png"  class="usPr" />
+{% endif %}
+</div>
+
+<div id="logo">
+<img src="media/images/compasv3.png" class="compas" onclick="openMenu()" id="comps">
+{#<img src="media/images/Fv3.png" alt="главная" onclick="indexPAGE()" id="imgh" width="60">#}
+<a href="/"  class="aLogo">
+<img class="logoF" src="media/images/Fv3.png" > FORMATICA</a>
+{#<img class="logoF" src="media/images/Ficonv.png" > FORMATICA</a>#}
+<img src="media/images/EXITv1.png" onclick="quit()" class="exitv">
+</div>
+-->
+{% else %}
+
+<div id="header" style="background-color: #507299;background-size: inherit; text-align: center;">
+        <a href="/" class="aLogo">
+            <img src="media/images/Fv3.png" class="logoF"> FORMATICA</a>
+            <img src="media/images/EXITv4png.png" class="exitv" id="exitv" onclick="exit()">
+
+
+{% endif %}
+</div><!-- /.section, /#header -->
+        {% block login %}{% endblock %}
+        {% block addpost %}{% endblock %}
+        {% block addpostv1 %}{% endblock %}
+        {% block user %}{% endblock %}
+        {% block wall %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block user_page %}{% endblock %}
+        {% block userViews %}{% endblock %}
+</div>
+<img src="media/images/topv1.png" class="topbt" style="cursor:pointer;z-index: 9999" id="topbt">

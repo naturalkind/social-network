@@ -1,0 +1,164 @@
+<title>
+      {{ user.username }} - Крутой сайт
+  </title>
+<meta name="description" content="{{ user.username }} {{ user.id}}">
+<body style="margin: 0;color: #9d9d9d;background: #fafafa!important;font-family:Arial;">
+<header style="width: 100%;background: #ffffff;border-bottom: 1px solid #cfcfcf;font-size: 20px;height: 40px;">
+<a href="/skin" style="color:#02b875;text-decoration: none;float:left;margin: 9px">КРУТОЙ САЙТ</a>
+     <a href="/skinuser/{{ usere.id }}" ><img src="/media/{{ usere }}.png" width="30" height="30" style="border-radius: 30px;display: block;float: right;margin: 5px;"></a>
+    <a href="/skinadd/"> <button style="display: block;margin: 6px;font-size: 20px;background: #ffffff;border-radius: 6px;border:none;color: rgb(2, 184, 117);float: right;">добавить</button></a>
+
+    <div class="menu-h" style="float: right;margin: 9px;">
+{#        <a href="/file/" style="color: #9d9d9d;">медиа</a>#}
+        <a href="/community/" style="color: #9d9d9d;">сообщества</a>
+        <a href="/friend/" style="color: #9d9d9d;">друганы</a>
+    </div>
+</header>
+<style>
+ #block-post {
+    border: 0 none;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    overflow-y: scroll;
+    position: fixed;
+    right: 0;
+    top: 0;
+    text-align: center;
+}
+.fr-cell {
+    float: left;
+    margin: 5px;
+    width: 190px;
+}
+    .fr-cell img {
+    max-height: 200px;
+    height: 100%;
+    max-width: 190px;
+}
+</style>
+<div id="content" style="width: 100%">
+{% csrf_token %}
+    <div id="content-view" style="max-width: 960px;margin: 0 auto;text-align: center;">
+        <div class="content-block" style="margin: 20px auto;padding: 10px;border-radius: 3px;">
+{#        <a style="display: block;margin: 0px 20px 10px 20px;color:#02b875;text-decoration: none;">{{ user.username }}</a>#}
+        <div class="info" style="float: left;width: 300px;">
+            <h1 style="display: block;margin: 0px 20px 10px 20px;color:#02b875;text-decoration: none;">{{ user.username }}</h1>
+            <img src="/media/{{ user.username }}.png" style="max-width: 300px;display: block;float: left;">
+            {% if usere.id != user.id %}
+            <a onclick="addfollow('{{ user.id }}', '{{ usere.username }}')" style="cursor:pointer;">ПОДПИСАТЬСЯ</a>
+                {% else %}
+
+            {% endif %}
+
+            <a href="/skinmes/" style="cursor:pointer;color: #02b875;text-decoration:none;">СООБЩУНИЯ</a>
+           <div class="foll">
+           <a onclick="folls('{{ user.id }}')" style="cursor:pointer;">Подписчики {{ user.get_following.count }}</a>
+           <em>•</em>
+           <a onclick="foll('{{ user.id }}')" style="cursor:pointer;">Подписан {{ user.get_followers.count }}</a>
+               </div>
+            <script>
+                function foll(link){
+        document.body.style.overflow = 'hidden';
+        var pageop = document.getElementById('content-view');
+        var cont = document.getElementById('block-post');
+        var http = new XMLHttpRequest();
+        var linkfull = '/follow/'+ link;
+        if (http) {
+        http.open('get', linkfull);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+               cont.innerHTML = http.responseText;
+               cont.style.display = 'block';
+
+                pageop.style.opacity = 0.2;
+//                      var textElem = document.createElement('div');
+//                      textElem.id = 'close';
+//                      cont.insertBefore(textElem, cont.firstChild);
+
+                      cont.onclick = function(){
+                          document.body.style.overflow = 'auto';
+                          cont.style.display = 'none';
+                          pageop.style.opacity = 1;
+                      };
+
+            }
+        };
+        http.send(null);
+    } else {
+        document.location = link;
+    }
+
+}
+function folls(link){
+        document.body.style.overflow = 'hidden';
+        var pageop = document.getElementById('content-view');
+        var cont = document.getElementById('block-post');
+        var http = new XMLHttpRequest();
+        var linkfull = '/follows/'+ link;
+        if (http) {
+        http.open('get', linkfull);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+               cont.innerHTML = http.responseText;
+               cont.style.display = 'block';
+//               cont.style.overflow = 'auto';
+                pageop.style.opacity = 0.2;
+//                      var textElem = document.createElement('div');
+//                      textElem.id = 'close';
+//                      cont.insertBefore(textElem, cont.firstChild);
+                      cont.onclick = function(){
+                          document.body.style.overflow = 'auto';
+                          cont.style.display = 'none';
+                          pageop.style.opacity = 1;
+                      };
+
+            }
+        };
+        http.send(null);
+    } else {
+        document.location = link;
+    }
+}
+function addfollow(link, us){
+        var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+        var http = new XMLHttpRequest();
+        var linkfull = '/users/'+ link +'/?username=' + us;
+        if (http) {
+        http.open('post', linkfull);
+        http.setRequestHeader('X-CSRFToken', crsv);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+               console.log(http.responseText)
+                alert('ПОДПИСАЛИСЬ')
+            }
+        };
+        http.send(null);
+    } else {
+        document.location = link;
+    }
+}
+            </script>
+        </div>
+                            <div class="ur" style="right: 100px;position: absolute;">
+                                <p>РУКЛАМА</p>
+                    <p><img src="/media/0abf289c-527.png" width="150"></p>
+        </div>
+            <div class="user-content" style="width:600px;display: block;margin: 0 20px;position: relative;float: left;">
+                {% for p in post %}
+                <div class="ps-us" style="float: left;margin: 0 auto">
+                    <a href="/skin/{{ p.id }}">
+                    <img src="/media/{{ p.image }}_tm.png" style="max-width: 220px;float: left;margin: 2px"></a>
+                <a style="display: block;color: #02b875;text-align: left;">{{ p.title }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<div id="block-post" style="display: none;background-color: rgba(0,0,0,.75);" atr="con"></div>

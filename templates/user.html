@@ -1,0 +1,79 @@
+
+{% block user_page %}
+<div id="pages" align="center" style="display: none;">
+        {% if post.has_next %}
+            <span id="IOP" style="display: none">{{ post.next_page_number }}</span>
+        {% endif %}
+    </div>
+
+
+      <div id="user-page">
+      <div class="info">
+      <div class="us-name">
+      <h3>{{ user_info.username }}</h3></div>
+      <div class="uspgimg">
+          {% if user_info.image_user != "/media/images/Fv2.png" %}
+      <img src="/media/{{ user_info.username }}.png">
+          {% else %}
+              <img src="/media/images/oneProf.png" height="300" width="auto">
+          {% endif %}
+      </div>
+<div class="soc">
+{% if username %}
+{% if user_info.username == username %}
+   <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF()">
+{#          <a onclick="editPROFF()">Редактировать профиль✎</a>#}
+{#<em>•</em>#}
+           {% else %}
+    <img src="/media/images/addusr.png" class="addusr" onclick="addfollow('{{ userid }}', '{{ user_info.username }}')">
+      <a onclick="addfollow('{{ userid }}', '{{ user_info.username }}')">ПОДПИСАТЬСЯ</a>
+               <div class="pm-mes">
+{#           <form action="messages" method="post" class="new_message">#}
+           {% csrf_token %}
+           <input id="recipient_name" placeholder="Имя получателя" value="{{ user_info.username }}" style="display: none">
+           <input id="message" placeholder="Сообщение">
+
+{#    </form>#}
+<p>
+    <a onclick="createMES()">Отправить</a>
+</p>
+           </div>
+    {% endif %}
+{% endif %}
+           <a onclick="foll('{{ user_info.id }}')">Подписчики {{ user_info.get_followers.count }}</a>
+           <em>•</em>
+           <a onclick="folls('{{ user_info.id }}')">Подписан {{ user_info.get_following.count }}</a>
+      <em>•</em>
+           <a onclick="getlkpost('{{ user_info.id }}')">Нравится</a>
+</div>
+      </div>
+
+{#    <div onclick="userViewPost('{{ user_info.username }}')" class="userview"></div>#}
+ <ul class="day-block" id="DODO" atr="user">
+      {% for l in post %}
+          {% if user_info in l.user_post %}
+      <li class="views-row"  onmouseover="getIndex(this);">
+      <div class="views-title"><a onclick="showContent('{{l.id}}')" atribut="{{l.id}}">{{ l.title }}</a></div>
+      <div class="field-image">
+      <img src="/media/{{ l.title }}_tm.png" width="220" height="150" alt="">
+      </div>
+      </li>
+              {% else %}
+      <li class="views-row"  onmouseover="getIndex(this);">
+      <div class="field-image" atribut="{{l.id}}">
+{#      <img src="/media/{{ l.image }}_tm.png" width="300" height="230" onclick="showContent('{{l.id}}')">#}
+<img style="background: url('/media/{{ l.image }}.png');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')">
+
+      </div>
+          {% endif %}
+{#{% if username %}#}
+{#    <button id="{{l.id}}" type="button" onclick="LIKE('{{l.id}}')" onmouseover="LIKEOVER('{{l.id}}')" onmouseout="LIKEDONE('{{l.id}}')">нравится |#}
+{#        {{ l.likes.count }}#}
+{#    </button>#}
+{#                  </li>#}
+{#                  {% else %}#}
+{#                  <button type="button" id="{{l.id}}" onclick="LIKE(this)" value="">нравится | {{ l.likes.count }}</button>#}
+{#              {% endif %}#}
+      {% endfor %}
+      </ul>
+{% endblock %}

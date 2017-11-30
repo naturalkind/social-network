@@ -1,0 +1,67 @@
+﻿
+{% extends 'base.html' %}
+  {% block content %}
+
+  <div id="main-wrapper">
+  <div id="pages" align="center" style="display: none;">
+{#        {% if posts.has_previous %}#}
+{#            <a onclick="backPAGE('{{ posts.previous_page_number }}')" >Назад</a>#}
+{#        {% endif %}#}
+{#    <span class="current">#}
+{#       <span id="IOP">{{ posts.number }}</span> из <span id="IOPV">{{ posts.paginator.num_pages }}</span>#}
+{#    </span>#}
+        {% if posts.has_next %}
+{#            <a onclick="nextPAGE('{{ posts.next_page_number }}')" >Вперед</a>#}
+{#            <a onclick="jsons('{{ posts.next_page_number }}')">KKK</a>#}
+            <span id="IOP" style="display: none">{{ posts.next_page_number }}</span>
+{#           <div id="IOP" atr= "{{ posts.number }}"></div>#}
+{#            <div id="IOPV1" atr= "{{ posts.next_page_number }}" style="display: none"></div>#}
+{#            <div id="IOPV" atr= "{{ posts.paginator.num_pages }}"></div>#}
+        {% endif %}
+    </div>
+{#       <div id="filt"><a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a></div>#}
+     <div id="day-block">
+
+
+{#<div id="breadcrumb">#}
+{#    <a id="ShowButtonv1" onclick="filterNEW()">новое</a>#}
+{#    <a id="ShowButtonv2" onclick="filterBEST()">популярное</a>#}
+{#    <input id="ShowButtonv1" type="button"  onclick="filterNEW()" value="Сортировать по новым">#}
+{#<input id="ShowButtonv2" type="button"  onclick="filterBEST()" value="Сортировать по популярным"></div>#}
+{#</div>#}
+
+         <ul class="day-block" id="DODO" atr="">
+          {% for post in posts %}
+          <li class="views-row"  onmouseover="getIndex(this);">
+
+  <div class="field-image" atribut="{{post.id}}">
+
+{#      <img src="/media/{{ post.title }}_{{ post.user_post.id }}_tm.png" width="220" height="150" alt="" onclick="showContent('{{post.id}}')"> </div>#}
+{#   <img src="{{ post.image.url }}" width="220" height="150" alt="" onclick="showContent('{{post.id}}')"> </div>#}
+{#      <img src="http://formatica.wtf/media/{{ post.image }}_tm.png" width="300" height="230" onclick="showContent('{{post.id}}')">#}
+{#  <img style="background: url('/media/{{ post.image }}_tm.png');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')">#}
+{#   {% if post.video %}#}
+{#      <img style="background: url('https://img.youtube.com/vi/1lI0t-0_3EE/0.jpg');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')">#}
+{#  {% endif %}#}
+      {% if post.image %}
+      <img style="background: url('/media/{{ post.image }}.png');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')">
+  {% endif %}
+
+  </div>
+{#              {% if username %}#}
+{#    <button id="{{post.id}}" type="button" onclick="LIKE('{{post.id}}')" onmouseover="LIKEOVER('{{post.id}}')" onmouseout="LIKEDONE('{{post.id}}')">нравится |#}
+{#        {{ post.likes.count }}#}
+{#    </button>#}
+{#                  </li>#}
+{#                  {% else %}#}
+{#                  ♥#}
+{#                  <img src="/media/images/unn.png" id="{{post.id}}" onclick="LIKE(this)" width=auto height="26" >#}
+{#                  <button type="button" id="{{post.id}}" onclick="LIKE(this)" value="">нравится | {{ post.likes.count }}</button>#}
+{##}
+{#              {% endif %}#}
+          {% endfor %}
+      </ul></div></div>
+{#      <div class="overuser" style="position: relative; opacity: 1; pointer-events: auto; display: none;"></div>#}
+      <div id="block-post" style="display: none;background-color: rgba(0,0,0,.75);" atr="con"></div>
+{#      <div id="tooltip" style="display: none;"></div>#}
+{% endblock %}

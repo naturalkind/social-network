@@ -1,0 +1,41 @@
+﻿
+  {% block content %}
+      <div id="pages" align="center" style="display: none;">
+        {% if post.has_previous %}
+            <a onclick="backPAGE('{{ post.previous_page_number }}')" >Назад</a>
+        {% endif %}
+    <span class="current">
+       <span id="IOP">{{ post.number }}</span> из <span id="IOPV">{{ post.paginator.num_pages }}</span>
+    </span>
+        {% if post.has_next %}
+            <a onclick="nextPAGE('{{ post.next_page_number }}')" >Вперед</a>
+            <a onclick="jsons('{{ post.next_page_number }}')">KKK</a>
+            <span id="IOPV1" style="display: none">{{ post.next_page_number }}</span>
+{#           <div id="IOP" atr= "{{ posts.number }}"></div>#}
+{#            <div id="IOPV1" atr= "{{ posts.next_page_number }}" style="display: none"></div>#}
+{#            <div id="IOPV" atr= "{{ posts.paginator.num_pages }}"></div>#}
+        {% endif %}
+    </div>
+  <div id="day-block">
+<div id="breadcrumb"></div>
+
+
+          <ul class="day-block" id="DODO">
+              {% for post in post %}
+              <li class="views-row" onmouseover="getIndex(this);">
+  <div class="views-title"><a onclick="showContent('{{post.id}}')" atribut="{{post.id}}"><span class="arrow">←</span> {{ post.title }} <span class="arrow">→</span></a> </div>
+  <div class="views-image">
+{#      <img src="/media/{{ post.title }}_tm.png" width="220" height="150" alt="">#}
+      <img src="/media/{{ post.imgMed }}_tm.png" width="240" height="170" onclick="showContent('{{post.id}}')">
+  </div>
+ {% if username %}
+  <button class="btn" type="button"  onclick="LIKE('{{post.id}}')">нравится |
+        {{ post.likes.count }}
+    </button>{% endif %}
+{#  <a href="user/{{ post.user_post.id }}">{{ post.user_post }}</a>#}
+          </li>
+{% endfor %}
+      </ul>
+      </div>
+
+{% endblock %}

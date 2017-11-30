@@ -1,0 +1,137 @@
+
+  {% block login %}
+      <script type="text/javascript" src="/media/js/js.js"></script>
+<style>
+      .large-offset a {
+    color: #507299;
+}
+      .large-offset img {
+    outline: 0;
+    float: left;
+    padding: 15px;}
+
+@media only screen and (min-width : 400px){
+.large-offset {
+    position: relative;
+{#    margin: 20px;#}
+{#    margin: 80px;#}
+    border-radius: 10px;
+    font-size: 35px;
+    padding: 30px;
+    text-align: center;
+{#    background: #f3f3f3;#}
+    font-family: sans-serif;
+}
+
+.large-offset input {
+    font-size: 50px;
+    background: #f1f1f1;
+    border: none;
+{#    background: white;#}
+{#    border: 1px solid #9eb1a0;#}
+    border-radius: 3px;
+    box-sizing: border-box;
+    color: #262626;
+    padding: 10px;
+    width: 100%;
+    -webkit-appearance: none;
+    margin-bottom: 10px;
+}
+          .large-offset form {
+    width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+{#              .button {#}
+{#    font-size: 26px;#}
+{#    border: 1px solid #507299;#}
+{#    border-radius: 3px;#}
+{#    box-sizing: border-box;#}
+{#    color: #ffffff;#}
+{#    margin: 10px 0;#}
+{#    padding: 5px 55px 6px;#}
+{#    -webkit-appearance: none;#}
+{#    background: #507299;#}
+{#}#}
+
+          .large-offset .button {
+    font-size: 50px;
+    border: 1px solid #507299;
+    border-radius: 3px;
+    box-sizing: border-box;
+    color: #ffffff;
+{#    margin: 10px 0;#}
+    padding: 5px 55px 6px;
+    -webkit-appearance: none;
+    background: #507299;
+}
+      }
+@media screen and (min-width: 1200px) {
+    .large-offset {
+        margin: 0 auto;
+        margin-top: 20px;
+        padding: 0;
+        font-size: 18px;
+        text-align: center;
+        font-family: sans-serif;
+    }
+
+    .large-offset .button {
+        font-size: 18px;
+        border: 1px solid #507299;
+        border-radius: 3px;
+        box-sizing: border-box;
+        color: #ffffff;
+        padding: 5px 55px 6px;
+        -webkit-appearance: none;
+        background: #507299;
+    }
+
+    .large-offset form {
+        margin: 0 auto;
+        width: 200px;
+        background: #ffffff;
+        position: relative;
+    }
+
+    .large-offset input {
+        font-size: 16px;
+        background: #f1f1f1;
+        border: none;
+    {#              background: white;#} {#              border: 1px solid #9eb1a0;#} border-radius: 3px;
+        box-sizing: border-box;
+        color: #262626;
+        padding: 10px;
+        width: 100%;
+        -webkit-appearance: none;
+        margin-bottom: 10px;
+    }
+}
+@media screen and (min-width: 1600px){
+    .large-offset form {
+    width: 217px;
+    margin: 0 auto;
+    position: relative;
+}
+}
+
+      </style>
+       <div id="main-wrapper">
+        <div class="large-offset" >
+{#            <img src="/media/images/FORMATICAv5.png" alt="логотип" width="auto" height="200">#}
+            <form action="/login" method="post">
+                {% csrf_token %}
+{#                <label for="username">Имя</label>#}
+                <input type="text" name="username" id="username" placeholder="имя">
+{#                <label for="password">Пароль</label>#}
+                <input type="password" name="password" id="password" placeholder="пароль">
+                {% if login_error %}
+                  <label class="error">{{ login_error }}</label>
+                {% endif %}
+                <input class="button" type="submit" value="Войти">
+        <div class="label"><a onclick="addREG()">Регистрация</a> </div>
+            </form>
+{#            <img src="/media/images/FORMATICAv3.png" alt="логотип" width="auto" height="200">#}
+        </div>
+       </div>
+  {% endblock %}
