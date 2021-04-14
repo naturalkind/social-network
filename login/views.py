@@ -106,7 +106,7 @@ def user(request):
         data = json.loads(request.body)
         image_post = data['my_image']
         imgstr = re.search(r'base64,(.*)', image_post).group(1)
-        path = default_storage.save('%s.png' % auth.get_user(request).username , ContentFile(imgstr))
+        path = default_storage.save('%s.png' % auth.get_user(request).username , ContentFile(base64.b64decode(imgstr)))
         img_file = open("media/%s.png" % auth.get_user(request).username, 'wb')
         img_file.write(base64.b64decode(imgstr))
         img_file.close()
