@@ -64,7 +64,7 @@
         <h1 style="font-size: 18px;margin: 10 auto;">СОБЕСЕДНИКИ</h1>
 
     {% for thread in threads %}
-        <div class="pm" style="margin: 10px auto;" onclick="mesID('{{ thread.id }}','{{ request.user }}')"><img src="/media/{{ thread.partner.username }}_tm.png" class="usPr" style="float:none;border-radius: 6px;"><div class="pmu">{{ thread.partner.username }}</div>
+        <div class="pm" style="margin: 10px auto;" onclick="mesID('{{ thread.id }}','{{ request.user }}')"><img src="/media/tm_{{ thread.partner.username }}.png" class="usPr" style="float:none;border-radius: 6px;"><div class="pmu">{{ thread.partner.username }}</div>
         </div>
     {% empty %}
         <p>Пока что собеседников нет.</p>
@@ -74,9 +74,9 @@
         {% for m in mes reversed%}
  <div class="message">
             {% if m.sender == user %}
-                <p class="author we"><img src="/media/{{ user.username }}_tm.png" class="usPr" onclick="myPROFILE('{{ user.username }}')" style="float:none;"><p class="txtmessage we">{{ m.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ m.datetime|date:"d.m H:i" }}</span></p></p>
+                <p class="author we"><img src="/media/tm_{{ user.username }}.png" class="usPr" onclick="myPROFILE('{{ user.username }}')" style="float:none;"><p class="txtmessage we">{{ m.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ m.datetime|date:"d.m H:i" }}</span></p></p>
             {% else %}
-                <p class="author partner"><img src="/media/{{ partner.username }}_tm.png" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;"><p class="txtmessage partner">{{ m.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ m.datetime|date:"d.m H:i" }}</span></p></p>
+                <p class="author partner"><img src="/media/tm_{{ partner.username }}.png" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;"><p class="txtmessage partner">{{ m.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ m.datetime|date:"d.m H:i" }}</span></p></p>
             {% endif %}
 
 

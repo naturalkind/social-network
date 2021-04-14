@@ -23,7 +23,7 @@
 {#<a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a>#}
 <img src="media/images/mesv4.png" onclick="privatMES()" id="mespr">
 {% if username.image_user != "/media/images/Fv2.png" %}
-<img onclick="myPROFILE('{{ username.username }}')" src="media/{{ username.username }}_tm.png" class="usPr"/>
+<img onclick="myPROFILE('{{ username.username }}')" src="media/tm_{{ username.username }}.png" class="usPr"/>
 {% else %}
 <img onclick="myPROFILE('{{ username }}')" src="media/images/oneProf.png"  class="usPr" />
 {% endif %}

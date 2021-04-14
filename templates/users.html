@@ -9,7 +9,7 @@
      <div class="user-image">
          {% if x.image_user != "/media/images/Fv2.png" %}
 {#              <img src="/media/{{ x.username }}.png" width="auto" height="180" onclick="userPROFILE('{{x.id}}')">#}
-{#         <img src="/media/{{ x.username }}_tm.png" width="180" height="180" onclick="userPROFILE('{{x.id}}')">#}
+{#         <img src="/media/tm_{{ x.username }}.png" width="180" height="180" onclick="userPROFILE('{{x.id}}')">#}
                  <div style="margin:5px;background-image: url('/media/{{ x.username }}.png');border:none;background-size:cover; width:180px;height:160px;" onclick="userPROFILE('{{x.id}}')"></div>
          {% else %}
              <div style="margin:5px;background-image: url('/media/images/oneProf.png');border:none;background-size:cover; width:180px;height:160px;" onclick="userPROFILE('{{x.id}}')"></div>
