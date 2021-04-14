@@ -3,11 +3,15 @@ from django.shortcuts import render_to_response, redirect, HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.contrib.auth.forms import UserCreationForm
-
-from django.contrib.auth.models import User
-# myapp module import
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from myapp.models import Post
-
+from django.contrib.auth.models import User
+from PIL import Image
+import re
+import base64
+import json
+import uuid
 
 # Create your views here.
 
@@ -38,20 +42,28 @@ def register(request):
     if request.POST:
         newuser_form = UserCreationForm(request.POST, request.FILES)
         if newuser_form.is_valid():
-            newuser_form.save()
+            #print newuser_form.cleaned_data['username'], newuser_form.cleaned_data['password2']
+            IDS = newuser_form.save()
             newuser = auth.authenticate(username=newuser_form.cleaned_data['username'],password=newuser_form.cleaned_data['password2'])
             auth.login(request, newuser)
+            #nameFile = str(newuser.id)+"_"+str(newuser_form.cleaned_data['username'])+".png"
+            nameFile = str(newuser_form.cleaned_data['username'])+".png"
+            print (nameFile)
+            with open("media/data_image/"+ nameFile, 'wb+') as photo_save:
+                 for chunk in request.FILES['image_user'].chunks():
+                    photo_save.write(chunk)
+            crop(nameFile)       
             return redirect('/')
         else:
           args['form'] = newuser_form
     return render_to_response('register.html', args)
 
-from PIL import Image
+
 def crop(usn):
     size = 150, 150
     crop_type='middle'
-    modified_path = "media/%s_tm.png" % usn
-    img_path = "media/%s.png" % usn
+    modified_path = "media/data_image/tm_%s" % usn
+    img_path = "media/data_image/%s" % usn
     img = Image.open(img_path)
     # Get current and desired ratio for the images
     img_ratio = img.size[0] / float(img.size[1])
@@ -89,11 +101,6 @@ def crop(usn):
         # If the scale is the same, we do not need to crop
     img.save(modified_path)
 
-import re
-import base64
-import json
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 
 def user(request):
     args = {}
@@ -106,26 +113,26 @@ def user(request):
         data = json.loads(request.body)
         image_post = data['my_image']
         imgstr = re.search(r'base64,(.*)', image_post).group(1)
-        path = default_storage.save('%s.png' % auth.get_user(request).username , ContentFile(base64.b64decode(imgstr)))
-        img_file = open("media/%s.png" % auth.get_user(request).username, 'wb')
+        #path = default_storage.save('%s.png' % auth.get_user(request).username , ContentFile(base64.b64decode(imgstr)))
+        #----------->
+        img_file = open("media/data_image/%s.png" % auth.get_user(request).username, 'wb')
         img_file.write(base64.b64decode(imgstr))
         img_file.close()
-
-        crop(usn)
-
-        userP.image_user = path
+        crop("%s.png" % auth.get_user(request).username)
+        userP.image_user = "media/data_image/%s.png" % auth.get_user(request).username
+        
         userP.save()
     return render_to_response('profile.html', args)
 
 from django.template import RequestContext
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core import serializers
-from django.contrib.auth.models import RELATIONSHIP_FOLLOWING
+#from django.contrib.auth.models import RELATIONSHIP_FOLLOWING
 
 
-def addfolow(request, user_info, username):
-    usse = User.objects.get(username=username)
-    user_info.add_relationship(usse, RELATIONSHIP_FOLLOWING)
+#def addfolow(request, user_info, username):
+#    usse = User.objects.get(username=username)
+#    user_info.add_relationship(usse, RELATIONSHIP_FOLLOWING)
 
 def getps(i):
     ps = Post.objects.get(id=int(i))
@@ -161,7 +168,7 @@ def user_page(request, user):
                                                      context_instance=RequestContext(request))
     if request.method == 'POST':
         username = request.GET.get('username')
-        addfolow(request,user_info, username)
+        #addfolow(request,user_info, username)
         return HttpResponse('ok', content_type = "application/json")
 
 def my_page(request, username):
@@ -237,7 +244,7 @@ def getlkpost(request,id):
     ps = Post.objects.all().filter(likes=user)
     for x in ps:
         pid = str(x.id)
-        li = """<li class="views-foll" width="600px"><div class="views-title" onclick="showContent('%s')">%s</div><img src="/media/%s.png" id="imgf" onclick="showContent('%s')"></li>""" % (pid,x.title, x.image,pid)
+        li = """<li class="views-foll" width="600px"><div class="views-title" onclick="showContent('%s')">%s</div><img src="/media/data_image/%s.png" id="imgf" onclick="showContent('%s')"></li>""" % (pid,x.title, x.image,pid)
         ht += li
 
     return HttpResponse(ht)
