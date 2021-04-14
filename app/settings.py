@@ -122,25 +122,25 @@ STATIC_URL = '/media/static/'
 # Media
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = 'media/'
+MEDIA_ROOT = 'media/data_image/'
 
 #chat
 API_KEY = '$0m3-U/\/1qu3-K3Y'
 
 
-SEND_MESSAGE_API_URL = 'http://192.168.1.50:8888/messages/send_message_api'
+SEND_MESSAGE_API_URL = 'http://192.168.1.137:8888/messages/send_message_api'
 # SEND_MESSAGE_API_URL = 'http://127.0.0.1:8000/messages/send_message_api'
 
 # SEND_MESSAGE_API_URLv1 = 'http://127.0.0.1:8899/wall/send_message_api'
 # SEND_POST_API_URL = 'http://192.168.1.35:8888/wall/send_message_api'
-SEND_POST_API_URL = 'http://192.168.1.50:8888/send_message_api'
+SEND_POST_API_URL = 'http://192.168.1.137:8888/send_message_api'
 
 #
-CACHES = {
-    'default': {
-        'BACKEND': 'redis_cache.RedisCache',
-    },
-}
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'redis_cache.RedisCache',
+#    },
+#}
 #
 CACHEOPS_REDIS = {
     'host': 'localhost',
