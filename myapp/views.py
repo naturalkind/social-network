@@ -11,7 +11,7 @@ from django.contrib import auth
 
 # myapp module import
 from myapp.models import *
-
+import uuid
 # Create your views here.
 
 
@@ -110,8 +110,8 @@ from datetime import datetime
 def crop(nameFile):
     size = 220, 150
     crop_type='middle'
-    modified_path = "media/%s_tm.png" % nameFile
-    img_path = "media/%s.png" % nameFile
+    modified_path = "/home/sadko/social-network-master/media/data_image/%s_tm.png" % nameFile
+    img_path = "/home/sadko/social-network-master/media/data_image/%s.png" % nameFile
     img = Image.open(img_path)
     # Get current and desired ratio for the images
     img_ratio = img.size[0] / float(img.size[1])
@@ -158,7 +158,7 @@ def addpost(request):
        return render_to_response('addpost.html', args)
     if request.method == 'POST':
         post_title = request.GET['id_title']
-        import uuid
+        
         nameFile = str(uuid.uuid4())[:12]
         # nameFile = "%s_%s" % (post_title, auth.get_user(request).id)
         # nameFile = "%s" % post_title
@@ -166,9 +166,9 @@ def addpost(request):
         data = json.loads(request.body)
         image_post = data['my_image']
         imgstr = re.search(r'base64,(.*)', image_post).group(1)
-        path = default_storage.save('%s.png' % nameFile, ContentFile(imgstr))
+        #path = default_storage.save('/home/sadko/social-network-master/media/data_image/%s.png' % nameFile, ContentFile(imgstr))
         # pathmedium = default_storage.save('%s_tm.png' % nameFile, ContentFile(imgstr))
-        img_file = open("media/%s.png" % nameFile, 'wb')
+        img_file = open("/home/sadko/social-network-master/media/data_image/%s.png" % nameFile, 'wb')
         img_file.write(base64.b64decode(imgstr))
         img_file.close()
         # save timbinal imageMedium=pathmedium,
@@ -188,7 +188,7 @@ def addpost(request):
         titVK = post_title
             ######
         # f = open("/Users/macbookpro/PycharmProjects/app/media/%s" % path, "rb")
-        f = open("media/%s" % path, "rb")
+        f = open("/home/sadko/social-network-master/media/%s" % path, "rb")
 
         img = {'photo': f} #!!!!!!
         # data = dict(access_token=token, gid=owner_id)
@@ -422,7 +422,7 @@ def follow(request, id):
     ht = ''
     p = User.objects.get(id=id)
     for x in p.get_followers():
-        img = '/media/'+ x.username +'_tm.png'
+        img = '/home/sadko/social-network-master/media/data_image/'+ x.username +'_tm.png'
         idu = str(x.pk)
         li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
         ht += li
@@ -434,7 +434,7 @@ def follows(request, id):
     ht = ''
     p = User.objects.get(id=id)
     for x in p.get_following():
-        img = '/media/'+ x.username +'_tm.png'
+        img = '/home/sadko/social-network-master/media/data_image/'+ x.username +'_tm.png'
         idu = str(x.pk)
         li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
         ht += li
