@@ -11,6 +11,8 @@ function getIndex(node) {
   }
   return  innode=i;
 }
+
+
 function createRequestObject() {
         try { return new XMLHttpRequest() }
         catch(e) {
@@ -20,7 +22,9 @@ function createRequestObject() {
                 catch(e) { return null; }
             }
         }
-    }
+}
+
+    
 function LIKENODE(link){  // лайк
 var cont = document.getElementById('like_count');
 var linkfull = '/add_like/?post_id='+link;
@@ -44,25 +48,25 @@ function MY(e) {  // лайк на страницах
     };
 }
 function LIKE(link){
-MY();
-if (isNaN(link) == false) {
-    var linkfull = '/add_like/?post_id=' + link;
-    var http = createRequestObject();
-    if (http) {
-        http.open('get', linkfull);
-        http.onreadystatechange = function () {
-            if (http.readyState == 4) {
-                document.getElementById(link).innerHTML = http.responseText;
-                document.getElementById(link).style.display = 'block';
-            }
-        };
-        http.send(null);
+    MY();
+    if (isNaN(link) == false) {
+        var linkfull = '/add_like/?post_id=' + link;
+        var http = createRequestObject();
+        if (http) {
+            http.open('get', linkfull);
+            http.onreadystatechange = function () {
+                if (http.readyState == 4) {
+                    document.getElementById(link).innerHTML = http.responseText;
+                    document.getElementById(link).style.display = 'block';
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
     } else {
-        document.location = link;
-    }
-} else {
-    link.innerHTML = "регистрируйся";
-  }
+        link.innerHTML = "регистрируйся";
+      }
 }
 
 function ool(id){
@@ -83,6 +87,7 @@ function ool(id){
     client.setRequestHeader('Content-type', 'application/json; charset=utf-8');
     client.send(null);
 }
+
 var gem;
 var rpv;
 
@@ -257,30 +262,8 @@ function privatMES(){
             document.location = link;
         }
 }
-function createMES(){
-    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-    console.log(crsv);
-    var cont = document.getElementById('message').value;
-    var id_text = document.getElementById('recipient_name').value;
-    if (cont) {
-        var linkfull = 'messages/send_message/';
-        var http = new XMLHttpRequest();
-        if (http) {
-            var event = { message:cont,
-                         recipient_name:id_text };
 
-            var data = JSON.stringify(event);
-            http.open('post', linkfull, true);
-            http.setRequestHeader('X-CSRFToken', crsv);
-            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-            http.onreadystatechange = function () {
-                if (http.readyState == 4) {
-                }
-            };
-            http.send(data);
-        }
-    } else {alert('Не нажимай лишний раз кнопку, если не заполнил поле')}
-}
+
 function getNumEnding(iNumber, aEndings) {
     var sEnding, i;
     iNumber = iNumber % 100;
@@ -300,68 +283,8 @@ function getNumEnding(iNumber, aEndings) {
     }
     return sEnding;
 }
-//  личные сообщения!
 
-
-function activate_chat(thread_id, user_name, number_of_messages) {
-    var ws_chat;
-    var received = document.getElementById('received').innerText;
-    var sent = document.getElementById('sent').innerText;
-    
-    function start_chat_ws() {
-        var tev = document.getElementById('conver');
-        ws_chat = new WebSocket("ws://"+ IP_ADDR +":8998/" + thread_id + "/");
-        ws_chat.onmessage = function(event) {
-            var message_data = JSON.parse(event.data);
-            var date = new Date(message_data.timestamp*1000);
-//<a onclick="myPROFILE(' +"'"+message_data.sender+"'"+')">' + message_data.sender + '</a>
-            tev.innerHTML += '<div class="message"><p class="author ' + ((message_data.sender == user_name) ? 'we' : 'partner') + '"><img src="/media/data_image/tm_'+ message_data.sender +'.png" class="usPr" onclick="myPROFILE('+ "'" + message_data.sender + "'" +')"></p><p class="txtmessage '+((message_data.sender == user_name) ? 'we' : 'partner') + '">' + message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '<span class="datetime" style="font-size: 15px;color: #afafaf;">' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '</span></p></div>';
-
-            number_of_messages++;
-            if (message_data.sender == user_name) {
-                sent++;
-            } else {
-                received++;
-            }
-            var tev1 = document.getElementById('messages');
-            if (tev1){
-            tev1.innerHTML = '<span id="total">' + number_of_messages + '</span> ' + getNumEnding(number_of_messages, ["сообщение", "сообщения", "сообщений"]) + ' (<span id="received">' + received + '</span> получено, <span id="sent">' + sent + '</span> отправлено)';
-            }
-        };
-        ws_chat.onclose = function(){
-            // Try to reconnect in 5 seconds
-            setTimeout(function() {start_chat_ws()}, 5000);
-        };
-    }
-
-    if ("WebSocket" in window) {
-        start_chat_ws();
-    } else {
-        var formMS = document.getElementById('message_form');
-        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
-
-        return false;
-    }
-
-    function send_message() {
-        var textarea = document.getElementById('message_textarea');
-        if (textarea.value == "") {
-            return false;
-        }
-        if (ws_chat.readyState != WebSocket.OPEN) {
-            return false;
-        }
-        ws_chat.send(textarea.value);
-        textarea.value = "";
-    }
-
-    var onMESv1 = document.getElementById('btn');
-    onMESv1.addEventListener('click', send_message);
-    onMESv1.onclick = function (){
-        send_message();
-    };
-}
-////
+///
 function mesID(thread_id, user_name, number_of_messages){
     var cont = document.getElementById('main-wrapper');
        var http = createRequestObject();
@@ -625,7 +548,7 @@ function handler(e) {
                     document.body.style.overflow = 'auto';
     var textElem = document.getElementById('topbt');
     textElem.style.transform = 'rotate(0deg)';
-	e.target.removeEventListener(e.type, arguments.callee);
+    e.target.removeEventListener(e.type, arguments.callee);
 //
 //	alert("You'll only see this once!");
 }
@@ -669,6 +592,8 @@ function showImg(link){
                               }
             }
     }, false);
+    
+    
     /*Ловим движение пальцем*/
     img.addEventListener('touchmove', function(event) {
             event.preventDefault();
@@ -703,7 +628,9 @@ function showImg(link){
 
                 }startPoint={x:nowPoint.pageX,y:nowPoint.pageY}}
     }, false);
-            /*Ловим отпускание пальца*/
+
+    
+    /*Ловим отпускание пальца*/
     img.addEventListener('touchend', function(event) {
             var pdelay=new Date();
             nowPoint=event.changedTouches[0];
@@ -737,8 +664,9 @@ function showImg(link){
             else{/*СВАЙП ВНИЗ*/}
                  }
             }
-}, false);
+    }, false);
 }
+
 function showContent(link) {
     try{
         document.body.removeChild(document.getElementById('block-post'));
@@ -920,76 +848,7 @@ function OnOn() {
 
 }
 
-// комментарии
-function activate_com(post_id) {
-    var ws_com;
-    function start_com_ws() {
-        var tev = document.getElementById('field-comment_'+post_id);
-//        var tev = document.getElementsByClassName('box-com');
-        ws_com = new WebSocket("ws://"+ IP_ADDR + ":8889/" + post_id + "/");
-        ws_com.onmessage = function(event) {
-            var fc = document.createElement('div');
-            fc.className = 'f-c';
-            var message_data = JSON.parse(event.data);
-//            console.log(message_data);
-//            var date = new Date(message_data.timestamp*1000);
-            fc.innerHTML = '<a>' + message_data.user_post + '</a> ' +'<img src="'+ message_data.img +'">'+message_data.title;
-            tev.insertBefore(fc, tev.lastChild);
-        };
-        ws_com.onclose = function(){
-            // Try to reconnect in 5 seconds
-            setTimeout(function() {start_com_ws()}, 5000);
-        };
-    }
 
-    if ("WebSocket" in window) {
-        start_com_ws();
-    } else {
-        var formMS = document.getElementById('message_form');
-        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
-
-        return false;
-    }
-
-    function send_com(cip) {
-//        var textarea = document.getElementById('comment_text_' + cip);
-//        console.log(textarea.value);
-//        if (textarea.value == "") {
-//            return false;
-//        }
-//        if (ws.readyState != WebSocket.OPEN) {
-//            return false;
-//        }
-//        ws.send(textarea.value);
-//        textarea.value = "";
-        var comment_text = document.getElementById('comment_text_' + cip);
-        if (comment_text.value == "") {
-            return false;
-        }
-        if (ws_com.readyState != WebSocket.OPEN) {
-            return false;
-        }
-        var tx = comment_text.value;
-        var event = { comment_text : tx,
-                      comment_image: dataURL_v1 };
-        var data = JSON.stringify(event);
-        console.log(data);
-        ws_com.send(data);
-        comment_text.value = "";
-    }
-
-//    var onMES = document.getElementById('message_textarea');
-
-    var onMESv1 = document.getElementById('add_'+ post_id);
-//    onMES.onclick = function (){
-//        send_com();
-//    };
-    onMESv1.onclick = function (){
-        console.log('ADD WORK');
-        send_com(post_id);
-
-    };
-}
 var textcontext, textcanvas ,textinput;
 function OnOnreg() {
     var ik = document.getElementById('oimg');
@@ -1139,11 +998,12 @@ function playpause(e){
  video.src = "/media/video/"+e;
  video.play();
  }
-function addfollow(link, us){
+function addfollow(link, us, id){
         var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
         var http = createRequestObject();
-        var linkfull = '/users/'+ link +'/?username=' + us;
+        var linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id;
+        console.log(linkfull);
         if (http) {
         http.open('post', linkfull);
         http.setRequestHeader('X-CSRFToken', crsv);
@@ -1178,116 +1038,13 @@ function FileSlicer(file) {
         return file.slice(start, end);
     }
 }
-//var fs;
-
-
-//
-//			function Ready(){
-//                console.log('ok');
-//				if(window.File && window.FileReader){ //These are the necessary HTML5 objects the we are going to use
-//					document.getElementById('UploadButton').addEventListener('click', StartUpload);
-//					document.getElementById('FileBox').addEventListener('change', FileChosen);
-//				}
-//				else
-//				{
-//					document.getElementById('UploadArea').innerHTML = "Your Browser Doesn't Support The File API Please Update Your Browser";
-//				}
-//			}
-//			var SelectedFile;
-//			function FileChosen(evnt) {
-//                console.log('ok');
-//                var video = document.getElementById("id_video");
-//		        SelectedFile = evnt.target.files[0];
-//                        video.style.display = 'block';
-//        video.style.maxWidth = '600px';
-//                var url = URL.createObjectURL(SelectedFile);
-//                video.src = url;
-//                video.play();
-//				document.getElementById('NameBox').value = SelectedFile.name;
-//		    }
-//
-//			var socket = io.connect('http://formatica.wtf:8877');
-//			var FReader;
-//			var Name;
-//			function StartUpload(){
-//				if(document.getElementById('FileBox').value != "")
-//				{
-//					FReader = new FileReader();
-//					Name = document.getElementById('NameBox').value;
-//					var Content = "<span id='NameArea'>Uploading " + SelectedFile.name + " as " + Name + "</span>";
-//					Content += '<div id="ProgressContainer"><div id="ProgressBar"></div></div><span id="percent">50%</span>';
-//					Content += "<span id='Uploaded'> - <span id='MB'>0</span>/" + Math.round(SelectedFile.size / 1048576) + "MB</span>";
-//					document.getElementById('UploadArea').innerHTML = Content;
-//					FReader.onload = function(evnt){
-//						socket.emit('Upload', { 'Name' : Name, Data : evnt.target.result });
-//					};
-//					socket.emit('Start', { 'Name' : Name, 'Size' : SelectedFile.size });
-//				}
-//				else
-//				{
-//					alert("Нужно выбрать файл");
-//				}
-//			}
-//
-//			socket.on('MoreData', function (data){
-//				UpdateBar(data['Percent']);
-//				var Place = data['Place'] * 524288; //The Next Blocks Starting Position
-//				var NewFile; //The Variable that will hold the new Block of Data
-//				if(SelectedFile.webkitSlice)
-//					NewFile = SelectedFile.slice(Place, Place + Math.min(524288, (SelectedFile.size-Place)));
-//				else
-//					NewFile = SelectedFile.slice(Place, Place + Math.min(524288, (SelectedFile.size-Place)));
-//				FReader.readAsBinaryString(NewFile);
-//			});
-//			function UpdateBar(percent){
-//				document.getElementById('ProgressBar').style.width = percent + '%';
-//				document.getElementById('percent').innerHTML = (Math.round(percent*100)/100) + '%';
-//				var MBDone = Math.round(((percent/100.0) * SelectedFile.size) / 1048576);
-//				document.getElementById('MB').innerHTML = MBDone;
-//			}
-//
-//			var Path = "http://formatica.wtf/";
-//
-//			socket.on('Done', function (data){
-//				var Content = "Файл загрузился !!!";
-//				Content += "<video id='Thumb' src='" + Path + data['Image'] + "' alt='" + Name + "'><br>";
-//				Content += "<button	type='button' name='Upload' value='' id='Restart' class='Button'>Новая загрузка</button>";
-//				document.getElementById('UploadArea').innerHTML = Content;
-//				document.getElementById('Restart').addEventListener('click', Refresh);
-//				document.getElementById('UploadBox').style.width = '270px';
-//				document.getElementById('UploadBox').style.height = '270px';
-//				document.getElementById('UploadBox').style.textAlign = 'center';
-//				document.getElementById('Restart').style.left = '20px';
-//			});
-//			function Refresh(){
-//				location.reload(true);
-//			}
 
 function OnOnvideo(input) {
     setInterval(you, 2000);
     var cont = document.getElementById('cn');
-//    cont.innerHTML += '<div id="UploadBox"><h2>Загрузчик</h2><span id="UploadArea"><label for="FileBox">Выберите файл: </label><input type="file" id="FileBox" ><br><label for="NameBox">Имя: </label><br><button	type="button" id="UploadButton" class="Button">Загрузить</button></span></div>';
     cont.innerHTML += '<input type="text" id="NameBox"><div id="video-placeholder" onclick="onYouTubeIframeAPIReady()"></div>';
-//    Ready();
-//        var video = document.getElementById("id_video");
-//        video.style.display = 'block';
-//        video.style.maxWidth = '600px';
-//        //THE METHOD THAT SHOULD SET THE VIDEO SOURCE
-//    if (!(input.files && input.files[0])) {
-//    } else {
-//        var file = input.files[0];
-////        console.log(file);
-//        fs = new FileSlicer(file);
-//        console.log(fs);
-//        ///
-//        var url = URL.createObjectURL(file);
-//        video.src = url;
-//        video.play();
-//    }
-
 }
 
-//style="width: 90px;height: 105px;float: left;margin: 2px 5px;padding: 2px;background: #ffffff;border-radius: 4px;"
 function foll(link){
         document.body.style.overflow = 'hidden';
         var pageop = document.getElementById('main-wrapper');
@@ -1510,6 +1267,10 @@ function OnOnW() {
 }
 
 
+/////////////
+// WEB SOKET 
+/////////////
+// стена -------------------------------------->
 var ws_wall;
 function activate_wall(user_name) {
     function start_wall() {
@@ -1561,11 +1322,151 @@ function send_wall() {
                       body: bx,
                       image: dataURL_wall,
                       video : youd
-//                      video : Name
-//                      audio: audio
+                      //video : Name
+                      //audio: audio
         };
         var data = JSON.stringify(event);
         //console.log(data);
         ws_wall.send(data);
         alert('ЗАГУЗИЛИ');
 }
+
+
+// комментарии ------------------------------------->
+function activate_com(post_id) {
+    var ws_com;
+    function start_com_ws() {
+        var tev = document.getElementById('field-comment_'+post_id);
+        ws_com = new WebSocket("ws://"+ IP_ADDR + ":8889/" + post_id + "/");
+        ws_com.onmessage = function(event) {
+            var fc = document.createElement('div');
+            fc.className = 'f-c';
+            var message_data = JSON.parse(event.data);
+            fc.innerHTML = '<a>' + message_data.user_post + '</a> ' +'<img src="'+ message_data.img +'">'+message_data.title;
+            tev.insertBefore(fc, tev.lastChild);
+        };
+        ws_com.onclose = function(){
+            // Try to reconnect in 5 seconds
+            setTimeout(function() {start_com_ws()}, 5000);
+        };
+    }
+
+    if ("WebSocket" in window) {
+        start_com_ws();
+    } else {
+        var formMS = document.getElementById('message_form');
+        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
+
+        return false;
+    }
+
+    function send_com(cip) {
+        var comment_text = document.getElementById('comment_text_' + cip);
+        if (comment_text.value == "") {
+            return false;
+        }
+        if (ws_com.readyState != WebSocket.OPEN) {
+            return false;
+        }
+        var tx = comment_text.value;
+        var event = { comment_text : tx,
+                      comment_image: dataURL_v1 };
+        var data = JSON.stringify(event);
+        ws_com.send(data);
+        comment_text.value = "";
+    }
+
+    var onMESv1 = document.getElementById('add_'+ post_id);
+    onMESv1.onclick = function (){
+        console.log('ADD WORK');
+        send_com(post_id);
+
+    };
+}
+
+function createMES(){
+    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
+    console.log(crsv);
+    var cont = document.getElementById('message').value;
+    var id_text = document.getElementById('recipient_name').value;
+    if (cont) {
+        var linkfull = 'messages/send_message/';
+        var http = new XMLHttpRequest();
+        if (http) {
+            var event = { message:cont,
+                         recipient_name:id_text };
+
+            var data = JSON.stringify(event);
+            http.open('post', linkfull, true);
+            http.setRequestHeader('X-CSRFToken', crsv);
+            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+            http.onreadystatechange = function () {
+                if (http.readyState == 4) {
+                }
+            };
+            http.send(data);
+        }
+    } else {alert('Не нажимай лишний раз кнопку, если не заполнил поле')}
+}
+
+
+//  личные сообщения ------------------------------------------------>
+function activate_chat(thread_id, user_name, number_of_messages) {
+    var ws_chat;
+    var received = document.getElementById('received').innerText;
+    var sent = document.getElementById('sent').innerText;
+    
+    function start_chat_ws() {
+        var tev = document.getElementById('conver');
+        ws_chat = new WebSocket("ws://"+ IP_ADDR +":8998/" + thread_id + "/");
+        ws_chat.onmessage = function(event) {
+            var message_data = JSON.parse(event.data);
+            var date = new Date(message_data.timestamp*1000);
+//<a onclick="myPROFILE(' +"'"+message_data.sender+"'"+')">' + message_data.sender + '</a>
+            tev.innerHTML += '<div class="message"><p class="author ' + ((message_data.sender == user_name) ? 'we' : 'partner') + '"><img src="/media/data_image/tm_'+ message_data.sender +'.png" class="usPr" onclick="myPROFILE('+ "'" + message_data.sender + "'" +')"></p><p class="txtmessage '+((message_data.sender == user_name) ? 'we' : 'partner') + '">' + message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '<span class="datetime" style="font-size: 15px;color: #afafaf;">' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '</span></p></div>';
+
+            number_of_messages++;
+            if (message_data.sender == user_name) {
+                sent++;
+            } else {
+                received++;
+            }
+            var tev1 = document.getElementById('messages');
+            if (tev1){
+            tev1.innerHTML = '<span id="total">' + number_of_messages + '</span> ' + getNumEnding(number_of_messages, ["сообщение", "сообщения", "сообщений"]) + ' (<span id="received">' + received + '</span> получено, <span id="sent">' + sent + '</span> отправлено)';
+            }
+        };
+        ws_chat.onclose = function(){
+            // Try to reconnect in 5 seconds
+            setTimeout(function() {start_chat_ws()}, 5000);
+        };
+    }
+
+    if ("WebSocket" in window) {
+        start_chat_ws();
+    } else {
+        var formMS = document.getElementById('message_form');
+        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
+
+        return false;
+    }
+
+    function send_message() {
+        var textarea = document.getElementById('message_textarea');
+        if (textarea.value == "") {
+            return false;
+        }
+        if (ws_chat.readyState != WebSocket.OPEN) {
+            return false;
+        }
+        ws_chat.send(textarea.value);
+        textarea.value = "";
+    }
+
+    var onMESv1 = document.getElementById('btn');
+    onMESv1.addEventListener('click', send_message);
+    onMESv1.onclick = function (){
+        send_message();
+    };
+}
+

@@ -17,7 +17,7 @@ from importlib import import_module
 
 session_engine = import_module(settings.SESSION_ENGINE)
 
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 
 from myapp.models import *
 

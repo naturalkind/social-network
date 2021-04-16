@@ -18,8 +18,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from rest_framework import generics
-from django.contrib.auth.models import User
-from myapp.models import Post
+#from django.contrib.auth.models import User
+from myapp.models import Post, User
 from myapp.serializers import UserSerializer, PostSerializer
 
 urlpatterns = [
@@ -70,8 +70,10 @@ urlpatterns = [
 
 # фильтр
 
-    url(r'^follow/(?P<id>.*)$', 'myapp.views.follow'),
-    url(r'^follows/(?P<id>.*)$', 'myapp.views.follows'),
+#    url(r'^follow/(?P<id>.*)$', 'myapp.views.follow'),
+#    url(r'^follows/(?P<id>.*)$', 'myapp.views.follows'),
+    url(r'^follow/(?P<id>.*)$', 'login.views.follow'),
+    url(r'^follows/(?P<id>.*)$', 'login.views.follows'),
     url(r'^getlkpost/(?P<id>.*)$', 'login.views.getlkpost'),
     url(r'^viewcom/(?P<post_id>.*)$', 'myapp.views.viewcom'),
     url(r'^rppos/(?P<id>.*)$', 'wall.views.rppos'),

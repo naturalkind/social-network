@@ -2,11 +2,13 @@
 from django.shortcuts import render_to_response, redirect, HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
+#from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-from myapp.models import Post
-from django.contrib.auth.models import User
+from myapp.models import *
+#from django.contrib.auth.models import User
+
 from PIL import Image
 import re
 import base64
@@ -14,6 +16,11 @@ import json
 import uuid
 
 # Create your views here.
+class UserForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ('username',)
 
 def login(request):
     args = {}
@@ -38,9 +45,9 @@ def logout(request):
 def register(request):
     args = {}
     args.update(csrf(request))
-    args['form'] = UserCreationForm()
+    args['form'] = UserForm()
     if request.POST:
-        newuser_form = UserCreationForm(request.POST, request.FILES)
+        newuser_form = UserForm(request.POST, request.FILES)
         if newuser_form.is_valid():
             #print newuser_form.cleaned_data['username'], newuser_form.cleaned_data['password2']
             IDS = newuser_form.save()
@@ -127,12 +134,43 @@ def user(request):
 from django.template import RequestContext
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core import serializers
-#from django.contrib.auth.models import RELATIONSHIP_FOLLOWING
+
+#https://coderoad.ru/58794639/Как-сделать-систему-follower-following-с-моделью-django
+def addfolow(request, user_info, username, userid):
+    usse = User.objects.get(username=username)
+    print usse
+    user_info.add_relationship(usse, RELATIONSHIP_FOLLOWING)
+
+#WORK
+#def addfolow(request, user_info, username, userid):
+#    user_2 = User.objects.get(pk=int(userid))
+#    isd = Follow.objects.create(from_person=user_info, to_person=user_2)
 
 
-#def addfolow(request, user_info, username):
-#    usse = User.objects.get(username=username)
-#    user_info.add_relationship(usse, RELATIONSHIP_FOLLOWING)
+def follow(request, id):
+    ht = ''
+    p = User.objects.get(id=id)
+    for x in p.get_followers():
+        print x.username
+        img = 'media/data_image/tm_'+ x.username +'.png'
+        idu = str(x.pk)
+        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
+        ht += li
+
+    return HttpResponse("<div id='foll'>%s</div>" % ht)
+
+def follows(request, id):
+    ht = ''
+    p = User.objects.get(id=id)
+    for x in p.get_following():
+        img = 'media/data_image/tm_'+ x.username +'.png'
+        idu = str(x.pk)
+        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
+        ht += li
+
+    return HttpResponse("<div id='foll'>%s</div>" % ht)
+
+
 
 def getps(i):
     ps = Post.objects.get(id=int(i))
@@ -168,8 +206,17 @@ def user_page(request, user):
                                                      context_instance=RequestContext(request))
     if request.method == 'POST':
         username = request.GET.get('username')
-        #addfolow(request,user_info, username)
+        userid = request.GET.get('userid')
+        addfolow(request, user_info, username, userid)
         return HttpResponse('ok', content_type = "application/json")
+
+#>>> from django.contrib.auth.models import User
+#>>> from myapp.models import Post, Follow
+#KeyboardInterrupt
+#>>> A = User.objects.create(username="A")
+#>>> B = User.objects.create(username="B")
+#>>> Follow.objects.create
+
 
 def my_page(request, username):
     user_info = User.objects.get(username=username)

@@ -26,7 +26,7 @@
 {#<em>•</em>#}
            {% else %}
     <img src="/media/images/addusr.png" class="addusr" onclick="addfollow('{{ userid }}', '{{ user_info.username }}')">
-      <a onclick="addfollow('{{ userid }}', '{{ user_info.username }}')">ПОДПИСАТЬСЯ</a>
+      <a onclick="addfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">ПОДПИСАТЬСЯ</a>
                <div class="pm-mes">
 {#           <form action="messages" method="post" class="new_message">#}
            {% csrf_token %}

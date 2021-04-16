@@ -3,7 +3,8 @@ import json
 from django.http import HttpResponse
 import redis
 
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from myapp.models import User
 from django.utils import dateformat
 
 from datetime import datetime

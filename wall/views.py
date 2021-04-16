@@ -13,7 +13,8 @@ from django.conf import settings
 from login.views import login
 from myapp.views import index
 from django.contrib import auth
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from myapp.models import User
 from myapp.models import Post
 from wall.utils import json_response, send_message
 try:

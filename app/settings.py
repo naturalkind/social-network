@@ -44,6 +44,8 @@ INSTALLED_APPS = (
     'comment',
 )
 
+AUTH_USER_MODEL = 'myapp.User'
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

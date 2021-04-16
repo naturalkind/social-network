@@ -13,9 +13,9 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 
-from myapp.models import Post, Comment
+from myapp.models import Post, Comment, User
 
 from comment.utls import json_response, send_comment
 
