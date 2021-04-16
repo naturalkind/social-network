@@ -15,18 +15,19 @@ import re
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from myapp.views import crop
+import uuid
 
 def json_response(obj):
     return HttpResponse(json.dumps(obj), content_type="application/json")
 
 
 def send_message(title, body, image, video, user_post):
-    import uuid
+    
     nameFile = str(uuid.uuid4())[:12]
     user_postv = User.objects.get(username=user_post)
     imgstr = re.search(r'base64,(.*)', image).group(1)
     # path = default_storage.save('%s.png' % nameFile, ContentFile(imgstr))
-    img_file = open("media/%s.png" % nameFile, 'wb')
+    img_file = open("media/data_image/%s.png" % nameFile, 'wb')
     img_file.write(base64.b64decode(imgstr))
     img_file.close()
 

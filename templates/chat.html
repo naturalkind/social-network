@@ -12,9 +12,9 @@
         {% for message in thread_messages reversed %}
         <div class="message">
             {% if message.sender == user %}
-                <p class="author we"><img src="/media/tm_{{ user.username }}.png" class="usPr" onclick="myPROFILE('{{ user.username }}')" style="float:none;"><p class="txtmessage we">{{ message.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span></p></p>
+                <p class="author we"><img src="/media/data_image/tm_{{ user.username }}.png" class="usPr" onclick="myPROFILE('{{ user.username }}')" style="float:none;"><p class="txtmessage we">{{ message.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span></p></p>
             {% else %}
-                <p class="author partner"><img src="/media/tm_{{ partner.username }}.png" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;"><p class="txtmessage partner">{{ message.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span></p></p>
+                <p class="author partner"><img src="/media/data_image/tm_{{ partner.username }}.png" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;"><p class="txtmessage partner">{{ message.text|linebreaksbr }}<span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span></p></p>
             {% endif %}
 
 

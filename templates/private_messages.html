@@ -5,7 +5,7 @@
     <h1>СОБЕСЕДНИКИ</h1>
     <div class="partners">
     {% for thread in threads %}
-        <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/tm_{{ thread.partner.username }}.png" class="usPr" style="float:none;border: 2px solid #a9a9a9;"><div class="pmu">{{ thread.partner.username }} ({{ thread.total_messages|default_if_none:"0" }} {{ thread.total_messages|rupluralize:"сообщение,сообщения,сообщений" }})</div>
+        <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/data_image/tm_{{ thread.partner.username }}.png" class="usPr" style="float:none;border: 2px solid #a9a9a9;"><div class="pmu">{{ thread.partner.username }} ({{ thread.total_messages|default_if_none:"0" }} {{ thread.total_messages|rupluralize:"сообщение,сообщения,сообщений" }})</div>
         </div>
     {% empty %}
         <p>Пока что собеседников нет.</p>
@@ -26,7 +26,7 @@
 {#    <a onclick="createMES()">Отправить</a>#}
 {#</p>#}
 {#           </div>#}
-{#                   <a onclick="userPROFILE('{{ fr.id }}')"><img src="/media/tm_{{ fr.username }}.png" width="85px" style="border-radius: 5px;">{{ fr.username|truncatechars:10 }}</a></div>#}
+{#                   <a onclick="userPROFILE('{{ fr.id }}')"><img src="/media/data_image/tm_{{ fr.username }}.png" width="85px" style="border-radius: 5px;">{{ fr.username|truncatechars:10 }}</a></div>#}
 {#           {% endfor %}#}
 {#</div>#}
 

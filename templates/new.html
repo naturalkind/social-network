@@ -25,8 +25,8 @@
               <li class="views-row" onmouseover="getIndex(this);">
   <div class="views-title"><a onclick="showContent('{{post.id}}')" atribut="{{post.id}}"><span class="arrow">←</span> {{ post.title }} <span class="arrow">→</span></a> </div>
   <div class="views-image">
-{#      <img src="/media/{{ post.title }}_tm.png" width="220" height="150" alt="">#}
-      <img src="/media/{{ post.imgMed }}_tm.png" width="240" height="170" onclick="showContent('{{post.id}}')">
+{#      <img src="/media/data_image/{{ post.title }}_tm.png" width="220" height="150" alt="">#}
+      <img src="/media/data_image/{{ post.imgMed }}_tm.png" width="240" height="170" onclick="showContent('{{post.id}}')">
   </div>
  {% if username %}
   <button class="btn" type="button"  onclick="LIKE('{{post.id}}')">нравится |

@@ -5,7 +5,7 @@
 <body style="margin: 0;color: #9d9d9d;background: #fafafa!important;font-family:Arial;">
 <header style="width: 100%;background: #ffffff;border-bottom: 1px solid #cfcfcf;font-size: 20px;height: 40px;">
 <a href="/skin" style="color:#02b875;text-decoration: none;float:left;margin: 9px">КРУТОЙ САЙТ</a>
-     <a href="/skinuser/{{ user.id }}" ><img src="/media/{{ user }}.png" width="30" height="30" style="border-radius: 30px;display: block;float: right;margin: 5px;"></a>
+     <a href="/skinuser/{{ user.id }}" ><img src="/media/data_image/{{ user }}.png" width="30" height="30" style="border-radius: 30px;display: block;float: right;margin: 5px;"></a>
     <a href="/skinadd/"> <button style="display: block;margin: 6px;font-size: 20px;background: #ffffff;border-radius: 6px;border:none;color: rgb(2, 184, 117);float: right;">добавить</button></a>
     <div class="menu-h" style="float: right;margin: 9px;">
 {#        <a href="/file/" style="color: #9d9d9d;">медиа</a>#}
@@ -23,7 +23,7 @@
         <div class="fr" style="width: 100%">
             {% for c in user.get_friends %}
                 <div class="fr-cl" style="width: 60px;float: left;margin: 10px">
-          <a href="/skinuser/{{ c.id }}" style="text-decoration: none;color:#02b875;"><img src="/media/{{ c }}_tm.png" width="60" height="60">{{ c }}</a>
+          <a href="/skinuser/{{ c.id }}" style="text-decoration: none;color:#02b875;"><img src="/media/data_image/{{ c }}_tm.png" width="60" height="60">{{ c }}</a>
             </div>
             {% endfor %}
         </div>

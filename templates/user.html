@@ -13,7 +13,7 @@
       <h3>{{ user_info.username }}</h3></div>
       <div class="uspgimg">
           {% if user_info.image_user != "/media/images/Fv2.png" %}
-      <img src="/media/{{ user_info.username }}.png">
+      <img src="/media/data_image/{{ user_info.username }}.png">
           {% else %}
               <img src="/media/images/oneProf.png" height="300" width="auto">
           {% endif %}
@@ -55,14 +55,14 @@
       <li class="views-row"  onmouseover="getIndex(this);">
       <div class="views-title"><a onclick="showContent('{{l.id}}')" atribut="{{l.id}}">{{ l.title }}</a></div>
       <div class="field-image">
-      <img src="/media/{{ l.title }}_tm.png" width="220" height="150" alt="">
+      <img src="/media/data_image/{{ l.title }}_tm.png" width="220" height="150" alt="">
       </div>
       </li>
               {% else %}
       <li class="views-row"  onmouseover="getIndex(this);">
       <div class="field-image" atribut="{{l.id}}">
-{#      <img src="/media/{{ l.image }}_tm.png" width="300" height="230" onclick="showContent('{{l.id}}')">#}
-<img style="background: url('/media/{{ l.image }}.png');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')">
+{#      <img src="/media/data_image/{{ l.image }}_tm.png" width="300" height="230" onclick="showContent('{{l.id}}')">#}
+<img style="background: url('/media/data_image/{{ l.image }}.png');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')">
 
       </div>
           {% endif %}

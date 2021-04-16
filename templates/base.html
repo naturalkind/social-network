@@ -5,15 +5,13 @@
 <meta name="description" content="Неформальное сообщество умных людей" id="description">
 <meta name="keywords" content="image, formatica, messages, fun, multimedia" id="keywords">
 {#<link rel="shortcut icon" href="/media/images/faviconvF.png" type="image/png">Публикуйте, смотрите, общайтесь#}
-<link rel="shortcut icon" href="/media/images/unn.png" type="image/png">
+<link rel="shortcut icon" href="media/images/unn.png" type="image/png">
 <link rel="stylesheet" type="text/css" media="all" href="media/css/layout.css" />
 <link rel="stylesheet" type="text/css" media="all" href="media/css/style.css" />
 <link rel="stylesheet" type="text/css" media="all" href="media/css/colors.css" />
-{#       <script type="text/javascript" src="media/js/jscr.js"></script>#}
 {#<script type="text/javascript" async src="media/js/js.js"></script>#}
     <script type="text/javascript" src="media/js/js.js"></script>
     <script async src="http://www.youtube.com/iframe_api"></script>
-{#<script type="text/javascript" src="media/js/script.js"></script>#}
 <!--[if lte IE 7]>
 
 <![endif]-->
@@ -28,7 +26,7 @@
 {#<a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a>#}
 <img src="/media/images/mesv4.png" onclick="privatMES()" id="mespr">
 {% if username.image_user != "/media/images/Fv2.png" %}
-<img onclick="myPROFILE('{{ username.username }}')" src="media/tm_{{ username.username }}.png" class="usPr"/>
+<img onclick="myPROFILE('{{ username.username }}')" src="media/data_image/tm_{{ username.username }}.png" class="usPr"/>
 {% else %}
 <img onclick="myPROFILE('{{ username }}')" src="media/images/oneProf.png"  class="usPr" />
 {% endif %}
@@ -36,13 +34,13 @@
 <div id="logo">
 <img src="media/images/compasv3.png" class="compas" onclick="openMenu()" id="comps">
 {#<img src="/media/images/Fv3.png" alt="главная" onclick="indexPAGE()" id="imgh" width="60">#}
-<a href="/"  class="aLogo">СООБЩЕСТВО <img class="logoF" src="media/images/FROMATICA Fv1.png"></a>
+<a href="/"  class="aLogo">СООБЩЕСТВО <img class="logoF" src="media/images/famaly_logo.png"></a>
 {#<img class="logoF" src="media/images/Ficonv.png" > FORMATICA</a> #}
 <img src="media/images/EXITv1.png" onclick="quit()" class="exitv">
 </div>
 {% else %}
 <div id="header" style="background-color: #507299;background-size: inherit; text-align: center;">
-            <a href="/"  class="aLogo">СООБЩЕСТВО <img class="logoF" src="media/images/FROMATICA Fv1.png"></a>
+            <a href="/"  class="aLogo">СООБЩЕСТВО <img class="logoF" src="media/images/famaly_logo.png"></a>
             <img src="media/images/EXITv4png.png" class="exitv" id="exitv" onclick="exit()">
 {% endif %}
 </div><!-- /.section, /#header -->

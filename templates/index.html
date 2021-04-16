@@ -36,15 +36,15 @@
 
   <div class="field-image" atribut="{{post.id}}">
 
-{#      <img src="/media/{{ post.title }}_{{ post.user_post.id }}_tm.png" width="220" height="150" alt="" onclick="showContent('{{post.id}}')"> </div>#}
+{#      <img src="/media/data_image/{{ post.title }}_{{ post.user_post.id }}_tm.png" width="220" height="150" alt="" onclick="showContent('{{post.id}}')"> </div>#}
 {#   <img src="{{ post.image.url }}" width="220" height="150" alt="" onclick="showContent('{{post.id}}')"> </div>#}
-{#      <img src="http://formatica.wtf/media/{{ post.image }}_tm.png" width="300" height="230" onclick="showContent('{{post.id}}')">#}
-{#  <img style="background: url('/media/{{ post.image }}_tm.png');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')">#}
+{#      <img src="/media/data_image/{{ post.image }}_tm.png" width="300" height="230" onclick="showContent('{{post.id}}')">#}
+{#  <img style="background: url('/media/data_image/{{ post.image }}_tm.png');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')">#}
 {#   {% if post.video %}#}
 {#      <img style="background: url('https://img.youtube.com/vi/1lI0t-0_3EE/0.jpg');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')">#}
 {#  {% endif %}#}
       {% if post.image %}
-      <img style="background: url('/media/{{ post.image }}.png');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')">
+      <img style="background: url('/media/data_image/{{ post.image }}.png');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')">
   {% endif %}
 
   </div>

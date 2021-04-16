@@ -34,8 +34,8 @@ class Command(BaseCommand):
 
         self.http_server = tornado.httpserver.HTTPServer(application)
         # self.http_server.listen(port, address="127.0.0.1")
-        self.http_server.listen(port, address="192.168.1.50")
-
+        self.http_server.listen(port, address="192.168.1.137")
+        #self.http_server.listen(port, address="178.158.131.41") 
         # Init signals handler
         signal.signal(signal.SIGTERM, self.sig_handler)
 

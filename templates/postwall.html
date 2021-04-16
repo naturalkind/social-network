@@ -12,7 +12,7 @@
  <div onclick="showContent('{{message.id}}')" class="views-title" style="width: 100%;float: left;">
     <div class="user-cord" >
         {% if message.user_post.image_user != "/media/images/Fv2.png" %}
-        <img src="/media/tm_{{message.user_post}}.png" class="imgUs" onclick="userPROFILE('{{message.user_post.id }}')" style="cursor:pointer;">
+        <img src="/media/data_image/tm_{{message.user_post}}.png" class="imgUs" onclick="userPROFILE('{{message.user_post.id }}')" style="cursor:pointer;">
         {% else %}
         <img src="/media/images/oneProf.png" height="400" width="auto" onclick="userPROFILE('{{message.user_post.id }}')">
         {% endif %}
@@ -23,8 +23,8 @@
  </div>
 {#                    <a class="messageA" onclick="showContent('{{ message.id }}')">←{{ message.title }}→</a>#}
  <div class="field-image" atribut="{{message.id}}">
-        <img src="/media/{{ message.image }}.png" height="auto" width="auto" class="wallpost" onclick="showImg('{{message.image}}',this)" imgb="{{message.image}}">
-{#   <img src="/media/{{ message.imgMed }}.png" height="auto" width="auto" class="wallpost" onclick="showContent('{{message.id}}')" atribut="{{message.id}}">#}
+        <img src="/media/data_image/{{ message.image }}.png" height="auto" width="auto" class="wallpost" onclick="showImg('{{message.image}}',this)" imgb="{{message.image}}">
+{#   <img src="/media/data_image/{{ message.imgMed }}.png" height="auto" width="auto" class="wallpost" onclick="showContent('{{message.id}}')" atribut="{{message.id}}">#}
  </div>
  <div class="body">
 <div class="text" style="padding:5px;">
@@ -57,81 +57,7 @@
  </div>
 </div>
 <script>
-function getNumEnding(iNumber, aEndings) {
-    var sEnding, i;
-    iNumber = iNumber % 100;
-    if (iNumber>=11 && iNumber<=19) {
-        sEnding=aEndings[2];
-    }
-    else {
-        i = iNumber % 10;
-        switch (i)
-        {
-            case (1): sEnding = aEndings[0]; break;
-            case (2):
-            case (3):
-            case (4): sEnding = aEndings[1]; break;
-            default: sEnding = aEndings[2];
-        }
-    }
-    return sEnding;
-}
-var readerwall = new FileReader();
-var dataURL_wall;
-function OnOnW() {
-    canvaswall = document.getElementById('canvas');
-    contextwall = canvaswall.getContext('2d');
-    var inputwall = document.getElementById('image_file');
-    filewall = inputwall.files;
-    readerwall.readAsDataURL(filewall[0]);
-    readerwall.onload = function (e) {
-                var im = new Image();
-                im.onload = function (e) {
-                    canvaswall.width = im.width;
-                    canvaswall.height = im.height;
-                    contextwall.drawImage(im, 0, 0, im.width, im.height);
-                    dataURL_wall = canvaswall.toDataURL("image/png");
-                };
-                im.src = readerwall.result;
-    }
-}
 
-
-var ws;
-function activate_wall(user_name) {
-    function start_wall() {
-        var tev = document.getElementById('conversation');
-        ws = new WebSocket("ws://192.168.1.137:8899/");
-        ws.onmessage = function(event) {
-{#            console.log(event.data);#}
-{#            if (event.data=='ok'){#}
-{#                ws.send(fs.getNextSlice());#}
-{#            }#}
-            var fc = document.createElement('div');
-            fc.className = 'message';
-            var message_data = JSON.parse(event.data);
-{#            alert('ЗАГУЗИЛИAAA');#}
-{#            console.log(message_data);#}
-            var date = new Date(message_data.timestamp*1000);
-            fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/'+ message_data.user_post +'.png" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')">' + message_data.title + '→</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/'+ message_data.image +'.png" height="auto" width="auto" onclick="showImg('+"'"+ message_data.image +"'"+',this)" class="wallpost"></div>';
-            tev.insertBefore(fc, tev.firstChild);
-        };
-        ws.onclose = function(){
-            // Try to reconnect in 5 seconds
-            setTimeout(function() {start_wall()}, 5000);
-        };
-    }
-
-    if ("WebSocket" in window) {
-        start_wall();
-    } else {
-        var formMS = document.getElementById('message_form');
-        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
-
-        return false;
-    }
-}
-        activate_wall();
 </script>
 <div id="block-post" style="display: none;background-color: rgba(0,0,0,.75);" atr="con"></div>
 {% endblock wall %}

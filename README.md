@@ -11,9 +11,7 @@
 ***./start***
 
 ### Пример работы:
-Видео:
-[![Видео к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr1.png)](https://www.youtube.com/watch?v=YUGzkWZ31Z8)
-Изображения:
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr1.png)
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr2.png)
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr3.png)
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr4.png)

@@ -9,14 +9,14 @@
 Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> {{post.date_post|date:'d b o в H:i' }}</div></div>
 <div class="auto-images">
 {% if post.video != '' %}
-    <img src="/media/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">
+    <img src="/media/data_image/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">
     {% else %}
     <div id="video-placeholder" idv="{{ post.video }}">
 
 </div>
     {% endif %}
 {#<div id="video-placeholder" idv="{{ post.video }}">#}
-{#<img src="/media/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">#}
+{#<img src="/media/data_image/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">#}
 {#</div>#}
 
 {#<video controls="" autoplay="" id="id_video" style="display: block; margin: 0px auto; max-width: 600px;" src="/media/video/{{ post.video }}"><source id="source_video"></video>#}
@@ -46,7 +46,7 @@
       <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">
   <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
 
-          <img src="/media/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">
+          <img src="/media/data_image/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">
 
          <span style="display: block;text-align: center;">{{ cm.comment_text }}</span></div>
   {% endfor %}
@@ -77,7 +77,7 @@
     </div>
        <ul class="day-block" id="DOD" icon="{{ post.id }}">
       {% for f in post_user %}
-       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/{{ f.image }}.png');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3></li>
+       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/data_image/{{ f.image }}.png');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3></li>
       {% endfor %}
 </ul>
       </div>
@@ -107,7 +107,7 @@
 {#Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> {{post.date_post|date:'d b o в H:i' }}</div></div>#}
 {#<div class="auto-images">#}
 {#<div id="video-placeholder" idv="{{ post.video }}">#}
-{#<img src="/media/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">#}
+{#<img src="/media/data_image/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">#}
 {#</div>#}
 {#<video controls="" autoplay="" id="id_video" style="display: block; margin: 0px auto; max-width: 600px;" src="/media/video/{{ post.video }}"><source id="source_video"></video>#}
 {#    <video id="video" width="480" height="270">#}
@@ -136,7 +136,7 @@
 {#      <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">#}
 {#  <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>#}
 {##}
-{#          <img src="/media/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">#}
+{#          <img src="/media/data_image/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">#}
 {##}
 {#         <span style="display: block;text-align: center;">{{ cm.comment_text }}</span></div>#}
 {#  {% endfor %}#}
@@ -167,7 +167,7 @@
 {#    </div>#}
 {#       <ul class="day-block" id="DOD" icon="{{ post.id }}">#}
 {#      {% for f in post_user %}#}
-{#       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" src="/media/{{ f.image }}_tm.png" atribut="{{f.id}}"></h3></li>#}
+{#       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" src="/media/data_image/{{ f.image }}_tm.png" atribut="{{f.id}}"></h3></li>#}
 {#      {% endfor %}#}
 {#</ul>#}
 {#      </div>#}

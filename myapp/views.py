@@ -422,6 +422,7 @@ def follow(request, id):
     ht = ''
     p = User.objects.get(id=id)
     for x in p.get_followers():
+        print x.username
         img = '/home/sadko/social-network-master/media/data_image/tm_'+ x.username +'.png'
         idu = str(x.pk)
         li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
