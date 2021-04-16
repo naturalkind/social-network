@@ -36,10 +36,11 @@
 {#    {{ message.body }}#}
 {% endif %}
 </div>
- <div style="width: 100%">
+ <div id="post_like_block_{{message.id}}" style="width: 100%">
     <img src="/media/images/mesvF.png" onclick="comView('{{ message.id }}')">
 
-     <img src="/media/images/frv1.gif" onclick="LIKE('{{message.id}}')" onmouseover="LIKEOVER('{{message.id}}')" onmouseout="LIKEDONE('{{message.id}}')">
+<!--     <img src="/media/images/frv1.gif" onclick="LIKE('{{message.id}}')" onmouseover="LIKEOVER('{{message.id}}')" onmouseout="LIKEDONE('{{message.id}}')">-->
+     <img id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE('{{message.id}}')" onmouseover="LIKEOVER('{{message.id}}')" onmouseout="LIKEDONE('{{message.id}}')">
 
     <img src="/media/images/rpvF.png" onclick="rpPost('{{ message.id }}','{{ username }}')">
 {#        <img src="/media/images/tbpnews.png" style="width: 90px;">#}

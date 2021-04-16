@@ -566,7 +566,7 @@ color: #ffffff;}
 .about {
     position: relative;
 }
- #tooltip {
+#tooltip {
       position: fixed;
       z-index: 100;
       max-width: 200px;

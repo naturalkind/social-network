@@ -519,6 +519,7 @@ function scroll(){
   var contentHeight = scrollable.offsetHeight;
   var yOffset = window.pageYOffset;
   var y = yOffset + window.innerHeight;
+  
   if(y >= contentHeight){
     isLoading = true;
       console.log('scroll');
@@ -784,11 +785,13 @@ function showContent(link) {
 // лайки при наведении
 function LIKEOVER(link) {
     var html= '';
-    try{document.getElementById('tooltip').remove();}catch(err) {}
+    //try{document.getElementById('tooltip').remove();}catch(err) {}
 
     var tooltipElem = document.createElement('div');
-        tooltipElem.id = 'tooltip';
-    var over = document.getElementById(link);
+        tooltipElem.id = 'tooltip_'+link;
+        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 200px;padding: 10px 20px;border-radius: 2px;text-align: center;font: 14px/1.3 arial, sans-serif;color: #333;background: #fff;");
+        
+    var over = document.getElementById("post_like_block_"+link);
 //    over.style.display = 'block';
     var http = createRequestObject();
     var linkfull = '/likeover/?post_id=' + link;
@@ -801,6 +804,7 @@ function LIKEOVER(link) {
                 for (var r in f) {
                     html += " <a>" + f[r].fields.username + "</a> ";
                 }
+                console.log("100")
                 tooltipElem.innerHTML = html;
                 over.appendChild(tooltipElem);
                 var coords = over.getBoundingClientRect();
@@ -819,7 +823,7 @@ function LIKEOVER(link) {
     }
 }
 function LIKEDONE(link){
-    try{document.getElementById('tooltip').remove();}catch(err) {}
+    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
 }
 
 var canvas;
