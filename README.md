@@ -11,7 +11,7 @@
 ***./start***
 
 ### Пример работы:
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr1.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr2.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr3.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/master/media/skr4.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr1.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr2.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr3.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr4.png)
