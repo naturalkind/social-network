@@ -2,7 +2,6 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 
-#from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 
@@ -23,7 +22,6 @@ class User(AbstractUser):
     relationship = models.ManyToManyField('self', through='Relationship',symmetrical=False, related_name='related_to')
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
-    ####
     def add_relationship(self, person, status):
         relationship, created = Relationship.objects.get_or_create(
             from_person=self,
@@ -60,8 +58,6 @@ class User(AbstractUser):
             to_people__from_person=self,
             from_people__status=RELATIONSHIP_FOLLOWING,
             from_people__to_person=self)
-    ####
-
 
 
 class Relationship(models.Model):
@@ -82,9 +78,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes', blank=True)
     point_likes = models.IntegerField(default=0)
 
-    #
     relike = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Relike',symmetrical=False,related_name='userlk')
-
 
     def __unicode__(self):
             return u'name: %s , id: %s' % (self.title, self.id)
