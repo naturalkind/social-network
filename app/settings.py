@@ -112,7 +112,6 @@ USE_L10N = True
 
 LANGUAGE_CODE = 'ru-RU'
 
-
 USE_TZ = True
 
 

@@ -18,28 +18,30 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from rest_framework import generics
-#from django.contrib.auth.models import User
 from myapp.models import Post, User
 from myapp.serializers import UserSerializer, PostSerializer
 
 urlpatterns = [
-# приложение myapp
+    ############## приложение myapp
     url(r'^admin/', include(admin.site.urls)), # административная страница
     url(r'^send_message_api/$', 'wall.views.send_message_api_view'),
     url(r'^$', 'wall.views.chat_view'),
-    ##############
+    
+    ############## Лайки
     url(r'add_like/$', 'myapp.views.add_like', name='add_like'),
     url(r'likeover/$', 'myapp.views.likeover'),
+    ############## Обрезание масштабирование картинки
     url(r'crop/$', 'myapp.views.crop'),
-    ##############
+    
+    ############## Посты
     url(r'^addpost/$', 'myapp.views.addpost'), # добавление материала
     url(r'^(?P<post>\d+)/$', 'myapp.views.post'), # страница материала
+    
     url(r'^new', 'myapp.views.new'), # страница новых
     url(r'^best', 'myapp.views.best'), # страница новых
-    url(r'^create_post/$', 'myapp.views.create_post'),
-    url(r'^create_comment/$', 'myapp.views.create_comment'),
-    url(r'^commentapi/(?P<post_id>\d+)/$', 'comment.views.send_comment_api_view'),
-# приложение login
+    
+
+    ############### приложение login
     url(r'^login', 'login.views.login'),
     url(r'^logout/', 'login.views.logout'),
     url(r'^register/', 'login.views.register'),
@@ -52,29 +54,21 @@ urlpatterns = [
 # сообщения
     url(r'^messages/', include('privatemessages.urls')),
 # уроки
-    url(r'^getapiv/', generics.ListCreateAPIView.as_view(queryset=Post.objects.all().order_by("-date_post"), serializer_class=PostSerializer), name='post-list'),
     ##
-    url(r'^usersv/', generics.ListCreateAPIView.as_view(queryset=User.objects.all(), serializer_class=UserSerializer), name='user-list'),
-    url(r'^userid/(?P<id>[0-9]+)/$', 'myapp.views.getapi_detail_user'),
-    ##
-
-    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^getapi/(?P<pk>[0-9]+)/$', 'myapp.views.getapi_detail'),
-    # url(r'^getapi/', 'myapp.views.getapi'),
-    # url(r'^restapi/', 'myapp.views.restapi'), # rest
     url(r'^jsonu/', 'login.views.jsonu'), # пользователь
     url(r'^json/', 'myapp.views.jsons'), # контент
 # медиа ссылки
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': settings.MEDIA_ROOT}),
 
-# фильтр
-
-#    url(r'^follow/(?P<id>.*)$', 'myapp.views.follow'),
-#    url(r'^follows/(?P<id>.*)$', 'myapp.views.follows'),
+    ##################### Подписаться на пользователя
     url(r'^follow/(?P<id>.*)$', 'login.views.follow'),
     url(r'^follows/(?P<id>.*)$', 'login.views.follows'),
     url(r'^getlkpost/(?P<id>.*)$', 'login.views.getlkpost'),
+    ##################### Коментарии
     url(r'^viewcom/(?P<post_id>.*)$', 'myapp.views.viewcom'),
     url(r'^rppos/(?P<id>.*)$', 'wall.views.rppos'),
+    url(r'^create_post/$', 'myapp.views.create_post'),
+    url(r'^create_comment/$', 'myapp.views.create_comment'),
+    url(r'^commentapi/(?P<post_id>\d+)/$', 'comment.views.send_comment_api_view'),
 ]

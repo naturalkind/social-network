@@ -3,7 +3,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 
 from django.core.files.base import ContentFile
 from django.core import validators

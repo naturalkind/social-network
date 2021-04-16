@@ -316,6 +316,7 @@ def post(request, post):
 def viewcom(request, post_id):
     comment  = Comment.objects.filter(post_id=post_id)
     return render_to_response('comv.html',{'comment':comment,'id':post_id})
+    
 def best(request):
     post = Post.objects.all().order_by('-point_likes')
     paginator = Paginator(post, 30)
@@ -337,107 +338,5 @@ def best(request):
         return HttpResponse(json.dumps(data), content_type = "application/json")
     return render_to_response('best.html', {'post': posts, 'username': auth.get_user(request).username})
 
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
-from myapp.serializers import PostSerializer
-from rest_framework import generics, viewsets
-from rest_framework import pagination
-
-@api_view(['GET', 'POST'])
-def getapi(request):
-    """
-    List all snippets, or create a new snippet.
-    """
-    if request.method == 'GET':
-        snippets = Post.objects.all().order_by("-date_post")
-        serializer = PostSerializer(snippets, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-# from django.views.decorators.csrf import csrf_exempt
-# @csrf_exempt
-@api_view(['GET', 'PUT', 'DELETE'])
-def getapi_detail(request, pk):
-    """
-    Retrieve, update or delete a snippet instance.
-    """
-    try:
-        snippet = Post.objects.get(pk=pk)
-    except Post.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = PostSerializer(snippet)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = PostSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        snippet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def getapi_detail_user(request, id):
-    try:
-        # psus = Post.objects.filter(user_post__id=1)
-        snippet = User.objects.get(id=id)
-    except User.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
-        content = Post.objects.filter(user_post=snippet)
-        ser = PostSerializer(content, many=True) #work
-        serializer = UserSerializer(snippet)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = UserSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        snippet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated
-from myapp.serializers import UserSerializer
-
-
-def follow(request, id):
-
-    ht = ''
-    p = User.objects.get(id=id)
-    for x in p.get_followers():
-        print x.username
-        img = '/home/sadko/social-network-master/media/data_image/tm_'+ x.username +'.png'
-        idu = str(x.pk)
-        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
-        ht += li
-
-    return HttpResponse("<div id='foll'>%s</div>" % ht)
-
-def follows(request, id):
-
-    ht = ''
-    p = User.objects.get(id=id)
-    for x in p.get_following():
-        img = '/home/sadko/social-network-master/media/data_image/tm_'+ x.username +'.png'
-        idu = str(x.pk)
-        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
-        ht += li
-
-    return HttpResponse("<div id='foll'>%s</div>" % ht)

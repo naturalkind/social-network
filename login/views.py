@@ -2,12 +2,15 @@
 from django.shortcuts import render_to_response, redirect, HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
-#from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from myapp.models import *
+#from django.core.files.storage import default_storage
 #from django.contrib.auth.models import User
+from django.template import RequestContext
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core import serializers
+
 
 from PIL import Image
 import re
@@ -131,20 +134,10 @@ def user(request):
         userP.save()
     return render_to_response('profile.html', args)
 
-from django.template import RequestContext
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.core import serializers
-
-#https://coderoad.ru/58794639/Как-сделать-систему-follower-following-с-моделью-django
 def addfolow(request, user_info, username, userid):
     usse = User.objects.get(username=username)
     print usse
     user_info.add_relationship(usse, RELATIONSHIP_FOLLOWING)
-
-#WORK
-#def addfolow(request, user_info, username, userid):
-#    user_2 = User.objects.get(pk=int(userid))
-#    isd = Follow.objects.create(from_person=user_info, to_person=user_2)
 
 
 def follow(request, id):
@@ -209,14 +202,6 @@ def user_page(request, user):
         userid = request.GET.get('userid')
         addfolow(request, user_info, username, userid)
         return HttpResponse('ok', content_type = "application/json")
-
-#>>> from django.contrib.auth.models import User
-#>>> from myapp.models import Post, Follow
-#KeyboardInterrupt
-#>>> A = User.objects.create(username="A")
-#>>> B = User.objects.create(username="B")
-#>>> Follow.objects.create
-
 
 def my_page(request, username):
     user_info = User.objects.get(username=username)
