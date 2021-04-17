@@ -27,7 +27,7 @@
            {% else %}
            
            {% if foll_blank == 0 %}
-               <img src="/media/images/addusr.png" class="addusr" onclick="addfollow('{{ userid }}', '{{ user_info.username }}')">
+               <img src="/media/images/addusr.png" class="addusr" onclick="addfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">
                <a id="follw_{{ user_info.id }}" onclick="addfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">ПОДПИСАТЬСЯ</a>
            {% else %}
                <a id="follw_{{ user_info.id }}" onclick="delfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">ОТПИСАТЬСЯ</a>

@@ -181,9 +181,11 @@ function editPROFF (){
 //                textElem.id = 'close';
 //                cont.insertBefore(textElem, cont.firstChild);
                 var textElem = document.getElementById('topbt');
+                textElem.style.transform = 'rotate(90deg)';
                 textElem.onclick = function(){
                           document.body.style.overflow = 'auto';
-                          cont.style.display = 'none';
+                          cont.style.display = 'none';                     
+                          textElem.style.transform = 'rotate(0deg)';
                       };
 //                console.log(http.responseText);
                 }
@@ -508,8 +510,8 @@ if (r != "undefined"){
 function handler(e) {
 	// remove this handler
     var cont = document.getElementById('block-post');
-                    cont.style.display = 'none';
-                    document.body.style.overflow = 'auto';
+    cont.style.display = 'none';
+    document.body.style.overflow = 'auto';
     var textElem = document.getElementById('topbt');
     textElem.style.transform = 'rotate(0deg)';
     e.target.removeEventListener(e.type, arguments.callee);
@@ -531,7 +533,9 @@ function showImg(link){
     var startPoint={};
     var nowPoint;
     var ldelay;
-
+    var textElem = document.getElementById('topbt');
+    textElem.style.transform = 'rotate(90deg)';
+    textElem.addEventListener("click",  handler);
 
     cont.addEventListener("click", handler);
     img.addEventListener('touchstart', function(event) {
@@ -1420,9 +1424,6 @@ function nodeScriptClone(node){
 function nodeScriptIs(node) {
         return node.tagName === 'SCRIPT';
 }
-
-
-
 
 
 //////////////////////////////////////////////////////////////////
