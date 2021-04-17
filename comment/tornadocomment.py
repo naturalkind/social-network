@@ -24,6 +24,7 @@ from myapp.models import *
 c = brukva.Client()
 c.connect()
 
+
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.set_header('Content-Type', 'text/plain')

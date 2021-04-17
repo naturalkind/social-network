@@ -6,7 +6,7 @@ import tornado.ioloop
 
 from django.core.management.base import BaseCommand, CommandError
 
-from wall.tornadowall import application
+from privatemessages.privatemessagesapp import application, settings
 
 class Command(BaseCommand):
     args = '[port_number]'
@@ -30,17 +30,15 @@ class Command(BaseCommand):
             except ValueError:
                 raise CommandError('Invalid port number specified')
         else:
-            port = 8899
+            port = 8998
 
         self.http_server = tornado.httpserver.HTTPServer(application)
-        # self.http_server.listen(port, address="127.0.0.1")
-        self.http_server.listen(port, address="192.168.1.137")
-        #self.http_server.listen(port, address="178.158.131.41")         
-    
+        self.http_server.listen(port, address=settings.IP_SYS)
+
         # Init signals handler
         signal.signal(signal.SIGTERM, self.sig_handler)
 
         # This will also catch KeyboardInterrupt exception
         signal.signal(signal.SIGINT, self.sig_handler)
-        print "START PORT", port
+        print "Private message PORT", port
         tornado.ioloop.IOLoop.instance().start()

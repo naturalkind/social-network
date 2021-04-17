@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.8/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
+IP_SYS = "192.168.1.137"
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
