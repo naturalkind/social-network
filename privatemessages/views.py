@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 # Create your views here.
 
 import json
@@ -60,10 +61,13 @@ def send_message_view(request):
                     message_text,
                     request.user.username
                 )
-
     return HttpResponseRedirect(
-        reverse('privatemessages.views.messages_view')
+        reverse('privatemessages.views.chat_view', args=(thread.id,))
     )
+#    return HttpResponse('добавили', content_type = "application/json")  
+#    return HttpResponseRedirect(
+#        reverse('privatemessages.views.messages_view')
+#    )
 
 @csrf_exempt
 def send_message_api_view(request, thread_id):
@@ -102,6 +106,7 @@ def send_message_api_view(request, thread_id):
     return json_response({"status": "ok"})
 
 def messages_view(request):
+
     if not request.user.is_authenticated():
         return HttpResponse("Please sign in.")
 

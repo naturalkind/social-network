@@ -240,28 +240,7 @@ function profilePOST(link){
             document.location = link;
         }
 }
-function privatMES(){
-       var contv = document.getElementById('block-post');
-       var cont = document.getElementById('main-wrapper');
-       var http = createRequestObject();
-       if( http )   {
-            var linkfull = '/messages';
-            http.open('get', linkfull);
-            http.onreadystatechange = function () {
-                if(http.readyState == 4) {
-                    cont.innerHTML = http.responseText;
-                    history.pushState({'view':'MES'}, null, null);
-//                    cont.style.opacity = 1;
-                    cont.style.display = 'block'
-                    contv.style.display = 'none';
-//                    document.body.style.overflow = 'auto';
-                }
-            };
-            http.send(null);
-        } else {
-            document.location = link;
-        }
-}
+
 
 
 function getNumEnding(iNumber, aEndings) {
@@ -285,23 +264,7 @@ function getNumEnding(iNumber, aEndings) {
 }
 
 ///
-function mesID(thread_id, user_name, number_of_messages){
-    var cont = document.getElementById('main-wrapper');
-       var http = createRequestObject();
-       if( http )   {
-            var linkfull = 'messages/chat/' + thread_id;
-            http.open('get', linkfull);
-            http.onreadystatechange = function () {
-                if(http.readyState == 4) {
-                    cont.innerHTML = http.responseText;
-                    activate_chat(thread_id, user_name, number_of_messages);
-                }
-            };
-            http.send(null);
-        } else {
-            document.location = link;
-        }
-}
+
 function filterBEST(){
     var cont = document.getElementById('main-wrapper'); // ищем элемент с id
         var http = createRequestObject();
@@ -1429,11 +1392,39 @@ function activate_com(post_id) {
     };
 }
 
+//////////////////////////////////////////////////////////////////
+//  личные сообщения /////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function privatMES(){
+       var contv = document.getElementById('block-post');
+       var cont = document.getElementById('main-wrapper');
+       var http = createRequestObject();
+       if( http )   {
+            var linkfull = '/messages';
+            http.open('get', linkfull);
+            http.onreadystatechange = function () {
+                if(http.readyState == 4) {
+                    cont.innerHTML = http.responseText;
+                    history.pushState({'view':'MES'}, null, null);
+//                    cont.style.opacity = 1;
+                    cont.style.display = 'block'
+                    contv.style.display = 'none';
+//                    document.body.style.overflow = 'auto';
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
+}
+
+
 function createMES(){
     var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
     console.log(crsv);
     var cont = document.getElementById('message').value;
     var id_text = document.getElementById('recipient_name').value;
+    var m_wrapper = document.getElementById('main-wrapper');
     if (cont) {
         var linkfull = 'messages/send_message/';
         var http = new XMLHttpRequest();
@@ -1447,6 +1438,12 @@ function createMES(){
             http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
             http.onreadystatechange = function () {
                 if (http.readyState == 4) {
+                    //console.log("send P mess", http)
+                    m_wrapper.innerHTML = http.responseText;
+                    var arr = m_wrapper.getElementsByTagName('script');
+                    for (var n = 0; n < arr.length; n++) {
+                        eval(arr[n].innerHTML);
+                        }
                 }
             };
             http.send(data);
@@ -1454,8 +1451,25 @@ function createMES(){
     } else {alert('Не нажимай лишний раз кнопку, если не заполнил поле')}
 }
 
+function mesID(thread_id, user_name, number_of_messages){
+    var cont = document.getElementById('main-wrapper');
+       var http = createRequestObject();
+       if( http )   {
+            var linkfull = 'messages/chat/' + thread_id;
+            http.open('get', linkfull);
+            http.onreadystatechange = function () {
+                if(http.readyState == 4) {
+                    cont.innerHTML = http.responseText;
+                    activate_chat(thread_id, user_name, number_of_messages);
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
+}
 
-//  личные сообщения ------------------------------------------------>
+
 function activate_chat(thread_id, user_name, number_of_messages) {
     var ws_chat;
     var received = document.getElementById('received').innerText;

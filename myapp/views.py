@@ -26,7 +26,10 @@ import urllib2
 import json
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-
+import re
+import base64
+from PIL import Image
+from datetime import datetime
 
 @login_required
 def create_comment(request):
@@ -116,12 +119,7 @@ def create_post(request):
             content_type="application/json"
         )
 
-#
-import re
-import base64
-from PIL import Image
-# -*- coding: utf-8 -*-
-from datetime import datetime
+
 def crop(nameFile):
     size = 220, 150
     crop_type='middle'
