@@ -1391,6 +1391,39 @@ function activate_com(post_id) {
 
     };
 }
+/////////////////////////// ТЕСТ
+
+function nodeScriptReplace(node) {
+        if ( nodeScriptIs(node) === true ) {
+                node.parentNode.replaceChild( nodeScriptClone(node) , node );
+        }
+        else {
+                var i = -1, children = node.childNodes;
+                while ( ++i < children.length ) {
+                      nodeScriptReplace( children[i] );
+                }
+        }
+
+        return node;
+}
+function nodeScriptClone(node){
+        var script  = document.createElement("script");
+        script.text = node.innerHTML;
+
+        var i = -1, attrs = node.attributes, attr;
+        while ( ++i < attrs.length ) {                                    
+              script.setAttribute( (attr = attrs[i]).name, attr.value );
+        }
+        return script;
+}
+
+function nodeScriptIs(node) {
+        return node.tagName === 'SCRIPT';
+}
+
+
+
+
 
 //////////////////////////////////////////////////////////////////
 //  личные сообщения /////////////////////////////////////////////
@@ -1440,10 +1473,11 @@ function createMES(){
                 if (http.readyState == 4) {
                     //console.log("send P mess", http)
                     m_wrapper.innerHTML = http.responseText;
-                    var arr = m_wrapper.getElementsByTagName('script');
-                    for (var n = 0; n < arr.length; n++) {
-                        eval(arr[n].innerHTML);
-                        }
+                    nodeScriptReplace(m_wrapper);
+//                    var arr = m_wrapper.getElementsByTagName('script');
+//                    for (var n = 0; n < arr.length; n++) {
+//                        eval(arr[n].innerHTML);
+//                        }
                 }
             };
             http.send(data);
