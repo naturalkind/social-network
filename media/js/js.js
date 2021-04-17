@@ -907,27 +907,7 @@ function openMenu(){
        activmen = false;
     }
 }
-function rpPost(link, us) {
-//    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-    var http = createRequestObject();
-        var linkfull = '/rppos/'+ link +'?username=' + us;
-        if (http) {
-        http.open('get', linkfull);
-//        http.setRequestHeader('X-CSRFToken', crsv);
-        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        http.onreadystatechange = function () {
-            if (http.readyState == 4) {
-                document.getElementById(link).innerHTML = http.responseText;
-                document.getElementById(link).style.display = 'block';
-               console.log(http.responseText)
-            }
-        };
-        http.send(null);
-    } else {
-        document.location = link;
-    }
 
-}
 /// добвать пост
 function addPost(){
     try{
@@ -1002,11 +982,34 @@ function playpause(e){
  video.src = "/media/video/"+e;
  video.play();
  }
+ 
+ 
+// Репосты 
+function rpPost(link, us) {
+    var http = createRequestObject();
+        var linkfull = '/rppos/'+ link +'?username=' + us+'&user_blank=1';
+        if (http) {
+            http.open('get', linkfull);
+            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+            http.onreadystatechange = function () {
+                if (http.readyState == 4) {
+                    document.getElementById(link).innerHTML = http.responseText;
+                    document.getElementById(link).style.display = 'block';
+                    console.log(http.responseText)
+            }
+        };
+        http.send(null);
+    } else {
+        document.location = link;
+    }
+
+} 
+// Подписка пользователь 
 function addfollow(link, us, id){
         var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
         var http = createRequestObject();
-        var linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id;
+        var linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=1';
         console.log(linkfull);
         if (http) {
         http.open('post', linkfull);
@@ -1015,6 +1018,12 @@ function addfollow(link, us, id){
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
                console.log(http.responseText)
+               var follow_btn = document.getElementById("follw_"+id);
+               follow_btn.innerHTML = "ОТПИСАТЬСЯ";
+               follow_btn.setAttribute('onclick', 'delfollow("'+ link +'","'+ us +'","'+ id +'")')
+               
+               var foll_coun = document.getElementById("foll_coun_"+id);
+               foll_coun.innerHTML = parseInt(foll_coun.innerHTML)+1;
             }
         };
         http.send(null);
@@ -1022,32 +1031,35 @@ function addfollow(link, us, id){
         document.location = link;
     }
 }
-///
-function FileSlicer(file) {
 
-    // randomly picked 1MB slices,
-    // I don't think this size is important for this experiment
-//    this.sliceSize = 1024*1024;
-//    this.sliceSize = 2048*2048;
-    this.sliceSize = 1024*1024;
-    this.slices = Math.ceil(file.size / this.sliceSize);
+function delfollow(link, us, id){
+        var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
-    this.currentSlice = 0;
-
-    this.getNextSlice = function() {
-        var start = this.currentSlice * this.sliceSize;
-        var end = Math.min((this.currentSlice+1) * this.sliceSize, file.size);
-        ++this.currentSlice;
-
-        return file.slice(start, end);
+        var http = createRequestObject();
+        var linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=0';
+        console.log(linkfull);
+        if (http) {
+        http.open('post', linkfull);
+        http.setRequestHeader('X-CSRFToken', crsv);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+               console.log(http.responseText)
+               var follow_btn = document.getElementById("follw_"+id);
+               follow_btn.innerHTML = "ПОДПИСАТЬСЯ";
+               follow_btn.setAttribute('onclick', 'addfollow("'+ link +'","'+ us +'","'+ id +'")')
+               
+               var foll_coun = document.getElementById("foll_coun_"+id);
+               foll_coun.innerHTML = parseInt(foll_coun.innerHTML)-1;
+            }
+        };
+        http.send(null);
+    } else {
+        document.location = link;
     }
 }
 
-function OnOnvideo(input) {
-    setInterval(you, 2000);
-    var cont = document.getElementById('cn');
-    cont.innerHTML += '<input type="text" id="NameBox"><div id="video-placeholder" onclick="onYouTubeIframeAPIReady()"></div>';
-}
+
 
 function foll(link){
         document.body.style.overflow = 'hidden';
@@ -1082,8 +1094,8 @@ function foll(link){
     } else {
         document.location = link;
     }
-
 }
+
 function folls(link){
         document.body.style.overflow = 'hidden';
         var pageop = document.getElementById('main-wrapper');
@@ -1118,6 +1130,35 @@ function folls(link){
         document.location = link;
     }
 }
+//------------------------------------------------>
+
+
+function FileSlicer(file) {
+
+    // randomly picked 1MB slices,
+    // I don't think this size is important for this experiment
+//    this.sliceSize = 1024*1024;
+//    this.sliceSize = 2048*2048;
+    this.sliceSize = 1024*1024;
+    this.slices = Math.ceil(file.size / this.sliceSize);
+
+    this.currentSlice = 0;
+
+    this.getNextSlice = function() {
+        var start = this.currentSlice * this.sliceSize;
+        var end = Math.min((this.currentSlice+1) * this.sliceSize, file.size);
+        ++this.currentSlice;
+
+        return file.slice(start, end);
+    }
+}
+
+function OnOnvideo(input) {
+    setInterval(you, 2000);
+    var cont = document.getElementById('cn');
+    cont.innerHTML += '<input type="text" id="NameBox"><div id="video-placeholder" onclick="onYouTubeIframeAPIReady()"></div>';
+}
+
 function getlkpost(link){
         document.body.style.overflow = 'hidden';
         var pageop = document.getElementById('main-wrapper');

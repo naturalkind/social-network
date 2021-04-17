@@ -134,10 +134,20 @@ def user(request):
         userP.save()
     return render_to_response('profile.html', args)
 
+
+def getps(i):
+    ps = Post.objects.get(id=int(i))
+    return ps
+
+
 def addfolow(request, user_info, username, userid):
     usse = User.objects.get(username=username)
-    print usse
     user_info.add_relationship(usse, RELATIONSHIP_FOLLOWING)
+    #return 
+    
+def delfolow(request, user_info, username, userid):
+    usse = User.objects.get(username=username)
+    user_info.remove_relationship(usse, RELATIONSHIP_FOLLOWING)
 
 
 def follow(request, id):
@@ -163,14 +173,12 @@ def follows(request, id):
 
     return HttpResponse("<div id='foll'>%s</div>" % ht)
 
-
-
-def getps(i):
-    ps = Post.objects.get(id=int(i))
-    return ps
-
 def user_page(request, user):
     user_info = User.objects.get(pk=user)
+    foll_blank = 0
+    if user_info in request.user.relationship.all():
+        #print user_info.relationship.all(), user_info, request.user.relationship.all() 
+        foll_blank = 1
     if request.method == 'GET':
         # post = Post.objects.filter(user_post__id=user).order_by('-date_post')
         post = list(Post.objects.filter(user_post__id=user))
@@ -195,13 +203,20 @@ def user_page(request, user):
             return HttpResponse(json.dumps(data), content_type = "application/json")
         return render_to_response('user.html', {'user_info':user_info, 'post':posts,
                                                 'username':auth.get_user(request).username,
+                                                'foll_blank':foll_blank,
                                                 'userid':auth.get_user(request).pk},
                                                      context_instance=RequestContext(request))
     if request.method == 'POST':
         username = request.GET.get('username')
         userid = request.GET.get('userid')
-        addfolow(request, user_info, username, userid)
-        return HttpResponse('ok', content_type = "application/json")
+        user_blank = request.GET.get('user_blank')
+        if int(user_blank) == 1:
+            addfolow(request, user_info, username, userid)
+            return HttpResponse('ok', content_type = "application/json")
+        if int(user_blank) == 0:
+            delfolow(request, user_info, username, userid)
+            return HttpResponse('ok', content_type = "application/json")
+
 
 def my_page(request, username):
     user_info = User.objects.get(username=username)

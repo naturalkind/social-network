@@ -27,9 +27,10 @@ urlpatterns = [
     url(r'^send_message_api/$', 'wall.views.send_message_api_view'),
     url(r'^$', 'wall.views.chat_view'),
     
-    ############## Лайки
+    ############## Лайки/Репосты
     url(r'add_like/$', 'myapp.views.add_like', name='add_like'),
     url(r'likeover/$', 'myapp.views.likeover'),
+    url(r'^rppos/(?P<id>.*)$', 'myapp.views.rppos'),
     ############## Обрезание масштабирование картинки
     url(r'crop/$', 'myapp.views.crop'),
     
@@ -67,7 +68,6 @@ urlpatterns = [
     url(r'^getlkpost/(?P<id>.*)$', 'login.views.getlkpost'),
     ##################### Коментарии
     url(r'^viewcom/(?P<post_id>.*)$', 'myapp.views.viewcom'),
-    url(r'^rppos/(?P<id>.*)$', 'wall.views.rppos'),
     url(r'^create_post/$', 'myapp.views.create_post'),
     url(r'^create_comment/$', 'myapp.views.create_comment'),
     url(r'^commentapi/(?P<post_id>\d+)/$', 'comment.views.send_comment_api_view'),

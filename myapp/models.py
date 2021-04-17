@@ -22,6 +22,7 @@ class User(AbstractUser):
     relationship = models.ManyToManyField('self', through='Relationship',symmetrical=False, related_name='related_to')
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
+        
     def add_relationship(self, person, status):
         relationship, created = Relationship.objects.get_or_create(
             from_person=self,

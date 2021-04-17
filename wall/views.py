@@ -98,15 +98,5 @@ def chat_view(request):
                               context_instance=RequestContext(request))
 
 
-def rppos(request, id):
-    if request.method == 'GET':
-    # if request.method == 'POST':
-        username = request.GET.get('username')
-        psse = Post.objects.get(id=int(id))
-        usse = User.objects.get(username=username)
-        psse.add_rela(usse, RELATIONSHIP_FOLLOWING)
-        return HttpResponse('добавили', content_type = "application/json")
-        # return HttpResponse(psse.get_foll, content_type = "application/json")
-
 
 

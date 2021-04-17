@@ -25,8 +25,14 @@
 {#          <a onclick="editPROFF()">Редактировать профиль✎</a>#}
 {#<em>•</em>#}
            {% else %}
-    <img src="/media/images/addusr.png" class="addusr" onclick="addfollow('{{ userid }}', '{{ user_info.username }}')">
-      <a onclick="addfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">ПОДПИСАТЬСЯ</a>
+           
+           {% if foll_blank == 0 %}
+               <img src="/media/images/addusr.png" class="addusr" onclick="addfollow('{{ userid }}', '{{ user_info.username }}')">
+               <a id="follw_{{ user_info.id }}" onclick="addfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">ПОДПИСАТЬСЯ</a>
+           {% else %}
+               <a id="follw_{{ user_info.id }}" onclick="delfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">ОТПИСАТЬСЯ</a>
+           {% endif %}
+
                <div class="pm-mes">
 {#           <form action="messages" method="post" class="new_message">#}
            {% csrf_token %}
@@ -40,9 +46,9 @@
            </div>
     {% endif %}
 {% endif %}
-           <a onclick="foll('{{ user_info.id }}')">Подписчики {{ user_info.get_followers.count }}</a>
+           <a onclick="foll('{{ user_info.id }}')">Подписчики <span id="foll_coun_{{ user_info.id }}">{{ user_info.get_followers.count }}</span></a>
            <em>•</em>
-           <a onclick="folls('{{ user_info.id }}')">Подписан {{ user_info.get_following.count }}</a>
+           <a onclick="folls('{{ user_info.id }}')">Подписан <span id="folls_coun_{{ user_info.id }}">{{ user_info.get_following.count }}</span></a>
       <em>•</em>
            <a onclick="getlkpost('{{ user_info.id }}')">Нравится</a>
 </div>
@@ -61,7 +67,6 @@
               {% else %}
       <li class="views-row"  onmouseover="getIndex(this);">
       <div class="field-image" atribut="{{l.id}}">
-{#      <img src="/media/data_image/{{ l.image }}_tm.png" width="300" height="230" onclick="showContent('{{l.id}}')">#}
 <img style="background: url('/media/data_image/{{ l.image }}.png');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')">
 
       </div>

@@ -42,7 +42,22 @@ def create_comment(request):
               x = 'тебе не нравиться'
     return HttpResponse(x)
 
+@login_required
+def rppos(request, id):
+    if request.method == 'GET':
+    # if request.method == 'POST':
+        username = request.GET.get('username')
+        psse = Post.objects.get(id=int(id))
+        usse = User.objects.get(username=username)
+         
+        if psse.relike.filter(id=request.user.id).exists():
+            psse.remove_rela(usse, RELATIONSHIP_FOLLOWING)
+            return HttpResponse('удалили', content_type = "application/json")
+        else:
+            psse.add_rela(usse, RELATIONSHIP_FOLLOWING)
+            return HttpResponse('добавили', content_type = "application/json")    
 
+        # return HttpResponse(psse.get_foll, content_type = "application/json")
 
 @login_required
 def add_like(request):
