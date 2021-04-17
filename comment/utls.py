@@ -26,7 +26,7 @@ def send_comment(post_id, comment_user, comment_text, comment_image ):
     nameFile = str(uuid.uuid4())[:12]
     imgstr = re.search(r'base64,(.*)', comment_image).group(1)
     # path = default_storage.save('%s.png' % nameFile, ContentFile(imgstr))
-    img_file = open("media/%s.png" % nameFile, 'wb')
+    img_file = open("media/data_image/%s.png" % nameFile, 'wb')
     img_file.write(base64.b64decode(imgstr))
     img_file.close()
 

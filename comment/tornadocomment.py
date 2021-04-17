@@ -68,7 +68,7 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):
 
         http_client = tornado.httpclient.AsyncHTTPClient()
         request = tornado.httpclient.HTTPRequest(
-            "".join([   "http://192.168.1.50:8888/commentapi/",
+            "".join([   "http://192.168.1.137:8888/commentapi/",
                         self.post_id,
                         "/"
                     ]),

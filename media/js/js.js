@@ -785,7 +785,7 @@ function showContent(link) {
 // лайки при наведении
 function LIKEOVER(link) {
     var html= '';
-    //try{document.getElementById('tooltip').remove();}catch(err) {}
+    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
 
     var tooltipElem = document.createElement('div');
         tooltipElem.id = 'tooltip_'+link;
@@ -1382,7 +1382,7 @@ function activate_com(post_id) {
 
     var onMESv1 = document.getElementById('add_'+ post_id);
     onMESv1.onclick = function (){
-        console.log('ADD WORK');
+        console.log('add comment');
         send_com(post_id);
 
     };
