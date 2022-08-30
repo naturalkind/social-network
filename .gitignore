@@ -1,4 +1,4 @@
 media/data_image/
-*.rbd
+*.rdb
 *.sqlite3
 *.pyc
