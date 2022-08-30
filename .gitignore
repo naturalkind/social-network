@@ -1,0 +1,4 @@
+media/data_image/
+*.rbd
+*.sqlite3
+*.pyc
