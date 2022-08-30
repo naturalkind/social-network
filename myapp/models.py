@@ -5,8 +5,6 @@ from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
-from django.core.files.base import ContentFile
-from django.core import validators
 from datetime import datetime
 import base64
 import re
@@ -62,8 +60,8 @@ class User(AbstractUser):
 
 
 class Relationship(models.Model):
-    from_person = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='from_people')
-    to_person = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='to_people')
+    from_person = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='from_people', on_delete=models.CASCADE)
+    to_person = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='to_people', on_delete=models.CASCADE)
     status = models.IntegerField(choices=RELATIONSHIP_STATUSES)
 
 
@@ -74,7 +72,7 @@ class Post(models.Model):
     image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
     body = models.TextField(max_length=999999, default="", verbose_name='Текст', blank=True)
     date_post = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    user_post = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='us_post', default="")
+    user_post = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='us_post', default="", on_delete=models.CASCADE)
     slug = models.SlugField(blank=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes', blank=True)
     point_likes = models.IntegerField(default=0)
@@ -123,8 +121,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post_id = models.ForeignKey(Post, default="")
-    comment_user = models.ForeignKey(settings.AUTH_USER_MODEL, default="")
+    post_id = models.ForeignKey(Post, default="", on_delete=models.CASCADE)
+    comment_user = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE,)
     comment_text = models.TextField(max_length=250, default="", blank=True)
     comment_image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
     timecomment = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -136,17 +134,17 @@ class Media(models.Model):
     audio = models.TextField(max_length=200, default="", verbose_name='Название аудио', blank=True)
     image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
     style = models.TextField(max_length=999999, default="", verbose_name='Текст', blank=True)
-    user_post = models.ForeignKey(settings.AUTH_USER_MODEL, default="")
+    user_post = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE)
 
 class Community(models.Model):
-    user_community = models.ForeignKey(settings.AUTH_USER_MODEL, default="")
+    user_community = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE)
     users_community = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='users_community', blank=True)
     community_post = models.ManyToManyField(Post, related_name='community_post', blank=True)
     community_media = models.ManyToManyField(Media, related_name='community_media', blank=True)
 
 class Relike(models.Model):
-    from_post = models.ForeignKey(Post, related_name='from_post_lk')
-    to_pers = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='people_lk')
+    from_post = models.ForeignKey(Post, related_name='from_post_lk', on_delete=models.CASCADE)
+    to_pers = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='people_lk', on_delete=models.CASCADE)
     status = models.IntegerField(choices=RELATIONSHIP_STATUSES)
     
 

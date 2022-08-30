@@ -17,9 +17,9 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
-from rest_framework import generics
+#from rest_framework import generics
 from myapp.models import Post, User
-from myapp.serializers import UserSerializer, PostSerializer
+#from myapp.serializers import UserSerializer, PostSerializer
 
 urlpatterns = [
     ############## приложение myapp

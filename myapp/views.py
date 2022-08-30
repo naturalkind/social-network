@@ -21,8 +21,6 @@ from django.views.decorators.http import require_POST
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import requests
-import urllib
-import urllib2
 import json
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -227,7 +225,6 @@ def addpost(request):
 
     return render_to_response('addpost.html', args)
 
-import md5
 from django.core import serializers
 
 def index(request):

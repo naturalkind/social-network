@@ -1509,12 +1509,14 @@ function activate_chat(thread_id, user_name, number_of_messages) {
     var ws_chat;
     var received = document.getElementById('received').innerText;
     var sent = document.getElementById('sent').innerText;
-    
+    console.log("activate_chat", IP_ADDR, thread_id);
     function start_chat_ws() {
         var tev = document.getElementById('conver');
         ws_chat = new WebSocket("ws://"+ IP_ADDR +":8998/" + thread_id + "/");
         ws_chat.onmessage = function(event) {
             var message_data = JSON.parse(event.data);
+            console.log("from server");
+            
             var date = new Date(message_data.timestamp*1000);
 //<a onclick="myPROFILE(' +"'"+message_data.sender+"'"+')">' + message_data.sender + '</a>
             tev.innerHTML += '<div class="message"><p class="author ' + ((message_data.sender == user_name) ? 'we' : 'partner') + '"><img src="/media/data_image/tm_'+ message_data.sender +'.png" class="usPr" onclick="myPROFILE('+ "'" + message_data.sender + "'" +')"></p><p class="txtmessage '+((message_data.sender == user_name) ? 'we' : 'partner') + '">' + message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '<span class="datetime" style="font-size: 15px;color: #afafaf;">' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '</span></p></div>';
@@ -1553,6 +1555,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
         if (ws_chat.readyState != WebSocket.OPEN) {
             return false;
         }
+        console.log(textarea.value)
         ws_chat.send(textarea.value);
         textarea.value = "";
     }

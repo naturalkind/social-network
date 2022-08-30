@@ -1,0 +1,2 @@
+#!/bin/bash
+rm -R db.sqlite3&rm -R dump.rdb&redis-cli flushall&redis-cli flushdb&python manage.py migrate

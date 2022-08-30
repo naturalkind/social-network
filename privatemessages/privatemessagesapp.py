@@ -9,25 +9,15 @@ import tornado.websocket
 import tornado.ioloop
 import tornado.httpclient
 
-
-
 from django.conf import settings
 from importlib import import_module
 
 session_engine = import_module(settings.SESSION_ENGINE)
 
-#from django.contrib.auth.models import User
 from myapp.models import User
 
 from privatemessages.models import Thread
 
-c = brukva.Client()
-c.connect()
-
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.set_header('Content-Type', 'text/plain')
-        self.write('WORK')
 
 class MessagesHandler(tornado.websocket.WebSocketHandler):
     def __init__(self, *args, **kwargs):
@@ -36,6 +26,7 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):
         self.client.connect()
 
     def open(self, thread_id):
+        self.thread_id = thread_id
         session_key = self.get_cookie(settings.SESSION_COOKIE_NAME)
         session = session_engine.SessionStore(session_key)
         try:
@@ -47,9 +38,12 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):
         if not Thread.objects.filter(id=thread_id, participants__id=self.user_id).exists():
             self.close()
             return
-        self.channel = "".join(['thread_', thread_id,'_messages'])
+              
+        self.channel = "".join([thread_id, "mess"])     
+        print (self.channel)       
+        #self.channel = "".join(["thread_", thread_id, "_messages"])
+        #self.channel = "".join(["/"])
         self.client.subscribe(self.channel)
-        self.thread_id = thread_id
         self.client.listen(self.show_new_message)
 
     def handle_request(self, response):
@@ -60,11 +54,6 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):
             return
         if len(message) > 10000:
             return
-        c.publish(self.channel, json.dumps({
-            "timestamp": int(time.time()),
-            "sender": self.sender_name,
-            "text": message,
-        }))
         http_client = tornado.httpclient.AsyncHTTPClient()
         request = tornado.httpclient.HTTPRequest(
             "".join([
@@ -80,15 +69,18 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):
                 "sender_id": self.user_id,
             })
         )
+        print ("on_message", message, settings.SEND_MESSAGE_API_URL)
         http_client.fetch(request, self.handle_request)
 
     def show_new_message(self, result):
+        print (">>>>>>>>>>>>>>?????????????????", str(result.body))
         self.write_message(str(result.body))
 
     def check_origin(self, origin):
         return True
 
     def on_close(self):
+        print ("CLOSE")
         try:
             self.client.unsubscribe(self.channel)
         except AttributeError:
@@ -107,6 +99,5 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):
         )
 
 application = tornado.web.Application([
-    (r"/", MainHandler),
     (r'/(?P<thread_id>\d+)/', MessagesHandler),
 ])

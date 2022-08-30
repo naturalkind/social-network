@@ -9,7 +9,11 @@ https://docs.djangoproject.com/en/1.8/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
-IP_SYS = "192.168.1.137"
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+
+IP_SYS = s.getsockname()[0]
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -46,7 +50,6 @@ INSTALLED_APPS = (
 )
 
 AUTH_USER_MODEL = 'myapp.User'
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -134,11 +137,8 @@ MEDIA_ROOT = 'media'
 API_KEY = '$0m3-U/\/1qu3-K3Y'
 
 
-SEND_MESSAGE_API_URL = 'http://192.168.1.137:8888/messages/send_message_api'
-#SEND_MESSAGE_API_URL = 'http://178.158.131.41:8888/messages/send_message_api'
-
-#SEND_MESSAGE_API_URLv1 = 'http://178.158.131.41:8888/wall/send_message_api'
-SEND_POST_API_URL = 'http://192.168.1.137:8888/send_message_api'
+SEND_MESSAGE_API_URL = 'http://'+ IP_SYS +':8888/messages/send_message_api'
+SEND_POST_API_URL = 'http://'+ IP_SYS +':8888/send_message_api'
 
 
 

@@ -26,7 +26,6 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from myapp.serializers import PostSerializer
 from myapp.models import RELATIONSHIP_FOLLOWING
 import base64
 import re

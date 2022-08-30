@@ -40,5 +40,5 @@ class Command(BaseCommand):
 
         # This will also catch KeyboardInterrupt exception
         signal.signal(signal.SIGINT, self.sig_handler)
-        print "Private message PORT", port
+        print ("Private message PORT", port)
         tornado.ioloop.IOLoop.instance().start()

@@ -17,7 +17,6 @@ from importlib import import_module
 
 session_engine = import_module(settings.SESSION_ENGINE)
 
-#from django.contrib.auth.models import User
 from myapp.models import User
 
 from django.utils import dateformat
@@ -26,8 +25,6 @@ import base64
 import re
 import os, uuid
 
-c = brukva.Client()
-c.connect()
 
 class MessagesHandler(tornado.websocket.WebSocketHandler):  # старница сообщения
     def __init__(self, *args, **kwargs):
@@ -53,8 +50,6 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):  # старница �
         pass
 
     def on_message(self, message):
-
-
         d = json.loads(message)
         dt = d['title']
         db = d['body']
@@ -64,7 +59,7 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):  # старница �
         except KeyError:
             dv = 'ok'
 
-        print dt, settings.SEND_POST_API_URL
+        #print (dt, settings.SEND_POST_API_URL)
         http_client = tornado.httpclient.AsyncHTTPClient()
         request = tornado.httpclient.HTTPRequest("".join([ settings.SEND_POST_API_URL, "/" ]),
             method="POST",

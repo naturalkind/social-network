@@ -20,6 +20,7 @@ from privatemessages.models import Thread, Message
 from privatemessages.utils import json_response, send_message
 
 def send_message_view(request):
+    print ("send_message_view")
     if not request.method == "POST":
         return HttpResponse("Please use POST.")
 
@@ -71,11 +72,12 @@ def send_message_view(request):
 
 @csrf_exempt
 def send_message_api_view(request, thread_id):
+    
     if not request.method == "POST":
         return json_response({"error": "Please use POST."})
 
     api_key = request.POST.get("api_key")
-
+    
     if api_key != settings.API_KEY:
         return json_response({"error": "Please pass a correct API key."})
 
@@ -96,17 +98,22 @@ def send_message_api_view(request, thread_id):
 
     if len(message_text) > 10000:
         return json_response({"error": "The message is too long."})
-
+        
+    print ("send_message_api_view", thread.id,
+                                    sender.id,
+                                    sender.username,
+                                    message_text)
     send_message(
                     thread.id,
                     sender.id,
-                    message_text
+                    message_text,
+                    sender.username
                 )
 
     return json_response({"status": "ok"})
 
 def messages_view(request):
-
+    print ("messages_view")
     if not request.user.is_authenticated():
         return HttpResponse("Please sign in.")
 
@@ -139,6 +146,7 @@ def messages_view(request):
                               context_instance=RequestContext(request))
 
 def chat_view(request, thread_id):
+    print ("chat_view")
     if not request.user.is_authenticated():
         return HttpResponse("Please sign in.")
 

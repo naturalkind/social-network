@@ -49,12 +49,15 @@ def register(request):
     args = {}
     args.update(csrf(request))
     args['form'] = UserForm()
+    print ("REG", request, request.FILES)
     if request.POST:
         newuser_form = UserForm(request.POST, request.FILES)
+        print (newuser_form.is_valid())
         if newuser_form.is_valid():
             #print newuser_form.cleaned_data['username'], newuser_form.cleaned_data['password2']
             IDS = newuser_form.save()
-            newuser = auth.authenticate(username=newuser_form.cleaned_data['username'],password=newuser_form.cleaned_data['password2'])
+            newuser = auth.authenticate(username=newuser_form.cleaned_data['username'],
+                                        password=newuser_form.cleaned_data['password2'])
             auth.login(request, newuser)
             #nameFile = str(newuser.id)+"_"+str(newuser_form.cleaned_data['username'])+".png"
             nameFile = str(newuser_form.cleaned_data['username'])+".png"
@@ -65,6 +68,7 @@ def register(request):
             crop(nameFile)       
             return redirect('/')
         else:
+          print ("REG3", request, request.FILES)
           args['form'] = newuser_form
     return render_to_response('register.html', args)
 
@@ -154,7 +158,7 @@ def follow(request, id):
     ht = ''
     p = User.objects.get(id=id)
     for x in p.get_followers():
-        print x.username
+        print (x.username)
         img = 'media/data_image/tm_'+ x.username +'.png'
         idu = str(x.pk)
         li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
