@@ -39,10 +39,7 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):
             self.close()
             return
               
-        self.channel = "".join([thread_id, "mess"])     
-        print (self.channel)       
-        #self.channel = "".join(["thread_", thread_id, "_messages"])
-        #self.channel = "".join(["/"])
+        self.channel = "".join([thread_id])     
         self.client.subscribe(self.channel)
         self.client.listen(self.show_new_message)
 
@@ -73,14 +70,12 @@ class MessagesHandler(tornado.websocket.WebSocketHandler):
         http_client.fetch(request, self.handle_request)
 
     def show_new_message(self, result):
-        print (">>>>>>>>>>>>>>?????????????????", str(result.body))
         self.write_message(str(result.body))
 
     def check_origin(self, origin):
         return True
 
     def on_close(self):
-        print ("CLOSE")
         try:
             self.client.unsubscribe(self.channel)
         except AttributeError:

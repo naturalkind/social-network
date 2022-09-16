@@ -25,17 +25,12 @@ print (len(images.file))
 
 url = "http://178.158.131.41:8888/register/"
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-dir_file = "/media/sadko/1b32d2c7-3fcf-4c94-ad20-4fb130a7a7d4/IMAGE/Supreme.png"
-
-payload = {'username':'sadko','password2':'1', 'password1':'1'}
-_files = {'image_user':open(dir_file, 'rb')}
-#post_reg = R.post(url, headers=headers, data=payload)
-#print (post_reg.content)
 with R.session() as client:
-        get_reg = client.get(url)
-        print (get_reg.cookies) # get_reg.content
-        payload['csrfmiddlewaretoken'] = get_reg.cookies['csrftoken']
-        print (payload)
-        result = client.post(url, data = payload, files=_files)
-        print (result.content)
+        for i in range(10):
+            get_reg = client.get(url)
+            payload = {'username':'sadko_'+str(i),'password2':'1', 'password1':'1', 'csrfmiddlewaretoken':get_reg.cookies['csrftoken']}
+            file_path = random.choice(list(images.file.keys()))
+            _files = {'image_user':open(images.file[file_path][0], 'rb')}
+            result = client.post(url, data = payload, files=_files)
+            print (result)
 

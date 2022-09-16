@@ -35,9 +35,10 @@ def send_message(thread_id,
             "text": message_text
         }))
 
-#    for key in ("total_messages", "".join(["from_", sender_id])):
-#        r.hincrby(
+    for key in ("total_messages", "".join(["from_", sender_id])):
+        r.hincrby(
 #            "".join(["thread_", thread_id, "_messages"]),
-#            key,
-#            1
-#        )
+            "".join([thread_id]),
+            key,
+            1
+        )

@@ -133,8 +133,13 @@ def messages_view(request):
     for thread in threads:
         thread.partner = thread.participants.exclude(id=request.user.id)[0]
 
+#        thread.total_messages = r.hget(
+#            "".join(["thread_", str(thread.id), "_messages"]),
+#            "total_messages"
+#        )
+
         thread.total_messages = r.hget(
-            "".join(["thread_", str(thread.id), "_messages"]),
+            "".join([str(thread.id)]),
             "total_messages"
         )
 
@@ -158,15 +163,25 @@ def chat_view(request, thread_id):
 
     r = redis.StrictRedis()
 
+#    messages_total = r.hget(
+#        "".join(["thread_", thread_id, "_messages"]),
+#        "total_messages"
+#    )
+
+#    messages_sent = r.hget(
+#        "".join(["thread_", thread_id, "_messages"]),
+#        "".join(["from_", user_id])
+#    )
     messages_total = r.hget(
-        "".join(["thread_", thread_id, "_messages"]),
+        "".join([thread_id]),
         "total_messages"
     )
 
     messages_sent = r.hget(
-        "".join(["thread_", thread_id, "_messages"]),
+        "".join([thread_id]),
         "".join(["from_", user_id])
     )
+
 
     if messages_total:
         messages_total = int(messages_total)
