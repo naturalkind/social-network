@@ -8,7 +8,7 @@
       <div class="f-c">
   <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
           {% if cm.comment_image %}
- <img src="/media/data_image/{{ cm.comment_image}}.png" onclick="showImg('{{cm.comment_image}}',this)" style="display:block;margin:0 auto;max-width:400px;width: auto;height:auto;max-height: 240px;">
+ <img src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image}}.png" onclick="showImg(this)" style="display:block;margin:0 auto;max-width:400px;width: auto;height:auto;max-height: 240px;">
 {% endif %}
           <span style="display: block;text-align:center;">{{ cm.comment_text }}</span>
       </div>

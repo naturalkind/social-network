@@ -11,7 +11,6 @@
 <link rel="stylesheet" type="text/css" media="all" href="media/css/colors.css" />
 {#<script type="text/javascript" async src="media/js/js.js"></script>#}
     <script type="text/javascript" src="media/js/js.js"></script>
-    <script async src="http://www.youtube.com/iframe_api"></script>
 <!--[if lte IE 7]>
 
 <![endif]-->
@@ -25,10 +24,10 @@
 <a onclick="user()" id="userA"></a>
 {#<a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a>#}
 <img src="/media/images/mesv4.png" onclick="privatMES()" id="mespr">
-{% if username.image_user != "/media/images/Fv2.png" %}
-<img onclick="myPROFILE('{{ username.username }}')" src="media/data_image/tm_{{ username.username }}.png" class="usPr"/>
+{% if username.image_user %}
+<img onclick="myPROFILE('{{ username.username }}')" src="/media/data_image/{{ username.path_data }}/tm_{{ username.image_user }}" class="usPr"/>
 {% else %}
-<img onclick="myPROFILE('{{ username }}')" src="media/images/oneProf.png"  class="usPr" />
+<img onclick="myPROFILE('{{ username }}')" src="/media/data_image/oneProf.png"  class="usPr" />
 {% endif %}
 </div>
 <div id="logo">

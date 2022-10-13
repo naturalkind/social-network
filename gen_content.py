@@ -1,7 +1,7 @@
-import requests as R
 import os
 import time
 import random
+from myapp.models import User, Post
 
 class DATA(object):
    def __init__(self):
@@ -22,16 +22,27 @@ images = DATA()
 images.parseIMG("/media/sadko/1b32d2c7-3fcf-4c94-ad20-4fb130a7a7d4/IMAGE")
 print (len(images.file))
 
-#178.158.131.41
+def cop(x, y):
+     f_file = open(x, "rb").read()
+     to_file = open(y,"wb").write(f_file)
 
-url = "http://178.158.131.41:8888/register/"
-headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-with R.session() as client:
-        for i in range(1000):
-            get_reg = client.get(url)
-            payload = {'username':'sadko_'+str(i),'password2':'1', 'password1':'1', 'csrfmiddlewaretoken':get_reg.cookies['csrftoken']}
-            file_path = random.choice(list(images.file.keys()))
-            _files = {'image_user':open(images.file[file_path][0], 'rb')}
-            result = client.post(url, data = payload, files=_files)
-            print (result)
+from myapp.models import User
+#print (dir(User))
+us = User.objects.all()[:5]
+print (us)
+for i in us:
+    print (i.path_data)
+    for jj in range(10): 
+        post = Post()
+        post.title = "test"
+        post.body = ""
+        file_path = random.choice(list(images.file.keys()))
+        old_name = images.file[file_path][0].split("/")[-1].split(".")[0]
+        cop(images.file[file_path][0], f"media/data_image/{i.path_data}/{old_name}.png")
+        post.image = old_name
+        post.path_data = str(i.path_data)
+        post.user_post = i
+        post.save() 
+
+
 

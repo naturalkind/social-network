@@ -2,4 +2,3 @@ media/data_image/
 *.rdb
 *.sqlite3
 *.pyc
-test_redis/

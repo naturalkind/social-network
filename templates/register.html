@@ -6,14 +6,6 @@
     margin: 0 auto;
 }
 #oimg,
- .large   #textcanvas, .large #canvas {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    max-width: 600px;
-    position: relative;
-    margin-left: auto;
-    margin-right: auto;
-}
 .large form {
       width: 600px;
       margin: 0 auto;
@@ -108,35 +100,20 @@
         <div class="large">
             <form action="/register/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-{#                {{ form }}#}
-{#                <label for="id_username">Имя пользователя:</label>#}
-{#                {{form.username}}#}
                 <input id="id_username" maxlength="30" name="username" type="text" placeholder="имя пользователя">
                 <span class="helptext">Необходимо - 30 латинских символов или меньше. Буквы, цифры и символы "@/./+/-/_"</span>
                 <br>
-{#                <input id="id_username" maxlength="30" name="username" type="text">#}
-{#                <label for="id_password1">Пароль:</label>#}
                 <input id="id_password1" name="password1" type="password" placeholder="пароль">
-{#                {{form.password1}}#}
                 <br>
-{#                <label for="id_password2">Подтверждение пароля:</label>#}
                 <input id="id_password2" name="password2" type="password" placeholder="подтверждение пароля">
-{#                {{form.password2}}#}
-{#                <span class="helptext">Введите тот же пароль, для проверки.</span>#}
                 <br>
-{#                <input id="id_password1" name="password1" type="password">#}
-{#                <input id="id_password2" name="password2" type="password">#}
-{#                <div id="imginreg">#}
                 <input id="id_image_user" name="image_user" type="file" onchange="OnOnreg()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
                 <label for="id_image_user" id="id_image_user_lb">ЗАГРУЗКА КАРТИКИ</label>
-{#            </div>#}
-            <div id="cn">
-                <img src="" id="oimg">
-            <canvas id="canvas" width="0" height="0"></canvas>
-            <canvas id="textcanvas" width="0" height="0" style="position: absolute;top:264px"></canvas>
+                <div id="cn">
+                    <img id="oimg">
+                    <canvas id="canvas" width="0" height="0"></canvas>
                 </div>
-                 <input class="button" type="submit" value="зарегистрироваться" style="display: none;" id="regb">
-{#                <input class="button" type="submit" value="зарегестрироваться" style="display: none;" id="regb" onclick="imgS()">#}
+                <input class="button" type="submit" value="зарегистрироваться" style="display: none;" id="regb">
             </form>
         </div>
 

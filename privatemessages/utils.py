@@ -26,19 +26,12 @@ def send_message(thread_id,
     r = redis.StrictRedis()
 
     print ("send_message", sender_name)
-    if sender_name:
-        r.publish("".join([thread_id]), json.dumps({
-#        r.publish("".join(["thread_", thread_id, "_messages"]), json.dumps({
-#        r.publish("".join(["/"]), json.dumps({
-            "timestamp": dateformat.format(message.datetime, 'U'),
-            "sender": sender_name,
-            "text": message_text
-        }))
 
     for key in ("total_messages", "".join(["from_", sender_id])):
         r.hincrby(
-#            "".join(["thread_", thread_id, "_messages"]),
-            "".join([thread_id]),
+            #"".join([thread_id]),
+            #"".join(["thread_", thread_id, "_messages"]),
+            "".join(["private_", thread_id, "_messages"]),
             key,
             1
         )

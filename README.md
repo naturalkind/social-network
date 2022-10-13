@@ -3,12 +3,32 @@
 При создании, учитывал возможность использовать в проектах с высокой нагрузкой
 
 #### Для запуска нужно:
-* Django 1.8.4 - работа с БД
-* Tornado 4.5.3 - websocket
-* Redis - нереляционная высокопроизводительная СУБД(brukva клиент)
-* Gunicorn - python WSGI HTTP сервер для UNIX
+* Django 3.2.16 - работа с БД
+* Channels 3.0.1 - websocket
+* Channels-redis 2.4.2 - django channels, которые используют Redis в качестве резервного хранилища
+* Daphne - ASGI сервер протоколов Django
 #### Пуск:
-***./start***
+
+установка нужных компонентов   
+***python3 -m venv <myenvname>***   
+***source <myenvname>/bin/activate***   
+***pip install --upgrade pip***
+***pip install -r requirements.txt***   
+***pip uninstall channels***
+***pip install channels==3.0.1*** 
+
+запуск   
+***python3 manage.py migrate --run-syncdb***   
+***daphne app.asgi:application --bind 0.0.0.0 --port 8888***   
+
+генирация пользователей и контента   
+***python3 gen_user.py***   
+***./manage.py shell < gen_content.py***   
+
+дополнительно   
+***redis-cli flushall***   
+***sudo rm -R db.sqlite3***   
+
 
 ### Пример работы:
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr1.png)

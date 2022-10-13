@@ -18,6 +18,8 @@ RELATIONSHIP_STATUSES = (
 )
 class User(AbstractUser):
     relationship = models.ManyToManyField('self', through='Relationship',symmetrical=False, related_name='related_to')
+    image_user = models.TextField(max_length=200, default="oneProf.png", verbose_name='Название картинки', blank=True)
+    path_data = models.TextField(max_length=200, default="", verbose_name='Название каталога', blank=True)
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
         
@@ -68,15 +70,14 @@ class Relationship(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=50, default="", verbose_name='Загаловок', blank=True)
     video = models.TextField(max_length=200, default="", verbose_name='Название видео', blank=True)
-    audio = models.TextField(max_length=200, default="", verbose_name='Название аудио', blank=True)
     image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
+    path_data = models.TextField(max_length=200, default="", verbose_name='Расположение', blank=True)
     body = models.TextField(max_length=999999, default="", verbose_name='Текст', blank=True)
     date_post = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     user_post = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='us_post', default="", on_delete=models.CASCADE)
     slug = models.SlugField(blank=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes', blank=True)
     point_likes = models.IntegerField(default=0)
-
     relike = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Relike',symmetrical=False,related_name='userlk')
 
     def __unicode__(self):
@@ -105,8 +106,6 @@ class Post(models.Model):
     def get_foll(self):
         return self.get_rela(RELATIONSHIP_FOLLOWING)
 
-
-###
     @property
     def total_likes(self):
         """
@@ -126,6 +125,7 @@ class Comment(models.Model):
     comment_text = models.TextField(max_length=250, default="", blank=True)
     comment_image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
     timecomment = models.DateTimeField(auto_now_add=True, db_index=True)
+    
 # новый модуль
 class Media(models.Model):
     about = models.CharField(max_length=50, default="", verbose_name='О файле', blank=True)
@@ -133,6 +133,7 @@ class Media(models.Model):
     video = models.TextField(max_length=200, default="", verbose_name='Название видео', blank=True)
     audio = models.TextField(max_length=200, default="", verbose_name='Название аудио', blank=True)
     image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
+    path_data = models.TextField(max_length=200, default="", verbose_name='Расположение', blank=True)
     style = models.TextField(max_length=999999, default="", verbose_name='Текст', blank=True)
     user_post = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE)
 
