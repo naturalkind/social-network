@@ -10,20 +10,20 @@
 #### Пуск:
 
 установка нужных компонентов   
-***python3 -m venv <myenvname>***   
-***source <myenvname>/bin/activate***   
-***pip install --upgrade pip***
-***pip install -r requirements.txt***   
-***pip uninstall channels***
-***pip install channels==3.0.1*** 
+```python3 -m venv <myenvname>```   
+```source <myenvname>/bin/activate```   
+```pip install --upgrade pip***
+```pip install -r requirements.txt```   
+```pip uninstall channels```
+```pip install channels==3.0.1``` 
 
 запуск   
-***python3 manage.py migrate --run-syncdb***   
-***daphne app.asgi:application --bind 0.0.0.0 --port 8888***   
+```python3 manage.py migrate --run-syncdb```   
+```daphne app.asgi:application --bind 0.0.0.0 --port 8888```   
 
 генирация пользователей и контента   
-***python3 gen_user.py***   
-***./manage.py shell < gen_content.py***   
+```python3 gen_user.py```   
+```./manage.py shell < gen_content.py```   
 
 дополнительно   
 ***redis-cli flushall***   
