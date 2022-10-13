@@ -10,28 +10,61 @@
 #### Пуск:
 
 установка нужных компонентов   
-***python3 -m venv <myenvname>***   
-***source <myenvname>/bin/activate***   
-***pip install --upgrade pip***
-***pip install -r requirements.txt***   
-***pip uninstall channels***
-***pip install channels==3.0.1*** 
+```
+python3 -m venv <myenvname>
+```
 
-запуск   
-***python3 manage.py migrate --run-syncdb***   
-***daphne app.asgi:application --bind 0.0.0.0 --port 8888***   
+```
+source <myenvname>/bin/activate
+```
+
+```
+pip install --upgrade pip
+```
+
+```
+pip install -r requirements.txt
+```
+
+```
+pip uninstall channels
+```
+
+```
+pip install channels==3.0.1
+```
+
+запуск
+```
+python3 manage.py migrate --run-syncdb
+```
+
+```
+daphne app.asgi:application --bind 0.0.0.0 --port 8888
+```
 
 генирация пользователей и контента   
-```python3 gen_user.py   
-   ./manage.py shell < gen_content.py```   
+```
+python3 gen_user.py
+```
+
+```
+./manage.py shell < gen_content.py
+```
 
 дополнительно   
-***redis-cli flushall***   
-***sudo rm -R db.sqlite3***   
+```
+redis-cli flushall
+```
+
+```
+sudo rm -R db.sqlite3
+```
 
 
 ### Пример работы:
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr1.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr2.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr3.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0/media/skr4.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr1.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr2.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr3.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr4.png)
+
