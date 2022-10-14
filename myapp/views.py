@@ -545,7 +545,7 @@ def chat_view(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     if page:
-        data['data'] = serializers.serialize('json', posts)
+        data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
         return HttpResponse(json.dumps(data), content_type = "application/json")
 
     return render(request, 'postwall.html',
