@@ -1,4 +1,5 @@
 media/data_image/
+env
 *.rdb
 *.sqlite3
 *.pyc

@@ -1,4 +1,4 @@
-IP_ADDR = "";
+IP_ADDR = "178.158.131.41";
 var innode;
 var len;
 
@@ -804,10 +804,11 @@ var dataURL_v1;
 var reader = new FileReader();
 
 var im;
-function OnOn() {
-    canvas = document.getElementById('canvas');
+function OnOn(id) {
+    console.log('canvas_'+id)
+    canvas = document.getElementById('canvas_'+id);
     context = canvas.getContext('2d');
-    var input = document.getElementById('id_image');
+    var input = document.getElementById('id_image_'+id);
     file = input.files;
     reader.readAsDataURL(file[0]);
     reader.onload = function (e) {
@@ -839,8 +840,8 @@ var comv = false;
 function comView(link){
 // ищем элемент с id
 //        if(comv) return false;
-        var conr = document.getElementById(link);
-        if(comv == false){
+    var conr = document.getElementById(link);
+    if(comv == false){
         var http = createRequestObject();
         if( http )   {
             http.open('get', 'comment/'+link);
@@ -855,17 +856,18 @@ function comView(link){
                     conr.style.display = 'block';
 //                    console.log(http.responseText);
                     activate_com(link);
-
+                    
                 }
             };
             http.send(null);
         } else {
             document.location = link;
         }
-            } else {
-            conr.style.display = 'none';
-            comv = false;
-        }
+    } else {
+        console.log("CLOSE")
+        conr.style.display = 'none';
+        comv = false;
+    }
 }
 var activmen=false;
 function openMenu(){
@@ -1339,6 +1341,7 @@ function activate_com(post_id) {
         send_com(post_id);
 
     };
+    return ws_com;
 }
 /////////////////////////// ТЕСТ
 

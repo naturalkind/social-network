@@ -20,9 +20,9 @@
 
 <div id="results" style="margin:10px 20px;">
     <input id="comment_text_{{ id }}" placeholder="Введите Ваше сообщение..." style="width: 100%;border: none;padding: 10px;border-radius: 10px;">
-    <input id="id_image" name="image" type="file" onchange="OnOn()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
-   <label for="id_image" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
-   <div id="cn"> <canvas id="canvas" width="0" height="0" style="max-width: 410px;"></canvas></div>
+    <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
+   <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
+   <div id="cn"> <canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>
 </div>
 <img id="add_{{ id }}" src="/media/images/cloud.png" width="50" height="50" style="background: #507299;padding: 6px;border-radius: 7px;">
 {#<button id="add_{{ id }}">ОТПРАВИТЬ</button>#}
