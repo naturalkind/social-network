@@ -7,6 +7,7 @@
 * Channels 3.0.1 - websocket
 * Channels-redis 2.4.2 - django channels, которые используют Redis в качестве резервного хранилища
 * Daphne - ASGI сервер протоколов Django
+* Gunicorn - python WSGI HTTP сервер для UNIX
 #### Пуск:
 
 установка нужных компонентов   
@@ -40,7 +41,7 @@ python3 manage.py migrate --run-syncdb
 ```
 
 ```
-daphne app.asgi:application --bind 0.0.0.0 --port 8888
+gunicorn app.wsgi:application --bind 192.168.1.50:8888 & daphne app.asgi:application --bind 0.0.0.0 --port 8889
 ```
 
 генирация пользователей и контента   

@@ -28,21 +28,46 @@ def cop(x, y):
 
 from myapp.models import User
 #print (dir(User))
-us = User.objects.all()[:5]
-print (us)
-for i in us:
-    print (i.path_data)
-    for jj in range(10): 
-        post = Post()
-        post.title = "test"
-        post.body = ""
-        file_path = random.choice(list(images.file.keys()))
-        old_name = images.file[file_path][0].split("/")[-1].split(".")[0]
-        cop(images.file[file_path][0], f"media/data_image/{i.path_data}/{old_name}.png")
-        post.image = old_name
-        post.path_data = str(i.path_data)
-        post.user_post = i
-        post.save() 
+user_count = User.objects.count()
+U = User.objects.all()
+print (user_count)
+
+def chunks(lst, count):
+    start = 0
+    for i in range(count):
+          stop = start + len(lst[i::count])
+          yield lst[start:stop]
+          start = stop 
+test = chunks(U, 5)
+for us in test:
+    for i in us:
+        for jj in range(10):
+            post = Post()
+            post.title = "test"
+            post.body = ""
+            file_path = random.choice(list(images.file.keys()))
+            old_name = images.file[file_path][0].split("/")[-1].split(".")[0]
+            cop(images.file[file_path][0], f"media/data_image/{i.path_data}/{old_name}.png")
+            post.image = old_name
+            post.path_data = str(i.path_data)
+            post.user_post = i
+            post.save()             
+
+#us = User.objects.all()[:5]
+#print (us)
+#for i in us:
+#    print (i.path_data)
+#    for jj in range(10): 
+#        post = Post()
+#        post.title = "test"
+#        post.body = ""
+#        file_path = random.choice(list(images.file.keys()))
+#        old_name = images.file[file_path][0].split("/")[-1].split(".")[0]
+#        cop(images.file[file_path][0], f"media/data_image/{i.path_data}/{old_name}.png")
+#        post.image = old_name
+#        post.path_data = str(i.path_data)
+#        post.user_post = i
+#        post.save() 
 
 
 

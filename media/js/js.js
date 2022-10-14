@@ -1,4 +1,6 @@
-IP_ADDR = "178.158.131.41";
+var IP_ADDR = "178.158.131.41";
+var PORT = "8889"
+
 var innode;
 var len;
 
@@ -187,7 +189,6 @@ function editPROFF (){
                           cont.style.display = 'none';                     
                           textElem.style.transform = 'rotate(0deg)';
                       };
-//                console.log(http.responseText);
                 }
             };
             http.send(null);
@@ -199,7 +200,6 @@ function editPROFF (){
 /// пользователя
 function userPROFILE(link){
     var bl = document.getElementById('block-post');
-//    var cont = document.body;
     var cont = document.getElementById('main-wrapper'); // ищем элемент с id
         var http = createRequestObject();
         if( http )   {
@@ -228,7 +228,6 @@ function profilePOST(link){
         if (http) {
             event = { my_image: dataURL_v1 };
             data = JSON.stringify(event);
-            //alert( data );
             http.open('post', linkfull, true);
             http.setRequestHeader('X-CSRFToken', crsv);
             http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
@@ -298,7 +297,6 @@ function useimg(use){
    }
 }
 function jsons(link, atr){
-        console.log("jsons >>>>>>>>>>>", link, atr)
         var linkfull;
         var wd, hd, us, cont;
         console.log(atr);
@@ -360,7 +358,6 @@ function jsons(link, atr){
                                }
                         cont.innerHTML += html;
                         isLoading = false;
-//                        console.log(g);
                            } else {
                         var f = JSON.parse(http.responseText);
                         
@@ -481,30 +478,28 @@ function getNewData(scrollable){
 }
 function scroll(){
     //console.log(window.scrollY++);
-  if (window.scrollY++ || window.scrollY--){
+    if (window.scrollY++ || window.scrollY--){
       try{document.getElementById('comps').style.opacity = "0.9";}catch (err){}
       } else {document.getElementById('comps').style.opacity = "1";}
-  if(isLoading) return false;
-  var scrollable = document.getElementById("main-wrapper");
-  var contentHeight = scrollable.offsetHeight;
-  var yOffset = window.pageYOffset;
-  var y = yOffset + window.innerHeight;
-  
-  if(y >= contentHeight){
-    isLoading = true;
-      console.log('scroll');
-    var fg = document.getElementById('topbt');
-    fg.onclick = function(){
-    window.scrollTo(0, 0);
-     fg.style.transform = 'rotate(180deg)';
+    if(isLoading) return false;
+    var scrollable = document.getElementById("main-wrapper");
+    var contentHeight = scrollable.offsetHeight;
+    var yOffset = window.pageYOffset;
+    var y = yOffset + window.innerHeight;
+
+    if(y >= contentHeight){
+        isLoading = true;
+        console.log('scroll');
+        var fg = document.getElementById('topbt');
+        fg.onclick = function(){
+            window.scrollTo(0, 0);
+            fg.style.transform = 'rotate(180deg)';
         };
-      try{
-    getNewData(document.getElementById("DODO").getAttribute('atr'));} catch (err){}
-  }
+        try{getNewData(document.getElementById("DODO").getAttribute('atr'));} catch (err){}
+    }
 }
 window.onscroll = scroll;
 
-////
 var r;
 function NewData(scrollable, r){
 //Эмуляция AJAX запроса...
@@ -1232,7 +1227,7 @@ function OnOnW() {
 var ws_wall;
 function activate_wall(user_name) {
     function start_wall() {
-        ws_wall = new WebSocket("ws://"+ IP_ADDR +":8888/");
+        ws_wall = new WebSocket("ws://"+ IP_ADDR +":"+PORT+"/");
         ws_wall.onmessage = function(event) {
             var fc = document.createElement('div');
             fc.className = 'message';
@@ -1296,7 +1291,7 @@ function activate_com(post_id) {
     var ws_com;
     function start_com_ws() {
         var tev = document.getElementById('field-comment_'+post_id);
-        ws_com = new WebSocket("ws://"+ IP_ADDR + ":8888/comment/" + post_id + "/");
+        ws_com = new WebSocket("ws://"+ IP_ADDR + ":"+PORT+"/comment/" + post_id + "/");
         ws_com.onmessage = function(event) {
             var fc = document.createElement('div');
             fc.className = 'f-c';
@@ -1457,16 +1452,13 @@ function activate_chat(thread_id, user_name, number_of_messages) {
     var ws_chat;
     var received = document.getElementById('received').innerText;
     var sent = document.getElementById('sent').innerText;
-    console.log("activate_chat", IP_ADDR, thread_id);
+    console.log("activate_chat", thread_id);
     function start_chat_ws() {
         var tev = document.getElementById('conver');
-        ws_chat = new WebSocket("ws://"+ IP_ADDR +":8888/" + thread_id + "/");
+        ws_chat = new WebSocket("ws://"+ IP_ADDR +":"+PORT+"/" + thread_id + "/");
         ws_chat.onmessage = function(event) {
             var message_data = JSON.parse(event.data);
-            console.log("from server", message_data);
-            
             var date = new Date(message_data.timestamp*1000);
-//<a onclick="myPROFILE(' +"'"+message_data.sender+"'"+')">' + message_data.sender + '</a>
             tev.innerHTML += '<div class="message"><p class="author ' + ((message_data.sender == user_name) ? 'we' : 'partner') + '"><img src="/media/data_image/'+ message_data.path_data +'/tm_'+ message_data.image_user +'" class="usPr" onclick="myPROFILE('+ "'" + message_data.sender + "'" +')"></p><p class="txtmessage '+((message_data.sender == user_name) ? 'we' : 'partner') + '">' + message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '<span class="datetime" style="font-size: 15px;color: #afafaf;">' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '</span></p></div>';
 
             number_of_messages++;
@@ -1481,7 +1473,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
             }
         };
         ws_chat.onclose = function(){
-            // Try to reconnect in 5 seconds
+            // переподключение через 5 секунд
             setTimeout(function() {start_chat_ws()}, 5000);
         };
     }
@@ -1503,8 +1495,6 @@ function activate_chat(thread_id, user_name, number_of_messages) {
         if (ws_chat.readyState != WebSocket.OPEN) {
             return false;
         }
-        console.log(textarea.value)
-        
         ws_chat.send(JSON.stringify({"event":"privatemessages", "message":textarea.value}));
         textarea.value = "";
     }
