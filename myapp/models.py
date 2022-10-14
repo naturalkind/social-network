@@ -59,7 +59,9 @@ class User(AbstractUser):
             to_people__from_person=self,
             from_people__status=RELATIONSHIP_FOLLOWING,
             from_people__to_person=self)
-
+    
+    def natural_key(self):
+        return (self.image_user, self.path_data, self.id, self.username)
 
 class Relationship(models.Model):
     from_person = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='from_people', on_delete=models.CASCADE)
