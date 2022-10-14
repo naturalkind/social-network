@@ -355,7 +355,7 @@ function jsons(link, atr){
                                var g = JSON.parse(f.data);
                                document.getElementById('IOP').innerText = f.op1;
                                for (var R in g) {
-                                   html += "<div class='views-row' onclick='userPROFILE("+ g[R].pk +")'><img src='/media/data_image/"+g[R].fields.username +".png' width='180' height='180'><div class='user-name'><a atribut='"+g[R].pk+"' style='padding: 0px;border-radius: 7px;font-size: 20px;color: #507299;'>"+g[R].fields.username +"</a></div></div>"
+                                   html += "<div class='views-row' onclick='userPROFILE("+ g[R].pk +")'><img src='/media/data_image/"+g[R].fields.path_data+"/"+g[R].fields.image_user +"' width='180' height='180'><div class='user-name'><a atribut='"+g[R].pk+"' style='padding: 0px;border-radius: 7px;font-size: 20px;color: #507299;'>"+g[R].fields.username +"</a></div></div>"
                                }
                         cont.innerHTML += html;
                         isLoading = false;
@@ -392,14 +392,15 @@ function jsons(link, atr){
                             var lkovr = "LIKEOVER(" + g[R].pk + ")";
                             var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image + '.png';
                         if (atr == 'wall' || atr=='viewuser') {
-                                var use = g[R].fields.user_post;
+                                var use = g[R].fields.user_post[2];
                                 var imgh ='"'+g[R].fields.image+'"';
                                 var imgv1 = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image + '.png';
                                 var date = new Date(g[R].fields.date_post);
                                 if (parseInt(date.getMinutes()) < 10) {
                                     minutes = "0" + date.getMinutes();
                                 } else minutes = date.getMinutes();
-                                html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/images/oneProf.png' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")'><a onclick='showContent(" + g[R].pk + ")' class='postview'>" + g[R].fields.title + "→</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div style='width: 100%;'><img src='/media/images/mesvF.png' onclick='comView("+g[R].pk +")'><img src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
+                                console.log(g[R])
+                                html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span><span class='arrow'> → </span>" + g[R].fields.title + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div style='width: 100%;'><img src='/media/images/mesvF.png' onclick='comView("+g[R].pk +")'><img src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
                         }
                             else {
                                 html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
@@ -435,7 +436,7 @@ function userViewPost(link){
                     var g = JSON.parse(f.data);
                     for (var R in g) {
                             var use = g[R].fields.user_post;
-                            var imgv1 = '/media/data_image/' + g[R].fields.image + '.png';
+                            var imgv1 = '/media/data_image/'+ g[R].fields.path_data +'/'+ g[R].fields.image + '.png';
                             var date = new Date(g[R].fields.date_post);
                             if (parseInt(date.getMinutes()) < 10) {
                                 minutes = "0" + date.getMinutes();
@@ -1511,4 +1512,3 @@ function activate_chat(thread_id, user_name, number_of_messages) {
         send_message();
     };
 }
-
