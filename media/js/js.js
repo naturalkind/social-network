@@ -1,7 +1,8 @@
-/// листалка
 IP_ADDR = "";
 var innode;
 var len;
+
+
 function getIndex(node) {
     var childs = node.parentNode.children;
   for (i = 0; i < childs.length; i++) {
@@ -775,7 +776,6 @@ function LIKEOVER(link) {
                 for (var r in f) {
                     html += " <a>" + f[r].fields.username + "</a> ";
                 }
-                console.log("100")
                 tooltipElem.innerHTML = html;
                 over.appendChild(tooltipElem);
                 var coords = over.getBoundingClientRect();
@@ -1236,7 +1236,7 @@ function activate_wall(user_name) {
             fc.className = 'message';
             var message_data = JSON.parse(event.data);
             var date = new Date(message_data.timestamp*1000);
-            fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')">' + message_data.title + '→</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'.png" height="auto" width="auto" onclick="showImg(this)" class="wallpost"></div>';
+            fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')">' + message_data.title + '→</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'.png" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div class="text" style="padding:5px;">'+ message_data.text +'</div><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img src="/media/images/mesvF.png" onclick="comView('+ "'" + message_data.id+ "'" +')"><img id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="' + message_data.id + '"></div></div></div></div>';
             try {
                 var tev = document.getElementById('conversation');
                 tev.insertBefore(fc, tev.firstChild);
