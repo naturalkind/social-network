@@ -76,6 +76,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             _data = {"type": "wallpost",
                      "timestamp": dateformat.format(post.date_post, 'U'),
                      "image": nameFile,
+                     "text":response["body"],
                      "user_post": str(self.sender_name),
                      "title": response["title"],
                      "id": post.id,
