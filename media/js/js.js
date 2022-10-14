@@ -3,7 +3,55 @@ var PORT = "8889"
 
 var innode;
 var len;
+var topbt;
+var topbt_indicator;
+var topbt_position;
 
+window.onload = function(){
+    topbt = document.getElementById('topbt');
+    topbt.onclick = function(e){
+                            console.log(topbt_indicator);
+                            if (topbt_indicator == "editPROFF") {
+                                document.body.style.overflow = 'auto';
+                                cont.style.display = 'none';                     
+                                textElem.style.transform = 'rotate(0deg)';                            
+                            } else if (topbt_indicator == "scroll_up"){
+                                topbt.style.transform = 'rotate(180deg)';
+                                window.scrollTo(0, 0)
+                                topbt_indicator = "scroll_down";
+                            } else if (topbt_indicator == "scroll_down") {
+                                topbt.style.transform = 'rotate(0deg)';
+                                window.scrollTo(0, topbt_position);
+                                topbt_indicator = "scroll_up";
+                            } else if (topbt_indicator == "handler") {
+                                handler(e)
+                            } else if (topbt_indicator == "addPost") {
+                                document.body.style.overflow = 'auto';
+                                cont.style.display = 'none';
+                                topbt.style.transform = 'rotate(0deg)';
+                                isLoading = false;                            
+                            } else if (topbt_indicator == "foll") {
+                                document.body.style.overflow = 'auto';
+                                cont.style.display = 'none';
+                                pageop.style.opacity = 1;
+                                topbt.style.transform = 'rotate(0deg)';
+                                topbt_indicator = "scroll";
+                            } else if (topbt_indicator = "") {
+                            
+                            }
+
+    };
+}
+
+function handler(e) {
+	// remove this handler
+    var cont = document.getElementById('block-post');
+    cont.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    topbt.style.transform = 'rotate(0deg)';
+    e.target.removeEventListener(e.type, arguments.callee);
+    topbt_indicator = "scroll";
+}
 
 function getIndex(node) {
     var childs = node.parentNode.children;
@@ -168,6 +216,7 @@ function addREG(){
         }
 }
 /// редактировать профиль
+console.log(topbt);
 function editPROFF (){
         document.body.style.overflow = 'hidden';
         var cont = document.getElementById('block-post'); // ищем элемент с id
@@ -182,13 +231,8 @@ function editPROFF (){
 //                var textElem = document.createElement('div');
 //                textElem.id = 'close';
 //                cont.insertBefore(textElem, cont.firstChild);
-                var textElem = document.getElementById('topbt');
-                textElem.style.transform = 'rotate(90deg)';
-                textElem.onclick = function(){
-                          document.body.style.overflow = 'auto';
-                          cont.style.display = 'none';                     
-                          textElem.style.transform = 'rotate(0deg)';
-                      };
+                topbt.style.transform = 'rotate(90deg)';
+                topbt_indicator = "editPROFF"
                 }
             };
             http.send(null);
@@ -489,12 +533,10 @@ function scroll(){
 
     if(y >= contentHeight){
         isLoading = true;
-        console.log('scroll');
-        var fg = document.getElementById('topbt');
-        fg.onclick = function(){
-            window.scrollTo(0, 0);
-            fg.style.transform = 'rotate(180deg)';
-        };
+        console.log('scroll', y);
+        topbt_position = y;
+        //textElem.onclick = null;
+        topbt_indicator = "scroll_up";
         try{getNewData(document.getElementById("DODO").getAttribute('atr'));} catch (err){}
     }
 }
@@ -507,17 +549,7 @@ console.log(r);
 if (r != "undefined"){
    setTimeout(jsons(r, scrollable), 1200);}
 }
-function handler(e) {
-	// remove this handler
-    var cont = document.getElementById('block-post');
-    cont.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    var textElem = document.getElementById('topbt');
-    textElem.style.transform = 'rotate(0deg)';
-    e.target.removeEventListener(e.type, arguments.callee);
-//
-//	alert("You'll only see this once!");
-}
+
 function showImg(path_data){
     document.body.style.overflow = 'hidden';
     var cont = document.getElementById('block-post');
@@ -533,9 +565,8 @@ function showImg(path_data){
     var startPoint={};
     var nowPoint;
     var ldelay;
-    var textElem = document.getElementById('topbt');
-    textElem.style.transform = 'rotate(90deg)';
-    textElem.addEventListener("click",  handler);
+    topbt.style.transform = 'rotate(90deg)';
+    topbt_indicator = "handler";
 
     cont.addEventListener("click", handler);
     img.addEventListener('touchstart', function(event) {
@@ -692,8 +723,8 @@ function showContent(link) {
 //                          pageop.style.opacity = 1;
 //                          isLoading = false;
 //                      };
-                    var textElem = document.getElementById('topbt');
-                    textElem.style.transform = 'rotate(90deg)';
+                      console.log(topbt)
+                      topbt.style.transform = 'rotate(90deg)';
 //                      textElem.onclick = function(){
 //                          pageop.style.display = 'block';
 //                          document.body.style.overflow = 'auto';
@@ -702,7 +733,8 @@ function showContent(link) {
 //                          textElem.style.transform = 'rotate(0deg)';
 //                          isLoading = false;
 //                      };
-                    textElem.addEventListener("click", handler);
+                    //topbt.onclick = null;
+                      topbt_indicator = "handler";
                       // листать
                       var textElemv1 = document.createElement('a');
                       textElemv1.id = 'next';
@@ -884,14 +916,8 @@ function addPost(){
         var cont = document.getElementById('block-post');
         cont.style.display = 'block';
         cont.innerHTML = html;
-        var textElem = document.getElementById('topbt');
-        textElem.style.transform = 'rotate(90deg)';
-        textElem.onclick = function(){
-            document.body.style.overflow = 'auto';
-            cont.style.display = 'none';
-            textElem.style.transform = 'rotate(0deg)';
-            isLoading = false;
-        };
+        topbt.style.transform = 'rotate(90deg)';
+        topbt_indicator = "addPost";
 
     } catch (err){}
 }
@@ -992,14 +1018,8 @@ function foll(link){
 //                      var textElem = document.createElement('div');
 //                      textElem.id = 'close';
 //                      cont.insertBefore(textElem, cont.firstChild);
-                      var textElem = document.getElementById('topbt');
-                      textElem.style.transform = 'rotate(90deg)';
-                      textElem.onclick = function(){
-                          document.body.style.overflow = 'auto';
-                          cont.style.display = 'none';
-                          pageop.style.opacity = 1;
-                          textElem.style.transform = 'rotate(0deg)';
-                      };
+                      topbt.style.transform = 'rotate(90deg)';
+                      topbt_indicator = "foll";
 
             }
         };
@@ -1027,15 +1047,8 @@ function folls(link){
 //                      var textElem = document.createElement('div');
 //                      textElem.id = 'close';
 //                      cont.insertBefore(textElem, cont.firstChild);
-                      var textElem = document.getElementById('topbt');
-                      textElem.style.transform = 'rotate(90deg)';
-                      textElem.onclick = function(){
-                          document.body.style.overflow = 'auto';
-                          cont.style.display = 'none';
-                          pageop.style.opacity = 1;
-                          textElem.style.transform = 'rotate(0deg)';
-                      };
-
+                      topbt.style.transform = 'rotate(90deg)';
+                      topbt_indicator = "foll";
             }
         };
         http.send(null);
@@ -1085,14 +1098,8 @@ function getlkpost(link){
 //                      var textElem = document.createElement('div');
 //                      textElem.id = 'close';
 //                      cont.insertBefore(textElem, cont.firstChild);
-                      var textElem = document.getElementById('topbt');
-                      textElem.style.transform = 'rotate(90deg)';
-                      textElem.onclick = function(){
-                          document.body.style.overflow = 'auto';
-                          cont.style.display = 'none';
-                          pageop.style.opacity = 1;
-                          textElem.style.transform = 'rotate(0deg)';
-                      };
+                      topbt.style.transform = 'rotate(90deg)';
+                      topbt_indicator = "foll";
 
             }
         };
