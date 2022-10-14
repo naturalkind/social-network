@@ -1,5 +1,5 @@
 /// листалка
-IP_ADDR = "178.158.131.41";
+IP_ADDR = "";
 var innode;
 var len;
 function getIndex(node) {
