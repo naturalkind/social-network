@@ -733,6 +733,16 @@ div#cn {
     margin: 0 auto;
 }
 
+.send {
+    display: block;
+    position: fixed;
+    bottom: 25px;
+    left: 49%;
+    background: #507299;
+    padding: 6px;
+    border-radius: 6px;
+}
+
 #imginreg {
     position: relative;
     width: 100%;
@@ -956,6 +966,15 @@ font-family: Arial;
 /*}*/
 @media only screen and (min-width : 400px){
 
+.send {
+    left: 45%;
+}
+
+.send img {
+    outline: 0;
+    width: 98px;
+    height: 98px;
+}
 .message {
     margin: 20px 0;
     margin: 20px;
@@ -1528,7 +1547,8 @@ textarea#id_body {
     /*height:90px;*/
     width: 125px;
     height: 125px;
-    margin: 8px;}
+    margin: 8px;
+    }
 #breadcrumb a{
     cursor: pointer;
     border-radius: 5px;
@@ -1549,6 +1569,15 @@ textarea#id_body {
 
 /*}*/
 @media screen and (min-width: 1200px)  {
+
+    .send {
+        left: 49%;
+    }
+    .send img {
+        outline: 0;
+        width: 48px;
+        height: 48px;
+    }
     #conversation .message {
     /*max-width: 400px;*/
     /*float: left;*/
@@ -2090,6 +2119,7 @@ font-size: 20px
     /*min-width: 600px;*/
     margin: 20px auto;
 }
+
     img.topbt {
     position: fixed;
     width: 60px;

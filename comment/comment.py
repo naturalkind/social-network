@@ -49,12 +49,17 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
         """
         response = json.loads(text_data)        
         
-        
-        nameFile = str(uuid.uuid4())[:12]
-        imgstr = re.search(r'base64,(.*)', response['comment_image']).group(1)
-        img_file = open(f"media/data_image/{self.path_data}/{nameFile}.png", 'wb')
-        img_file.write(base64.b64decode(imgstr))
-        img_file.close()
+        if response['comment_image'] != "":
+            nameFile = str(uuid.uuid4())[:12]
+            imgstr = re.search(r'base64,(.*)', response['comment_image']).group(1)
+            img_file = open(f"media/data_image/{self.path_data}/{nameFile}.png", 'wb')
+            img_file.write(base64.b64decode(imgstr))
+            img_file.close()
+            comment_image = f"{self.path_data}/{nameFile}.png"
+        else:
+            comment_image = ""
+            nameFile = ""
+        print ("COMMET<<<<<<<<", response)
         ps = await database_sync_to_async(Post.objects.get)(id=self.post_name)
         comment = Comment()
         comment.comment_text = response['comment_text']
@@ -68,7 +73,7 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
         _data={
                 "type": "send_comment",
                 "comment_text": response['comment_text'],
-                "comment_image": f"{self.path_data}/{nameFile}.png",
+                "comment_image": comment_image,
                 "comment_user": self.scope['user'].username,
             }
         await self.channel_layer.group_send(self.post_group_name, _data)

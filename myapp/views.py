@@ -21,7 +21,7 @@ import os
 import uuid
 from PIL import Image
 from datetime import datetime
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import UserCreationForm 
 
 
@@ -195,7 +195,10 @@ def new(request):
     
 # На выходе мы получим в ответе post_id если не было ошибки
 def post(request, post):
-    post_id = Post.objects.get(id=post)
+    try:
+        post_id = Post.objects.get(id=post)
+    except ObjectDoesNotExist:
+        return HttpResponse("Больше не существует")
     data = {} 
     comment  = Comment.objects.filter(post_id=post_id)
     page = request.GET.get('page')

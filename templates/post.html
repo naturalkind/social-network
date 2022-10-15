@@ -2,7 +2,7 @@
 {#{% extends 'base.html' %}#}
 {% block content %}
     {% if username == post.user_post.username %}
-<a onclick="ool('{{post.id}}')">УДАЛИТЬ</a>
+<a onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>
     {% endif %}
 <div id="node">
 <div id="breadcrumb" style="background: #507299;"><div class="title">{{post.title}}</div><div class="user">

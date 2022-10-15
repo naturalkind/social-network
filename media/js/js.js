@@ -1,5 +1,5 @@
 var IP_ADDR = "178.158.131.41";
-var PORT = "8889"
+var PORT = "8888"
 
 var innode;
 var len;
@@ -10,36 +10,36 @@ var topbt_position;
 window.onload = function(){
     topbt = document.getElementById('topbt');
     topbt.onclick = function(e){
-                            console.log(topbt_indicator);
-                            if (topbt_indicator == "editPROFF") {
-                                document.body.style.overflow = 'auto';
-                                cont.style.display = 'none';                     
-                                textElem.style.transform = 'rotate(0deg)';                            
-                            } else if (topbt_indicator == "scroll_up"){
-                                topbt.style.transform = 'rotate(180deg)';
-                                window.scrollTo(0, 0)
-                                topbt_indicator = "scroll_down";
-                            } else if (topbt_indicator == "scroll_down") {
-                                topbt.style.transform = 'rotate(0deg)';
-                                window.scrollTo(0, topbt_position);
-                                topbt_indicator = "scroll_up";
-                            } else if (topbt_indicator == "handler") {
-                                handler(e)
-                            } else if (topbt_indicator == "addPost") {
-                                document.body.style.overflow = 'auto';
-                                cont.style.display = 'none';
-                                topbt.style.transform = 'rotate(0deg)';
-                                isLoading = false;                            
-                            } else if (topbt_indicator == "foll") {
-                                document.body.style.overflow = 'auto';
-                                cont.style.display = 'none';
-                                pageop.style.opacity = 1;
-                                topbt.style.transform = 'rotate(0deg)';
-                                topbt_indicator = "scroll";
-                            } else if (topbt_indicator = "") {
-                            
-                            }
-
+            var cont = document.getElementById('block-post');
+            console.log(topbt_indicator, topbt_position);
+            if (topbt_indicator == "editPROFF") {
+                document.body.style.overflow = 'auto';
+                cont.style.display = 'none';                     
+                topbt.style.transform = 'rotate(0deg)';                            
+            } else if (topbt_indicator == "scroll_up"){
+                topbt.style.transform = 'rotate(180deg)';
+                window.scrollTo(0, 0)
+                topbt_indicator = "scroll_down";
+            } else if (topbt_indicator == "scroll_down") {
+                topbt.style.transform = 'rotate(0deg)';
+                window.scrollTo(0, topbt_position);
+                topbt_indicator = "scroll_up";
+            } else if (topbt_indicator == "handler") {
+                handler(e)
+            } else if (topbt_indicator == "addPost") {
+                document.body.style.overflow = 'auto';
+                cont.style.display = 'none';
+                topbt.style.transform = 'rotate(0deg)';
+                isLoading = false;                            
+            } else if (topbt_indicator == "foll") {
+                document.body.style.overflow = 'auto';
+                cont.style.display = 'none';
+                pageop.style.opacity = 1;
+                topbt.style.transform = 'rotate(0deg)';
+                topbt_indicator = "scroll";
+            } else if (topbt_indicator = "") {
+            
+            }
     };
 }
 
@@ -49,8 +49,18 @@ function handler(e) {
     cont.style.display = 'none';
     document.body.style.overflow = 'auto';
     topbt.style.transform = 'rotate(0deg)';
-    e.target.removeEventListener(e.type, arguments.callee);
-    topbt_indicator = "scroll";
+    //e.target.removeEventListener(e.type, arguments.callee);
+    var scrollable = document.getElementById("main-wrapper");
+    var contentHeight = scrollable.offsetHeight;
+//    var yOffset = window.pageYOffset;
+//    topbt_position = yOffset + window.innerHeight;
+    if (topbt_position > contentHeight) {
+        topbt_indicator = "scroll_down";
+    } else {
+        topbt_indicator = "scroll_up";
+    }
+    
+    
 }
 
 function getIndex(node) {
@@ -119,24 +129,6 @@ function LIKE(link){
       }
 }
 
-function ool(id){
-    console.log(document.cookie);
-    var strCookies = document.cookie;
-    var cookiearray = strCookies.split(';');
-    for(var i=0; i<cookiearray.length; i++){
-      var name = cookiearray[i].split('=')[0];
-      var value = cookiearray[i].split('=')[1];
-        console.log(value);
-}
-    console.log(id);
-//    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-    var link ='/getapi/'+id;
-    var client = new XMLHttpRequest();
-    client.open("DELETE", link, true);
-    client.setRequestHeader('X-CSRFToken', value);
-    client.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-    client.send(null);
-}
 
 var gem;
 var rpv;
@@ -402,7 +394,7 @@ function jsons(link, atr){
                                }
                         cont.innerHTML += html;
                         isLoading = false;
-                           } else {
+                        } else {
                         var f = JSON.parse(http.responseText);
                         
                         
@@ -442,7 +434,8 @@ function jsons(link, atr){
                                     minutes = "0" + date.getMinutes();
                                 } else minutes = date.getMinutes();
                                 console.log(g[R])
-                                html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span><span class='arrow'> → </span>" + g[R].fields.title + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div style='width: 100%;'><img src='/media/images/mesvF.png' onclick='comView("+g[R].pk +")'><img src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
+                                
+                                html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span><span class='arrow'> → </span>" + g[R].fields.title + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img src='/media/images/mesvF.png' onclick='comView("+g[R].pk +")'><img src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
                         }
                             else {
                                 html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
@@ -516,27 +509,27 @@ function getNewData(scrollable){
     try {
         r = document.getElementById('IOP').innerText;
         if (r != "undefined"){
-  setTimeout(jsons(r, scrollable), 1200);
+            setTimeout(jsons(r, scrollable), 1200);
         }
     } catch (err) {}
 }
 function scroll(){
     //console.log(window.scrollY++);
     if (window.scrollY++ || window.scrollY--){
-      try{document.getElementById('comps').style.opacity = "0.9";}catch (err){}
-      } else {document.getElementById('comps').style.opacity = "1";}
+        try{document.getElementById('comps').style.opacity = "0.9";}catch (err){}
+    } else {
+        document.getElementById('comps').style.opacity = "1";
+    }
     if(isLoading) return false;
     var scrollable = document.getElementById("main-wrapper");
     var contentHeight = scrollable.offsetHeight;
     var yOffset = window.pageYOffset;
     var y = yOffset + window.innerHeight;
-
     if(y >= contentHeight){
         isLoading = true;
-        console.log('scroll', y);
         topbt_position = y;
-        //textElem.onclick = null;
         topbt_indicator = "scroll_up";
+        console.log('scroll', topbt_position);
         try{getNewData(document.getElementById("DODO").getAttribute('atr'));} catch (err){}
     }
 }
@@ -667,9 +660,8 @@ function showImg(path_data){
 }
 
 function showContent(link) {
-    try{
-        document.body.removeChild(document.getElementById('block-post'));
-    }catch (err){}
+        try{document.body.removeChild(document.getElementById('block-post'));}catch (err){}
+        console.log("showContent", topbt_position)
         isLoading = false;
         document.body.style.overflow = 'hidden';
 //        var cont = document.getElementById('block-post'); // ищем элемент с id
@@ -1239,13 +1231,17 @@ function activate_wall(user_name) {
             var fc = document.createElement('div');
             fc.className = 'message';
             var message_data = JSON.parse(event.data);
-            var date = new Date(message_data.timestamp*1000);
-            fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')">' + message_data.title + '→</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'.png" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div class="text" style="padding:5px;">'+ message_data.text +'</div><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img src="/media/images/mesvF.png" onclick="comView('+ "'" + message_data.id+ "'" +')"><img id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="' + message_data.id + '"></div></div></div></div>';
-            try {
-                var tev = document.getElementById('conversation');
-                tev.insertBefore(fc, tev.firstChild);
-            } catch (err) {
-                console.log("save data")
+            if (message_data["status"]=="wallpost") {
+                var date = new Date(message_data.timestamp*1000);
+                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')">' + message_data.title + '→</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'.png" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div class="text" style="padding:5px;">'+ message_data.text +'</div><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img src="/media/images/mesvF.png" onclick="comView('+ "'" + message_data.id+ "'" +')"><img id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="' + message_data.id + '"></div></div></div></div>';
+                try {
+                    var tev = document.getElementById('conversation');
+                    tev.insertBefore(fc, tev.firstChild);
+                } catch (err) {
+                    console.log("save data")
+                }
+            } else if (message_data["status"]=="deletepost") {
+                
             }
         };
         ws_wall.onclose = function(){
@@ -1290,6 +1286,12 @@ function send_wall() {
         ws_wall.send(data);
         alert('ЗАГУЗИЛИ');
 }
+// удалить
+function deletepost(id){
+    var event = { id : id, event: "deletepost"};
+    var data = JSON.stringify(event);
+    ws_wall.send(data);
+}
 
 //////////////////////////////////////////////////////////////////
 ///  комментарии /////////////////////////////////////////////////
@@ -1303,7 +1305,10 @@ function activate_com(post_id) {
             var fc = document.createElement('div');
             fc.className = 'f-c';
             var message_data = JSON.parse(event.data);
-            fc.innerHTML = '<a>' + message_data.comment_user + '</a> ' +'<img src="media/data_image/'+ message_data.comment_image +'">'+message_data.comment_text;
+            console.log(">>>>>>>>>>>>>COM", message_data)
+            if (message_data.comment_image != "") {
+                fc.innerHTML = '<a>' + message_data.comment_user + '</a> ' +'<img src="media/data_image/'+ message_data.comment_image +'">'+message_data.comment_text;
+            } else {fc.innerHTML = '<a>' + message_data.comment_user + '</a> '+ message_data.comment_text;}
             tev.insertBefore(fc, tev.lastChild);
         };
         ws_com.onclose = function(){
@@ -1322,6 +1327,10 @@ function activate_com(post_id) {
     }
 
     function send_com(cip) {
+        console.log(dataURL_v1, typeof dataURL_v1)
+        if (typeof dataURL_v1 == 'undefined') {
+            dataURL_v1 = "";
+        }
         var comment_text = document.getElementById('comment_text_' + cip);
         if (comment_text.value == "") {
             return false;

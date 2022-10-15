@@ -52,8 +52,6 @@ class WallHandler(AsyncJsonWebsocketConsumer):
         """
         response = json.loads(text_data)
         event = response.get("event", None)
-        #message_res = response.get("message", None)
-        #print (response)
         if event == "wallpost":
             nameFile = str(uuid.uuid4())[:12]
             user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)
@@ -82,10 +80,17 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                      "id": post.id,
                      "image_user" : self.image_user, 
                      "path_data" : self.path_data,
+                     "status" : "wallpost"
                     }
             await self.channel_layer.group_send(self.room_group_name, _data)
-        
-        
+        if event == "deletepost":
+            print ("DELETE..............", response)
+            post = await database_sync_to_async(Post.objects.get)(id=response["id"])
+            await sync_to_async(post.delete)()
+            #post_async = sync_to_async(post.delete)
+            #await post.delete()
+            _data = {"type": "wallpost", "status":"deletepost"}
+            await self.channel_layer.group_send(self.room_group_name, _data)
 #        if event == 'MOVE':
 #            # Send message to room group
 #            await self.channel_layer.group_send(self.room_group_name, {
@@ -99,5 +104,5 @@ class WallHandler(AsyncJsonWebsocketConsumer):
         # Send message to WebSocket
         print (">>>>>>>>>>>>", res)
         await self.send(text_data=json.dumps(res))
-        
-        
+
+
