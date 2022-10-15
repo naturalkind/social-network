@@ -733,7 +733,7 @@ div#cn {
     margin: 0 auto;
 }
 
-.send {
+#block-post .send {
     display: block;
     position: fixed;
     bottom: 25px;
@@ -966,11 +966,11 @@ font-family: Arial;
 /*}*/
 @media only screen and (min-width : 400px){
 
-.send {
+#block-post .send {
     left: 45%;
 }
 
-.send img {
+#block-post .send img {
     outline: 0;
     width: 98px;
     height: 98px;
@@ -1570,10 +1570,10 @@ textarea#id_body {
 /*}*/
 @media screen and (min-width: 1200px)  {
 
-    .send {
+    #block-post .send {
         left: 49%;
     }
-    .send img {
+    #block-post .send img {
         outline: 0;
         width: 48px;
         height: 48px;

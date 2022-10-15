@@ -28,9 +28,9 @@
   {% for cm in comment %}
       <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">
   <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
-
+        {% if cm.comment_image %}
           <img src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">
-
+        {% endif %}
          <span style="display: block;text-align: center;">{{ cm.comment_text }}</span></div>
   {% endfor %}
 
