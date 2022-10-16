@@ -79,9 +79,8 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             
         if event == "Start":
             print ("START..............")
-            self.namefile = str(uuid.uuid4())[:12]#f"{_nameFile}_{response['Name']}"#
-            #self.namefile = f'media/data_image/{self.path_data}/{_nameFile}_{response["Name"]}'
-            self.myfile = open(f'media/data_image/{self.path_data}/{self.namefile}.png', "wb")
+            self.namefile = f'{str(uuid.uuid4())[:12]}_{response["Name"]}'
+            self.myfile = open(f'media/data_image/{self.path_data}/{self.namefile}', "wb")
             
             _data = {"type": "wallpost", "status":"MoreData"}
             await self.channel_layer.group_send(self.room_group_name, _data)

@@ -263,7 +263,7 @@ def login(request):
         password = request.POST.get('password','')
         user = auth.authenticate(username=username,password=password)
         if user is not None:
-            auth.login(request,user)
+            auth.login(request, user)
             return redirect('/')
         else:
             args['login_error']= 'Пользователь не найден'
@@ -525,7 +525,7 @@ def getlkpost(request,id):
     ps = Post.objects.all().filter(likes=user)
     for x in ps:
         pid = str(x.id)
-        li = f"""<li class="views-foll" width="600px"><div class="views-title" onclick="showContent('{pid}')">{x.title}</div><img src="/media/data_image/{x.path_data}/{x.image}.png" id="imgf" onclick="showContent('{pid}')"></li>"""
+        li = f"""<li class="views-foll" width="600px"><div class="views-title" onclick="showContent('{pid}')">{x.title}</div><img src="/media/data_image/{x.path_data}/{x.image}" id="imgf" onclick="showContent('{pid}')"></li>"""
         ht += li
 
     return HttpResponse(ht)

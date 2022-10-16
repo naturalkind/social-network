@@ -56,13 +56,13 @@
       <li class="views-row"  onmouseover="getIndex(this);">
       <div class="views-title"><a onclick="showContent('{{l.id}}')" atribut="{{l.id}}">{{ l.title }}</a></div>
       <div class="field-image">
-      <img src="/media/data_image/{{ user_info.path_data }}/{{ l.title }}_tm.png" width="220" height="150" alt="">
+        <img src="/media/data_image/{{ user_info.path_data }}/{{ l.title }}_tm.png" width="220" height="150" alt="">
       </div>
       </li>
               {% else %}
       <li class="views-row"  onmouseover="getIndex(this);">
       <div class="field-image" atribut="{{l.id}}">
-<img style="background: url('/media/data_image/{{ l.path_data }}/{{ l.image }}.png');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')">
+<img style="background: url('/media/data_image/{{ l.path_data }}/{{ l.image }}');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')">
 
       </div>
           {% endif %}

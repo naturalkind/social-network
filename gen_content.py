@@ -46,8 +46,8 @@ for us in test:
             post.title = "test"
             post.body = ""
             file_path = random.choice(list(images.file.keys()))
-            old_name = images.file[file_path][0].split("/")[-1].split(".")[0]
-            cop(images.file[file_path][0], f"media/data_image/{i.path_data}/{old_name}.png")
+            old_name = images.file[file_path][0].split("/")[-1]#.split(".")[0]
+            cop(images.file[file_path][0], f"media/data_image/{i.path_data}/{old_name}")
             post.image = old_name
             post.path_data = str(i.path_data)
             post.user_post = i

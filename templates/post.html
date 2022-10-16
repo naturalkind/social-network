@@ -8,15 +8,15 @@
 <div id="breadcrumb" style="background: #507299;"><div class="title">{{post.title}}</div><div class="user">
 Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> {{post.date_post|date:'d b o в H:i' }}</div></div>
 <div class="auto-images">
-{% if post.video == '' %}
-    <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}.png" width="auto" alt="{{post.title}}" title="{{post.title}}" onclick="youps('{{ post.video }}')">
+    {% if post.video == '' %}
+        <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.title}}" title="{{post.title}}">
+    <!--    onclick="youps('{{ post.video }}')"-->
     {% else %}
-    <div id="video-placeholder" idv="{{ post.video }}">
-
-</div>
+        <div id="video-placeholder" idv="{{ post.video }}">
+    </div>
     {% endif %}
-
 </div>
+
 <div class="about">
 <!-- -->
 <p style="font-size: 26px;margin: 0 auto;padding: 10px 40px;text-align: left;color: #9a9a9a;">{{post.body|safe}}</p>
@@ -53,7 +53,7 @@
     </div>
        <ul class="day-block" id="DOD" icon="{{ post.id }}">
       {% for f in post_user %}
-       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/data_image/{{ f.path_data }}/{{ f.image }}.png');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3></li>
+       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/data_image/{{ f.path_data }}/{{ f.image }}');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3></li>
       {% endfor %}
 </ul>
       </div>

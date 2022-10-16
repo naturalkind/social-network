@@ -16,24 +16,19 @@
         {% else %}
         <img src="/media/images/oneProf.png" height="400" width="auto" onclick="userPROFILE('{{message.user_post.id }}')">
         {% endif %}
-        <a atribut="{{message.id}}" class="postview"><span style="font-weight: bolder;" >{{message.user_post.username }}</span> → {{ message.title|truncatechars:20 }}</a>
+        <a atribut="{{message.id}}" class="postview"><span style="font-weight: bolder;" >{{message.user_post.username }}</span><span class="arrow"> → </span><span class="message-title">{{ message.title|truncatechars:20 }}</span></a>
     </div>
     <span class="datetime">{{ message.date_post|date:'H:i' }}</span>
 {# {{ message.date_post|date:'d b o в H:i' }}#}
  </div>
-{#                    <a class="messageA" onclick="showContent('{{ message.id }}')">←{{ message.title }}→</a>#}
  <div class="field-image" atribut="{{message.id}}">
-        <img src="/media/data_image/{{message.path_data}}/{{ message.image }}.png" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}">
-{#   <img src="/media/data_image/{{ message.imgMed }}.png" height="auto" width="auto" class="wallpost" onclick="showContent('{{message.id}}')" atribut="{{message.id}}">#}
+        <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}">
  </div>
  <div class="body">
 <div class="text" style="padding:5px;">
 {% if message.body  %}
-
 {#{{ message.body|safe}}#}
-
 {{ message.body|truncatechars:60 }}
-{#    {{ message.body }}#}
 {% endif %}
 </div>
  <div id="post_like_block_{{message.id}}" style="width: 100%">
@@ -47,7 +42,6 @@
   </div>
    </div>
  </div>
-{#        <img src="{{ message.image.url }}" height="300px" width="auto">#}
 </div>
 {% endfor %}
   </div>
