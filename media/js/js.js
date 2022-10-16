@@ -351,9 +351,10 @@ function jsons(link, atr){
             linkfull = '/my/'+us+'/?page=' + link;
         }
         else if (atr == 'users'){
+            console.log("VIEW---------------")
             cont = document.getElementById('DODO');
-            wd = 300;
-            hd = 230;
+            wd = 180;//300;
+            hd = 160;//230;
             linkfull = 'users/?page=' + link;
         }
         else if (atr=='con'){
@@ -390,6 +391,9 @@ function jsons(link, atr){
                                var g = JSON.parse(f.data);
                                document.getElementById('IOP').innerText = f.op1;
                                for (var R in g) {
+                               
+                               
+                              // margin:5px;background-image: url('/media/data_image/db7b295b-b32/tm_db7b295b-b32_sadko_19.png');border:none;background-size:cover; width:180px;height:160px;
                                    html += "<div class='views-row' onclick='userPROFILE("+ g[R].pk +")'><img src='/media/data_image/"+g[R].fields.path_data+"/"+g[R].fields.image_user +"' width='180' height='180'><div class='user-name'><a atribut='"+g[R].pk+"' style='padding: 0px;border-radius: 7px;font-size: 20px;color: #507299;'>"+g[R].fields.username +"</a></div></div>"
                                }
                         cont.innerHTML += html;
@@ -902,7 +906,7 @@ function openMenu(){
 /// добвать пост
 function addPost(){
     try{
-      html ='<form class="message_form" style="display: block;" id="formsend"><input id="id_title" placeholder="НАЗВАНИЕ" maxlength="100"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">загрузка картинки</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" maxlength="400" placeholder="Введите Ваше сообщение..." onfocus="geturlimg()"></textarea></div><div class="send"><img src="/media/images/cloud.png" width="50" height="50" onclick="send_wall()"></div></form>';
+        html ='<form class="message_form" id="message_form" style="display: block;" id="formsend"><input id="id_title" placeholder="НАЗВАНИЕ" maxlength="100"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">загрузка картинки</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" maxlength="400" placeholder="Введите Ваше сообщение..." onfocus="geturlimg()"></textarea></div><div class="send"><img src="/media/images/cloud.png" width="50" height="50" onclick="send_wall()"></div></form>';
         document.body.style.overflow = 'hidden';
         var contv = document.getElementById('main-wrapper');
         var cont = document.getElementById('block-post');
@@ -910,10 +914,9 @@ function addPost(){
         cont.innerHTML = html;
         topbt.style.transform = 'rotate(90deg)';
         topbt_indicator = "addPost";
-
+        //Ready();
     } catch (err){}
 }
- 
  
 // Репосты 
 function rpPost(link, us) {
@@ -952,7 +955,6 @@ function addfollow(link, us, id){
                var follow_btn = document.getElementById("follw_"+id);
                follow_btn.innerHTML = "ОТПИСАТЬСЯ";
                follow_btn.setAttribute('onclick', 'delfollow("'+ link +'","'+ us +'","'+ id +'")')
-               
                var foll_coun = document.getElementById("foll_coun_"+id);
                foll_coun.innerHTML = parseInt(foll_coun.innerHTML)+1;
             }
@@ -1143,9 +1145,9 @@ function geturlimg(){setTimeout(draw, 5000)}
 function draw() {
         var textarea = document.getElementById('id_body');
         try{
-        var url = textarea.value;
-        console.log(url);
-        start_imgurl(url);} catch (err){}
+            var url = textarea.value;
+            console.log(url);
+            start_imgurl(url);} catch (err){}
     }
 function start_imgurl(url){
         var img = document.createElement("img");
@@ -1198,26 +1200,100 @@ function getNumEnding(iNumber, aEndings) {
     }
     return sEnding;
 }
+
+// загрузка websocket файлов
+
 var readerwall = new FileReader();
 var dataURL_wall;
 function OnOnW() {
+    currentChunk = 1.0
     canvaswall = document.getElementById('canvas');
     contextwall = canvaswall.getContext('2d');
     var inputwall = document.getElementById('image_file');
     filewall = inputwall.files;
-    readerwall.readAsDataURL(filewall[0]);
-    readerwall.onload = function (e) {
-                var im = new Image();
-                im.onload = function (e) {
-                    canvaswall.width = im.width;
-                    canvaswall.height = im.height;
-                    contextwall.drawImage(im, 0, 0, im.width, im.height);
-                    dataURL_wall = canvaswall.toDataURL("image/png");
-                };
-                im.src = readerwall.result;
+    SelectedFile = filewall[0];
+    Name = SelectedFile.name;
+    fileSize = SelectedFile.size;
+    type_file = Name.split(".")
+    type_file = type_file[type_file.length-1].toLowerCase()
+    console.log("ONNNN", Name)
+    if (type_file == "png" || type_file == "jpg" || type_file == "jpeg") {
+        readerwall.readAsDataURL(filewall[0]);
+        readerwall.onload = function (e) {
+            var im = new Image();
+            im.onload = function (e) {
+                canvaswall.width = im.width;
+                canvaswall.height = im.height;
+                contextwall.drawImage(im, 0, 0, im.width, im.height);
+                dataURL_wall = canvaswall.toDataURL("image/png");
+            };
+            im.src = readerwall.result;
+            StartUpload()
+        }
     }
 }
 
+
+var SelectedFile;
+var Name;
+var fileSize;
+var PR;
+var sPR;
+
+var chunkSize = 1024.0 * 1024.0;
+var currentChunk;
+var totalChunks;
+var t_el = document.createElement("div");
+t_el.id = "loader";
+t_el.style.display = "block";
+
+function Ready(){
+    if(window.File && window.FileReader){ //These are the necessary HTML5 objects the we are going to use
+        //document.getElementById('UploadButton').addEventListener('click', StartUpload);
+        //document.getElementById('FileBox').addEventListener('change', FileChosen);
+        //document.getElementById('image_file').addEventListener('change', StartUpload);
+    }
+    else
+    {
+        document.getElementById('UploadArea').innerHTML = "Your Browser Doesn't Support The File API Please Update Your Browser";
+    }
+} 
+ 
+
+function FileChosen(evnt) {
+    SelectedFile = evnt.target.files[0];
+    Name = SelectedFile.name;
+    fileSize = SelectedFile.size;
+}
+
+function StartUpload(){
+    if(document.getElementById('image_file').value != "") {
+        var Content = "<span id='NameArea'>Uploading " + SelectedFile.name + " as " + Name + "</span>";
+        Content += '<div id="ProgressContainer"><div id="ProgressBar"></div></div><span id="percent">50%</span>';
+        if (SelectedFile.size/1000 < 1.0) {
+            Content += "<span id='Uploaded'> - <span id='MB'>0</span>/" + fileSize + " B</span>";
+        } else {
+            Content += "<span id='Uploaded'> - <span id='MB'>0</span>/" + fileSize / 1000000.0 + " MB</span>";
+        };
+        document.getElementById('UploadArea').innerHTML = Content;
+        ws_wall.send(JSON.stringify({'event': 'Start', 'Name' : Name, 'Size' : fileSize }));
+        totalChunks = Math.ceil((fileSize/chunkSize), chunkSize);
+        sPR = 0;
+        PR = (fileSize/totalChunks)/1000000.0
+        UpdateBar(0);
+        console.log("Event Start");
+        } else {
+            alert("Нужно выбрать файл");
+        }
+}
+
+function UpdateBar(percent){
+    document.getElementById('ProgressBar').style.width = percent + '%';
+    document.getElementById('percent').innerHTML = (Math.round(percent*100.0)/100.0) + '%';
+    sPR = sPR + PR;                  
+    var MBDone = sPR-PR;
+    document.getElementById('MB').innerHTML = MBDone;
+}
 
 /////////////
 // WEB SOKET 
@@ -1240,8 +1316,32 @@ function activate_wall(user_name) {
                 } catch (err) {
                     console.log("save data")
                 }
+                document.getElementById('block-post').removeChild(t_el);
+                document.getElementById('message_form').style.display = "block";
+                //alert('ЗАГУЗИЛИ');
             } else if (message_data["status"]=="deletepost") {
                 
+            } else if (message_data["status"]=="MoreData") {
+                console.log("More Data", currentChunk <= totalChunks);
+                if (currentChunk <= totalChunks) {
+                        var offset = (currentChunk-1.0) * chunkSize;
+                        var currentFilePart = SelectedFile.slice(offset, (offset+chunkSize));
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                               UpdateBar(Math.ceil((currentChunk*100.0)/totalChunks));
+                               ws_wall.send(JSON.stringify({'event':'Upload', 'Name' : 'more', 'Data' : e.target.result }));
+                               currentChunk++;
+                        }
+                        reader.readAsDataURL(currentFilePart) 
+                } else {
+                        console.log("Event Done");
+                        document.getElementById('UploadBox').style.display = "none";
+                        ws_wall.send(JSON.stringify({'event':'Done'}));
+                }            
+            
+            } else if (message_data["status"]=="Done") { 
+                    console.log("DONE");
+                    
             }
         };
         ws_wall.onclose = function(){
@@ -1271,6 +1371,9 @@ function send_wall() {
         if (ws_wall.readyState != WebSocket.OPEN) {
             return false;
         }
+        document.getElementById('block-post').appendChild(t_el);
+        document.getElementById('message_form').style.display = "none";
+        //StartUpload();
         var bx = body.value;
         var tx = title.value;
         var event = { title : tx,
@@ -1284,7 +1387,6 @@ function send_wall() {
         var data = JSON.stringify(event);
         //console.log(data);
         ws_wall.send(data);
-        alert('ЗАГУЗИЛИ');
 }
 // удалить
 function deletepost(id){

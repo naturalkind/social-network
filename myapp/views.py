@@ -449,7 +449,7 @@ def my_page(request, username):
 # страница пользователя
 def userViews(request):
     users = User.objects.all()
-    paginator = Paginator(users, 25)
+    paginator = Paginator(users, 40)
     page = request.GET.get('page')
     data = {}
     data['us'] = auth.get_user(request).username

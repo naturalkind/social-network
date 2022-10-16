@@ -15,7 +15,7 @@ import re
 import redis
 import time
 import uuid
-import base64
+import base64, io
 session_engine = import_module(settings.SESSION_ENGINE)
         
 
@@ -28,6 +28,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
         if str(self.scope['user']) != 'AnonymousUser':
             self.image_user = self.scope['user'].image_user
             self.path_data = self.scope['user'].path_data
+            self.namefile = str()
         print ("CHANNEL_LAYERS", self.channel_name, self.room_group_name)
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -53,27 +54,19 @@ class WallHandler(AsyncJsonWebsocketConsumer):
         response = json.loads(text_data)
         event = response.get("event", None)
         if event == "wallpost":
-            nameFile = str(uuid.uuid4())[:12]
             user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)
-            imgstr = re.search(r'base64,(.*)', response["image"]).group(1)
-            img_file = open(f"media/data_image/{self.path_data}/{nameFile}.png", 'wb')
-            img_file.write(base64.b64decode(imgstr))
-            img_file.close()
-            
             post = Post()
             post.title = response["title"]
             post.body = response["body"]
-            post.image = nameFile
+            post.image = self.namefile
             post.path_data = self.path_data
             post.user_post = user_postv
             post_async = sync_to_async(post.save)
             await post_async()
 
-#            
-
             _data = {"type": "wallpost",
                      "timestamp": dateformat.format(post.date_post, 'U'),
-                     "image": nameFile,
+                     "image": self.namefile,
                      "text":response["body"],
                      "user_post": str(self.sender_name),
                      "title": response["title"],
@@ -83,6 +76,36 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                      "status" : "wallpost"
                     }
             await self.channel_layer.group_send(self.room_group_name, _data)
+            
+        if event == "Start":
+            print ("START..............")
+            self.namefile = str(uuid.uuid4())[:12]#f"{_nameFile}_{response['Name']}"#
+            #self.namefile = f'media/data_image/{self.path_data}/{_nameFile}_{response["Name"]}'
+            self.myfile = open(f'media/data_image/{self.path_data}/{self.namefile}.png', "wb")
+            
+            _data = {"type": "wallpost", "status":"MoreData"}
+            await self.channel_layer.group_send(self.room_group_name, _data)
+            #self.write_message(json.dumps({"process":"MoreData"}))     
+
+        if event == "Upload":
+            da = response["Data"]
+            da = da.split(",")[1]
+            file_bytes = io.BytesIO(base64.b64decode(da)).read()
+            self.myfile.write(file_bytes)
+            print("MoreData..................")
+            _data = {"type": "wallpost", "status":"MoreData"}
+            await self.channel_layer.group_send(self.room_group_name, _data)
+            #self.write_message(json.dumps({"process":"MoreData"}))            
+            
+        if event == "Done":
+            #Adata = func_celery.delay(self.namefile)
+            #self.Blist.append(Adata)
+            print("DONE..................")
+            _data = {"type": "wallpost", "status":"Done"}
+            await self.channel_layer.group_send(self.room_group_name, _data)
+            #self.write_message(json.dumps({"process":"Done"}))
+
+        
         if event == "deletepost":
             print ("DELETE..............", response)
             post = await database_sync_to_async(Post.objects.get)(id=response["id"])
@@ -102,7 +125,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
     async def wallpost(self, res):
         """ Receive message from room group """
         # Send message to WebSocket
-        print (">>>>>>>>>>>>", res)
+        print ("wallpost >>>>>>>>>>>>", res)
         await self.send(text_data=json.dumps(res))
 
 

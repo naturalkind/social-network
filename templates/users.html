@@ -8,9 +8,11 @@
     <div class="views-row" onclick="userPROFILE('{{x.id}}')">
      <div class="user-image">
          {% if x.image_user != "/media/images/Fv2.png" %}
-                 <div style="margin:5px;background-image: url('/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}');border:none;background-size:cover; width:180px;height:160px;" ></div>
+<!--                 <div style="margin:5px;background-image: url('/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}');border:none;background-size:cover; width:180px;height:160px;" ></div>-->
+                 <img src="/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}" width="180" height="180">
+                
          {% else %}
-             <div style="margin:5px;background-image: url('/media/images/oneProf.png');border:none;background-size:cover; width:180px;height:160px;"></div>
+                  <div style="margin:5px;background-image: url('/media/images/oneProf.png');border:none;background-size:cover; width:180px;height:180px;"></div>
          {% endif %}
      </div>
     <div class="user-name">

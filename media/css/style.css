@@ -266,6 +266,32 @@ html.js input.throbbing {
     margin-bottom: 10px;
     cursor: pointer;
 }
+
+#loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #8d9daf; /* Blue  #3498db;*/
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    margin: 10% auto;
+    animation: spin 2s linear infinite;
+}
+
+/*#block-post .send {*/
+/*    display: block;*/
+/*    position: fixed;*/
+/*    bottom: 26px;*/
+/*    left: 49%;*/
+/*    background: #507299;*/
+/*    padding: 6px;*/
+/*    border-radius: 6px;*/
+/*}*/
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /*#conver .message{margin: 0px;padding: 0px 40px;}*/
 #conver .message{
     margin: 0px AUTO;
@@ -1326,8 +1352,13 @@ text-transform: uppercase;
 font-size: 36px
 }
 
-    .us-block {
+.us-block {
     max-width: 900px;
+}
+.us-block img {
+    margin:5px;
+    border:none;
+    background-size:cover
 }
 .us-name h3 {
  font-size:70px;
