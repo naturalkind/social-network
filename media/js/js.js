@@ -8,7 +8,10 @@ var topbt_indicator;
 var topbt_position;
 var main_wrapper;
 
-
+window.onload = function(){
+    topbt = document.getElementById('topbt');
+    main_wrapper = document.getElementById("main-wrapper");
+}
 
 function event_topbt(e){
             console.log("topbt>>>>>>>>>",topbt_indicator, topbt_position, e);
@@ -193,9 +196,6 @@ function exit(){
                 console.log("EXITE...", http.responseText)
                 main_wrapper.innerHTML = http.responseText;
                 document.getElementById('exitv').style.display = 'none';
-                topbt = document.getElementById('topbt');
-                main_wrapper = document.getElementById("main-wrapper");
-                topbt.onclick = event_topbt;
                 isLoading = false;
             }
         };
