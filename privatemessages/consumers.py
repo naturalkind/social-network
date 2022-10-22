@@ -8,6 +8,9 @@ from privatemessages.utils import send_message
 from django.conf import settings
 from django.utils import dateformat
 from asgiref.sync import sync_to_async
+from django.shortcuts import render, get_object_or_404
+from django.core import serializers
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 import asyncio
 import aioredis
@@ -18,7 +21,27 @@ import time
 
 session_engine = import_module(settings.SESSION_ENGINE)
 
-        
+
+@sync_to_async
+def get_pages(room_name, sender_id, message_res):
+    thread = get_object_or_404(Thread, id=room_name, participants__id=sender_id)
+    messages = thread.message_set.order_by("-datetime")#[:100]
+    paginator = Paginator(messages, 20)
+    data = {}
+    data['type'] = "send_message"
+    data['request_user_id'] = sender_id
+    data['event'] = "loadmore"
+    data['all_pages'] = paginator.num_pages
+    user_id = str(sender_id)
+    partner = thread.participants.exclude(id=sender_id)[0]
+    try:
+        posts = paginator.page(message_res)
+        data['op1'] = paginator.page(message_res).next_page_number()
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)  
+        data['op1'] = paginator.num_pages
+    data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+    return data
 
 class MessagesHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -70,6 +93,7 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                        "image_user" : self.image_user, 
                        "path_data" : self.path_data,
                        "text": str(message_res),
+                       "event": "privatemessages"
                     }
             for key in ("total_messages", "".join(["from_", str(self.sender_id )])):
                 await self.connection.hincrby(
@@ -81,7 +105,12 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
             
             await self.channel_layer.group_send(self.room_group_name, _data)
                     
-        
+        if event == "loadmore":
+#            print ("LOAD MORE PAGES")
+            _data = await get_pages(self.room_name, self.sender_id, message_res)
+            print ("LOAD MORE PAGES",  response)   
+            await self.channel_layer.group_send(self.room_group_name, _data)
+            
 #            await self.channel_layer.group_send(self.room_group_name, {
 #                'type': 'send_message',
 #                'message': message,
@@ -115,7 +144,7 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
     async def send_message(self, res):
         """ Receive message from room group """
         # Send message to WebSocket
-        print ("Receive message from room group", res)
+        #print ("Receive message from room group", res)
         await self.send(text_data=json.dumps(res))
         
         
