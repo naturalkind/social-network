@@ -317,6 +317,7 @@ def register(request):
 def user(request):
     args = {}
     args['username'] = auth.get_user(request).username
+    args['id'] = auth.get_user(request).id
     args.update(csrf(request))
     # args['form'] = UserForm()
     if request.method == 'POST':
@@ -506,7 +507,6 @@ def jsons(request):
         posts = paginator.page(paginator.num_pages)
     if page:
         data['data'] = serializers.serialize('json', posts)
-    print ("JSONSS...", data)
     return HttpResponse(json.dumps(data), content_type = "application/json")
 
 def likeover(request):

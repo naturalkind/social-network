@@ -26,7 +26,7 @@ session_engine = import_module(settings.SESSION_ENGINE)
 def get_pages(room_name, sender_id, message_res):
     thread = get_object_or_404(Thread, id=room_name, participants__id=sender_id)
     messages = thread.message_set.order_by("-datetime")#[:100]
-    paginator = Paginator(messages, 20)
+    paginator = Paginator(messages, 40)
     data = {}
     data['type'] = "send_message"
     data['request_user_id'] = sender_id

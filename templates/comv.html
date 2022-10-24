@@ -1,3 +1,4 @@
+<!--<div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-{{ id }}">-->
 <style>
     .f-c{
         text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background: #ffffff;margin-left: 20px;border-radius: 7px;
@@ -24,5 +25,6 @@
    <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
    <div id="cn"> <canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>
 </div>
-<img id="add_{{ id }}" src="/media/images/cloud.png" width="50" height="50" style="background: #507299;padding: 6px;border-radius: 7px;">
+<img id="add_{{ id }}" src="/media/images/cloud.png" width="50" height="50" style="background: #507299;padding: 6px;border-radius: 7px;" onclick="send_com('{{ id }}')">
 {#<button id="add_{{ id }}">ОТПРАВИТЬ</button>#}
+<!--</div>-->

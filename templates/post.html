@@ -24,7 +24,7 @@
     <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
 
 <div id="box-com" style="margin: 0 auto;">
-<div id="field-comment" style="padding-bottom: 15px;padding-top: 15px">
+<div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px">
   {% for cm in comment %}
       <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">
   <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
@@ -36,9 +36,9 @@
 
 
 </div>
-  <input id="comment_text" maxlength="400" placeholder="Введите Ваше сообщение...">
+  <input id="comment_text_{{post.id}}" class="comment_text" maxlength="400" placeholder="Введите Ваше сообщение...">
 <div id="results"></div>
-<button id="add_{{ post.id }}">ОТПРАВИТЬ</button>
+<button id="add_{{ post.id }}" onclick="send_com('{{ post.id }}')">ОТПРАВИТЬ</button>
 </div>
 </div>
 

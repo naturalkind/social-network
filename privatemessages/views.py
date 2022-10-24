@@ -135,7 +135,7 @@ def chat_view(request, thread_id):
     thread = get_object_or_404(Thread, id=thread_id, participants__id=request.user.id)
 
     messages = thread.message_set.order_by("-datetime")#[:100]
-    paginator = Paginator(messages, 20)
+    paginator = Paginator(messages, 40)
     data = {}
     
     user_id = str(request.user.id)

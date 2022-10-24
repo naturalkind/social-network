@@ -11,6 +11,9 @@
         <p class="name">{{ partner.username }}</p>
         <p id="messages"><span id="total">{{ messages_total }}</span> {{ messages_total|rupluralize:"сообщение,сообщения,сообщений" }} (<span id="received">{{ messages_received }}</span> получено, <span id="sent">{{ messages_sent }}</span> отправлено)</p>
     </div>
+    <div id="dot-loader">
+        <div class="dot-typing"></div>
+    </div>
     <div id="conver">
         {% for message in thread_messages reversed %}
         <div class="message">

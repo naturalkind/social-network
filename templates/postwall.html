@@ -10,9 +10,9 @@
             <div onclick="showContent('{{message.id}}')" class="views-title" style="width: 100%;float: left;">
                 <div class="user-cord" >
                     {% if message.user_post.image_user != "/media/images/Fv2.png" %}
-                        <img src="/media/data_image/{{message.user_post.path_data}}/tm_{{message.user_post.image_user}}" class="imgUs" onclick="userPROFILE('{{message.user_post.id }}')" style="cursor:pointer;">
+                        <img src="/media/data_image/{{message.user_post.path_data}}/tm_{{message.user_post.image_user}}" class="imgUs" onclick="userPROFILE('{{message.user_post.id }}')" style="cursor:pointer;" loading="lazy">
                     {% else %}
-                        <img src="/media/images/oneProf.png" height="400" width="auto" onclick="userPROFILE('{{message.user_post.id }}')">
+                        <img src="/media/images/oneProf.png" height="400" width="auto" onclick="userPROFILE('{{message.user_post.id }}')" loading="lazy">
                     {% endif %}
                         <a atribut="{{message.id}}" class="postview">
                             <span style="font-weight: bolder;" >{{message.user_post.username }}</span>
@@ -23,7 +23,7 @@
                 <span class="datetime">{{ message.date_post|date:'H:i' }}</span> <!--{# {{ message.date_post|date:'d b o в H:i' }}#}-->
             </div>
             <div class="field-image" atribut="{{message.id}}">
-                <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}">
+                <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy">
             </div>
             <div class="body">
                 <div class="text" style="padding:5px;">
@@ -32,10 +32,10 @@
                     {% endif %}
                 </div>
                 <div id="post_like_block_{{message.id}}" style="width: 100%">
-                    <img src="/media/images/mesvF.png" onclick="comView('{{ message.id }}')">
+                    <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" >
                     <img id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE('{{message.id}}')" onmouseover="LIKEOVER('{{message.id}}')" onmouseout="LIKEDONE('{{message.id}}')">
                     <img src="/media/images/rpvF.png" onclick="rpPost('{{ message.id }}','{{ username }}')">
-                    <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="{{ message.id }}"></div>
+<!--                    <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-{{ message.id }}"></div>-->
                 </div>
             </div>
         </div>

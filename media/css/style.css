@@ -5,6 +5,53 @@
     color: #aaa; 
 }
 
+/**
+ * ==============================================
+ * Dot Typing
+ * ==============================================
+ */
+#dot-loader {
+    display: none;
+    margin: 0 auto;
+    width: 0px;
+}
+ 
+.dot-typing {
+    position: relative;
+    left: -9999px;
+    width: 20px;
+    height: 20px;
+    border-radius: 30px;
+    background-color: #507299;
+    color: #507299;
+/*    box-shadow: 9984px 0 0 0 #507299, 9999px 0 0 0 #507299, 10014px 0 0 0 #507299;*/
+    box-shadow: 9950px 0 0 0 #507299, 10000px 0 0 0 #507299, 10050px 0 0 0 #507299;
+    animation: dotTyping 1.5s infinite linear;
+}
+
+@keyframes dotTyping {
+  0% {
+    box-shadow: 9970px 0 0 0 #75879b, 10000px 0 0 0 #507299, 10030px 0 0 0 #507299;
+  }
+  16.667% {
+    box-shadow: 9970px -10px 0 0 #75879b, 10000px 0 0 0 #507299, 10030px 0 0 0 #507299;
+  }
+  33.333% {
+    box-shadow: 9970px 0 0 0 #507299, 10000px 0 0 0 #75879b, 10030px 0 0 0 #507299;
+  }
+  50% {
+    box-shadow: 9970px 0 0 0 #507299, 10000px -10px 0 0 #75879b, 10030px 0 0 0 #507299;
+  }
+  66.667% {
+    box-shadow: 9970px 0 0 0 #507299, 10000px 0 0 0 #507299, 10030px 0 0 0 #75879b;
+  }
+  83.333% {
+    box-shadow: 9970px 0 0 0 #507299, 10000px 0 0 0 #507299, 10030px -10px 0 0 #75879b;
+  }
+  100% {
+    box-shadow: 9970px 0 0 0 #507299, 10000px 0 0 0 #507299, 10030px 0 0 0 #507299;
+  }
+}
 
 /* ---------- Overall Specifications ---------- */
 
@@ -565,7 +612,7 @@ input#myPROFILE {
 #canvas {
     margin-top: 10px;
     max-height: 600px;
-    max-width: 1200px;
+    max-width: 600px;
     position: relative;
     margin-left: auto;
     margin-right: auto;
@@ -908,7 +955,7 @@ font-family: Arial;
         float: left;
         margin: 17 0 0 8;
     }
-    input#comment_text {
+    input.comment_text {
         width: 100%;
         border: none;
         font-size: 36px;
@@ -1116,8 +1163,10 @@ font-family: Arial;
     
     .us-block img {
         margin: 5px;
-        width: 170px;
-        height: 170px;
+/*        width: 170px;*/
+/*        height: 170px;*/
+        width: 215px;
+        height: 215px;
         border: none;
         background-size: cover;
     }
@@ -1413,7 +1462,7 @@ font-family: Arial;
     #field-comment .f-c {
         font-size: 20px;
     }
-    input#comment_text {
+    input.comment_text {
         width: 100%;
         border: none;
         font-size: 20px;

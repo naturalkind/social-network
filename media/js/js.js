@@ -35,17 +35,19 @@ function scroll(){
     var contentHeight = main_wrapper.offsetHeight;
     yOffset = window.pageYOffset;
     var y = yOffset + window.innerHeight;
-    console.log('scroll', yOffset);
+//    console.log('scroll', yOffset);
     if (_page == "chat") {
         if(y >= contentHeight){
             isLoading = false;
             topbt_position = y;
             topbt_indicator = "scroll_up";
         } else if (yOffset <= 0) {
-            console.log("CHAT SCROLL", document.getElementById('IOP').innerText, yOffset);
-            if (all_pages != document.getElementById('IOP').innerText) {
-                ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
-            }
+            try {
+                if (all_pages != document.getElementById('IOP').innerText) {
+                    document.getElementById("dot-loader").style.display = "block";
+                    ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
+                }
+            } catch(e) {}
         }     
     } else {
         if(y >= contentHeight){
@@ -101,6 +103,7 @@ function event_topbt(e){
 function handler(e) {
     // remove this handler
     var block_post = document.getElementById('block-post');
+    block_post.innerHTML = "";
     block_post.style.display = 'none';
     document.body.style.overflow = 'auto';
     topbt.style.transform = 'rotate(0deg)';
@@ -279,7 +282,7 @@ function addREG(){
 function editPROFF (){
         document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post'); // ищем элемент с id
-        cont.style.overflow = 'auto';
+        block_post.style.overflow = 'auto';
         var http = createRequestObject();
             if( http )   {
                 http.open('get', '/profile');
@@ -460,7 +463,7 @@ function jsons(link, atr){
                     var g = JSON.parse(f.data);
                     document.getElementById('IOP').innerText = f.op1;
                     for (var R in g) {
-                       html += "<div class='views-row' onclick='userPROFILE("+ g[R].pk +")'><img src='/media/data_image/"+g[R].fields.path_data+"/"+g[R].fields.image_user +"' width='180' height='180'><div class='user-name'><a atribut='"+g[R].pk+"' style='padding: 0px;border-radius: 7px;font-size: 20px;color: #507299;'>"+g[R].fields.username +"</a></div></div>"
+                       html += "<div class='views-row' onclick='userPROFILE("+ g[R].pk +")'><img src='/media/data_image/"+g[R].fields.path_data+"/"+g[R].fields.image_user +"' width='180' height='180' loading='lazy'><div class='user-name'><a atribut='"+g[R].pk+"' style='padding: 0px;border-radius: 7px;font-size: 20px;color: #507299;'>"+g[R].fields.username +"</a></div></div>"
                     }
                     cont.innerHTML += html;
                     isLoading = false;
@@ -496,9 +499,10 @@ function jsons(link, atr){
                             if (parseInt(date.getMinutes()) < 10) {
                                 minutes = "0" + date.getMinutes();
                             } else minutes = date.getMinutes();
-                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span><span class='arrow'> → </span><span class='message-title'>" + g[R].fields.title + "</span></a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img src='/media/images/mesvF.png' onclick='comView("+g[R].pk +")'><img src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
+//     "+g[R].pk +"      onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}"
+                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span><span class='arrow'> → </span><span class='message-title'>" + g[R].fields.title + "</span></a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"'><img src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
                         } else {
-                            html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
+                            html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")' loading='lazy'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
                         }
                     }
                     if (atr == 'wall') {
@@ -720,6 +724,20 @@ function showImg(path_data){
 function showContent(link) {
 //    try{document.body.removeChild(document.getElementById('block-post'));}catch (err){}
     //console.log("showContent", topbt_position)
+//    try {
+//        console.log("box-com-"+link);
+//        document.getElementById("box-com-"+link).innerHTML = "";
+//    } catch (e) {}
+//    document.getElementById('box-com-'+link).remove();   
+//    document.getElementById('box-com-'+link).remove(); 
+    //
+    try {
+        var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
+        if (comv == "open") {
+            comView(document.getElementById("comment_image_id_"+link));
+        }
+    } catch (e) {} 
+    
     isLoading = false;
     document.body.style.overflow = 'hidden';
     var block_post = document.getElementById('block-post'); // ищем элемент с id
@@ -739,6 +757,19 @@ function showContent(link) {
                     block_post.innerHTML = http.responseText;
 //                    cont.style.display = 'block';
 //                    activate_com(link);
+                    try {
+                //        ws_com.close();
+                        var test_id = ws_com.url.split('/')[4]
+                        console.log(ws_com.url, test_id, )
+                        if (test_id != link) {
+                            activate_com(link);
+                        }
+                    } catch(e) { 
+                        activate_com(link);
+                        console.log(e)
+                    }                    
+                    
+                    
                     try {
                         var vp = document.getElementById('video-placeholder');
                         youd = vp.getAttribute('idv');
@@ -877,26 +908,51 @@ function OnOnreg() {
         document.getElementById('regb').style.display = 'block';
     };
 }
-var comv = false;
-function comView(link){
+//var comv = false;
+var prev_id_com;
+function comView(z){
 //  ищем элемент с id
-//  if(comv) return false;
-    var conr = document.getElementById(link);
-    if (comv == false) {
+//    if(comv) return false;
+    var comv = z.getAttribute('open-atr');
+    var link = z.getAttribute('id-comment');
+    console.log(z, comv, link)
+    var conr = document.getElementById("post_like_block_"+link);
+    if (comv == 'close') {
         var http = createRequestObject();
         if (http) {
             http.open('get', 'comment/'+link);
             http.onreadystatechange = function () {
                 if(http.readyState == 4) {
                     var apcom = document.createElement('div');
-//                    apcom.id = 'apcom_'+link;
-                    comv = true;
-//                    apcom.innerHTML = http.responseText;
-//                    conr.appendChild(apcom);
-                    conr.innerHTML = http.responseText;
+                    //div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-{{ id }}">
+                    apcom.id = 'box-com-'+link;
+                    apcom.className = "box-com";
+                    apcom.style.display = "block";
+                    
+//                    comv = true;
+                    apcom.innerHTML = http.responseText;
+                    conr.appendChild(apcom);
+//                    conr.innerHTML += http.responseText;
                     conr.style.display = 'block';
 //                    console.log(http.responseText);
-                    activate_com(link);
+//                    activate_com(link);
+
+                    z.setAttribute("open-atr", "open");
+                    try {
+                //        ws_com.close();
+                        var test_id = ws_com.url.split('/')[4]
+                        console.log("WS start", ws_com.url, test_id)
+                        if (test_id != link) {
+                            ws_com.close()
+                            prev_id_com = link;
+                            setTimeout(activate_com(link), 1000);
+//                            activate_com(link);
+                         }
+                    } catch(e) { 
+                        console.log("ERROR comView")
+                        activate_com(link);
+//                        console.log(e)
+                    }  
                 }
             };
             http.send(null);
@@ -905,8 +961,18 @@ function comView(link){
         }
     } else {
         console.log("CLOSE")
-        conr.style.display = 'none';
-        comv = false;
+        //conr.style.display = 'none';
+        z.setAttribute("open-atr", "close");
+        document.getElementById('box-com-'+link).remove();
+//        comv = false;
+//        try {
+//            document.getElementById('box-com-'+link).remove();
+//            console.log("CLOSE", link)
+//        } catch (e) {
+//            console.log("CLOSE2", prev_id_com, link)
+//            //comView(link);
+//        }
+        
     }
 }
 
@@ -1299,7 +1365,9 @@ function activate_wall(user_name) {
             var message_data = JSON.parse(event.data);
             if (message_data["status"]=="wallpost") {
                 var date = new Date(message_data.timestamp*1000);
-                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + message_data.user_post + '</span><span class="arrow"> → </span><span class="message-title">'+ message_data.title + '</span></a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div class="text" style="padding:5px;">'+ message_data.text +'</div><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img src="/media/images/mesvF.png" onclick="comView('+ "'" + message_data.id+ "'" +')"><img id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="' + message_data.id + '"></div></div></div></div>';
+//                <img src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"'>
+                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + message_data.user_post + '</span><span class="arrow"> → </span><span class="message-title">'+ message_data.title + '</span></a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div class="text" style="padding:5px;">'+ message_data.text +'</div><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'"><img id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"></div></div></div>';
+//                <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-' + message_data.id + '"></div>
                 try {
                     var tev = document.getElementById('conversation');
                     tev.insertBefore(fc, tev.firstChild);
@@ -1388,25 +1456,26 @@ function deletepost(id){
 //////////////////////////////////////////////////////////////////
 ///  комментарии /////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
+var ws_com;
 function activate_com(post_id) {
-    var ws_com;
+//    console.log("ACTIVATE COMMENT")
     function start_com_ws() {
-        var tev = document.getElementById('field-comment_'+post_id);
         ws_com = new WebSocket("ws://"+ IP_ADDR + ":"+PORT+"/comment/" + post_id + "/");
         ws_com.onmessage = function(event) {
+            var tev = document.getElementById('field-comment_'+post_id);
             var fc = document.createElement('div');
             fc.className = 'f-c';
             var message_data = JSON.parse(event.data);
-            console.log(">>>>>>>>>>>>>COM", message_data)
+            console.log(">>>>>>>>>>>>>COM", message_data, post_id)
             if (message_data.comment_image != "") {
                 fc.innerHTML = '<a>' + message_data.comment_user + '</a> ' +'<img src="media/data_image/'+ message_data.comment_image +'">'+message_data.comment_text;
             } else {fc.innerHTML = '<a>' + message_data.comment_user + '</a> '+ message_data.comment_text;}
             tev.insertBefore(fc, tev.lastChild);
         };
-        ws_com.onclose = function(){
-            // Try to reconnect in 5 seconds
-            setTimeout(function() {start_com_ws()}, 5000);
-        };
+//        ws_com.onclose = function(){
+//            // Try to reconnect in 5 seconds
+//            setTimeout(function() {start_com_ws()}, 5000);
+//        };
     }
 
     if ("WebSocket" in window) {
@@ -1417,19 +1486,58 @@ function activate_com(post_id) {
 
         return false;
     }
+//    var onMESv1 = document.getElementById('add_'+ post_id);
+//    onMESv1.onclick = function (){
+//        console.log('add comment');
+//        send_com(post_id);
 
-    function send_com(cip) {
-        console.log(dataURL_v1, typeof dataURL_v1)
-        if (typeof dataURL_v1 == 'undefined') {
-            dataURL_v1 = "";
+//    };
+}
+
+//function enter_comment(post_id) {
+//    var onMESv1 = document.getElementById('add_'+ post_id);
+//    onMESv1.onclick = function (){
+//        console.log('add comment');
+//        send_com(post_id);
+
+//    };
+//}
+
+
+function send_com(cip) {
+    if (typeof dataURL_v1 == 'undefined') {
+        dataURL_v1 = "";
+    }
+    var comment_text = document.getElementById('comment_text_' + cip);
+//    console.log("send_com...", dataURL_v1, typeof dataURL_v1, comment_text.value)
+    if (comment_text.value == "") {
+        return false;
+    }
+    if (ws_com.url.split('/')[4] != cip) {
+//        console.log(ws_com)
+        ws_com.close()
+        setTimeout(activate_com(cip), 1000);
+        ws_com.onopen = function () {
+            console.log(`conected: ${ws_com.readyState}`, WebSocket.OPEN)
+            var tx = comment_text.value;
+            var event = { comment_text : tx,
+                          comment_image: dataURL_v1 };
+            var data = JSON.stringify(event);
+            ws_com.send(data);
+            comment_text.value = "";
         }
-        var comment_text = document.getElementById('comment_text_' + cip);
-        if (comment_text.value == "") {
-            return false;
-        }
+
+//        ws_com.close()
+//        setTimeout(function() { ws_com.close()}, 1000);
+//        activate_com(cip);
+//        setTimeout(function() { activate_com(cip)}, 1000);
+        
+    } else {
+//    console.log(ws_com.url, cip)
         if (ws_com.readyState != WebSocket.OPEN) {
             return false;
         }
+        console.log("ELSE");
         var tx = comment_text.value;
         var event = { comment_text : tx,
                       comment_image: dataURL_v1 };
@@ -1437,15 +1545,9 @@ function activate_com(post_id) {
         ws_com.send(data);
         comment_text.value = "";
     }
-
-    var onMESv1 = document.getElementById('add_'+ post_id);
-    onMESv1.onclick = function (){
-        console.log('add comment');
-        send_com(post_id);
-
-    };
-    return ws_com;
+//    console.log("----", cip, ws_com.url.split('/')[4])
 }
+
 /////////////////////////// ТЕСТ
 
 function nodeScriptReplace(node) {
@@ -1815,8 +1917,14 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                     } else { 
                         temp_string.innerHTML += '<p class="author partner"><img src="/media/data_image/'+ data_path +'/tm_'+ image_file +'" class="usPr" onclick="userPROFILE('+ sender_name +')" style="float:none;"><p class="txtmessage partner">'+ g[R].fields.text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
                     }
-                    document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild); 
-                }    
+//                    document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild); 
+                    function test_smooth() {
+                        document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild);
+                        document.getElementById("dot-loader").style.display = "none";  
+                    }
+                    setTimeout(test_smooth, 1000);
+                }
+                  
 //                cont.innerHTML += html;
 //                isLoading = false;
             //----------------------------------->                

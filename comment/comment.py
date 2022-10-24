@@ -75,6 +75,7 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
                 "comment_text": response['comment_text'],
                 "comment_image": comment_image,
                 "comment_user": self.scope['user'].username,
+                "comment_id": self.post_name
             }
         await self.channel_layer.group_send(self.post_group_name, _data)
         
