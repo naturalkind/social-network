@@ -21,26 +21,32 @@ session_engine = import_module(settings.SESSION_ENGINE)
 
 class CommentHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        self.post_name = self.scope['url_route']['kwargs']['post_id']
-        self.sender_id = self.scope['user'].id
-        self.post_group_name = f"comment_{str(self.post_name)}_messages"
-        self.sender_name = self.scope['user']
-        self.image_user = self.scope['user'].image_user
-        self.path_data = self.scope['user'].path_data
-        print ("CommentHandler", self.post_group_name, self.post_name)
-        await self.channel_layer.group_add(
-            self.post_group_name,
-            self.channel_name
-        )
-        await self.accept()    
+        if str(self.scope['user']) == "AnonymousUser":
+            print (self.scope['user'])
+            await self.accept()
+            await self.close()
+        else:
+            self.post_name = self.scope['url_route']['kwargs']['post_id']
+            self.sender_id = self.scope['user'].id
+            self.post_group_name = f"comment_{str(self.post_name)}_messages"
+            self.sender_name = self.scope['user']
+            self.image_user = self.scope['user'].image_user
+            self.path_data = self.scope['user'].path_data
+            print ("CommentHandler", self.post_group_name, self.post_name)
+            await self.channel_layer.group_add(
+                self.post_group_name,
+                self.channel_name
+            )
+            await self.accept()    
             
     async def disconnect(self, close_code):
         print("Disconnected", close_code)
         # Leave room group
-        await self.channel_layer.group_discard(
-            self.post_group_name,
-            self.channel_name
-        )
+        if str(self.scope['user']) != "AnonymousUser":
+            await self.channel_layer.group_discard(
+                self.post_group_name,
+                self.channel_name
+            )
     
     async def receive(self, text_data):
         """

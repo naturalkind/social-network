@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function scroll(){
-//    console.log("WORK?", isLoading);
     if(isLoading) return false;
     var contentHeight = main_wrapper.offsetHeight;
     yOffset = window.pageYOffset;
@@ -133,7 +132,6 @@ function getIndex(node) {
 function createRequestObject() {
         try { return new XMLHttpRequest() }
         catch(e) {
-            console.log(e)
             try { return new ActiveXObject('Msxml2.XMLHTTP') }
             catch(e) {
                 try { return new ActiveXObject('Microsoft.XMLHTTP') }
@@ -169,7 +167,7 @@ function MY(e) {
 
 // сделать лайк
 function LIKE(link){
-    MY();
+//    MY(link);
     if (isNaN(link) == false) {
         var linkfull = '/add_like/?post_id=' + link;
         var http = createRequestObject();
@@ -177,8 +175,9 @@ function LIKE(link){
             http.open('get', linkfull);
             http.onreadystatechange = function () {
                 if (http.readyState == 4) {
-                    document.getElementById(link).innerHTML = http.responseText;
-                    document.getElementById(link).style.display = 'block';
+                    console.log(http.responseText, link)
+                    document.getElementById("box-indicator-"+link).innerHTML = http.responseText;
+                    document.getElementById("box-indicator-"+link).style.display = 'block';
                 }
             };
             http.send(null);
@@ -245,11 +244,7 @@ function enter(){
         http.open('get', '/login');
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
-                
-                console.log("enter...", main_wrapper)
-                
                 main_wrapper.innerHTML = http.responseText;
-                console.log("enter...", http.responseText)
 //                document.getElementById('enter').style.display = 'none';
 //                isLoading = false;
             }
@@ -331,24 +326,23 @@ function userPROFILE(link){
 
 function profilePOST(link){
     var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-    console.log(crsv);
-        var linkfull = '/profile/?username='+link;
-        var http = new XMLHttpRequest();
-        if (http) {
-            event = { my_image: dataURL_v1 };
-            data = JSON.stringify(event);
-            http.open('post', linkfull, true);
-            http.setRequestHeader('X-CSRFToken', crsv);
-            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-            http.onreadystatechange = function () {
-                if (http.readyState == 4) {
-                    alert('Все загружено!!!')
-                }
-            };
-            http.send(data);
-        } else {
-            document.location = link;
-        }
+    var linkfull = '/profile/?username='+link;
+    var http = new XMLHttpRequest();
+    if (http) {
+        event = { my_image: dataURL_v1 };
+        data = JSON.stringify(event);
+        http.open('post', linkfull, true);
+        http.setRequestHeader('X-CSRFToken', crsv);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+                alert('Все загружено!!!')
+            }
+        };
+        http.send(data);
+    } else {
+        document.location = link;
+    }
 }
 
 
@@ -405,9 +399,9 @@ function useimg(use){
    }
 }
 function jsons(link, atr){
+    console.log(link, atr)
     var linkfull;
     var wd, hd, us, cont;
-    console.log(atr);
     if (atr == 'user'){
         cont = document.getElementById('DODO');
         wd = 300;
@@ -423,7 +417,6 @@ function jsons(link, atr){
         linkfull = '/my/'+us+'/?page=' + link;
     }
     else if (atr == 'users'){
-        console.log("VIEW---------------")
         cont = document.getElementById('DODO');
         wd = 180;//300;
         hd = 160;//230;
@@ -467,6 +460,7 @@ function jsons(link, atr){
                     }
                     cont.innerHTML += html;
                     isLoading = false;
+                    
                 } else {
                     var f = JSON.parse(http.responseText);
                     if (atr == 'con') {
@@ -600,10 +594,10 @@ function getNewData(scrollable){
 
 var r;
 function NewData(scrollable, r){
-//Эмуляция AJAX запроса...
-console.log(r);
-if (r != "undefined"){
-   setTimeout(jsons(r, scrollable), 1200);}
+    //Эмуляция AJAX запроса...
+    if (r != "undefined"){
+       setTimeout(jsons(r, scrollable), 1200);
+   }
 }
 
 
@@ -760,13 +754,11 @@ function showContent(link) {
                     try {
                 //        ws_com.close();
                         var test_id = ws_com.url.split('/')[4]
-                        console.log(ws_com.url, test_id, )
                         if (test_id != link) {
                             activate_com(link);
                         }
                     } catch(e) { 
                         activate_com(link);
-                        console.log(e)
                     }                    
                     
                     
@@ -774,7 +766,6 @@ function showContent(link) {
                         var vp = document.getElementById('video-placeholder');
                         youd = vp.getAttribute('idv');
                         youps(youd);
-                        console.log(block_post.getAttribute('atr'));
                         block_post.onscroll = function () {
                             try {r = document.getElementById('IOPv').innerText;} catch (err){}
                             if(isLoading) return false;
@@ -878,7 +869,6 @@ var dataURL_v1;
 var reader = new FileReader();
 var im;
 function OnOn(id) {
-    console.log('canvas_'+id)
     canvas = document.getElementById('canvas_'+id);
     context = canvas.getContext('2d');
     var input = document.getElementById('id_image_'+id);
@@ -915,7 +905,6 @@ function comView(z){
 //    if(comv) return false;
     var comv = z.getAttribute('open-atr');
     var link = z.getAttribute('id-comment');
-    console.log(z, comv, link)
     var conr = document.getElementById("post_like_block_"+link);
     if (comv == 'close') {
         var http = createRequestObject();
@@ -941,7 +930,6 @@ function comView(z){
                     try {
                 //        ws_com.close();
                         var test_id = ws_com.url.split('/')[4]
-                        console.log("WS start", ws_com.url, test_id)
                         if (test_id != link) {
                             ws_com.close()
                             prev_id_com = link;
@@ -949,7 +937,6 @@ function comView(z){
 //                            activate_com(link);
                          }
                     } catch(e) { 
-                        console.log("ERROR comView")
                         activate_com(link);
 //                        console.log(e)
                     }  
@@ -960,19 +947,8 @@ function comView(z){
             document.location = link;
         }
     } else {
-        console.log("CLOSE")
-        //conr.style.display = 'none';
         z.setAttribute("open-atr", "close");
         document.getElementById('box-com-'+link).remove();
-//        comv = false;
-//        try {
-//            document.getElementById('box-com-'+link).remove();
-//            console.log("CLOSE", link)
-//        } catch (e) {
-//            console.log("CLOSE2", prev_id_com, link)
-//            //comView(link);
-//        }
-        
     }
 }
 
@@ -1012,9 +988,8 @@ function rpPost(link, us) {
             http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
             http.onreadystatechange = function () {
                 if (http.readyState == 4) {
-                    document.getElementById(link).innerHTML = http.responseText;
-                    document.getElementById(link).style.display = 'block';
-                    console.log(http.responseText)
+                    document.getElementById("box-indicator-"+link).innerHTML = http.responseText;
+                    document.getElementById("box-indicator-"+link).style.display = 'block';
             }
         };
         http.send(null);
@@ -1035,7 +1010,6 @@ function addfollow(link, us, id){
         http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
-               console.log(http.responseText)
                var follow_btn = document.getElementById("follw_"+id);
                follow_btn.innerHTML = "ОТПИСАТЬСЯ";
                follow_btn.setAttribute('onclick', 'delfollow("'+ link +'","'+ us +'","'+ id +'")')
@@ -1054,14 +1028,12 @@ function delfollow(link, us, id){
     var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     var http = createRequestObject();
     var linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=0';
-    console.log(linkfull);
     if (http) {
         http.open('post', linkfull);
         http.setRequestHeader('X-CSRFToken', crsv);
         http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
-               console.log(http.responseText)
                var follow_btn = document.getElementById("follw_"+id);
                follow_btn.innerHTML = "ПОДПИСАТЬСЯ";
                follow_btn.setAttribute('onclick', 'addfollow("'+ link +'","'+ us +'","'+ id +'")')
@@ -1201,7 +1173,6 @@ function myPROFILE(link){
 window.addEventListener("popstate", function(e) {
     var state = e.state;
     if (state.view == "USCON") {
-             console.log(state);
         myPROFILE(state.lk);
     } else if (state.view == "USS"){
         user()
@@ -1218,7 +1189,6 @@ function draw() {
         var textarea = document.getElementById('id_body');
         try{
             var url = textarea.value;
-            console.log(url);
             start_imgurl(url);} catch (err){}
     }
 function start_imgurl(url){
@@ -1272,7 +1242,6 @@ function OnOnW() {
     fileSize = SelectedFile.size;
     type_file = Name.split(".")
     type_file = type_file[type_file.length-1].toLowerCase()
-    console.log("ONNNN", Name)
     if (type_file == "png" || type_file == "jpg" || type_file == "jpeg") {
         readerwall.readAsDataURL(filewall[0]);
         readerwall.onload = function (e) {
@@ -1443,7 +1412,6 @@ function send_wall() {
                       //audio: audio
         };
         var data = JSON.stringify(event);
-        //console.log(data);
         ws_wall.send(data);
 }
 // удалить
@@ -1458,7 +1426,6 @@ function deletepost(id){
 //////////////////////////////////////////////////////////////////
 var ws_com;
 function activate_com(post_id) {
-//    console.log("ACTIVATE COMMENT")
     function start_com_ws() {
         ws_com = new WebSocket("ws://"+ IP_ADDR + ":"+PORT+"/comment/" + post_id + "/");
         ws_com.onmessage = function(event) {
@@ -1466,7 +1433,6 @@ function activate_com(post_id) {
             var fc = document.createElement('div');
             fc.className = 'f-c';
             var message_data = JSON.parse(event.data);
-            console.log(">>>>>>>>>>>>>COM", message_data, post_id)
             if (message_data.comment_image != "") {
                 fc.innerHTML = '<a>' + message_data.comment_user + '</a> ' +'<img src="media/data_image/'+ message_data.comment_image +'">'+message_data.comment_text;
             } else {fc.innerHTML = '<a>' + message_data.comment_user + '</a> '+ message_data.comment_text;}
@@ -1483,25 +1449,10 @@ function activate_com(post_id) {
     } else {
         var formMS = document.getElementById('message_form');
         formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
-
         return false;
     }
-//    var onMESv1 = document.getElementById('add_'+ post_id);
-//    onMESv1.onclick = function (){
-//        console.log('add comment');
-//        send_com(post_id);
-
-//    };
 }
 
-//function enter_comment(post_id) {
-//    var onMESv1 = document.getElementById('add_'+ post_id);
-//    onMESv1.onclick = function (){
-//        console.log('add comment');
-//        send_com(post_id);
-
-//    };
-//}
 
 
 function send_com(cip) {
@@ -1509,16 +1460,13 @@ function send_com(cip) {
         dataURL_v1 = "";
     }
     var comment_text = document.getElementById('comment_text_' + cip);
-//    console.log("send_com...", dataURL_v1, typeof dataURL_v1, comment_text.value)
     if (comment_text.value == "") {
         return false;
     }
     if (ws_com.url.split('/')[4] != cip) {
-//        console.log(ws_com)
         ws_com.close()
         setTimeout(activate_com(cip), 1000);
         ws_com.onopen = function () {
-            console.log(`conected: ${ws_com.readyState}`, WebSocket.OPEN)
             var tx = comment_text.value;
             var event = { comment_text : tx,
                           comment_image: dataURL_v1 };
@@ -1526,18 +1474,10 @@ function send_com(cip) {
             ws_com.send(data);
             comment_text.value = "";
         }
-
-//        ws_com.close()
-//        setTimeout(function() { ws_com.close()}, 1000);
-//        activate_com(cip);
-//        setTimeout(function() { activate_com(cip)}, 1000);
-        
     } else {
-//    console.log(ws_com.url, cip)
         if (ws_com.readyState != WebSocket.OPEN) {
             return false;
         }
-        console.log("ELSE");
         var tx = comment_text.value;
         var event = { comment_text : tx,
                       comment_image: dataURL_v1 };
@@ -1545,7 +1485,6 @@ function send_com(cip) {
         ws_com.send(data);
         comment_text.value = "";
     }
-//    console.log("----", cip, ws_com.url.split('/')[4])
 }
 
 /////////////////////////// ТЕСТ
@@ -1608,7 +1547,6 @@ function privatMES(){
 
 function createMES(){
     var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-    console.log(crsv);
     var cont = document.getElementById('message').value;
     var id_text = document.getElementById('recipient_name').value;
     if (cont) {
@@ -1624,7 +1562,6 @@ function createMES(){
             http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
             http.onreadystatechange = function () {
                 if (http.readyState == 4) {
-                    //console.log("send P mess", http)
                     main_wrapper.innerHTML = http.responseText;
                     nodeScriptReplace(main_wrapper);
 //                    var arr = m_wrapper.getElementsByTagName('script');
@@ -1710,7 +1647,6 @@ function get_scroll_height(obj){
 }
 
 function set_scroll_top(obj, p){
-//  console.log("set_scroll_top>>>", obj, p)
   if(!(obj=$(obj))) return false;
     p=parseInt(p)
   if(typeof(obj.scrollTop)!='undefined') obj.scrollTop=p;
@@ -1838,8 +1774,9 @@ function set_style(obj, name, value){
 
 
 function mesID(thread_id, user_name, number_of_messages){
-   var http = createRequestObject();
-   if( http )   {
+    isLoading = false;
+    var http = createRequestObject();
+    if( http )   {
         var linkfull = 'messages/chat/' + thread_id;
         http.open('get', linkfull);
         http.onreadystatechange = function () {
@@ -1966,7 +1903,7 @@ function send_message() {
 }
 
 document.addEventListener('keypress', function (e) {
-    console.log(">>>>>>>>>>>>>>>>", _page);
+    console.log("keypress", _page);
     if (_page == "chat") {
         if (e.keyCode == 13 && !event.shiftKey) {
             e.preventDefault();

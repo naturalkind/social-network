@@ -319,7 +319,6 @@ def user(request):
     args['username'] = auth.get_user(request).username
     args['id'] = auth.get_user(request).id
     args.update(csrf(request))
-    # args['form'] = UserForm()
     if request.method == 'POST':
         usn = request.GET['username']
         userP = User.objects.get(username=str(usn))
@@ -328,14 +327,11 @@ def user(request):
         imgstr = re.search(r'base64,(.*)', image_post).group(1)
         #----------->
         nameFile = f"{str(uuid.uuid4())[:12]}_{str(auth.get_user(request).username)}.png"
-        
         img_file = open(f"media/data_image/{userP.path_data}/{nameFile}", 'wb+')
         img_file.write(base64.b64decode(imgstr))
         img_file.close()
         crop(userP.path_data, nameFile, (150, 150))  
-        
         userP.image_user = nameFile
-        
         userP.save()
     return render(request, 'profile.html', args)
 

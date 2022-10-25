@@ -1,15 +1,11 @@
-
 {% block user %}
 <div id="YO">
-<form action="/profile/" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
-<label for="id_image_{{ id }}" id="id_image_user_lb">ЗАГРУЗКА КАРТИКИ</label>
-   <div id="cn"> <canvas id="canvas_{{ id }}" width="0" height="0"></canvas></div>
-
+    <form action="/profile/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
+        <label for="id_image_{{ id }}" id="id_image_user_lb">ЗАГРУЗКА КАРТИКИ</label>
+        <div id="cn"> <canvas id="canvas_{{ id }}" width="0" height="0"></canvas></div>
         <a id="RM" onclick="profilePOST('{{ username }}')">Нажми меня</a>
-</form>
-
-{#<input id="RM" type="button"  onclick="profilePOST('{{ username }}')" value="Нажми меня">#}
+    </form>
 </div>
- {% endblock %}
+{% endblock %}
