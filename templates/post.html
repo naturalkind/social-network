@@ -1,64 +1,74 @@
-
-{#{% extends 'base.html' %}#}
 {% block content %}
-    {% if username == post.user_post.username %}
-<a onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>
-    {% endif %}
+{% if username == post.user_post.username %}
+    <a onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>
+{% endif %}
 <div id="node">
-<div id="breadcrumb" style="background: #507299;"><div class="title">{{post.title}}</div><div class="user">
-Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> {{post.date_post|date:'d b o в H:i' }}</div></div>
-<div class="auto-images">
-    {% if post.video == '' %}
-        <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.title}}" title="{{post.title}}">
-    <!--    onclick="youps('{{ post.video }}')"-->
-    {% else %}
-        <div id="video-placeholder" idv="{{ post.video }}">
+    <div id="breadcrumb" style="background: #507299;">
+        <div class="title">{{post.title}}</div>
+        <div class="user"> Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> 
+        {{post.date_post|date:'d b o в H:i' }}
+        </div>
     </div>
-    {% endif %}
-</div>
-
-<div class="about">
-<!-- -->
-<p style="font-size: 26px;margin: 0 auto;padding: 10px 40px;text-align: left;color: #9a9a9a;">{{post.body|safe}}</p>
-{% if username %}
-    <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
-
-<div id="box-com" style="margin: 0 auto;">
-<div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px">
-  {% for cm in comment %}
-      <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">
-  <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
-        {% if cm.comment_image %}
-          <img src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">
-        {% endif %}
-         <span style="display: block;text-align: center;">{{ cm.comment_text }}</span></div>
-  {% endfor %}
-
-
-</div>
-  <input id="comment_text_{{post.id}}" class="comment_text" maxlength="400" placeholder="Введите Ваше сообщение...">
-<div id="results"></div>
-<button id="add_{{ post.id }}" onclick="send_com('{{ post.id }}')">ОТПРАВИТЬ</button>
-</div>
-</div>
-
-{% else %}
-    <div class="user-post"><h3 style="color: #ffffff">- ПОДБОРКА АВТОРА -</h3>
-    <div id="pages" align="center" style="display: none;">
-        {% if post_user.has_next %}
-
-            <span id="IOPv" style="display: none">{{ post_user.next_page_number }}</span>
-
+    <div class="auto-images">
+        {% if post.video == '' %}
+            <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.title}}" title="{{post.title}}">
+        <!--    onclick="youps('{{ post.video }}')"-->
+        {% else %}
+            <div id="video-placeholder" idv="{{ post.video }}"></div>
         {% endif %}
     </div>
-       <ul class="day-block" id="DOD" icon="{{ post.id }}">
-      {% for f in post_user %}
-       <li class="views-row"  onmouseover="getIndex(this);"><h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/data_image/{{ f.path_data }}/{{ f.image }}');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3></li>
-      {% endfor %}
-</ul>
-      </div>
 
-    {% endif %}
+    <div class="about">
+        <p style="font-size: 26px;margin: 0 auto;padding: 10px 40px;text-align: left;color: #9a9a9a;">{{post.body|safe}}</p>
+        {% if username %}
+            <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
+            <div id="box-com" style="margin: 0 auto;">
+                <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px">
+                    {% for cm in comment %}
+                        <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">
+                            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
+                            {% if cm.comment_image %}
+                                <img src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">
+                            {% endif %}
+                            <p>{{ cm.comment_text|linebreaksbr }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+    <!--  <input id="comment_text_{{post.id}}" class="comment_text" maxlength="400" placeholder="Введите Ваше сообщение...">-->
+                <div class="compose">
+                    <div id="comment_text_{{post.id}}"
+                         class="message_textarea" 
+                         role="textbox" 
+                         contenteditable="true" 
+                         aria-multiline="true" 
+                         aria-required="true" 
+                         placeholder="Напишите комментарий..." 
+                         contentEditable=true
+                         style="border: none;padding: 10px;border-radius: 10px;text-align:left;background: white;"
+                         ></div>
+                </div> 
+                <div id="results"></div>
+                <button id="add_{{ post.id }}" onclick="send_com(this, '{{ post.id }}')" indicator-ws="false">ОТПРАВИТЬ</button>
+<!--                <button id="add_{{ post.id }}" onclick="send_com('{{ post.id }}')">ОТПРАВИТЬ</button>-->
+            </div>
+        {% else %}
+        <div class="user-post">
+            <h3 style="color: #ffffff">- ПОДБОРКА АВТОРА -</h3>
+            <div id="pages" align="center" style="display: none;">
+                {% if post_user.has_next %}
+                    <span id="IOPv" style="display: none">{{ post_user.next_page_number }}</span>
+                {% endif %}
+            </div>
+            <ul class="day-block" id="DOD" icon="{{ post.id }}">
+                {% for f in post_user %}
+                    <li class="views-row"  onmouseover="getIndex(this);">
+                        <h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/data_image/{{ f.path_data }}/{{ f.image }}');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
 
-</div>

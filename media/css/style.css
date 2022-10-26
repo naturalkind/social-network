@@ -1,8 +1,8 @@
 /* test */
-
+.message_textarea:empty:before,
 #message_textarea:empty:before {
     content: attr(placeholder);
-    color: #aaa; 
+    color:#757575;
 }
 
 /**
@@ -471,7 +471,15 @@ li.views-row {
     width: 600px;
 }
 
-.pm-mes {text-align: center;}
+.pm-mes {
+    text-align: center;
+    width: 600px;
+    margin:0 auto;
+}
+
+.pm-mes #message_textarea {
+    text-align: left;
+}
 
 .chat,
 .private_messages {
@@ -913,18 +921,6 @@ font-family: Arial;
         margin-bottom: 10px;
     }
 
-    input#message_textarea {
-        background: #f1f1f1;
-        border: none;
-        padding: 10px;
-        width: 100%;
-        font-size: 36px;
-        border-radius: 2px;
-        color: #7b7b7b;
-        margin-bottom: 10px;
-    }
-
-
     #send {
         left: 45%;
     }
@@ -1038,13 +1034,6 @@ font-family: Arial;
         max-width: 900px;
         max-height: 600px;
     }
-    input#message {
-        background: #f2f2f2;
-        border: none;
-        padding: 5px;
-        width: 600px;
-        font-size: 30px
-    }
     .pm-mes a, #YO a, .private_messages a {
         cursor: pointer;
         border-radius: 5px;
@@ -1064,7 +1053,6 @@ font-family: Arial;
     }
     input#NameBox,
     input#recipient_name, 
-    input#message input#id_text, 
     input#id_title {
         width: 600px;
         padding: 0;
@@ -1108,7 +1096,7 @@ font-family: Arial;
         margin-top: -16px;
         z-index: 9999999;
     }
-    .back {
+    #back {
         height: 150px;
         width: 90px;
         right: 25px;
@@ -1421,16 +1409,6 @@ font-family: Arial;
         margin-bottom: 10px;
     }
 
-    input#message_textarea {
-        background: #f1f1f1;
-        border: none;
-        padding: 10px;
-        width: 100%;
-        font-size: 25px;
-        border-radius: 2px;
-        color: #7b7b7b;
-        margin-bottom: 10px;
-    }
     #send {
         left: 49%;
     }
@@ -1530,14 +1508,6 @@ font-family: Arial;
     .uspgimg img {
         height: 300px;
     }
-    input#message {
-        margin-top: 13px;
-        background: #f2f2f2;
-        border: none;
-        padding: 5px;
-        width: 600px;
-        font-size: 26px;
-    }
     #breadcrumb a{
         cursor: pointer;
         border-radius: 5px;
@@ -1569,7 +1539,6 @@ font-family: Arial;
         font-family: sans-serif;
     }
     input#recipient_name, 
-    input#message input#id_text, 
     input#id_title, 
     input#NameBox{
         width: 100%;
@@ -1612,7 +1581,7 @@ font-family: Arial;
         margin-top: -16px;
         z-index: 9999999;
     }
-    .back {
+    #back {
         height: 58px;
         width: 32px;
         right: 25px;

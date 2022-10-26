@@ -1,8 +1,6 @@
 {% block content %}
 {% load pluralize %}
-
 <div id="pages" align="center" style="display: none;">
-
     {% if thread_messages.has_next %}<span id="IOP" style="display: none">{{ thread_messages.next_page_number }}</span>{% endif %}
 </div>
 <div id="conver-chat">
@@ -45,7 +43,6 @@
             <button id="btn" type="button">ОТПРАВИТЬ</button>
         </div>
     </form>
-
 <script>
 activate_chat('{{ thread_id }}', '{{ request.user }}', '{{messages_total}}');
 </script>

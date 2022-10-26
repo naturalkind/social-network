@@ -54,7 +54,7 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
         Get the event and send the appropriate event
         """
         response = json.loads(text_data)        
-        
+        message_res = response.get("comment_text", None)
         if response['comment_image'] != "":
             nameFile = str(uuid.uuid4())[:12]
             imgstr = re.search(r'base64,(.*)', response['comment_image']).group(1)
@@ -68,7 +68,7 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
         print ("COMMET<<<<<<<<", response)
         ps = await database_sync_to_async(Post.objects.get)(id=self.post_name)
         comment = Comment()
-        comment.comment_text = response['comment_text']
+        comment.comment_text = message_res#response['comment_text']
         comment.comment_image = nameFile
         comment.post_id = ps
         comment.comment_user = self.sender_name
@@ -78,7 +78,7 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
         
         _data={
                 "type": "send_comment",
-                "comment_text": response['comment_text'],
+                "comment_text": message_res,
                 "comment_image": comment_image,
                 "comment_user": self.scope['user'].username,
                 "comment_id": self.post_name

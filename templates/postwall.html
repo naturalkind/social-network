@@ -7,6 +7,7 @@
     <div id="conversation">
     {% for message in thread_messages %}
         <div class="message" onmouseover="getIndex(this);">
+<!--        <div class="message">-->
             <div onclick="showContent('{{message.id}}')" class="views-title" style="width: 100%;float: left;">
                 <div class="user-cord" >
                     {% if message.user_post.image_user != "/media/images/Fv2.png" %}
@@ -32,8 +33,8 @@
                     {% endif %}
                 </div>
                 <div id="post_like_block_{{message.id}}" style="width: 100%">
-                    <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" >
-                    <img id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE('{{message.id}}')" onmouseover="LIKEOVER('{{message.id}}')" onmouseout="LIKEDONE('{{message.id}}')">
+                    <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
+<!--                    <img id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE('{{message.id}}')" onmouseover="LIKEOVER('{{message.id}}')" onmouseout="LIKEDONE('{{message.id}}')">-->
                     <img src="/media/images/rpvF.png" onclick="rpPost('{{ message.id }}','{{ username }}')">
                     <div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-{{ message.id }}"></div>
 <!--                    <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-{{ message.id }}"></div>-->

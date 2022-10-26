@@ -1,26 +1,15 @@
 #-*- coding: utf-8 -*-
 # Create your views here.
-
 import json
-
 import redis
-
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import RequestContext
 from django.urls import reverse
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-
 from myapp.models import User
-
 from privatemessages.models import Thread, Message
-
 from privatemessages.utils import send_message
-
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.core import serializers
 
 
 def send_message_view(request):
@@ -95,37 +84,6 @@ def messages_view(request):
                                   "threads": threads,
                                   "user_info":request.user
                               })
-
-
-
-
-#def chat_view(request):
-#    if not request.user.is_authenticated:
-#        return index(request)
-#    thread = Post.objects.all().order_by("-date_post")
-#    paginator = Paginator(thread, 6)
-#    page = request.GET.get('page')
-#    data = {}
-#    data['us'] = auth.get_user(request).username
-#    try:
-#        posts = paginator.page(page)
-#        data['op1'] = paginator.page(page).next_page_number()
-#        data['op2'] = paginator.page(page).previous_page_number()
-#    except PageNotAnInteger:
-#        posts = paginator.page(1)
-#    except EmptyPage:
-#        posts = paginator.page(paginator.num_pages)
-#    if page:
-#        data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
-#        return HttpResponse(json.dumps(data), content_type = "application/json")
-
-#    return render(request, 'postwall.html',
-#                              {
-#                                  "thread_messages": posts,
-#                                  "username": auth.get_user(request)
-#                              },
-#                              )
-
 
 
 def chat_view(request, thread_id):

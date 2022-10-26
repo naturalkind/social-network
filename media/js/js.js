@@ -121,11 +121,11 @@ function handler(e) {
 
 function getIndex(node) {
     var childs = node.parentNode.children;
-  for (i = 0; i < childs.length; i++) {
-      len = childs.length;
+    for (i = 0; i < childs.length; i++) {
+        len = childs.length;
     if (node == childs[i]) break;
-  }
-  return  innode=i;
+    }
+    return  innode=i;
 }
 
 
@@ -493,8 +493,8 @@ function jsons(link, atr){
                             if (parseInt(date.getMinutes()) < 10) {
                                 minutes = "0" + date.getMinutes();
                             } else minutes = date.getMinutes();
-//     "+g[R].pk +"      onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}"
-                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span><span class='arrow'> → </span><span class='message-title'>" + g[R].fields.title + "</span></a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"'><img src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
+//     "+g[R].pk +"      <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
+                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span><span class='arrow'> → </span><span class='message-title'>" + g[R].fields.title + "</span></a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
                         } else {
                             html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")' loading='lazy'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
                         }
@@ -715,113 +715,6 @@ function showImg(path_data){
     }, false);
 }
 
-function showContent(link) {
-//    try{document.body.removeChild(document.getElementById('block-post'));}catch (err){}
-    //console.log("showContent", topbt_position)
-//    try {
-//        console.log("box-com-"+link);
-//        document.getElementById("box-com-"+link).innerHTML = "";
-//    } catch (e) {}
-//    document.getElementById('box-com-'+link).remove();   
-//    document.getElementById('box-com-'+link).remove(); 
-    //
-    try {
-        var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
-        if (comv == "open") {
-            comView(document.getElementById("comment_image_id_"+link));
-        }
-    } catch (e) {} 
-    
-    isLoading = false;
-    document.body.style.overflow = 'hidden';
-    var block_post = document.getElementById('block-post'); // ищем элемент с id
-//    var block_post = document.createElement('div');
-//    block_post.id = 'block-post';
-    block_post.style.display = 'block';
-    block_post.style.background = 'rgba(0,0,0,.75)';
-    block_post.style.overflow = 'auto';
-    block_post.setAttribute('atr', 'con');
-//    document.body.appendChild(block_post, document.body.lastChild);
-    var http = createRequestObject();
-    if(link != null) {
-        if(http) {
-            http.open('get', '/'+link);
-            http.onreadystatechange = function () {
-                if(http.readyState == 4) {
-                    block_post.innerHTML = http.responseText;
-//                    cont.style.display = 'block';
-//                    activate_com(link);
-                    try {
-                //        ws_com.close();
-                        var test_id = ws_com.url.split('/')[4]
-                        if (test_id != link) {
-                            activate_com(link);
-                        }
-                    } catch(e) { 
-                        activate_com(link);
-                    }                    
-                    
-                    
-                    try {
-                        var vp = document.getElementById('video-placeholder');
-                        youd = vp.getAttribute('idv');
-                        youps(youd);
-                        block_post.onscroll = function () {
-                            try {r = document.getElementById('IOPv').innerText;} catch (err){}
-                            if(isLoading) return false;
-                            var endPos = block_post.scrollHeight - block_post.clientHeight - block_post.scrollTop;
-                            if (r != undefined ){
-                                if(endPos === 0){
-                                    isLoading = true;
-                                    NewData(block_post.getAttribute('atr'), r);
-                                }
-                            }
-                        };
-                    } catch (err){}
-                    topbt = document.getElementById('topbt');
-                    topbt.style.transform = 'rotate(90deg)';
-                    topbt_indicator = "handler";
-                    // листать
-                    var textElemv1 = document.createElement('a');
-                    textElemv1.id = 'next';
-                    var textElemv2 = document.createElement('a');
-                    textElemv2.className = 'back';
-                    var navlis = document.createElement('div');
-                    navlis.className = 'navlis';
-                    navlis.appendChild(textElemv1, navlis.firstChild);
-                    navlis.appendChild(textElemv2, navlis.lastChild);
-                    block_post.insertBefore(navlis, block_post.firstChild);
-                    textElemv2.onclick = function LISTING(){
-                        if (len>innode){
-                            innode++;
-                            var h = document.getElementsByClassName('field-image')[innode];
-                            try{var g = h.getAttribute('atribut');}catch (err){}
-
-                        } else {
-                            textElemv2.style.display = 'none';
-                            textElemv1.style.display = 'block';
-                        }
-                        showContent(g);
-                    };
-                    textElemv1.onclick = function LISTING(){
-                        if (innode != 0){
-                            innode--;
-                            var h = document.getElementsByClassName('field-image')[innode];
-                            try{var g = h.getAttribute('atribut');}catch (err){}
-                        } else {
-                           textElemv1.style.display = 'none';
-                           textElemv2.style.display = 'block';
-                        }
-                        showContent(g);
-                    };
-                }
-            };
-            http.send(null);
-        } else {
-            document.location = link;
-        }
-    }
-}
 // лайки при наведении
 function LIKEOVER(link) {
     var html= '';
@@ -898,59 +791,6 @@ function OnOnreg() {
         document.getElementById('regb').style.display = 'block';
     };
 }
-//var comv = false;
-var prev_id_com;
-function comView(z){
-//  ищем элемент с id
-//    if(comv) return false;
-    var comv = z.getAttribute('open-atr');
-    var link = z.getAttribute('id-comment');
-    var conr = document.getElementById("post_like_block_"+link);
-    if (comv == 'close') {
-        var http = createRequestObject();
-        if (http) {
-            http.open('get', 'comment/'+link);
-            http.onreadystatechange = function () {
-                if(http.readyState == 4) {
-                    var apcom = document.createElement('div');
-                    //div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-{{ id }}">
-                    apcom.id = 'box-com-'+link;
-                    apcom.className = "box-com";
-                    apcom.style.display = "block";
-                    
-//                    comv = true;
-                    apcom.innerHTML = http.responseText;
-                    conr.appendChild(apcom);
-//                    conr.innerHTML += http.responseText;
-                    conr.style.display = 'block';
-//                    console.log(http.responseText);
-//                    activate_com(link);
-
-                    z.setAttribute("open-atr", "open");
-                    try {
-                //        ws_com.close();
-                        var test_id = ws_com.url.split('/')[4]
-                        if (test_id != link) {
-                            ws_com.close()
-                            prev_id_com = link;
-                            setTimeout(activate_com(link), 1000);
-//                            activate_com(link);
-                         }
-                    } catch(e) { 
-                        activate_com(link);
-//                        console.log(e)
-                    }  
-                }
-            };
-            http.send(null);
-        } else {
-            document.location = link;
-        }
-    } else {
-        z.setAttribute("open-atr", "close");
-        document.getElementById('box-com-'+link).remove();
-    }
-}
 
 
 var activmen=false;
@@ -1000,21 +840,38 @@ function rpPost(link, us) {
 
 
 // Подписка пользователь 
-function addfollow(link, us, id){
+
+function addfollow(self, link, us, id){
     var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    var follow = self.getAttribute("atr-follow"); 
+    var linkfull;
+    if (follow=="false") {
+        console.log(follow, link, us, id);
+        linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=1';
+        self.setAttribute("atr-follow", "true");
+        
+    } else {
+        console.log(follow, link, us, id);
+        linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=0';
+        self.setAttribute("atr-follow", "false");
+    }
     var http = createRequestObject();
-    var linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=1';
     if (http) {
         http.open('post', linkfull);
         http.setRequestHeader('X-CSRFToken', crsv);
         http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
-               var follow_btn = document.getElementById("follw_"+id);
-               follow_btn.innerHTML = "ОТПИСАТЬСЯ";
-               follow_btn.setAttribute('onclick', 'delfollow("'+ link +'","'+ us +'","'+ id +'")')
-               var foll_coun = document.getElementById("foll_coun_"+id);
-               foll_coun.innerHTML = parseInt(foll_coun.innerHTML)+1;
+                var follow_btn = document.getElementById("follw_"+id);
+                if  (follow=="false") {
+                    follow_btn.innerHTML = "ОТПИСАТЬСЯ";
+                    var foll_coun = document.getElementById("foll_coun_"+id);
+                    foll_coun.innerHTML = parseInt(foll_coun.innerHTML)+1;
+                } else {
+                   follow_btn.innerHTML = "ПОДПИСАТЬСЯ";
+                   var foll_coun = document.getElementById("foll_coun_"+id);
+                   foll_coun.innerHTML = parseInt(foll_coun.innerHTML)-1;
+                }
             }
         };
         http.send(null);
@@ -1022,32 +879,6 @@ function addfollow(link, us, id){
         document.location = link;
     }
 }
-
-
-function delfollow(link, us, id){
-    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-    var http = createRequestObject();
-    var linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=0';
-    if (http) {
-        http.open('post', linkfull);
-        http.setRequestHeader('X-CSRFToken', crsv);
-        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        http.onreadystatechange = function () {
-            if (http.readyState == 4) {
-               var follow_btn = document.getElementById("follw_"+id);
-               follow_btn.innerHTML = "ПОДПИСАТЬСЯ";
-               follow_btn.setAttribute('onclick', 'addfollow("'+ link +'","'+ us +'","'+ id +'")')
-               
-               var foll_coun = document.getElementById("foll_coun_"+id);
-               foll_coun.innerHTML = parseInt(foll_coun.innerHTML)-1;
-            }
-        };
-        http.send(null);
-    } else {
-        document.location = link;
-    }
-}
-
 
 function foll(link){
     document.body.style.overflow = 'hidden';
@@ -1103,7 +934,7 @@ function folls(link){
 }
 
 
-//------------------------------------------------>
+// нарезка файлов 
 function FileSlicer(file) {
     this.sliceSize = 1024*1024;
     this.slices = Math.ceil(file.size / this.sliceSize);
@@ -1117,6 +948,7 @@ function FileSlicer(file) {
 }
 
 
+// показать понравившееся
 function getlkpost(link){
         document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post');
@@ -1324,6 +1156,99 @@ function UpdateBar(percent){
 // WEB SOKET 
 /////////////
 // стена -------------------------------------->
+
+function showContent(link) {
+    try {
+        var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
+        if (comv == "open") {
+            comView(document.getElementById("comment_image_id_"+link));
+        } else {
+            ws_dict[link] = activate_com(link);
+            document.getElementById("comment_image_id_"+link).setAttribute("open-atr", "open")
+        }
+    } catch (e) {} 
+    
+    console.log(comv)
+    isLoading = false;
+    document.body.style.overflow = 'hidden';
+    var block_post = document.getElementById('block-post'); // ищем элемент с id
+//    var block_post = document.createElement('div');
+//    block_post.id = 'block-post';
+    block_post.style.display = 'block';
+    block_post.style.background = 'rgba(0,0,0,.75)';
+    block_post.style.overflow = 'auto';
+    block_post.setAttribute('atr', 'con');
+//    document.body.appendChild(block_post, document.body.lastChild);
+    var http = createRequestObject();
+    if(link != null) {
+        if(http) {
+            http.open('get', '/'+link);
+            http.onreadystatechange = function () {
+                if(http.readyState == 4) {
+                    block_post.innerHTML = http.responseText;
+                    try {
+                        var vp = document.getElementById('video-placeholder');
+                        youd = vp.getAttribute('idv');
+                        youps(youd);
+                        block_post.onscroll = function () {
+                            try {r = document.getElementById('IOPv').innerText;} catch (err){}
+                            if(isLoading) return false;
+                            var endPos = block_post.scrollHeight - block_post.clientHeight - block_post.scrollTop;
+                            if (r != undefined ){
+                                if(endPos === 0){
+                                    isLoading = true;
+                                    NewData(block_post.getAttribute('atr'), r);
+                                }
+                            }
+                        };
+                    } catch (err){}
+                    topbt = document.getElementById('topbt');
+                    topbt.style.transform = 'rotate(90deg)';
+                    topbt_indicator = "handler";
+                    // листать
+                    var textElemv1 = document.createElement('a');
+                    textElemv1.id = 'next';
+                    var textElemv2 = document.createElement('a');
+                    textElemv2.id = 'back';
+                    var navlis = document.createElement('div');
+                    navlis.className = 'navlis';
+                    navlis.appendChild(textElemv1, navlis.firstChild);
+                    navlis.appendChild(textElemv2, navlis.lastChild);
+                    block_post.insertBefore(navlis, block_post.firstChild);
+                    textElemv2.onclick = function LISTING(){
+                        if (len>innode){
+                            innode++;
+                            var h = document.getElementsByClassName('field-image')[innode];
+                            try{var g = h.getAttribute('atribut');}catch (err){}
+
+                        } else {
+                            textElemv2.style.display = 'none';
+                            textElemv1.style.display = 'block';
+                        }
+                        showContent(g);
+                    };
+                    textElemv1.onclick = function LISTING(){
+                        if (innode != 0){
+                            innode--;
+                            var h = document.getElementsByClassName('field-image')[innode];
+                            try{var g = h.getAttribute('atribut');}catch (err){}
+                        } else {
+                           textElemv1.style.display = 'none';
+                           textElemv2.style.display = 'block';
+                        }
+                        showContent(g);
+                    };
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
+    }
+}
+
+
+
 var ws_wall;
 function activate_wall(user_name) {
     function start_wall() {
@@ -1334,8 +1259,8 @@ function activate_wall(user_name) {
             var message_data = JSON.parse(event.data);
             if (message_data["status"]=="wallpost") {
                 var date = new Date(message_data.timestamp*1000);
-//                <img src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"'>
-                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + message_data.user_post + '</span><span class="arrow"> → </span><span class="message-title">'+ message_data.title + '</span></a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div class="text" style="padding:5px;">'+ message_data.text +'</div><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'"><img id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"></div></div></div>';
+//                <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
+                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + message_data.user_post + '</span><span class="arrow"> → </span><span class="message-title">'+ message_data.title + '</span></a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div class="text" style="padding:5px;">'+ message_data.text +'</div><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'" type-div="icon" indicator-ws="close"><img id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"></div></div></div>';
 //                <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-' + message_data.id + '"></div>
                 try {
                     var tev = document.getElementById('conversation');
@@ -1343,8 +1268,10 @@ function activate_wall(user_name) {
                 } catch (err) {
                     console.log("save data")
                 }
-                document.getElementById('block-post').removeChild(t_el);
-                document.getElementById('message_form').style.display = "block";
+                try {
+                    document.getElementById('block-post').removeChild(t_el);
+                    document.getElementById('message_form').style.display = "block";
+                } catch (e) {};
                 //alert('ЗАГУЗИЛИ');
             } else if (message_data["status"]=="deletepost") {
                 
@@ -1362,7 +1289,9 @@ function activate_wall(user_name) {
                         reader.readAsDataURL(currentFilePart) 
                 } else {
                         console.log("Event Done");
-                        document.getElementById('UploadBox').style.display = "none";
+                        try {
+                            document.getElementById('UploadBox').style.display = "none";
+                        } catch (e) {};
                         ws_wall.send(JSON.stringify({'event':'Done'}));
                 }            
             
@@ -1421,71 +1350,6 @@ function deletepost(id){
     ws_wall.send(data);
 }
 
-//////////////////////////////////////////////////////////////////
-///  комментарии /////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-var ws_com;
-function activate_com(post_id) {
-    function start_com_ws() {
-        ws_com = new WebSocket("ws://"+ IP_ADDR + ":"+PORT+"/comment/" + post_id + "/");
-        ws_com.onmessage = function(event) {
-            var tev = document.getElementById('field-comment_'+post_id);
-            var fc = document.createElement('div');
-            fc.className = 'f-c';
-            var message_data = JSON.parse(event.data);
-            if (message_data.comment_image != "") {
-                fc.innerHTML = '<a>' + message_data.comment_user + '</a> ' +'<img src="media/data_image/'+ message_data.comment_image +'">'+message_data.comment_text;
-            } else {fc.innerHTML = '<a>' + message_data.comment_user + '</a> '+ message_data.comment_text;}
-            tev.insertBefore(fc, tev.lastChild);
-        };
-//        ws_com.onclose = function(){
-//            // Try to reconnect in 5 seconds
-//            setTimeout(function() {start_com_ws()}, 5000);
-//        };
-    }
-
-    if ("WebSocket" in window) {
-        start_com_ws();
-    } else {
-        var formMS = document.getElementById('message_form');
-        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
-        return false;
-    }
-}
-
-
-
-function send_com(cip) {
-    if (typeof dataURL_v1 == 'undefined') {
-        dataURL_v1 = "";
-    }
-    var comment_text = document.getElementById('comment_text_' + cip);
-    if (comment_text.value == "") {
-        return false;
-    }
-    if (ws_com.url.split('/')[4] != cip) {
-        ws_com.close()
-        setTimeout(activate_com(cip), 1000);
-        ws_com.onopen = function () {
-            var tx = comment_text.value;
-            var event = { comment_text : tx,
-                          comment_image: dataURL_v1 };
-            var data = JSON.stringify(event);
-            ws_com.send(data);
-            comment_text.value = "";
-        }
-    } else {
-        if (ws_com.readyState != WebSocket.OPEN) {
-            return false;
-        }
-        var tx = comment_text.value;
-        var event = { comment_text : tx,
-                      comment_image: dataURL_v1 };
-        var data = JSON.stringify(event);
-        ws_com.send(data);
-        comment_text.value = "";
-    }
-}
 
 /////////////////////////// ТЕСТ
 
@@ -1518,66 +1382,7 @@ function nodeScriptIs(node) {
 }
 
 
-//////////////////////////////////////////////////////////////////
-//  личные сообщения /////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-function privatMES(){
-   var block_post = document.getElementById('block-post');
-   var http = createRequestObject();
-   if( http )   {
-        var linkfull = '/messages';
-        http.open('get', linkfull);
-        http.onreadystatechange = function () {
-            if(http.readyState == 4) {
-                history.pushState({'view':'MES'}, null, null);
-                //cont.style.opacity = 1;
-                main_wrapper.style.display = 'block';
-                block_post.style.display = 'none';
-                main_wrapper.innerHTML = http.responseText;
-                //document.body.style.overflow = 'auto';
-                document.getElementById('topbt').style.transform = 'rotate(0deg)';
-            }
-        };
-        http.send(null);
-    } else {
-        document.location = link;
-    }
-}
 
-
-function createMES(){
-    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-    var cont = document.getElementById('message').value;
-    var id_text = document.getElementById('recipient_name').value;
-    if (cont) {
-        var linkfull = 'messages/send_message/';
-        var http = new XMLHttpRequest();
-        if (http) {
-            var event = { message:cont,
-                         recipient_name:id_text };
-
-            var data = JSON.stringify(event);
-            http.open('post', linkfull, true);
-            http.setRequestHeader('X-CSRFToken', crsv);
-            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-            http.onreadystatechange = function () {
-                if (http.readyState == 4) {
-                    main_wrapper.innerHTML = http.responseText;
-                    nodeScriptReplace(main_wrapper);
-//                    var arr = m_wrapper.getElementsByTagName('script');
-//                    for (var n = 0; n < arr.length; n++) {
-//                        eval(arr[n].innerHTML);
-//                        }
-                }
-            };
-            http.send(data);
-        }
-    } else {alert('Не нажимай лишний раз кнопку, если не заполнил поле')}
-}
-
-//////////////////////////////
-//////////////////////////////
-//////////////////////////////
 var WS_UA = navigator.userAgent.toLowerCase();
 
 var browser={
@@ -1768,9 +1573,62 @@ function set_style(obj, name, value){
 } 
 
 
-//////////////////////////////
-//////////////////////////////
-//////////////////////////////
+//////////////////////////////////////////////////////////////////
+//  личные сообщения /////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+function privatMES(){
+   var block_post = document.getElementById('block-post');
+   var http = createRequestObject();
+   if( http )   {
+        var linkfull = '/messages';
+        http.open('get', linkfull);
+        http.onreadystatechange = function () {
+            if(http.readyState == 4) {
+                history.pushState({'view':'MES'}, null, null);
+                //cont.style.opacity = 1;
+                main_wrapper.style.display = 'block';
+                block_post.style.display = 'none';
+                main_wrapper.innerHTML = http.responseText;
+                //document.body.style.overflow = 'auto';
+                document.getElementById('topbt').style.transform = 'rotate(0deg)';
+            }
+        };
+        http.send(null);
+    } else {
+        document.location = link;
+    }
+}
+
+
+function createMES(){
+    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
+    var cont = document.getElementById('message_textarea').innerText;
+    var id_text = document.getElementById('recipient_name').value;
+    if (cont) {
+        var linkfull = 'messages/send_message/';
+        var http = new XMLHttpRequest();
+        if (http) {
+            var event = { message:cont,
+                         recipient_name:id_text };
+
+            var data = JSON.stringify(event);
+            http.open('post', linkfull, true);
+            http.setRequestHeader('X-CSRFToken', crsv);
+            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+            http.onreadystatechange = function () {
+                if (http.readyState == 4) {
+                    main_wrapper.innerHTML = http.responseText;
+                    nodeScriptReplace(main_wrapper);
+//                    var arr = m_wrapper.getElementsByTagName('script');
+//                    for (var n = 0; n < arr.length; n++) {
+//                        eval(arr[n].innerHTML);
+//                        }
+                }
+            };
+            http.send(data);
+        }
+    } else {alert('Не нажимай лишний раз кнопку, если не заполнил поле')}
+}
 
 
 function mesID(thread_id, user_name, number_of_messages){
@@ -1797,11 +1655,6 @@ function mesID(thread_id, user_name, number_of_messages){
     }
 }
 
-
-function auto_height_text(elem) {  /* javascript */
-    elem.style.height = "1px";
-    elem.style.height = (elem.scrollHeight)+"px";
-}
 
 var ws_chat;
 function activate_chat(thread_id, user_name, number_of_messages) {
@@ -1839,6 +1692,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
             //----------------------------------->
                 var request_user_id = message_data["request_user_id"];
                 var g = JSON.parse(message_data.data);
+//                console.log(g)
                 all_pages = message_data.all_pages;
                 document.getElementById('IOP').innerText = message_data.op1;
                 var final_string = "";
@@ -1854,13 +1708,9 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                     } else { 
                         temp_string.innerHTML += '<p class="author partner"><img src="/media/data_image/'+ data_path +'/tm_'+ image_file +'" class="usPr" onclick="userPROFILE('+ sender_name +')" style="float:none;"><p class="txtmessage partner">'+ g[R].fields.text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
                     }
-//                    document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild); 
-                    function test_smooth() {
-                        document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild);
-                        document.getElementById("dot-loader").style.display = "none";  
-                    }
-                    setTimeout(test_smooth, 1000);
+                    document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild);
                 }
+                document.getElementById("dot-loader").style.display = "none";  
                   
 //                cont.innerHTML += html;
 //                isLoading = false;
@@ -1902,8 +1752,109 @@ function send_message() {
     textarea.innerText = "";
 }
 
+//////////////////////////////////////////////////////////////////
+///  комментарии /////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+var ws_dict = {}
+function comView(z){
+    var comv = z.getAttribute('open-atr');
+    var link = z.getAttribute('id-comment');
+    var type_div = z.getAttribute('type-div');
+    var conr = document.getElementById("post_like_block_"+link);
+    if (comv == 'close') {
+        z.setAttribute("open-atr", "open");
+        var http = createRequestObject();
+        if (http) {
+            http.open('get', 'comment/'+link);
+            http.onreadystatechange = function () {
+                if(http.readyState == 4) {
+                    var apcom = document.createElement('div');
+                    //div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-{{ id }}">
+                    apcom.id = 'box-com-'+link;
+                    apcom.className = "box-com";
+                    apcom.style.display = "block";
+                    
+                    apcom.innerHTML = http.responseText;
+                    conr.appendChild(apcom);
+                    conr.style.display = 'block';
+                    if (type_div == "icon" && z.getAttribute("indicator-ws") == "close") {
+//                        var test_id = ws_com.url.split('/')[4]
+                        z.setAttribute("indicator-ws", "open")
+                        ws_dict[link] = activate_com(link);
+                        console.log(link, ws_dict[link])
+                    }
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
+    } else {
+        z.setAttribute("open-atr", "close");
+        document.getElementById('box-com-'+link).remove();
+    }
+}
+
+
+// отправить комментарий
+function send_com(self, cip) {
+    if (typeof dataURL_v1 == 'undefined') {
+        dataURL_v1 = "";
+    }
+    var zetr = document.getElementById("comment_image_id_"+cip);
+    
+    var comment_text = document.getElementById('comment_text_' + cip);
+    if (comment_text.innerText == "") {
+        return false;
+    }
+    if (ws_dict[cip].url.split('/')[4] != cip) {
+        console.log(ws_dict[cip], cip, zetr.getAttribute("indicator-ws"));
+    } else {
+        if (ws_dict[cip].readyState != WebSocket.OPEN) {
+            return false;
+        }
+        var data = JSON.stringify({ comment_text : comment_text.innerText,
+                                    comment_image: dataURL_v1 });
+        ws_dict[cip].send(data);
+        comment_text.innerText = "";
+    }
+}
+
+function activate_com(post_id) {
+    function start_com_ws() {
+        var ws_com = new WebSocket("ws://"+ IP_ADDR + ":"+PORT+"/comment/" + post_id + "/");
+        ws_com.onmessage = function(event) {
+            var tev = document.getElementById('field-comment_'+post_id);
+            var fc = document.createElement('div');
+            fc.className = 'f-c';
+            var message_data = JSON.parse(event.data);
+            if (message_data.comment_image != "") {
+                fc.innerHTML = '<a>' + message_data.comment_user + '</a> ' +'<img src="media/data_image/'+ message_data.comment_image +'">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />');
+            } else {
+                fc.innerHTML = '<a>' + message_data.comment_user + '</a> '+ message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />');
+            }
+            tev.insertBefore(fc, tev.lastChild);
+        };
+        return ws_com
+    }
+
+    if ("WebSocket" in window) {
+        return start_com_ws();
+    } else {
+        var formMS = document.getElementById('message_form');
+        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
+        return false;
+    }
+}
+
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+
 document.addEventListener('keypress', function (e) {
-    console.log("keypress", _page);
+    //console.log("keypress", _page, e.keyCode);
     if (_page == "chat") {
         if (e.keyCode == 13 && !event.shiftKey) {
             e.preventDefault();

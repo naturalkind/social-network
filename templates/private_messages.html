@@ -1,4 +1,3 @@
-
 {% block content %}
 {% load pluralize %}
 <div class="private_messages">
@@ -33,7 +32,16 @@
     <form action="messages" method="post" class="new_message">
         {% csrf_token %}
         <div class="name"><input id="recipient_name" placeholder="ИМЯ ПОЛУЧАТЕЛЯ"></div>
-        <textarea id="message" rows="4" placeholder="Введите Ваше сообщение..."></textarea>
+            <div class="compose">
+                <div id="message_textarea" 
+                     role="textbox" 
+                     contenteditable="true" 
+                     aria-multiline="true" 
+                     aria-required="true" 
+                     placeholder="Введите ваше сообщение..." 
+                     contentEditable=true></div>
+            </div>  
+
 {#            <input id="message" placeholder="Сообщение"> Имя получателя#}
 
 

@@ -1,71 +1,75 @@
 {% block user_page %}
 <div id="pages" align="center" style="display: none;">
-        {% if post.has_next %}
-            <span id="IOP" style="display: none">{{ post.next_page_number }}</span>
-        {% endif %}
-    </div>
-
-
-      <div id="user-page">
-      <div class="info">
-      <div class="us-name">
-      <h3>{{ user_info.username }}</h3></div>
-      <div class="uspgimg">
-      {% if user_info.image_user %}
-            <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.image_user }}" loading="lazy">
-      {% else %}
-            <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy">
-      {% endif %}
-      </div>
-<div class="soc">
-{% if username %}
-{% if user_info.username == username %}
-   <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF()">
-           {% else %}
-           
-           {% if foll_blank == 0 %}
-               <img src="/media/images/addusr.png" class="addusr" onclick="addfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">
-               <a id="follw_{{ user_info.id }}" onclick="addfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">ПОДПИСАТЬСЯ</a>
-           {% else %}
-               <a id="follw_{{ user_info.id }}" onclick="delfollow('{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')">ОТПИСАТЬСЯ</a>
-           {% endif %}
-
-               <div class="pm-mes">
-           {% csrf_token %}
-           <input id="recipient_name" placeholder="Имя получателя" value="{{ user_info.username }}" style="display: none">
-           <input id="message" placeholder="Сообщение">
-
-<p>
-    <a onclick="createMES()">Отправить</a>
-</p>
-           </div>
+    {% if post.has_next %}
+        <span id="IOP" style="display: none">{{ post.next_page_number }}</span>
     {% endif %}
-{% endif %}
-           <a onclick="foll('{{ user_info.id }}')">Подписчики <span id="foll_coun_{{ user_info.id }}">{{ user_info.get_followers.count }}</span></a>
-           <em>•</em>
-           <a onclick="folls('{{ user_info.id }}')">Подписан <span id="folls_coun_{{ user_info.id }}">{{ user_info.get_following.count }}</span></a>
-      <em>•</em>
-           <a onclick="getlkpost('{{ user_info.id }}')">Нравится</a>
 </div>
-      </div>
-
+<div id="user-page">
+    <div class="info">
+        <div class="us-name">
+            <h3>{{ user_info.username }}</h3>
+        </div>
+        <div class="uspgimg">
+            {% if user_info.image_user %}
+                <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.image_user }}" loading="lazy">
+            {% else %}
+                <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy">
+            {% endif %}
+        </div>
+        <div class="soc">
+            {% if username %}
+                {% if user_info.username == username %}
+                    <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF()">
+                {% else %}
+                {% if foll_blank == 0 %}
+                    <img src="/media/images/addusr.png" class="addusr" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="false">
+                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="false">ПОДПИСАТЬСЯ</a>
+                {% else %}
+                    <img src="/media/images/addusr.png" class="addusr" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true">
+                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true">ОТПИСАТЬСЯ</a>
+                {% endif %}
+                <div class="pm-mes">
+                    {% csrf_token %}
+                    <input id="recipient_name" placeholder="Имя получателя" value="{{ user_info.username }}" style="display: none">
+<!--                    <input id="message" placeholder="Сообщение">-->
+                    <div class="compose">
+                        <div id="message_textarea" 
+                             role="textbox" 
+                             contenteditable="true" 
+                             aria-multiline="true" 
+                             aria-required="true" 
+                             placeholder="Введите ваше сообщение..." 
+                             contentEditable=true></div>
+                    </div>                    
+                    <p>
+                        <a onclick="createMES()">Отправить</a>
+                    </p>
+                </div>
+                {% endif %}
+            {% endif %}
+            <a onclick="foll('{{ user_info.id }}')">Подписчики <span id="foll_coun_{{ user_info.id }}">{{ user_info.get_followers.count }}</span></a>
+            <em>•</em>
+            <a onclick="folls('{{ user_info.id }}')">Подписан <span id="folls_coun_{{ user_info.id }}">{{ user_info.get_following.count }}</span></a>
+            <em>•</em>
+            <a onclick="getlkpost('{{ user_info.id }}')">Нравится</a>
+        </div>
+    </div>
 {#    <div onclick="userViewPost('{{ user_info.username }}')" class="userview"></div>#}
- <ul class="day-block" id="DODO" atr="user">
-      {% for l in post %}
-          {% if user_info in l.user_post %}
-      <li class="views-row"  onmouseover="getIndex(this);">
-      <div class="views-title"><a onclick="showContent('{{l.id}}')" atribut="{{l.id}}">{{ l.title }}</a></div>
-      <div class="field-image">
-        <img src="/media/data_image/{{ user_info.path_data }}/{{ l.title }}_tm.png" width="220" height="150" alt="" loading="lazy">
-      </div>
-      </li>
-              {% else %}
-      <li class="views-row"  onmouseover="getIndex(this);">
-      <div class="field-image" atribut="{{l.id}}">
-<img style="background: url('/media/data_image/{{ l.path_data }}/{{ l.image }}');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')" loading="lazy">
-
-      </div>
-          {% endif %}
-      {% endfor %}
-      </ul>
+    <ul class="day-block" id="DODO" atr="user">
+        {% for l in post %}
+            {% if user_info in l.user_post %}
+                <li class="views-row"  onmouseover="getIndex(this);">
+                    <div class="views-title"><a onclick="showContent('{{l.id}}')" atribut="{{l.id}}">{{ l.title }}</a></div>
+                    <div class="field-image">
+                        <img src="/media/data_image/{{ user_info.path_data }}/{{ l.title }}_tm.png" width="220" height="150" alt="" loading="lazy">
+                    </div>
+                </li>
+            {% else %}
+                <li class="views-row"  onmouseover="getIndex(this);">
+                    <div class="field-image" atribut="{{l.id}}">
+                        <img style="background: url('/media/data_image/{{ l.path_data }}/{{ l.image }}');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')" loading="lazy">
+                    </div>
+            {% endif %}
+        {% endfor %}
+    </ul>
 {% endblock %}

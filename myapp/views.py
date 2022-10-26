@@ -26,8 +26,6 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 
-
-
 @login_required
 def create_comment(request):
     ps_id = None
@@ -220,7 +218,7 @@ def post(request, post):
 
     return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
                                          'comment':comment, 'post_user_likes': post_id.likes.all()})
-                                         
+
 
 def viewcom(request, post_id):
     comment  = Comment.objects.filter(post_id=post_id)
