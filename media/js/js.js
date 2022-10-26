@@ -1157,17 +1157,25 @@ function UpdateBar(percent){
 /////////////
 // стена -------------------------------------->
 
+//            if (link in ws_dict[link]){
+//                console.log("showContent");
+//            }
+
 function showContent(link) {
     try {
         var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
         if (comv == "open") {
             comView(document.getElementById("comment_image_id_"+link));
+//            
         } else {
+//            if (link in ws_dict[link]){
+            console.log("showContent", ws_dict, link in ws_dict);
+//            }
             ws_dict[link] = activate_com(link);
             document.getElementById("comment_image_id_"+link).setAttribute("open-atr", "open")
         }
     } catch (e) {} 
-    
+//    document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws") = "open";
     console.log(comv)
     isLoading = false;
     document.body.style.overflow = 'hidden';
