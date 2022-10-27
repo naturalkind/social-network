@@ -18,9 +18,9 @@
             {#<a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a>#}
             <img src="/media/images/mesv4.png" onclick="privatMES()" id="mespr">
             {% if username.image_user %}
-                <img onclick="myPROFILE('{{ username.username }}')" src="/media/data_image/{{ username.path_data }}/tm_{{ username.image_user }}" class="usPr"/>
+                <img onclick="myPROFILE('{{ username.id }}')" src="/media/data_image/{{ username.path_data }}/tm_{{ username.image_user }}" class="usPr"/>
             {% else %}
-                <img onclick="myPROFILE('{{ username }}')" src="/media/data_image/oneProf.png"  class="usPr" />
+                <img onclick="myPROFILE('{{ username.id }}')" src="/media/data_image/oneProf.png"  class="usPr" />
             {% endif %}
         </div>
         <div id="logo">

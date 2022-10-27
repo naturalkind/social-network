@@ -36,7 +36,7 @@ urlpatterns = [
     path(r'login', myapp.login), 
     path(r'logout/', myapp.logout),
     path(r'register/', myapp.register),  
-    re_path(r'my/(?P<username>\w+)/', myapp.my_page),
+    re_path(r'my/(?P<user>\d+)/', myapp.my_page),
     path(r'profile/', myapp.user),
     path(r'users/', myapp.userViews),
     re_path(r'users/(?P<user>\d+)/', myapp.user_page), 

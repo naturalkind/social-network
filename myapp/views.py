@@ -415,10 +415,10 @@ def user_page(request, user):
             return HttpResponse('ok', content_type = "application/json")
 
 
-def my_page(request, username):
-    user_info = User.objects.get(username=username)
+def my_page(request, user):
+    user_info = User.objects.get(pk=user)
     # post = Post.objects.filter(user_post__username=username).order_by('-date_post')
-    post = list(Post.objects.filter(user_post__username=username))
+    post = list(Post.objects.filter(user_post__pk=user))
     p = Post.objects.filter(relike=user_info)
     for i in p:
         post.append(getps(int(i.id)))

@@ -1002,6 +1002,7 @@ font-family: Arial;
     .about .f-c {
         background:#f1f1f1;
         border-radius: 7px;
+        font-size: 30px;
     }
     
     .f-c {
@@ -1012,13 +1013,10 @@ font-family: Arial;
         background: #ffffff;
         margin-left: 20px;
         border-radius: 7px;
-        font-size: 20px;
+        font-size: 24px;
         color: #6f6f6f;
     }
     
-    .f-c p{
-        font-size: 16px;
-    }
    .video_file,
    .image_file{
         display: block;
@@ -1536,8 +1534,22 @@ font-family: Arial;
         margin: 11px 0 0 8;
 
     }
-    .f-c {
+    .about .f-c {
+        background:#f1f1f1;
+        border-radius: 7px;
         font-size: 16px;
+    }
+    
+    .f-c {
+        text-align: left;
+        margin-right: 20px;
+        padding: 5px;
+        margin-bottom: 15px;
+        background: #ffffff;
+        margin-left: 20px;
+        border-radius: 7px;
+        font-size: 16px;
+        color: #6f6f6f;
     }
     input.comment_text {
         width: 100%;

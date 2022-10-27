@@ -406,7 +406,7 @@ function jsons(link, atr){
         cont = document.getElementById('DODO');
         wd = 300;
         hd = 230;
-        us = document.querySelector('h3').innerText;
+        us = document.getElementById('user_id').innerText;
         linkfull = '/my/'+us+'/?page=' + link;
     }
     else if (atr == 'viewuser'){
@@ -1639,15 +1639,24 @@ function send_com(self, cip) {
     if (comment_text.innerText == "") {
         return false;
     }
-//    console.log(ws_dict[cip]);
-    if (ws_dict[cip].url.split('/')[4] != cip) {
-        console.log(ws_dict[cip], cip, zetr.getAttribute("indicator-ws"));
-    } else {
-        if (ws_dict[cip].readyState != WebSocket.OPEN) {
-            return false;
+    console.log(ws_dict, cip);
+    var data = JSON.stringify({ comment_text : comment_text.innerText,
+                                comment_image: dataURL_v1 });
+    try {
+        if (ws_dict[cip].url.split('/')[4] != cip) {
+            console.log(ws_dict[cip], cip, zetr.getAttribute("indicator-ws"));
+        } else {
+            if (ws_dict[cip].readyState != WebSocket.OPEN) {
+                return false;
+            }
+            ws_dict[cip].send(data);
+            comment_text.innerText = "";
         }
-        var data = JSON.stringify({ comment_text : comment_text.innerText,
-                                    comment_image: dataURL_v1 });
+    } catch(e) {
+//                        <img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
+        
+        zetr.setAttribute("indicator-ws", "open");
+        ws_dict[cip] = activate_com(cip);
         ws_dict[cip].send(data);
         comment_text.innerText = "";
     }
