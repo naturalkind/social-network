@@ -1161,99 +1161,99 @@ function UpdateBar(percent){
 //                console.log("showContent");
 //            }
 
-function showContent(link) {
-    try {
-        var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
-        if (comv == "open") {
-            comView(document.getElementById("comment_image_id_"+link));
-//            
-        } else {
-//            if (link in ws_dict[link]){
-            console.log("showContent", ws_dict, link in ws_dict);
-//            }
-            ws_dict[link] = activate_com(link);
-            document.getElementById("comment_image_id_"+link).setAttribute("open-atr", "open")
-        }
-    } catch (e) {} 
-//    document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws") = "open";
-    console.log(comv)
-    isLoading = false;
-    document.body.style.overflow = 'hidden';
-    var block_post = document.getElementById('block-post'); // ищем элемент с id
-//    var block_post = document.createElement('div');
-//    block_post.id = 'block-post';
-    block_post.style.display = 'block';
-    block_post.style.background = 'rgba(0,0,0,.75)';
-    block_post.style.overflow = 'auto';
-    block_post.setAttribute('atr', 'con');
-//    document.body.appendChild(block_post, document.body.lastChild);
-    var http = createRequestObject();
-    if(link != null) {
-        if(http) {
-            http.open('get', '/'+link);
-            http.onreadystatechange = function () {
-                if(http.readyState == 4) {
-                    block_post.innerHTML = http.responseText;
-                    try {
-                        var vp = document.getElementById('video-placeholder');
-                        youd = vp.getAttribute('idv');
-                        youps(youd);
-                        block_post.onscroll = function () {
-                            try {r = document.getElementById('IOPv').innerText;} catch (err){}
-                            if(isLoading) return false;
-                            var endPos = block_post.scrollHeight - block_post.clientHeight - block_post.scrollTop;
-                            if (r != undefined ){
-                                if(endPos === 0){
-                                    isLoading = true;
-                                    NewData(block_post.getAttribute('atr'), r);
-                                }
-                            }
-                        };
-                    } catch (err){}
-                    topbt = document.getElementById('topbt');
-                    topbt.style.transform = 'rotate(90deg)';
-                    topbt_indicator = "handler";
-                    // листать
-                    var textElemv1 = document.createElement('a');
-                    textElemv1.id = 'next';
-                    var textElemv2 = document.createElement('a');
-                    textElemv2.id = 'back';
-                    var navlis = document.createElement('div');
-                    navlis.className = 'navlis';
-                    navlis.appendChild(textElemv1, navlis.firstChild);
-                    navlis.appendChild(textElemv2, navlis.lastChild);
-                    block_post.insertBefore(navlis, block_post.firstChild);
-                    textElemv2.onclick = function LISTING(){
-                        if (len>innode){
-                            innode++;
-                            var h = document.getElementsByClassName('field-image')[innode];
-                            try{var g = h.getAttribute('atribut');}catch (err){}
+//function showContent(link) {
+//    try {
+//        var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
+//        if (comv == "open") {
+//            comView(document.getElementById("comment_image_id_"+link));
+////            
+//        } else {
+////            if (link in ws_dict[link]){
+//            console.log("showContent", ws_dict, link in ws_dict);
+////            }
+//            ws_dict[link] = activate_com(link);
+//            document.getElementById("comment_image_id_"+link).setAttribute("open-atr", "open")
+//        }
+//    } catch (e) {} 
+////    document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws") = "open";
+//    console.log(comv)
+//    isLoading = false;
+//    document.body.style.overflow = 'hidden';
+//    var block_post = document.getElementById('block-post'); // ищем элемент с id
+////    var block_post = document.createElement('div');
+////    block_post.id = 'block-post';
+//    block_post.style.display = 'block';
+//    block_post.style.background = 'rgba(0,0,0,.75)';
+//    block_post.style.overflow = 'auto';
+//    block_post.setAttribute('atr', 'con');
+////    document.body.appendChild(block_post, document.body.lastChild);
+//    var http = createRequestObject();
+//    if(link != null) {
+//        if(http) {
+//            http.open('get', '/'+link);
+//            http.onreadystatechange = function () {
+//                if(http.readyState == 4) {
+//                    block_post.innerHTML = http.responseText;
+//                    try {
+//                        var vp = document.getElementById('video-placeholder');
+//                        youd = vp.getAttribute('idv');
+//                        youps(youd);
+//                        block_post.onscroll = function () {
+//                            try {r = document.getElementById('IOPv').innerText;} catch (err){}
+//                            if(isLoading) return false;
+//                            var endPos = block_post.scrollHeight - block_post.clientHeight - block_post.scrollTop;
+//                            if (r != undefined ){
+//                                if(endPos === 0){
+//                                    isLoading = true;
+//                                    NewData(block_post.getAttribute('atr'), r);
+//                                }
+//                            }
+//                        };
+//                    } catch (err){}
+//                    topbt = document.getElementById('topbt');
+//                    topbt.style.transform = 'rotate(90deg)';
+//                    topbt_indicator = "handler";
+//                    // листать
+//                    var textElemv1 = document.createElement('a');
+//                    textElemv1.id = 'next';
+//                    var textElemv2 = document.createElement('a');
+//                    textElemv2.id = 'back';
+//                    var navlis = document.createElement('div');
+//                    navlis.className = 'navlis';
+//                    navlis.appendChild(textElemv1, navlis.firstChild);
+//                    navlis.appendChild(textElemv2, navlis.lastChild);
+//                    block_post.insertBefore(navlis, block_post.firstChild);
+//                    textElemv2.onclick = function LISTING(){
+//                        if (len>innode){
+//                            innode++;
+//                            var h = document.getElementsByClassName('field-image')[innode];
+//                            try{var g = h.getAttribute('atribut');}catch (err){}
 
-                        } else {
-                            textElemv2.style.display = 'none';
-                            textElemv1.style.display = 'block';
-                        }
-                        showContent(g);
-                    };
-                    textElemv1.onclick = function LISTING(){
-                        if (innode != 0){
-                            innode--;
-                            var h = document.getElementsByClassName('field-image')[innode];
-                            try{var g = h.getAttribute('atribut');}catch (err){}
-                        } else {
-                           textElemv1.style.display = 'none';
-                           textElemv2.style.display = 'block';
-                        }
-                        showContent(g);
-                    };
-                }
-            };
-            http.send(null);
-        } else {
-            document.location = link;
-        }
-    }
-}
+//                        } else {
+//                            textElemv2.style.display = 'none';
+//                            textElemv1.style.display = 'block';
+//                        }
+//                        showContent(g);
+//                    };
+//                    textElemv1.onclick = function LISTING(){
+//                        if (innode != 0){
+//                            innode--;
+//                            var h = document.getElementsByClassName('field-image')[innode];
+//                            try{var g = h.getAttribute('atribut');}catch (err){}
+//                        } else {
+//                           textElemv1.style.display = 'none';
+//                           textElemv2.style.display = 'block';
+//                        }
+//                        showContent(g);
+//                    };
+//                }
+//            };
+//            http.send(null);
+//        } else {
+//            document.location = link;
+//        }
+//    }
+//}
 
 
 
@@ -1763,6 +1763,106 @@ function send_message() {
 //////////////////////////////////////////////////////////////////
 ///  комментарии /////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
+
+function showContent(link) {
+    try {
+        var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
+        if (comv == "open") {
+            comView(document.getElementById("comment_image_id_"+link));
+//            document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws", "open")  
+        } else {
+            if (link in ws_dict){
+                console.log("showContent", ws_dict, link in ws_dict);
+            } else {
+                ws_dict[link] = activate_com(link);
+            }
+//            document.getElementById("comment_image_id_"+link).setAttribute("open-atr", "open")
+            document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws", "open")  
+        }
+    } catch (e) {} 
+//    document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws") = "open";
+    console.log(comv)
+    isLoading = false;
+    _page = "showContent";
+    document.body.style.overflow = 'hidden';
+    var block_post = document.getElementById('block-post'); // ищем элемент с id
+//    var block_post = document.createElement('div');
+//    block_post.id = 'block-post';
+    block_post.style.display = 'block';
+    block_post.style.background = 'rgba(0,0,0,.75)';
+    block_post.style.overflow = 'auto';
+    block_post.setAttribute('atr', 'con');
+//    document.body.appendChild(block_post, document.body.lastChild);
+    var http = createRequestObject();
+    if(link != null) {
+        if(http) {
+            http.open('get', '/'+link);
+            http.onreadystatechange = function () {
+                if(http.readyState == 4) {
+                    block_post.innerHTML = http.responseText;
+                    try {
+                        var vp = document.getElementById('video-placeholder');
+                        youd = vp.getAttribute('idv');
+                        youps(youd);
+                        block_post.onscroll = function () {
+                            try {r = document.getElementById('IOPv').innerText;} catch (err){}
+                            if(isLoading) return false;
+                            var endPos = block_post.scrollHeight - block_post.clientHeight - block_post.scrollTop;
+                            if (r != undefined ){
+                                if(endPos === 0){
+                                    isLoading = true;
+                                    NewData(block_post.getAttribute('atr'), r);
+                                }
+                            }
+                        };
+                    } catch (err){}
+                    topbt = document.getElementById('topbt');
+                    topbt.style.transform = 'rotate(90deg)';
+                    topbt_indicator = "handler";
+                    // листать
+                    var textElemv1 = document.createElement('a');
+                    textElemv1.id = 'next';
+                    var textElemv2 = document.createElement('a');
+                    textElemv2.id = 'back';
+                    var navlis = document.createElement('div');
+                    navlis.className = 'navlis';
+                    navlis.appendChild(textElemv1, navlis.firstChild);
+                    navlis.appendChild(textElemv2, navlis.lastChild);
+                    block_post.insertBefore(navlis, block_post.firstChild);
+                    textElemv2.onclick = function LISTING(){
+                        if (len>innode){
+                            innode++;
+                            var h = document.getElementsByClassName('field-image')[innode];
+                            try{var g = h.getAttribute('atribut');}catch (err){}
+
+                        } else {
+                            textElemv2.style.display = 'none';
+                            textElemv1.style.display = 'block';
+                        }
+                        showContent(g);
+                    };
+                    textElemv1.onclick = function LISTING(){
+                        if (innode != 0){
+                            innode--;
+                            var h = document.getElementsByClassName('field-image')[innode];
+                            try{var g = h.getAttribute('atribut');}catch (err){}
+                        } else {
+                           textElemv1.style.display = 'none';
+                           textElemv2.style.display = 'block';
+                        }
+                        showContent(g);
+                    };
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
+    }
+}
+
+
+
 
 var ws_dict = {}
 function comView(z){
