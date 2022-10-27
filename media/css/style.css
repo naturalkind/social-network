@@ -876,7 +876,11 @@ font-family: Arial;
 }
 
 @media only screen and (min-width : 400px){
-
+    img#comment-image {
+        max-width: 500px;
+        max-height: 500px;
+    }
+    
     #SIMPLE {
         display: block;
         position: relative;
@@ -1273,8 +1277,7 @@ font-family: Arial;
         float: right;
         margin: 16px 5px;
     }
-    .box-com .f-c img,
-    #box-com .f-c img,
+    #image-user,
     .message .views-title img {
         border-radius: 100px;
         margin: 9px;
@@ -1355,7 +1358,8 @@ font-family: Arial;
         z-index: 99999;
     }
     
-    .body img {width: 90px;
+    .icon-like {
+        width: 90px;
         height: 90px;
         margin: 0 60px;
     }
@@ -1384,6 +1388,10 @@ font-family: Arial;
 }
 
 @media screen and (min-width: 1200px)  {
+    img#comment-image {
+        max-width: 240px;
+        max-height: 240px;
+    }
     #SIMPLE {
         display: block;
         position: relative;
@@ -1693,7 +1701,7 @@ font-family: Arial;
         color: #507299;
         margin: 0;
     }
-    .body img {
+    .icon-like {
         width: 36px;
         height: 36px;
         margin: 0px 25px;
@@ -1782,8 +1790,8 @@ font-family: Arial;
         border-radius: 0;
         font-size: 16px;
     }
-    .box-com .f-c img,
-    #box-com .f-c img,
+    
+    #image-user,
     .message .views-title img {
         border-radius: 33px;
         float: left;

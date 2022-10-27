@@ -1,12 +1,13 @@
 <div id="field-comment_{{ id }}" style="background: #f2f2f2;">
     {% for cm in comment %}
         <div class="f-c">
-            <img src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+            <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
             <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">{{ cm.comment_user }}</a>
-            {% if cm.comment_image %}
-                <img src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image}}.png" onclick="showImg(this)" style="display:block;margin:0 auto;max-width:400px;width: auto;height:auto;max-height: 240px;">
-            {% endif %}
             <p style="padding:4px;">{{ cm.comment_text|linebreaksbr }}</p>
+            {% if cm.comment_image %}
+                <img id="comment-image" src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image}}.png" onclick="showImg(this)" style="">
+<!--                display:block;margin:0 auto;max-width:400px;width: auto;height:auto;max-height: 240px;-->
+            {% endif %}
             <div id="time-comment">{{ cm.timecomment|date:'d b o в H:i' }}</div>
         </div>
     {% endfor %}
