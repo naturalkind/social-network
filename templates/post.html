@@ -1,10 +1,10 @@
 {% block content %}
-{% if username == post.user_post.username %}
-    <a onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>
-{% endif %}
 <div id="node">
     <div id="breadcrumb" style="background: #507299;">
-        <div class="title">{{post.title}}</div>
+<!--        <div class="title">{{post.title}}</div>-->
+        {% if username == post.user_post.username %}
+            <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>
+        {% endif %}
         <div class="user"> Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> 
         {{post.date_post|date:'d b o в H:i' }}
         </div>
@@ -19,7 +19,7 @@
     </div>
 
     <div class="about">
-        <p style="font-size: 26px;margin: 0 auto;padding: 10px 40px;text-align: left;color: #9a9a9a;">{{post.body|safe}}</p>
+        <p style="font-size: 26px;margin: 0 auto;padding: 10px 40px;text-align: left;color: #9a9a9a;">{{post.body|safe|linebreaksbr}}</p>
         {% if username %}
             <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
             <div id="box-com" style="margin: 0 auto;">

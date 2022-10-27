@@ -876,6 +876,15 @@ font-family: Arial;
 }
 
 @media only screen and (min-width : 400px){
+
+    a#deletepost {
+        float: left;
+        background: #507299;
+        color: white;
+        font-size: 22px;
+        margin: 30px 0px 25px 10px;
+    }
+
     img#comment-image {
         max-width: 500px;
         max-height: 500px;
@@ -948,7 +957,14 @@ font-family: Arial;
     #send {
         left: 45%;
     }
-
+    img.send-img {
+        outline: 0;
+        width: 98px;
+        height: 98px;
+        background: #507299;
+        padding: 6px;
+        border-radius: 7px;
+    }
     #send-img {
         outline: 0;
         width: 98px;
@@ -959,7 +975,7 @@ font-family: Arial;
         margin: 20px;
     }
     #id_image_user_lb {
-        font-size: 30px;
+        font-size: 50px;
         text-align: center;
         background: #507299;
         color: white;
@@ -968,7 +984,7 @@ font-family: Arial;
         z-index: 9999;
         width: 600px;
         margin: 0 auto;
-        margin-top: 60px;
+        margin-top: 25px;
         display: block;
     }
     .title {
@@ -1361,7 +1377,7 @@ font-family: Arial;
     .icon-like {
         width: 90px;
         height: 90px;
-        margin: 0 60px;
+        margin: 20px 60px 6px 60px;
     }
     
     .body{font-size: 30px;padding: 5px;background: #f1f1f1;text-align: center;color: #afafaf;}
@@ -1371,7 +1387,7 @@ font-family: Arial;
         height: 125px;
         margin: 8px;
     }
-    #breadcrumb a{
+    a.username {
         cursor: pointer;
         border-radius: 5px;
         background: #ffffff;
@@ -1388,6 +1404,13 @@ font-family: Arial;
 }
 
 @media screen and (min-width: 1200px)  {
+    a#deletepost {
+        float: left;
+        background: #507299;
+        color: white;
+        font-size: 17px;
+        margin: 12px 0px 10px 10px;
+    }
     img#comment-image {
         max-width: 240px;
         max-height: 240px;
@@ -1479,6 +1502,14 @@ font-family: Arial;
 
     #send {
         left: 49%;
+    }
+    img.send-img {
+        outline: 0;
+        width: 48px;
+        height: 48px;
+        background: #507299;
+        padding: 6px;
+        border-radius: 7px;
     }
     #send-img {
         outline: 0;
@@ -1576,7 +1607,7 @@ font-family: Arial;
     .uspgimg img {
         height: 300px;
     }
-    #breadcrumb a{
+    a.username {
         cursor: pointer;
         border-radius: 5px;
         background: #ffffff;
@@ -1704,7 +1735,7 @@ font-family: Arial;
     .icon-like {
         width: 36px;
         height: 36px;
-        margin: 0px 25px;
+        margin: 10px 25px 0px 25px;
     }
     .body {
         font-size: 20px;

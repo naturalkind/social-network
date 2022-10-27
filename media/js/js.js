@@ -493,8 +493,17 @@ function jsons(link, atr){
                             if (parseInt(date.getMinutes()) < 10) {
                                 minutes = "0" + date.getMinutes();
                             } else minutes = date.getMinutes();
+                            
 //     "+g[R].pk +"      <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
-                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span><span class='arrow'> → </span><span class='message-title'>" + g[R].fields.title + "</span></a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div class='body'><div class='text' style='padding:5px;'>"+g[R].fields.body +"</div><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img class='icon-like' src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img class='icon-like' src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-indicator' style='display:none;margin: 0 auto;margin-top: 15px;' id='box-indicator-"+g[R].pk+"'></div><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
+//<div class='text' style='padding:5px;'>"+g[R].fields.body.slice(0,20) +"</div>
+                            if (g[R].fields.body.length>16) {
+                               var ttext =  "<span class='arrow'> → </span><span class='message-title'>" + g[R].fields.body.slice(0,18) + "...</span>";
+                            } else if (g[R].fields.body.length == 0) {
+                                var ttext = "";
+                            } else {
+                                var ttext = "<span class='arrow'> → </span><span class='message-title'>" + g[R].fields.body + "</span>";
+                            }
+                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span>" + ttext + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div class='body'><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img class='icon-like' src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img class='icon-like' src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-indicator' style='display:none;margin: 0 auto;margin-top: 15px;' id='box-indicator-"+g[R].pk+"'></div><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
                         } else {
                             html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")' loading='lazy'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
                         }
@@ -619,100 +628,100 @@ function showImg(path_data){
     topbt.style.transform = 'rotate(90deg)';
     topbt_indicator = "handler";
 
-    block_post.addEventListener("click", handler);
-    img.addEventListener('touchstart', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        startPoint.x=event.changedTouches[0].pageX;
-        startPoint.y=event.changedTouches[0].pageY;
-        ldelay=new Date();
-        if (startPoint.x>400){
-            if (len>innode) {
-                innode++;
-                var h = document.getElementsByClassName('field-image')[innode];
-                try{var m = h.children[0].getAttribute('imgb');
-                showImg(m);}catch (err){}
-            }
-        } else {
-            if (innode != 0) {
-                innode--;
-                var h = document.getElementsByClassName('field-image')[innode];
-                try{var m = h.children[0].getAttribute('imgb');
-                showImg(m);}catch (err){}
-            }
-        }
-    }, false);
-    
-    /*Ловим движение пальцем*/
-    img.addEventListener('touchmove', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var otk={};
-        nowPoint=event.changedTouches[0];
-        otk.x=nowPoint.pageX-startPoint.x;
-        img.style.left = event.pageX;
-        /*Обработайте данные*/
-        /*Для примера*/
-        if (Math.abs(otk.x) > 200) {
-            if (otk.x<0) {
-                if (len>innode){
-                          innode++;
-                          var h = document.getElementsByClassName('field-image')[innode];
-                          try{var m = h.children[0].getAttribute('imgb');
-                          showImg(m);}catch (err){}
-                          }
+//    block_post.addEventListener("click", handler);
+//    img.addEventListener('touchstart', function(event) {
+//        event.preventDefault();
+//        event.stopPropagation();
+//        startPoint.x=event.changedTouches[0].pageX;
+//        startPoint.y=event.changedTouches[0].pageY;
+//        ldelay=new Date();
+//        if (startPoint.x>400){
+//            if (len>innode) {
+//                innode++;
+//                var h = document.getElementsByClassName('field-image')[innode];
+//                try{var m = h.children[0].getAttribute('imgb');
+//                showImg(m);}catch (err){}
+//            }
+//        } else {
+//            if (innode != 0) {
+//                innode--;
+//                var h = document.getElementsByClassName('field-image')[innode];
+//                try{var m = h.children[0].getAttribute('imgb');
+//                showImg(m);}catch (err){}
+//            }
+//        }
+//    }, false);
+//    
+//    /*Ловим движение пальцем*/
+//    img.addEventListener('touchmove', function(event) {
+//        event.preventDefault();
+//        event.stopPropagation();
+//        var otk={};
+//        nowPoint=event.changedTouches[0];
+//        otk.x=nowPoint.pageX-startPoint.x;
+//        img.style.left = event.pageX;
+//        /*Обработайте данные*/
+//        /*Для примера*/
+//        if (Math.abs(otk.x) > 200) {
+//            if (otk.x<0) {
+//                if (len>innode){
+//                          innode++;
+//                          var h = document.getElementsByClassName('field-image')[innode];
+//                          try{var m = h.children[0].getAttribute('imgb');
+//                          showImg(m);}catch (err){}
+//                          }
 
-                /*СВАЙП ВЛЕВО(ПРЕД.СТРАНИЦА)*/
-            }
-            if(otk.x > 0){
-                if (innode != 0) {
-                          innode--;
-                          var h = document.getElementsByClassName('field-image')[innode];
-                          try{var m = h.children[0].getAttribute('imgb');
-                          showImg(m);}catch (err){}
+//                /*СВАЙП ВЛЕВО(ПРЕД.СТРАНИЦА)*/
+//            }
+//            if(otk.x > 0){
+//                if (innode != 0) {
+//                          innode--;
+//                          var h = document.getElementsByClassName('field-image')[innode];
+//                          try{var m = h.children[0].getAttribute('imgb');
+//                          showImg(m);}catch (err){}
 
-                          }
+//                          }
 
-            /*СВАЙП ВПРАВО(СЛЕД.СТРАНИЦА)*/
+//            /*СВАЙП ВПРАВО(СЛЕД.СТРАНИЦА)*/
 
-            } startPoint={x:nowPoint.pageX,y:nowPoint.pageY}}
-    }, false);
-    
-    /*Ловим отпускание пальца*/
-    img.addEventListener('touchend', function(event) {
-            var pdelay=new Date();
-            nowPoint=event.changedTouches[0];
-            var xAbs = Math.abs(startPoint.x - nowPoint.pageX);
-            var yAbs = Math.abs(startPoint.y - nowPoint.pageY);
-            if ((xAbs > 20 || yAbs > 20) && (pdelay.getTime()-ldelay.getTime())<200) {
-                if (xAbs > yAbs) {
-                    if (nowPoint.pageX < startPoint.x){
+//            } startPoint={x:nowPoint.pageX,y:nowPoint.pageY}}
+//    }, false);
+//    
+//    /*Ловим отпускание пальца*/
+//    img.addEventListener('touchend', function(event) {
+//            var pdelay=new Date();
+//            nowPoint=event.changedTouches[0];
+//            var xAbs = Math.abs(startPoint.x - nowPoint.pageX);
+//            var yAbs = Math.abs(startPoint.y - nowPoint.pageY);
+//            if ((xAbs > 20 || yAbs > 20) && (pdelay.getTime()-ldelay.getTime())<200) {
+//                if (xAbs > yAbs) {
+//                    if (nowPoint.pageX < startPoint.x){
 
-                    if (len>innode){
-                              innode++;
-                              var h = document.getElementsByClassName('field-image')[innode];
-                              try{var m = h.children[0].getAttribute('imgb');
-                              showImg(m);}catch (err){}
-                              }
+//                    if (len>innode){
+//                              innode++;
+//                              var h = document.getElementsByClassName('field-image')[innode];
+//                              try{var m = h.children[0].getAttribute('imgb');
+//                              showImg(m);}catch (err){}
+//                              }
 
 
-                    /*СВАЙП ВЛЕВО*/} else {
-                    if (innode != 0){
-                              innode--;
-                              var h = document.getElementsByClassName('field-image')[innode];
-                              try{var m = h.children[0].getAttribute('imgb');
-                              showImg(m);}catch (err){}
+//                    /*СВАЙП ВЛЕВО*/} else {
+//                    if (innode != 0){
+//                              innode--;
+//                              var h = document.getElementsByClassName('field-image')[innode];
+//                              try{var m = h.children[0].getAttribute('imgb');
+//                              showImg(m);}catch (err){}
 
-                              }
+//                              }
 
-                        /*СВАЙП ВПРАВО*/}
-                }
-            else {
-            if (nowPoint.pageY < startPoint.y){/*СВАЙП ВВЕРХ*/}
-            else{/*СВАЙП ВНИЗ*/}
-                 }
-            }
-    }, false);
+//                        /*СВАЙП ВПРАВО*/}
+//                }
+//            else {
+//            if (nowPoint.pageY < startPoint.y){/*СВАЙП ВВЕРХ*/}
+//            else{/*СВАЙП ВНИЗ*/}
+//                 }
+//            }
+//    }, false);
 }
 
 // лайки при наведении
@@ -807,10 +816,12 @@ function openMenu(){
 /// добвать пост
 function addPost(){
     try{
-        html ='<form class="message_form" id="message_form" style="display: block;" id="formsend"><input id="id_title" inputmode="search" placeholder="НАЗВАНИЕ" maxlength="100"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">загрузка картинки</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" maxlength="400" placeholder="Введите Ваше сообщение..." onfocus="geturlimg()"></textarea></div><div id="send"><img src="/media/images/cloud.png" onclick="send_wall()" id="send-img"></div></form>';
+        html ='<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">загрузка картинки</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea></div><div id="send"><img src="/media/images/cloud.png" onclick="send_wall()" id="send-img"></div></form></div>'; // maxlength="400" onfocus="geturlimg()" <input id="id_title" inputmode="search" placeholder="НАЗВАНИЕ" maxlength="100">
+//        html ='<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">загрузка картинки</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><div class="compose"><div class="message_textarea" role="textbox" contenteditable="true" aria-multiline="true" aria-required="true" placeholder="Введите Ваше сообщение..." contentEditable=true style="text-align:left;"></div></div></div><div id="send"><img src="/media/images/cloud.png" onclick="send_wall()" id="send-img"></div></form></div>'; 
         document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post');
         block_post.style.display = 'block';
+//        block_post.style.overflow = 'auto';
         block_post.innerHTML = html;
         topbt.style.transform = 'rotate(90deg)';
         topbt_indicator = "addPost";
@@ -1262,7 +1273,15 @@ function activate_wall(user_name) {
             if (message_data["status"]=="wallpost") {
                 var date = new Date(message_data.timestamp*1000);
 //                <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
-                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + message_data.user_post + '</span><span class="arrow"> → </span><span class="message-title">'+ message_data.title + '</span></a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div class="text" style="padding:5px;">'+ message_data.text +'</div><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'" type-div="icon" indicator-ws="close"><img class="icon-like" id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-' + message_data.id +'"></div></div></div></div>';
+//<div class="text" style="padding:5px;">'+ message_data.text.slice(0,20) +'</div>
+                if (message_data.text.length>18) {
+                   var ttext =  "<span class='arrow'> → </span><span class='message-title'>" + message_data.text.slice(0,20) + "...</span>";
+                } else if (message_data.text.length == 0) {
+                    var ttext = "";
+                } else {
+                    var ttext = "<span class='arrow'> → </span><span class='message-title'>" + message_data.text+ "</span>";
+                }
+                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + message_data.user_post + '</span>'+ ttext + '</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'" type-div="icon" indicator-ws="close"><img class="icon-like" id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-' + message_data.id +'"></div></div></div></div>';
 //                <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-' + message_data.id + '"></div>
                 try {
                     var tev = document.getElementById('conversation');
@@ -1320,7 +1339,7 @@ function activate_wall(user_name) {
 activate_wall();
 
 function send_wall() {
-        var title = document.getElementById('id_title');
+        var title =  document.getElementById('id_body');//document.getElementById('id_title');
         var body = document.getElementById('id_body');
 //        var audio = document.getElementById('id_audio');
         if (title.value == "") {
@@ -1620,6 +1639,7 @@ function send_com(self, cip) {
     if (comment_text.innerText == "") {
         return false;
     }
+//    console.log(ws_dict[cip]);
     if (ws_dict[cip].url.split('/')[4] != cip) {
         console.log(ws_dict[cip], cip, zetr.getAttribute("indicator-ws"));
     } else {

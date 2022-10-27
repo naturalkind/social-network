@@ -18,7 +18,8 @@
                         <a atribut="{{message.id}}" class="postview">
                             <span style="font-weight: bolder;" >{{message.user_post.username }}</span>
                             <span class="arrow"> → </span>
-                            <span class="message-title">{{ message.title|truncatechars:20 }}</span>
+                            <span class="message-title">{{ message.body|truncatechars:20 }}</span>
+<!--                            <span class="message-title">{{ message.title|truncatechars:20 }}</span>-->
                         </a>
                 </div>
                 <span class="datetime">{{ message.date_post|date:'H:i' }}</span> <!--{# {{ message.date_post|date:'d b o в H:i' }}#}-->
@@ -27,11 +28,12 @@
                 <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy">
             </div>
             <div class="body">
-                <div class="text" style="padding:5px;">
-                    {% if message.body  %}
-                        {{ message.body|truncatechars:60 }} <!--{#{{ message.body|safe}}#} -->
-                    {% endif %}
-                </div>
+<!--                <div class="text" style="padding:5px;text-align: left;">-->
+<!--                    {% if message.body  %}-->
+<!--                        {{ message.body|truncatechars:87 }}  {#{{ message.body|safe}}#}-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+                
                 <div id="post_like_block_{{message.id}}" style="width: 100%">
                     <img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
                     <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE('{{message.id}}')" onmouseover="LIKEOVER('{{message.id}}')" onmouseout="LIKEDONE('{{message.id}}')">
