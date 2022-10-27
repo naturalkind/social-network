@@ -8,6 +8,7 @@ from django.utils import dateformat
 from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
 
+import datetime
 import asyncio
 import aioredis
 import async_timeout
@@ -75,13 +76,17 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
         #comment.save()   
         comment_async = sync_to_async(comment.save)
         await comment_async()    
-        
+        now = datetime.datetime.now().strftime('%H:%M:%S')
         _data={
                 "type": "send_comment",
                 "comment_text": message_res,
                 "comment_image": comment_image,
                 "comment_user": self.scope['user'].username,
-                "comment_id": self.post_name
+                "path_data": self.path_data,
+                "image_user": self.image_user,
+                "comment_id": self.post_name,
+                "user_id": self.sender_id,
+                "timecomment":now,
             }
         await self.channel_layer.group_send(self.post_group_name, _data)
         

@@ -23,33 +23,39 @@
         {% if username %}
             <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
             <div id="box-com" style="margin: 0 auto;">
-                <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px">
+                <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px;">
                     {% for cm in comment %}
-                        <div class="f-c" style="text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background:#f1f1f1;margin-left: 20px;border-radius: 7px;">
-                            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
+<!--                        <div class="f-c" style="background:#f1f1f1;border-radius: 7px;">-->
+                        <div class="f-c">
+                            <img src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+                            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">{{ cm.comment_user }}</a>
                             {% if cm.comment_image %}
                                 <img src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image }}.png" style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;">
                             {% endif %}
-                            <p>{{ cm.comment_text|linebreaksbr }}</p>
+                            <p style="padding:4px;">{{ cm.comment_text|linebreaksbr }}</p>
+                            <div id="time-comment">{{ cm.timecomment|date:'d b o в H:i' }}</div>
                         </div>
                     {% endfor %}
                 </div>
     <!--  <input id="comment_text_{{post.id}}" class="comment_text" maxlength="400" placeholder="Введите Ваше сообщение...">-->
-                <div class="compose">
-                    <div id="comment_text_{{post.id}}"
-                         class="message_textarea" 
-                         role="textbox" 
-                         contenteditable="true" 
-                         aria-multiline="true" 
-                         aria-required="true" 
-                         placeholder="Напишите комментарий..." 
-                         contentEditable=true
-                         style="border: none;padding: 10px;border-radius: 10px;text-align:left;background: white;"
-                         ></div>
-                </div> 
-                <div id="results"></div>
-                <button id="add_{{ post.id }}" onclick="send_com(this, '{{ post.id }}')" indicator-ws="false">ОТПРАВИТЬ</button>
-<!--                <button id="add_{{ post.id }}" onclick="send_com('{{ post.id }}')">ОТПРАВИТЬ</button>-->
+                <div id="SIMPLE"></div>
+                <div id="message_form_comment">
+                    <div class="compose">
+                        <div id="comment_text_{{post.id}}"
+                             class="message_textarea" 
+                             role="textbox" 
+                             contenteditable="true" 
+                             aria-multiline="true" 
+                             aria-required="true" 
+                             placeholder="Напишите комментарий..." 
+                             contentEditable=true
+                             style="text-align:left;"
+                             ></div>
+                    </div> 
+                    <div id="results"></div>
+                    <button id="add_{{ post.id }}" onclick="send_com(this, '{{ post.id }}')" indicator-ws="false">ОТПРАВИТЬ</button>
+    <!--                <button id="add_{{ post.id }}" onclick="send_com('{{ post.id }}')">ОТПРАВИТЬ</button>-->
+                </div>
             </div>
         {% else %}
         <div class="user-post">

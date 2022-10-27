@@ -1,24 +1,18 @@
-<!--<div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-{{ id }}">-->
-<style>
-    .f-c{
-        text-align: left;margin-right: 20px;padding: 5px;margin-bottom:15px;background: #ffffff;margin-left: 20px;border-radius: 7px;
-    }
-</style>
 <div id="field-comment_{{ id }}" style="background: #f2f2f2;">
     {% for cm in comment %}
         <div class="f-c">
-            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;text-align: center;">{{ cm.comment_user }}</a>
+            <img src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">{{ cm.comment_user }}</a>
             {% if cm.comment_image %}
                 <img src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image}}.png" onclick="showImg(this)" style="display:block;margin:0 auto;max-width:400px;width: auto;height:auto;max-height: 240px;">
             {% endif %}
-                <span style="display: block;text-align:center;">{{ cm.comment_text|linebreaksbr }}</span> 
-<!--                <p style="display: block;text-align:center;">{{ cm.comment_text|linebreaks }}</p> -->
+            <p style="padding:4px;">{{ cm.comment_text|linebreaksbr }}</p>
+            <div id="time-comment">{{ cm.timecomment|date:'d b o в H:i' }}</div>
         </div>
     {% endfor %}
 {#    <button id="add" onclick="create_comment('{{post.id}}')">ОТПРАВИТЬ</button>#}
 </div>
 <div id="results" style="margin:10px 20px;">
-<!--    <input id="comment_text_{{ id }}" placeholder="Введите Ваше сообщение..." style="width: 100%;border: none;padding: 10px;border-radius: 10px;">-->
     <div class="compose">
         <div id="comment_text_{{ id }}"
              class="message_textarea" 
@@ -35,7 +29,5 @@
     <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
     <div id="cn"><canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>
 </div>
-<!--<img id="add_{{ id }}" src="/media/images/cloud.png" width="50" height="50" style="background: #507299;padding: 6px;border-radius: 7px;" onclick="send_com('{{ id }}')">-->
 <img id="add_{{ id }}" src="/media/images/cloud.png" width="50" height="50" style="background: #507299;padding: 6px;border-radius: 7px;" onclick="send_com(this, '{{ id }}')" indicator-ws="false">
 {#<button id="add_{{ id }}">ОТПРАВИТЬ</button>#}
-<!--</div>-->
