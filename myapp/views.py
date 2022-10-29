@@ -440,6 +440,7 @@ def user_page(request, user):
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})
         else:
+            print ("RENDER HTML5")
             return render(request, '_user.html', {'user_info':user_info, 'post':posts,
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,

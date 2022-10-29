@@ -209,6 +209,7 @@ function user(){
                 isLoading = false;
                 _page = "user"
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
+                history.pushState(null, null, '/users');
             }
         };
         http.send(null);
@@ -304,11 +305,13 @@ function editPROFF (){
 
 
 /// пользователя
-function userPROFILE(link){
+function userPROFILE(link, _type){
+    _type = typeof _type !== 'undefined' ?  _type : "javascript";
+    console.log("userPROFILE..........", _type)
     var http = createRequestObject();
     if(http) {
 //        http.open('get', '/users/'+link);
-        http.open('get', '/users/'+link+"/?_type=javascript");
+        http.open('get', '/users/'+link+"/?_type="+_type);
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
@@ -319,6 +322,7 @@ function userPROFILE(link){
                 main_wrapper.style.display = 'block';
                 document.body.style.overflow = 'auto';
                 isLoading = false;
+                history.pushState(null, null, '/users/'+link);
             }
         };
         http.send(null);
