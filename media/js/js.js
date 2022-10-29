@@ -22,12 +22,13 @@ var all_pages;
 //    topbt = document.getElementById('topbt');
 //    main_wrapper = document.getElementById("main-wrapper");
 //})
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("load......")
-    topbt = document.getElementById('topbt');
-    main_wrapper = document.getElementById("main-wrapper");
-}, false);
-
+//document.addEventListener('DOMContentLoaded', function() {
+//    console.log("load......")
+//    topbt = document.getElementById('topbt');
+//    main_wrapper = document.getElementById("main-wrapper");
+//}, false);
+topbt = document.getElementById('topbt');
+main_wrapper = document.getElementById("main-wrapper");
 
 function scroll(){
     if(isLoading) return false;
@@ -456,12 +457,18 @@ function jsons(link, atr){
                     var g = JSON.parse(f.data);
                     document.getElementById('IOP').innerText = f.op1;
                     for (var R in g) {
-                       html += "<div class='views-row' onclick='userPROFILE("+ g[R].pk +")'><img src='/media/data_image/"+g[R].fields.path_data+"/"+g[R].fields.image_user +"' width='180' height='180' loading='lazy'><div class='user-name'><a atribut='"+g[R].pk+"' style='padding: 0px;border-radius: 7px;font-size: 20px;color: #507299;'>"+g[R].fields.username +"</a></div></div>"
+                       if (g[R].fields.username.length>15) {
+                           var tuser =  g[R].fields.username.slice(0,12) + "...";
+                        } else {
+                            var tuser = g[R].fields.username;
+                        }
+                       html += "<div class='views-row' onclick='userPROFILE("+ g[R].pk +")'><img src='/media/data_image/"+g[R].fields.path_data+"/tm_"+g[R].fields.image_user +"' width='180' height='180' loading='lazy'><div class='user-name'><a atribut='"+g[R].pk+"' style='padding: 0px;border-radius: 7px;font-size: 20px;color: #507299;'>"+tuser +"</a></div></div>"
                     }
                     cont.innerHTML += html;
                     isLoading = false;
                     
                 } else {
+                
                     var f = JSON.parse(http.responseText);
                     if (atr == 'con') {
                         try {
@@ -496,6 +503,13 @@ function jsons(link, atr){
                             
 //     "+g[R].pk +"      <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
 //<div class='text' style='padding:5px;'>"+g[R].fields.body.slice(0,20) +"</div>
+                            if (g[R].fields.user_post[3].length>15) {
+                               var tuser =  g[R].fields.user_post[3].slice(0,15) + "...";
+                            } else {
+                                var tuser = g[R].fields.user_post[3];
+                            }
+
+
                             if (g[R].fields.body.length>16) {
                                var ttext =  "<span class='arrow'> → </span><span class='message-title'>" + g[R].fields.body.slice(0,18) + "...</span>";
                             } else if (g[R].fields.body.length == 0) {
@@ -503,7 +517,7 @@ function jsons(link, atr){
                             } else {
                                 var ttext = "<span class='arrow'> → </span><span class='message-title'>" + g[R].fields.body + "</span>";
                             }
-                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ g[R].fields.user_post[3] +"</span>" + ttext + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div class='body'><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img class='icon-like' src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img class='icon-like' src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-indicator' style='display:none;margin: 0 auto;margin-top: 15px;' id='box-indicator-"+g[R].pk+"'></div><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
+                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ tuser +"</span>" + ttext + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div id='body-post-wall'><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img class='icon-like' src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img class='icon-like' src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-indicator' style='display:none;margin: 0 auto;margin-top: 15px;' id='box-indicator-"+g[R].pk+"'></div><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
                         } else {
                             html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")' loading='lazy'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
                         }
@@ -570,7 +584,7 @@ function userViewPost(link){
     }
 }
 //
-
+var r;
 function getNewData(scrollable){
     try {
         r = document.getElementById('IOP').innerText;
@@ -578,35 +592,6 @@ function getNewData(scrollable){
             setTimeout(jsons(r, scrollable), 1200);
         }
     } catch (err) {}
-}
-//function scroll(){
-//    console.log('scroll', window.scrollY++, isLoading);
-//    if (window.scrollY++ || window.scrollY--){
-//        try{document.getElementById('comps').style.opacity = "0.9";}catch (err){}
-//    } else {
-//        document.getElementById('comps').style.opacity = "1";
-//    }
-//    if(isLoading) return false;
-//    main_wrapper = document.getElementById("main-wrapper");
-//    var contentHeight = main_wrapper.offsetHeight;
-//    var yOffset = window.pageYOffset;
-//    var y = yOffset + window.innerHeight;
-//    if(y >= contentHeight){
-//        isLoading = true;
-//        topbt_position = y;
-//        topbt_indicator = "scroll_up";
-//        console.log('scroll topbt_position', topbt_position);
-//        try{getNewData(document.getElementById("DODO").getAttribute('atr'));} catch (err){}
-//    }
-//}
-//window.onscroll = scroll;
-
-var r;
-function NewData(scrollable, r){
-    //Эмуляция AJAX запроса...
-    if (r != "undefined"){
-       setTimeout(jsons(r, scrollable), 1200);
-   }
 }
 
 
@@ -1201,22 +1186,6 @@ function showContent(link) {
             http.onreadystatechange = function () {
                 if(http.readyState == 4) {
                     block_post.innerHTML = http.responseText;
-                    try {
-                        var vp = document.getElementById('video-placeholder');
-                        youd = vp.getAttribute('idv');
-                        youps(youd);
-                        block_post.onscroll = function () {
-                            try {r = document.getElementById('IOPv').innerText;} catch (err){}
-                            if(isLoading) return false;
-                            var endPos = block_post.scrollHeight - block_post.clientHeight - block_post.scrollTop;
-                            if (r != undefined ){
-                                if(endPos === 0){
-                                    isLoading = true;
-                                    NewData(block_post.getAttribute('atr'), r);
-                                }
-                            }
-                        };
-                    } catch (err){}
                     topbt = document.getElementById('topbt');
                     topbt.style.transform = 'rotate(90deg)';
                     topbt_indicator = "handler";
@@ -1274,6 +1243,12 @@ function activate_wall(user_name) {
                 var date = new Date(message_data.timestamp*1000);
 //                <img src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
 //<div class="text" style="padding:5px;">'+ message_data.text.slice(0,20) +'</div>
+                if (message_data.user_post.length>15) {
+                   var tuser =  message_data.user_post.slice(0,15) + "...";
+                } else {
+                    var tuser = message_data.user_post;
+                }
+
                 if (message_data.text.length>18) {
                    var ttext =  "<span class='arrow'> → </span><span class='message-title'>" + message_data.text.slice(0,20) + "...</span>";
                 } else if (message_data.text.length == 0) {
@@ -1281,7 +1256,7 @@ function activate_wall(user_name) {
                 } else {
                     var ttext = "<span class='arrow'> → </span><span class='message-title'>" + message_data.text+ "</span>";
                 }
-                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + message_data.user_post + '</span>'+ ttext + '</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div class="body"><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'" type-div="icon" indicator-ws="close"><img class="icon-like" id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-' + message_data.id +'"></div></div></div></div>';
+                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="myPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + tuser + '</span>'+ ttext + '</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div id="body-post-wall"><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'" type-div="icon" indicator-ws="close"><img class="icon-like" id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-' + message_data.id +'"></div></div></div></div>';
 //                <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-' + message_data.id + '"></div>
                 try {
                     var tev = document.getElementById('conversation');

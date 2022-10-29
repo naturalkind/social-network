@@ -19,17 +19,19 @@
     </div>
 
     <div class="about">
-        <p style="font-size: 26px;margin: 0 auto;padding: 10px 40px;text-align: left;color: #9a9a9a;">{{post.body|safe|linebreaksbr}}</p>
+        <p id="post-text">{{post.body|linebreaksbr}}</p>
+<!--    safe|    -->
         {% if username %}
             <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
-            <div id="box-com" style="margin: 0 auto;">
+            <div class="box-com" style="margin: 0 auto;">
                 <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px;">
                     {% for cm in comment %}
 <!--                        <div class="f-c" style="background:#f1f1f1;border-radius: 7px;">-->
                         <div class="f-c">
                             <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
                             <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">{{ cm.comment_user }}</a>
-                            <p style="padding:4px;">{{ cm.comment_text|linebreaksbr }}</p>
+                            <p id="comment-text">{{ cm.comment_text|linebreaksbr }}</p>
+<!--                            style="padding:4px;"-->
                             {% if cm.comment_image %}
                                 <img id="comment-image" src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image }}.png" >
 <!--                                style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;"-->

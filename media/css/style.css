@@ -54,19 +54,32 @@
 }
 
 /* ---------- Overall Specifications ---------- */
-
+html,
+body,
+#page  {
+    height: 100%;
+    -webkit-text-size-adjust: none;
+}
+#header {
+      width: 100%;
+      margin: 0 auto;
+}
+#header div.section {
+    position: relative;
+}
 body {
-  line-height: 1.5;
-  font-size: 90%;
-  word-wrap: break-word;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
+/*    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+    font-family: "Helvetica Neue", sans-serif;
+    line-height: 1.5;
+    word-wrap: break-word;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
 }
 a:link,
 a:visited {
-  text-decoration: none;
+    text-decoration: none;
 }
 .us-block {
     text-align: center;
@@ -183,40 +196,16 @@ tr.odd {
 img {
     outline: 0;
 }
-code,
-pre,
-kbd,
-samp,
-var {
-    padding: 0 0.4em;
-    font-size: 0.857em;
-    font-family: Menlo, Consolas, "Andale Mono", "Lucida Console", "Nimbus Mono L", "DejaVu Sans Mono", monospace, "Courier New";
-}
 
 
 /* ------------------ Fonts ------------------ */
 
-body,
-.comment-form label {
-    font-family: Arial;
-}
-#header,
-#footer-wrapper,
-#skip-link,
-ul.links,
-ul.primary,
-.item-list .pager,
-table,
-.breadcrumb {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
 textarea, select, a.button {
     font-family: Arial;
     border-color: #507299;
     background: #f1f1f1;
     color: #ada9a9;
     border: none;
-    font-size: 16px;
 }
 
 /* ------------------ Header ------------------ */
@@ -254,9 +243,9 @@ textarea, select, a.button {
 
 /* -------------- Breadcrumbs   -------------- */
 
-.breadcrumb {
-    font-size: 0.929em;
-}
+/*.breadcrumb {*/
+/*    font-size: 0.929em;*/
+/*}*/
 
 /* Animated throbber */
 html.js input.form-autocomplete {
@@ -695,12 +684,6 @@ input#myPROFILE {
     max-width: 650px;
     /*min-height: 380px;*/
 }
-.aLogo{
-    color:white;
-    font-family:sans-serif;
-    top: 5px;
-    position: relative;
-}
 
 input[type="file"] {
     border: none;
@@ -875,7 +858,27 @@ font-family: Arial;
     margin-left: 10px;
 }
 
-@media only screen and (min-width : 400px){
+#body-post-wall{
+/*    padding: 5px;*/
+/*    text-align: center;*/
+    background: #f1f1f1;
+    color: #afafaf;
+}
+
+@media only screen and (min-width : 200px){
+    a#user-link{
+        padding: 0;
+        font-size: 30px;
+        color: #507299;
+        font-family: sans-serif;
+    }
+    p#post-text {
+        font-size: 30px;
+        margin: 0 auto;
+        padding: 10px 40px;
+        text-align: left;
+        color: #9a9a9a;    
+    }
 
     a#deletepost {
         float: left;
@@ -900,7 +903,7 @@ font-family: Arial;
 
     #time-comment {
         text-align: right;
-        font-size: 12px;
+        font-size: 24px;
         display: block;
         position: relative;
         padding-right: 10px;
@@ -943,15 +946,17 @@ font-family: Arial;
         -webkit-appearance: none;
         background: #507299;
     }
-    #box-com .message_textarea,
+    .compose .message_textarea,
+    .box-com .message_textarea,
     .compose #message_textarea {
         background: #f1f1f1;
         border: none;
         padding: 10px;
         font-size: 36px;
-        border-radius: 2px;
+        border-radius: 10px;
         color: #7b7b7b;
         margin-bottom: 10px;
+        text-align: left;
     }
 
     #send {
@@ -975,36 +980,36 @@ font-family: Arial;
         margin: 20px;
     }
     #id_image_user_lb {
-        font-size: 50px;
+        font-size: 40px;
         text-align: center;
         background: #507299;
         color: white;
         cursor: pointer;
         border-radius: 6px;
         z-index: 9999;
-        width: 600px;
         margin: 0 auto;
-        margin-top: 25px;
+        margin-top: 15px;
         display: block;
+        padding: 5px;
     }
     .title {
         float: left;
         margin: 17 0 0 8;
     }
-    input.comment_text {
-        width: 100%;
-        border: none;
-        font-size: 36px;
-        margin-bottom: 40px;
-        background: #f1f1f1;
-        padding: 20px;
-    }
-    .about .f-c {
-        background:#f1f1f1;
-        border-radius: 7px;
-        font-size: 30px;
-    }
-    
+/*    input.comment_text {*/
+/*        width: 100%;*/
+/*        border: none;*/
+/*        font-size: 36px;*/
+/*        margin-bottom: 40px;*/
+/*        background: #f1f1f1;*/
+/*        padding: 20px;*/
+/*    }*/
+/*    .about .f-c {*/
+/*        background:#f1f1f1;*/
+/*    }*/
+/*    p#comment-text {*/
+/*        font-size: 22px !important;*/
+/*    }*/
     .f-c {
         text-align: left;
         margin-right: 20px;
@@ -1013,8 +1018,8 @@ font-family: Arial;
         background: #ffffff;
         margin-left: 20px;
         border-radius: 7px;
-        font-size: 24px;
         color: #6f6f6f;
+        font-size: 28px !important;
     }
     
    .video_file,
@@ -1066,7 +1071,7 @@ font-family: Arial;
         right: 0;
         background: white;
         max-width: 100%;
-        text-align: center;
+/*        text-align: center;*/
     }
     .send button {
         color: #ffffff;
@@ -1226,7 +1231,11 @@ font-family: Arial;
     }
     
     #breadcrumb {
-        font: normal normal normal 36px 'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight: bold;height: 86px;
+        font: normal normal normal 36px 'Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-weight: bold;
+        height: 86px;
+        color: #FFFFFF;
+        text-align: center;
     }
     #breadcrumb .user {
         float: right;
@@ -1239,7 +1248,6 @@ font-family: Arial;
         min-height: 300px;
     }
     textarea, select, a.button {
-        width: 600px;
         font-family: Arial;
         padding: 15px;
         border-color: #507299;
@@ -1315,7 +1323,12 @@ font-family: Arial;
         top: 7px;
     }
     
-    .aLogo{color:white;font-family:sans-serif;top: -6px;position: relative;}
+    .aLogo{
+        color:white;
+        font-family:sans-serif;
+        top: -6px;
+        position: relative;
+    }
     
     #header {
         background-color: #507299;
@@ -1375,10 +1388,8 @@ font-family: Arial;
     .icon-like {
         width: 90px;
         height: 90px;
-        margin: 20px 60px 6px 60px;
+        margin: 15px 60px 8px 60px;
     }
-    
-    .body{font-size: 30px;padding: 5px;background: #f1f1f1;text-align: center;color: #afafaf;}
     
     #mespr{
         width: 125px;
@@ -1402,6 +1413,20 @@ font-family: Arial;
 }
 
 @media screen and (min-width: 1200px)  {
+    a#user-link{
+        padding: 0;
+        font-size: 20px;
+        color: #507299;
+        font-family: sans-serif;
+    }
+
+    p#post-text {
+        font-size: 20px;
+        margin: 0 auto;
+        padding: 10px 40px;
+        text-align: left;
+        color: #9a9a9a;    
+    }
     a#deletepost {
         float: left;
         background: #507299;
@@ -1423,7 +1448,7 @@ font-family: Arial;
 
     #time-comment {
         text-align: right;
-        font-size: 13px;
+        font-size: 14px;
         display: block;
         position: relative;
         padding-right: 5px;
@@ -1486,16 +1511,17 @@ font-family: Arial;
         margin-top: 5px;
         width: 100%;
     }
-
-    #box-com .message_textarea,
+    .compose .message_textarea,
+    .box-com .message_textarea,
     .compose #message_textarea {
         background: #f1f1f1;
         border: none;
         padding: 10px;
-        font-size: 25px;
+        font-size: 20px;
         border-radius: 2px;
         color: #7b7b7b;
         margin-bottom: 10px;
+        text-align: left;
     }
 
     #send {
@@ -1520,7 +1546,7 @@ font-family: Arial;
         margin: 20px auto;
     }
      #id_image_user_lb{
-        font-size: 20px;
+        font-size: 23px;
         text-align: center;
         background: #507299;
         color: white;
@@ -1528,18 +1554,19 @@ font-family: Arial;
         cursor: pointer;
         border-radius: 0;
         z-index: 9999;
+        padding: 4px;
     }
     .title {
     float: left;
         margin: 11px 0 0 8;
 
     }
-    .about .f-c {
-        background:#f1f1f1;
-        border-radius: 7px;
-        font-size: 16px;
-    }
-    
+/*    .about .f-c {*/
+/*        background:#f1f1f1;*/
+/*    }*/
+/*    p#comment-text {*/
+/*        font-size: 16px !important;*/
+/*    }*/
     .f-c {
         text-align: left;
         margin-right: 20px;
@@ -1548,18 +1575,18 @@ font-family: Arial;
         background: #ffffff;
         margin-left: 20px;
         border-radius: 7px;
-        font-size: 16px;
         color: #6f6f6f;
+        font-size: 16px !important;
     }
-    input.comment_text {
-        width: 100%;
-        border: none;
-        font-size: 20px;
-        margin-bottom: 10px;
-        background-color: #f1f1f1;
-        padding: 10px;
-        text-align: center;
-    }
+/*    input.comment_text {*/
+/*        width: 100%;*/
+/*        border: none;*/
+/*        font-size: 20px;*/
+/*        margin-bottom: 10px;*/
+/*        background-color: #f1f1f1;*/
+/*        padding: 10px;*/
+/*        text-align: center;*/
+/*    }*/
     .video_file,
     .image_file{
         display: block;
@@ -1605,7 +1632,7 @@ font-family: Arial;
         background: #FFFFFF;
         max-width: 800px;
         margin: 0 auto;
-        text-align: center;
+/*        text-align: center;*/
     }
     #send button {
         color: #ffffff;
@@ -1747,14 +1774,7 @@ font-family: Arial;
     .icon-like {
         width: 36px;
         height: 36px;
-        margin: 10px 25px 0px 25px;
-    }
-    .body {
-        font-size: 20px;
-        padding: 5px;
-        background: #f1f1f1;
-        text-align: center;
-        color: #a2a2a2;
+        margin: 5px 25px 3px 25px;
     }
 
     #breadcrumb {
@@ -1770,7 +1790,6 @@ font-family: Arial;
         margin: 13px 10px;
     }
     textarea, select, a.button {
-        width: 600px;
         font-family: Arial;
         border-color: #507299;
         background: #f1f1f1;
@@ -1852,7 +1871,12 @@ font-family: Arial;
         position: relative;
         top: 3px;
     }
-    .aLogo{color:white;font-family:sans-serif;top: 5px;position: relative;}
+    .aLogo {
+        color:white;
+        font-family:sans-serif;
+        top: 5px;
+        position: relative;
+    }
     #header {
         width: 100%;
         margin: 0 auto;
