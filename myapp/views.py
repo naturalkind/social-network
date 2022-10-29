@@ -354,7 +354,7 @@ def follow(request, id):
     p = User.objects.get(id=id)
     for x in p.get_followers():
         print (x.username)
-        img = f'media/data_image/{x.path_data}/tm_{x.image_user}'
+        img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
         idu = str(x.pk)
         li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
         ht += li
@@ -365,12 +365,44 @@ def follows(request, id):
     ht = ''
     p = User.objects.get(id=id)
     for x in p.get_following():
-        img = f'media/data_image/{x.path_data}/tm_{x.image_user}'
+        img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
         idu = str(x.pk)
         li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
         ht += li
     return HttpResponse("<div id='foll'>%s</div>" % ht)
 
+
+#def user_page(request, user):
+#    user_info = User.objects.get(pk=user)
+#    foll_blank = 0
+#    if str(request.user) != "AnonymousUser":
+#        if user_info in request.user.relationship.all():
+#            foll_blank = 1
+#    if request.method == 'GET':
+#        post = list(Post.objects.filter(user_post__id=user))
+#        p = Post.objects.filter(relike=user_info)
+#        for i in p:
+#            post.append(getps(int(i.id)))
+#        paginator = Paginator(post, 15)
+#        page = request.GET.get('page')
+#        data = {}
+#        data.update(csrf(request))
+#        data['us'] = auth.get_user(request).username
+#        try:
+#            posts = paginator.page(page)
+#            data['op1'] = paginator.page(page).next_page_number()
+#            data['op2'] = paginator.page(page).previous_page_number()
+#        except PageNotAnInteger:
+#            posts = paginator.page(1)
+#        except EmptyPage:
+#            posts = paginator.page(paginator.num_pages)
+#        if page:
+#            data['data'] = serializers.serialize('json', posts)
+#            return HttpResponse(json.dumps(data), content_type = "application/json")
+#        return render(request, 'user.html', {'user_info':user_info, 'post':posts,
+#                                             'username':auth.get_user(request).username,
+#                                             'foll_blank':foll_blank,
+#                                             'userid':auth.get_user(request).pk})
 
 def user_page(request, user):
     user_info = User.objects.get(pk=user)
@@ -385,6 +417,8 @@ def user_page(request, user):
             post.append(getps(int(i.id)))
         paginator = Paginator(post, 15)
         page = request.GET.get('page')
+        _type = request.GET.get('_type')
+        print ("USER_PAGE>>>", _type=="javascript")
         data = {}
         data.update(csrf(request))
         data['us'] = auth.get_user(request).username
@@ -399,10 +433,19 @@ def user_page(request, user):
         if page:
             data['data'] = serializers.serialize('json', posts)
             return HttpResponse(json.dumps(data), content_type = "application/json")
-        return render(request, 'user.html', {'user_info':user_info, 'post':posts,
-                                             'username':auth.get_user(request).username,
-                                             'foll_blank':foll_blank,
-                                             'userid':auth.get_user(request).pk})
+            
+        if _type == "javascript":    
+            return render(request, 'user.html', {'user_info':user_info, 'post':posts,
+                                                 'username':auth.get_user(request),
+                                                 'foll_blank':foll_blank,
+                                                 'userid':auth.get_user(request).pk})
+        else:
+            return render(request, '_user.html', {'user_info':user_info, 'post':posts,
+                                                 'username':auth.get_user(request),
+                                                 'foll_blank':foll_blank,
+                                                 'userid':auth.get_user(request).pk})
+
+
     if request.method == 'POST':
         username = request.GET.get('username')
         userid = request.GET.get('userid')

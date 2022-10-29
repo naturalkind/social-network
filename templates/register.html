@@ -1,124 +1,26 @@
-
+<script type="text/javascript" defer src="/media/js/js.js" ></script>
 <link rel="stylesheet" type="text/css" media="all" href="/media/css/style.css" />
-<style>
-.large {
-    width: 100%;
-    margin: 0 auto;
-}
-#oimg,
-.large form {
-      width: 600px;
-      margin: 0 auto;
-      padding: 15px 0px;
-  }
-.large span,
-.large label,
-.large input{
-        width: 100%;
-}
-@media only screen and (min-width : 200px){
-    .large span{
-        font-size: 24px;
-    }
-    .large input {
-        font-size: 36px;
-        background: #f1f1f1;
-        border: none;
-        border-radius: 3px;
-        box-sizing: border-box;
-        color: #262626;
-        padding: 10px;
-        -webkit-appearance: none;
-        margin-bottom: 10px;
-        }
-     .large .button {
-        font-size: 50px;
-        border: 1px solid #507299;
-        border-radius: 6px;
-        box-sizing: border-box;
-        color: #ffffff;
-        padding: 8px 0px;
-        -webkit-appearance: none;
-        background: #507299;
-    }
-    #id_image_user_lb{
-        font-size: 33px;
-       text-align: center;background: #507299;color: white;
-        padding: 8px 0px;
-        cursor: pointer;
-        border-radius: 6px;
-        z-index: 9999;
-    }
-
-}
-
-@media screen and (min-width: 1200px) {
-    .large .button {
-        font-size: 14px;
-        border: 1px solid #507299;
-        border-radius: 6px;
-        box-sizing: border-box;
-        color: #ffffff;
-        padding: 8px 0px;
-        -webkit-appearance: none;
-        background: #507299;
-    }
-    .large form {
-        width: 600px;
-        margin: 0 auto;
-        padding: 15px;
-    }
-    .large span,
-    .large label {
-        font-size: 17px;
-    }
-    .large input {
-        background: #f1f1f1;
-        border: none;
-        font-size: 18px;
-        padding: 8px 8px;
-        margin: 5px 0;
-
-    }
-    #id_image_user_lb{
-        margin-top: 7px;
-        font-size: 14px;
-        text-align: center;
-        background: #507299;
-        color: white;
-        padding: 8px 0px;
-        cursor: pointer;
-        border-radius: 6px;
-        z-index: 9999;
-    }
-
-}
-
-
-</style>
-
 {% block login %}
-        <div class="large">
-            <form action="/register/" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input id="id_username" maxlength="30" name="username" type="text" placeholder="имя пользователя">
-                <span class="helptext">Необходимо - 30 латинских символов или меньше. Буквы, цифры и символы "@/./+/-/_"</span>
-                <br>
-                <input id="id_password1" name="password1" type="password" placeholder="пароль">
-                <br>
-                <input id="id_password2" name="password2" type="password" placeholder="подтверждение пароля">
-                <br>
-                <input id="id_image_user" name="image_user" type="file" onchange="OnOnreg()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
-                <label for="id_image_user" id="id_image_user_lb">ЗАГРУЗКА КАРТИКИ</label>
-                <div id="cn">
-                    <img id="oimg">
-                    <canvas id="canvas" width="0" height="0"></canvas>
-                </div>
-                <input class="button" type="submit" value="зарегистрироваться" style="display: none;" id="regb">
-            </form>
-        </div>
-
-  {% endblock %}
+    <div class="large">
+        <form action="/register/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input id="id_username" maxlength="30" name="username" type="text" placeholder="имя пользователя">
+            <span class="helptext">Необходимо - 30 латинских символов или меньше. Буквы, цифры и символы "@/./+/-/_"</span>
+            <br>
+            <input id="id_password1" name="password1" type="password" placeholder="пароль">
+            <br>
+            <input id="id_password2" name="password2" type="password" placeholder="подтверждение пароля">
+            <br>
+            <input id="id_image_user" name="image_user" type="file" onchange="OnOnreg()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
+            <label for="id_image_user" id="id_image_user_lb">ЗАГРУЗКА КАРТИКИ</label>
+            <div id="cn">
+                <img id="oimg">
+                <canvas id="canvas" width="0" height="0"></canvas>
+            </div>
+            <input class="button" type="submit" value="зарегистрироваться" style="display: none;" id="regb">
+        </form>
+    </div>
+{% endblock %}
 
 
 

@@ -1,5 +1,5 @@
-var IP_ADDR = "178.158.131.41";
-var PORT = "8888"
+var IP_ADDR = "xn--90aci8aadpej1e.com";
+var PORT = "80"
 
 var innode;
 var len;
@@ -13,22 +13,24 @@ var temp_position;
 var isLoading = false;
 var all_pages;
 
-//window.onload = function(){
-//    topbt = document.getElementById('topbt');
-//    main_wrapper = document.getElementById("main-wrapper");
-//}
-//window.addEventListener('load', (event) => {
-//    console.log(event)
-//    topbt = document.getElementById('topbt');
-//    main_wrapper = document.getElementById("main-wrapper");
-//})
-//document.addEventListener('DOMContentLoaded', function() {
-//    console.log("load......")
-//    topbt = document.getElementById('topbt');
-//    main_wrapper = document.getElementById("main-wrapper");
-//}, false);
-topbt = document.getElementById('topbt');
-main_wrapper = document.getElementById("main-wrapper");
+window.onload = function(){
+    topbt = document.getElementById('topbt');
+    main_wrapper = document.getElementById("main-wrapper");
+}
+window.addEventListener('load', (event) => {
+    console.log(event)
+    topbt = document.getElementById('topbt');
+    main_wrapper = document.getElementById("main-wrapper");
+})
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("load......")
+    topbt = document.getElementById('topbt');
+    main_wrapper = document.getElementById("main-wrapper");
+}, false);
+
+// работает если в html script defer
+//topbt = document.getElementById('topbt');
+//main_wrapper = document.getElementById("main-wrapper");
 
 function scroll(){
     if(isLoading) return false;
@@ -303,14 +305,15 @@ function editPROFF (){
 
 /// пользователя
 function userPROFILE(link){
-    var block_post = document.getElementById('block-post');
     var http = createRequestObject();
     if(http) {
-        http.open('get', '/users/'+link);
+//        http.open('get', '/users/'+link);
+        http.open('get', '/users/'+link+"/?_type=javascript");
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
                 history.pushState({"view": "USP", 'lk': link }, null, null);
+                var block_post = document.getElementById('block-post');
                 block_post.style.display = 'none';
                 main_wrapper.style.opacity = 1;
                 main_wrapper.style.display = 'block';
@@ -1440,10 +1443,11 @@ function mesID(thread_id, user_name, number_of_messages){
     isLoading = false;
     var http = createRequestObject();
     if( http )   {
-        var linkfull = 'messages/chat/' + thread_id;
+        var linkfull = '/messages/chat/' + thread_id;
         http.open('get', linkfull);
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
+                console.log( http.responseText);
                 main_wrapper.innerHTML = http.responseText;
                 activate_chat(thread_id, user_name, number_of_messages);
                 //document.body.style.overflow = "hidden";
@@ -1647,7 +1651,7 @@ function activate_com(post_id) {
             var message_data = JSON.parse(event.data);
             console.log(message_data);
             if (message_data.comment_image != "") {
-                fc.innerHTML = '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">'+message_data.comment_user+'</a><p style="padding:4px;">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p><img id="comment-image" src="media/data_image/'+ message_data.comment_image +'">';
+                fc.innerHTML = '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">'+message_data.comment_user+'</a><p style="padding:4px;">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p><img id="comment-image" src="/media/data_image/'+ message_data.comment_image +'">';
             } else {
                 fc.innerHTML = '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">'+message_data.comment_user+'</a><p style="padding:4px;">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p>';
             }

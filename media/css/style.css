@@ -776,6 +776,8 @@ li.views-foll {
     background: #507299;
     color: white;
     font-size: 26px;
+    text-align: left;
+    padding: 10px 15px;
 }
 #imgf {
     max-width: 900px;
@@ -864,8 +866,52 @@ font-family: Arial;
     background: #f1f1f1;
     color: #afafaf;
 }
+.about .f-c {
+    background:#f1f1f1;
+}
+
+.large {
+    width: 100%;
+    margin: 0 auto;
+}
+#oimg,
+.large form {
+      width: 600px;
+      margin: 0 auto;
+      padding: 15px 0px;
+  }
+.large span,
+.large label,
+.large input{
+        width: 100%;
+}
+
 
 @media only screen and (min-width : 200px){
+    .large span{
+        font-size: 24px;
+    }
+    .large input {
+        font-size: 36px;
+        background: #f1f1f1;
+        border: none;
+        border-radius: 3px;
+        box-sizing: border-box;
+        color: #262626;
+        padding: 10px;
+        -webkit-appearance: none;
+        margin-bottom: 10px;
+        }
+     .large .button {
+        font-size: 50px;
+        border: 1px solid #507299;
+        border-radius: 6px;
+        box-sizing: border-box;
+        color: #ffffff;
+        padding: 8px 0px;
+        -webkit-appearance: none;
+        background: #507299;
+    }
     a#user-link{
         padding: 0;
         font-size: 30px;
@@ -1003,9 +1049,6 @@ font-family: Arial;
 /*        margin-bottom: 40px;*/
 /*        background: #f1f1f1;*/
 /*        padding: 20px;*/
-/*    }*/
-/*    .about .f-c {*/
-/*        background:#f1f1f1;*/
 /*    }*/
 /*    p#comment-text {*/
 /*        font-size: 22px !important;*/
@@ -1413,6 +1456,33 @@ font-family: Arial;
 }
 
 @media screen and (min-width: 1200px)  {
+    .large .button {
+        font-size: 14px;
+        border: 1px solid #507299;
+        border-radius: 6px;
+        box-sizing: border-box;
+        color: #ffffff;
+        padding: 8px 0px;
+        -webkit-appearance: none;
+        background: #507299;
+    }
+    .large form {
+        width: 600px;
+        margin: 0 auto;
+        padding: 15px;
+    }
+    .large span,
+    .large label {
+        font-size: 17px;
+    }
+    .large input {
+        background: #f1f1f1;
+        border: none;
+        font-size: 18px;
+        padding: 8px 8px;
+        margin: 5px 0;
+
+    }
     a#user-link{
         padding: 0;
         font-size: 20px;
