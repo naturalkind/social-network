@@ -12,16 +12,16 @@ var yOffset;
 var temp_position;
 var isLoading = false;
 var all_pages;
-
 window.onload = function(){
     topbt = document.getElementById('topbt');
     main_wrapper = document.getElementById("main-wrapper");
 }
 window.addEventListener('load', (event) => {
-    console.log(event)
+//    console.log(event)
     topbt = document.getElementById('topbt');
     main_wrapper = document.getElementById("main-wrapper");
 })
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log("load......")
     topbt = document.getElementById('topbt');
@@ -34,39 +34,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function scroll(){
     if(isLoading) return false;
-    var contentHeight = main_wrapper.offsetHeight;
+    var contentHeight = document.getElementById("main-wrapper").offsetHeight;
     yOffset = window.pageYOffset;
     var y = yOffset + window.innerHeight;
-//    console.log('scroll', yOffset);
-    if (_page == "chat") {
-        if(y >= contentHeight){
-            isLoading = false;
-            topbt_position = y;
-            topbt_indicator = "scroll_up";
-        } else if (yOffset <= 0) {
-            try {
-                if (all_pages != document.getElementById('IOP').innerText) {
-                    document.getElementById("dot-loader").style.display = "block";
-                    ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
-                }
-            } catch(e) {}
-        }     
-    } else {
-        if(y >= contentHeight){
-            isLoading = true;
-            topbt_position = y;
-            topbt_indicator = "scroll_up";
-            console.log('scroll topbt_position', topbt_position);
-            try {
-                getNewData(document.getElementById("DODO").getAttribute('atr'));
-            } catch (err) {}
+//    console.log('scroll', yOffset, contentHeight, y, _page);
+    if (document.getElementById('IOP').innerText!="STOP") {
+        if (_page == "chat") {
+            if(y >= contentHeight){
+                isLoading = false;
+                topbt_position = y;
+                topbt_indicator = "scroll_up";
+            } else if (yOffset <= 0) {
+                document.getElementById("dot-loader").style.display = "block";
+                ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
+            }     
+        } else {
+            if(y >= contentHeight){
+                isLoading = true;
+                topbt_position = y;
+                topbt_indicator = "scroll_up";
+                console.log(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
+                jsons(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
+            }
         }
     }
-
 }
 window.onscroll = scroll;
 
 function event_topbt(e){
+//    console.log("event_topbt", e)
     var block_post = document.getElementById('block-post');
     if (topbt_indicator == "editPROFF") {
         document.body.style.overflow = 'auto';
@@ -206,7 +202,7 @@ function user(_type){
                 document.body.style.overflow = 'auto';
                 block_post.style.display = 'none';
                 isLoading = false;
-                _page = "user"
+                _page = "users"
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
                 history.pushState(null, null, '/users/');
             }
@@ -320,6 +316,7 @@ function userPROFILE(link, _type){
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
                 isLoading = false;
                 history.pushState(null, null, '/users/'+link);
+                _page = "user";
             }
         };
         http.send(null);
@@ -403,52 +400,38 @@ function useimg(use){
     http.send(null);
    }
 }
+
+
 function jsons(link, atr){
     console.log(link, atr)
     var linkfull;
-    var wd, hd, us, cont;
+    var wd, hd, us, contv;
     if (atr == 'user'){
-        cont = document.getElementById('DODO');
+        contv = document.getElementById('DODO');
         wd = 300;
         hd = 230;
         us = document.getElementById('user_id').innerText;
         linkfull = '/users/'+us+'/?page=' + link;
     }
-    else if (atr == 'viewuser'){
-        cont = document.getElementById('DODO');
-        wd = "auto";
-        hd = "auto";
-        us = document.querySelector('h3').innerText;
-        linkfull = '/users/'+us+'/?page=' + link;
-    }
     else if (atr == 'users'){
-        cont = document.getElementById('DODO');
+        contv = document.getElementById('DODO');
         wd = 180;//300;
         hd = 160;//230;
         linkfull = '/users/?page=' + link;
     }
-    else if (atr=='con'){
-        cont = document.getElementById('DOD');
-        wd = 220;
-        hd = 150;
-        try{
-        var con = cont.getAttribute('icon');}catch (err){return false}
-        linkfull = '/'+con+'/?page=' + link;
-
-    }
     else if (atr == 'wall'){
-        var contv = document.getElementById('conversation');
-        cont = document.getElementById('DODO');
+        contv = document.getElementById('conversation');
         wd = "auto";
         hd = "auto";
         linkfull = '/?page=' + link;
     }
-    else {
-        cont = document.getElementById('DODO');
-        linkfull = '/json/?page=' + link;
-        wd = 300;
-        hd = 230;
+    else if (atr== "wall-nonregister"){
+        contv = document.getElementById('DODO');
+        wd = "auto";
+        hd = "auto";
+        linkfull = '/?page=' + link;
     }
+    
     var html = '';
     var http = new XMLHttpRequest();
     if (http) {
@@ -459,6 +442,7 @@ function jsons(link, atr){
                 if (atr == 'users'){
                     var f = JSON.parse(http.responseText);
                     var g = JSON.parse(f.data);
+                    all_pages = f.all_pages;
                     document.getElementById('IOP').innerText = f.op1;
                     for (var R in g) {
                        if (g[R].fields.username.length>15) {
@@ -468,21 +452,15 @@ function jsons(link, atr){
                         }
                        html += "<div class='views-row' onclick='userPROFILE("+ g[R].pk +")'><img src='/media/data_image/"+g[R].fields.path_data+"/tm_"+g[R].fields.image_user +"' width='180' height='180' loading='lazy'><div class='user-name'><a atribut='"+g[R].pk+"' style='padding: 0px;border-radius: 7px;font-size: 20px;color: #507299;'>"+tuser +"</a></div></div>"
                     }
-                    cont.innerHTML += html;
+                    contv.innerHTML += html;
                     isLoading = false;
                     
-                } else {
-                
+                }  
+                else {
+                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!", link, atr);
                     var f = JSON.parse(http.responseText);
-                    if (atr == 'con') {
-                        try {
-                            document.getElementById('IOPv').innerText = f.op1;
-                        } catch (err) {}
-                    } else if (atr == 'user') {
-                        document.getElementById('IOP').innerText = f.op1;
-                    } else {
-                        document.getElementById('IOP').innerText = f.op1;
-                    }
+                    all_pages = f.all_pages;
+                    document.getElementById('IOP').innerText = f.op1;
                     var us = f.us;
                     var g = JSON.parse(f.data);
                     for (var R in g) {
@@ -496,7 +474,7 @@ function jsons(link, atr){
                         var lkout = "LIKEDONE(" + g[R].pk + ")";
                         var lkovr = "LIKEOVER(" + g[R].pk + ")";
                         var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
-                        if (atr == 'wall' || atr=='viewuser') {
+                        if (atr == 'wall') {
                             var use = g[R].fields.user_post[2];
                             var imgh ='"'+g[R].fields.image+'"';
                             var imgv1 = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
@@ -522,15 +500,11 @@ function jsons(link, atr){
                                 var ttext = "<span class='arrow'> → </span><span class='message-title'>" + g[R].fields.body + "</span>";
                             }
                             html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ tuser +"</span>" + ttext + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div id='body-post-wall'><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img class='icon-like' src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img class='icon-like' src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-indicator' style='display:none;margin: 0 auto;margin-top: 15px;' id='box-indicator-"+g[R].pk+"'></div><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
-                        } else {
+                        } else if (atr=='wall-nonregister' || atr=='user') {
                             html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")' loading='lazy'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
                         }
                     }
-                    if (atr == 'wall') {
-                        contv.innerHTML += html;
-                    } else {
-                        cont.innerHTML += html;
-                    }
+                    contv.innerHTML += html;
                     isLoading = false;
                 }
             }
@@ -587,17 +561,6 @@ function userViewPost(link){
         document.location = link;
     }
 }
-//
-var r;
-function getNewData(scrollable){
-    try {
-        r = document.getElementById('IOP').innerText;
-        if (r != "undefined"){
-            setTimeout(jsons(r, scrollable), 1200);
-        }
-    } catch (err) {}
-}
-
 
 function showImg(path_data){
     document.body.style.overflow = 'hidden';

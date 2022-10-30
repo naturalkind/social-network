@@ -153,6 +153,20 @@ def index(request):
     post = Post.objects.all().order_by('-date_post')
     paginator = Paginator(post, 24)
     page = request.GET.get('page')
+    data = {}
+    data['all_pages'] = paginator.num_pages   
+    try:
+        posts = paginator.page(page)
+        data['op1'] = paginator.page(page).next_page_number()
+        data['op2'] = paginator.page(page).previous_page_number()
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+        data['op1'] = "STOP"
+    if page:
+        data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+        return HttpResponse(json.dumps(data), content_type = "application/json")    
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
@@ -203,16 +217,16 @@ def post(request, post):
     paginator = Paginator(posts, 3)
     data['us'] = auth.get_user(request).username
     try:
-                    post_user = paginator.page(page)
-                    data['op1'] = paginator.page(page).next_page_number()
-                    data['op2'] = paginator.page(page).previous_page_number()
+        post_user = paginator.page(page)
+        data['op1'] = paginator.page(page).next_page_number()
+        data['op2'] = paginator.page(page).previous_page_number()
     except PageNotAnInteger:
-                    post_user = paginator.page(1)
+        post_user = paginator.page(1)
     except EmptyPage:
-                    post_user = paginator.page(paginator.num_pages)
+        post_user = paginator.page(paginator.num_pages)
     if page:
-                    data['data'] = serializers.serialize('json', post_user)
-                    return HttpResponse(json.dumps(data), content_type = "application/json")
+        data['data'] = serializers.serialize('json', post_user)
+        return HttpResponse(json.dumps(data), content_type = "application/json")
     data['post_user_likes'] = post_id.likes.all()
 
     return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
@@ -305,10 +319,11 @@ def register(request):
             auth.login(request, newuser)
             return redirect('/')
         else:
-            print (">>>>>>>>>>>>>", error_str)
-            return HttpResponse(error_str)
-    else:
-        return render(request, 'register.html', args)
+            args['form'] = newuser_form
+#            print (">>>>>>>>>>>>>", error_str)
+#            return HttpResponse(error_str)
+#    else:
+    return render(request, 'register.html', args)
 
 
 def user(request):
@@ -354,7 +369,11 @@ def follow(request, id):
     for x in p.get_followers():
         img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
         idu = str(x.pk)
-        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
+        if len(str(x.username)) > 15:
+            uname = f"str(x.username)[:15]..."
+        else:
+            uname = str(x.username)
+        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, uname)
         ht += li
     return HttpResponse("<div id='foll'>%s</div>" % ht)
 
@@ -365,10 +384,15 @@ def follows(request, id):
     for x in p.get_following():
         img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
         idu = str(x.pk)
-        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, x.username)
+        if len(str(x.username)) > 15:
+            uname = f"{str(x.username)[:10]}..."
+        else:
+            uname = str(x.username)
+        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, uname)
         ht += li
     return HttpResponse("<div id='foll'>%s</div>" % ht)
 
+# страница пользователя
 def user_page(request, user):
     user_info = User.objects.get(pk=user)
     foll_blank = 0
@@ -382,10 +406,11 @@ def user_page(request, user):
             post.append(getps(int(i.id)))
         paginator = Paginator(post, 15)
         page = request.GET.get('page')
-        print ("user_page>>>>>>>>>>>>", request)
+        print ("user_page>>>>>>>>>>>>", page, request, paginator.num_pages)
         
         data = {}
         data['us'] = auth.get_user(request).username
+        data['all_pages'] = paginator.num_pages  
         try:
             posts = paginator.page(page)
             data['op1'] = paginator.page(page).next_page_number()
@@ -393,14 +418,16 @@ def user_page(request, user):
         except PageNotAnInteger:
             posts = paginator.page(1)
         except EmptyPage:
+            data['op1'] = "STOP"
             posts = paginator.page(paginator.num_pages)
         if page:
+            print (data)
             data['data'] = serializers.serialize('json', posts)
             return HttpResponse(json.dumps(data), content_type = "application/json")
             
         _type = request.GET.get('_type')    
         if _type == "javascript":    
-            return render(request, 'user2.html', {'user_info':user_info, 'post':posts,
+            return render(request, 'user.html', {'user_info':user_info, 'post':posts,
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})
@@ -424,14 +451,17 @@ def user_page(request, user):
 
 
 
-# страница пользователя
-def userViews(request):
+# страница пользователей
+def users_all(request):
     users = User.objects.all()
     paginator = Paginator(users, 40)
-    page = request.GET.get('page')
+    page = request.GET.get('page', None)
     _type = request.GET.get('_type')
+    print (page, _type, paginator.num_pages)
+    posts = paginator.page(1)
     data = {}
     data['us'] = auth.get_user(request).username
+    data['all_pages'] = paginator.num_pages    
     try:
         posts = paginator.page(page)
         data['op1'] = paginator.page(page).next_page_number()
@@ -440,56 +470,20 @@ def userViews(request):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
+        data['op1'] = "STOP"
     if page:
+        
         data['data'] = serializers.serialize('json', posts)
         return HttpResponse(json.dumps(data), content_type = "application/json")
-
-
     if _type == "javascript":    
-        return render(request, 'users.html', {'users':posts,
+        return render(request, 'users.html', {
+                                              'users':posts,
                                               'username':auth.get_user(request)})
     else:
         return render(request, '_users.html', {'users':posts,
                                               'username':auth.get_user(request)})
 
-def jsonu(request):
-    users = User.objects.all()
-    paginator = Paginator(users, 6)
-    page = request.GET.get('page')
-    data = {}
-    data['us'] = auth.get_user(request).username
-    try:
-        posts = paginator.page(page)
-        data['op1'] = paginator.page(page).next_page_number()
-        data['op2'] = paginator.page(page).previous_page_number()
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
-    if page:
-        data['data'] = serializers.serialize('json', posts)
-    return HttpResponse(json.dumps(data), content_type = "application/json")
 
-
-def jsons(request):
-    f = Post.objects.all().order_by('-date_post')
-    paginator = Paginator(f, 24)
-    page = request.GET.get('page')
-    data = {}
-    data['us'] = auth.get_user(request).username
-    # data['op'] = paginator.num_pages
-    # data['op1'] = paginator.page_range
-    try:
-        posts = paginator.page(page)
-        data['op1'] = paginator.page(page).next_page_number()
-        data['op2'] = paginator.page(page).previous_page_number()
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
-    if page:
-        data['data'] = serializers.serialize('json', posts)
-    return HttpResponse(json.dumps(data), content_type = "application/json")
 
 def likeover(request):
     if request.method == 'GET':
@@ -514,6 +508,7 @@ def getlkpost(request,id):
 
 
 def chat_view(request):
+    print ("chat_view>>>>>>>>>>>>>>>>>>>")
     if not request.user.is_authenticated:
         return index(request)
     thread = Post.objects.all().order_by("-date_post")
@@ -521,6 +516,7 @@ def chat_view(request):
     page = request.GET.get('page')
     data = {}
     data['us'] = auth.get_user(request).username
+    data['all_pages'] = paginator.num_pages   
     try:
         posts = paginator.page(page)
         data['op1'] = paginator.page(page).next_page_number()
@@ -529,6 +525,7 @@ def chat_view(request):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
+        data['op1'] = "STOP"
     if page:
         data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
         return HttpResponse(json.dumps(data), content_type = "application/json")

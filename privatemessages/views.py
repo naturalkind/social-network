@@ -134,11 +134,11 @@ def chat_view(request, thread_id):
     try:
         posts = paginator.page(page)
         data['op1'] = paginator.page(page).next_page_number()
-        data['all_pages'] = paginator.num_pages
     except PageNotAnInteger:
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
+        data['op1'] = "STOP"
     _type = request.GET.get('_type')
     if _type == "javascript":    
         return render(request, 'chat.html',

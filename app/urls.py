@@ -37,7 +37,7 @@ urlpatterns = [
     path(r'logout/', myapp.logout),
     path(r'register/', myapp.register),  
     path(r'profile/', myapp.user),
-    path(r'users/', myapp.userViews),
+    path(r'users/', myapp.users_all),
     re_path(r'users/(?P<user>\d+)/', myapp.user_page), 
     
     # сообщения
@@ -52,10 +52,6 @@ urlpatterns = [
     re_path(r'add_like/$', myapp.add_like, name='add_like'),
     re_path(r'likeover/$', myapp.likeover),
     re_path(r'^rppos/(?P<id>.*)$', myapp.rppos),
-    
-    #
-    re_path(r'^jsonu/', myapp.jsonu), # пользователь
-    re_path(r'^json/', myapp.jsons), # контент
     
     # комментарии
     re_path(r'^comment/(?P<post_id>.*)$', myapp.viewcom),

@@ -37,9 +37,11 @@ def get_pages(room_name, sender_id, message_res):
     try:
         posts = paginator.page(message_res)
         data['op1'] = paginator.page(message_res).next_page_number()
+    except PageNotAnInteger:
+        posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)  
-        data['op1'] = paginator.num_pages
+        data['op1'] = "STOP"
     data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
     return data
 

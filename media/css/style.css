@@ -67,6 +67,12 @@ body,
 #header div.section {
     position: relative;
 }
+#main-wrapper {
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
 body {
 /*    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
     font-family: "Helvetica Neue", sans-serif;
@@ -886,8 +892,15 @@ font-family: Arial;
         width: 100%;
 }
 
-
+#YO {
+    display: block;
+    width: 600px;
+    margin: 0 auto;
+}
 @media only screen and (min-width : 200px){
+    .fr-cell{
+        font-size: 28px;
+    }
     .large span{
         font-size: 24px;
     }
@@ -1036,7 +1049,7 @@ font-family: Arial;
         margin: 0 auto;
         margin-top: 15px;
         display: block;
-        padding: 5px;
+        padding: 5px 0px;
     }
     .title {
         float: left;
@@ -1456,8 +1469,11 @@ font-family: Arial;
 }
 
 @media screen and (min-width: 1200px)  {
+    .fr-cell{
+        font-size: 24px;
+    }
     .large .button {
-        font-size: 14px;
+        font-size: 23px;
         border: 1px solid #507299;
         border-radius: 6px;
         box-sizing: border-box;
@@ -1624,7 +1640,7 @@ font-family: Arial;
         cursor: pointer;
         border-radius: 0;
         z-index: 9999;
-        padding: 4px;
+        padding: 4px 0px;
     }
     .title {
     float: left;
