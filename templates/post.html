@@ -29,7 +29,7 @@
 <!--                        <div class="f-c" style="background:#f1f1f1;border-radius: 7px;">-->
                         <div class="f-c">
                             <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
-                            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">{{ cm.comment_user }}</a>
+                            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" id="user-comment">{{ cm.comment_user }}</a>
                             <p id="comment-text">{{ cm.comment_text|linebreaksbr }}</p>
 <!--                            style="padding:4px;"-->
                             {% if cm.comment_image %}

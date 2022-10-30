@@ -897,7 +897,18 @@ font-family: Arial;
     width: 600px;
     margin: 0 auto;
 }
+
+p#comment-text {
+    margin: 5px 5px 0px 15px;
+}
+
 @media only screen and (min-width : 200px){
+    #user-comment {
+        display: block;
+        padding: 4px;
+        margin: 13px 0px 13px 50px;
+    }
+
     .fr-cell{
         font-size: 28px;
     }
@@ -932,7 +943,7 @@ font-family: Arial;
         font-family: sans-serif;
     }
     p#post-text {
-        font-size: 30px;
+        font-size: 36px;
         margin: 0 auto;
         padding: 10px 40px;
         text-align: left;
@@ -943,7 +954,7 @@ font-family: Arial;
         float: left;
         background: #507299;
         color: white;
-        font-size: 22px;
+        font-size: 23px;
         margin: 30px 0px 25px 10px;
     }
 
@@ -1075,7 +1086,7 @@ font-family: Arial;
         margin-left: 20px;
         border-radius: 7px;
         color: #6f6f6f;
-        font-size: 28px !important;
+        font-size: 30px !important;
     }
     
    .video_file,
@@ -1289,13 +1300,13 @@ font-family: Arial;
     #breadcrumb {
         font: normal normal normal 36px 'Helvetica Neue',Helvetica,Arial,sans-serif;
         font-weight: bold;
-        height: 86px;
+        height: 88px;
         color: #FFFFFF;
         text-align: center;
     }
     #breadcrumb .user {
         float: right;
-        font-size: 20px;
+        font-size: 21px;
         margin: 30px 10px;
     }
     textarea#id_body {
@@ -1459,7 +1470,7 @@ font-family: Arial;
         color: #507299;
         top: 12px;
         position: relative;
-        font-size: 20px;
+        font-size: 23px;
         margin: 0 auto;
         padding: 5px 0 5px 0;
         font-style: initial;
@@ -1469,6 +1480,11 @@ font-family: Arial;
 }
 
 @media screen and (min-width: 1200px)  {
+    #user-comment {
+        display: block;
+        padding: 4px;
+        margin: 9px 0px 9px 50px;   
+    }
     .fr-cell{
         font-size: 24px;
     }
