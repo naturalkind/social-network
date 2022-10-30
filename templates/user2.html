@@ -18,8 +18,8 @@
             {% endif %}
         </div>
         <div class="soc">
-            {% if username %}
-                {% if user_info.username == username %}
+            {% if request.user.is_authenticated %}
+                {% if user_info.username == username.username %}
                     <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF()">
                 {% else %}
                 {% if foll_blank == 0 %}

@@ -189,7 +189,7 @@ STATIC_URL = '/media/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+DATA_UPLOAD_MAX_MEMORY_SIZE = 31457280
 #-------------------------->
 DJANGO_ALLOW_ASYNC_UNSAFE = "true"
 

@@ -90,6 +90,7 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                        "type": "send_message",
                        "timestamp": dateformat.format(message.datetime, 'U'),
                        "sender": str(self.sender_name),
+                       "sender_id": self.sender_id,
                        "image_user" : self.image_user, 
                        "path_data" : self.path_data,
                        "text": str(message_res),

@@ -13,7 +13,6 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def send_message_view(request):
-    print ("send_message_view")
     if not request.method == "POST":
         return HttpResponse("Please use POST.")
 
@@ -78,9 +77,6 @@ def messages_view(request):
              "".join(["private_", str(thread.id), "_messages"]),
              "total_messages"
         ).decode("utf-8")
-    print ("messages_view")
-
-
     if _type == "javascript":    
         return render(request, 'private_messages.html',
                                   {
@@ -88,7 +84,6 @@ def messages_view(request):
                                       "username":request.user
                                   })
     else:
-        print ("RENDER HTML5")
         return render(request, '_private_messages.html',
                                   {
                                       "threads": threads,
@@ -140,12 +135,10 @@ def chat_view(request, thread_id):
         posts = paginator.page(page)
         data['op1'] = paginator.page(page).next_page_number()
         data['all_pages'] = paginator.num_pages
-        print ("TRY OK")
     except PageNotAnInteger:
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-    print ("chat_view", messages_total, messages_sent, posts.has_next, data)
     _type = request.GET.get('_type')
     if _type == "javascript":    
         return render(request, 'chat.html',
@@ -160,7 +153,6 @@ def chat_view(request, thread_id):
                                   })
 
     else:
-        print ("RENDER HTML5")
         return render(request, '_chat.html',
                                   {
                                       "thread_id": thread_id,
@@ -172,54 +164,3 @@ def chat_view(request, thread_id):
                                       "username":request.user
                                   })
 
-
-
-#def chat_view(request, thread_id):
-#    if not request.user.is_authenticated:
-#        return HttpResponse("Please sign in.")
-
-#    thread = get_object_or_404(Thread, id=thread_id, participants__id=request.user.id)
-
-#    messages = thread.message_set.order_by("-datetime")[:100]
-
-#    user_id = str(request.user.id)
-
-#    r = redis.StrictRedis()
-
-#    messages_total = r.hget(
-#         "".join(["private_", str(thread.id), "_messages"]),
-#         "total_messages"
-#    )
-
-#    messages_sent = r.hget(
-#        "".join(["private_", str(thread.id), "_messages"]),
-#        "".join(["from_", user_id])
-#    )
-
-#    if messages_total:
-#        messages_total = int(messages_total)
-#    else:
-#        messages_total = 0
-
-#    if messages_sent:
-#        messages_sent = int(messages_sent)
-#    else:
-#        messages_sent = 0
-
-#    messages_received = messages_total-messages_sent
-
-#    partner = thread.participants.exclude(id=request.user.id)[0]
-
-#    # tz = request.COOKIES.get("timezone")
-#    # if tz:
-#    #     timezone.activate(tz)
-#    print ("chat_view", messages_total, messages_sent)
-#    return render(request, 'chat.html',
-#                              {
-#                                  "thread_id": thread_id,
-#                                  "thread_messages": messages,
-#                                  "messages_total": messages_total,
-#                                  "messages_sent": messages_sent,
-#                                  "messages_received": messages_received,
-#                                  "partner": partner,
-#                              })
