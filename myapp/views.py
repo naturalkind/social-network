@@ -490,6 +490,7 @@ def userViews(request):
     users = User.objects.all()
     paginator = Paginator(users, 40)
     page = request.GET.get('page')
+    _type = request.GET.get('_type')
     data = {}
     data['us'] = auth.get_user(request).username
     try:
@@ -504,9 +505,14 @@ def userViews(request):
         data['data'] = serializers.serialize('json', posts)
         return HttpResponse(json.dumps(data), content_type = "application/json")
 
-    return render(request, 'users.html', {'users':posts,
-                                          'username':auth.get_user(request).username})
 
+    if _type == "javascript":    
+        return render(request, 'users.html', {'users':posts,
+                                              'username':auth.get_user(request)})
+    else:
+        print ("RENDER HTML5")
+        return render(request, '_users.html', {'users':posts,
+                                              'username':auth.get_user(request)})
 
 def jsonu(request):
     users = User.objects.all()

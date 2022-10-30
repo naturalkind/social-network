@@ -64,7 +64,7 @@ def messages_view(request):
     threads = Thread.objects.filter(
         participants=request.user
     ).order_by("-last_message")
-
+    _type = request.GET.get('_type')
     if not threads:
         return render(request, 'private_messages.html', {})
 
@@ -79,11 +79,22 @@ def messages_view(request):
              "total_messages"
         ).decode("utf-8")
     print ("messages_view")
-    return render(request, 'private_messages.html',
-                              {
-                                  "threads": threads,
-                                  "user_info":request.user
-                              })
+
+
+    if _type == "javascript":    
+        return render(request, 'private_messages.html',
+                                  {
+                                      "threads": threads,
+                                      "username":request.user
+                                  })
+    else:
+        print ("RENDER HTML5")
+        return render(request, '_private_messages.html',
+                                  {
+                                      "threads": threads,
+                                      "username":request.user
+                                  })
+
 
 
 def chat_view(request, thread_id):
@@ -135,15 +146,31 @@ def chat_view(request, thread_id):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     print ("chat_view", messages_total, messages_sent, posts.has_next, data)
-    return render(request, 'chat.html',
-                              {
-                                  "thread_id": thread_id,
-                                  "thread_messages": posts,
-                                  "messages_total": messages_total,
-                                  "messages_sent": messages_sent,
-                                  "messages_received": messages_received,
-                                  "partner": partner,
-                              })
+    _type = request.GET.get('_type')
+    if _type == "javascript":    
+        return render(request, 'chat.html',
+                                  {
+                                      "thread_id": thread_id,
+                                      "thread_messages": posts,
+                                      "messages_total": messages_total,
+                                      "messages_sent": messages_sent,
+                                      "messages_received": messages_received,
+                                      "partner": partner,
+                                      "username":request.user
+                                  })
+
+    else:
+        print ("RENDER HTML5")
+        return render(request, '_chat.html',
+                                  {
+                                      "thread_id": thread_id,
+                                      "thread_messages": posts,
+                                      "messages_total": messages_total,
+                                      "messages_sent": messages_sent,
+                                      "messages_received": messages_received,
+                                      "partner": partner,
+                                      "username":request.user
+                                  })
 
 
 

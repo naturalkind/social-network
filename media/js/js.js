@@ -193,15 +193,15 @@ function LIKE(link){
 }
 
 // пользователи
-function user(){
-    var block_post = document.getElementById('block-post');
+function user(_type){
+    _type = typeof _type !== 'undefined' ?  _type : "javascript";
     var http = createRequestObject();
     if(http) {
-        http.open('get', '/users');
+        http.open('get', '/users/?_type='+_type);
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
-                history.pushState({"view": "USS"}, null, null);
+                var block_post = document.getElementById('block-post');
                 //cont.style.opacity = 1;
                 main_wrapper.style.display = 'block'
                 document.body.style.overflow = 'auto';
@@ -209,7 +209,7 @@ function user(){
                 isLoading = false;
                 _page = "user"
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
-                history.pushState(null, null, '/users');
+                history.pushState(null, null, '/users/');
             }
         };
         http.send(null);
@@ -307,15 +307,12 @@ function editPROFF (){
 /// пользователя
 function userPROFILE(link, _type){
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
-    console.log("userPROFILE..........", _type)
     var http = createRequestObject();
     if(http) {
-//        http.open('get', '/users/'+link);
         http.open('get', '/users/'+link+"/?_type="+_type);
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
-                history.pushState({"view": "USP", 'lk': link }, null, null);
                 var block_post = document.getElementById('block-post');
                 block_post.style.display = 'none';
                 main_wrapper.style.opacity = 1;
@@ -428,7 +425,7 @@ function jsons(link, atr){
         cont = document.getElementById('DODO');
         wd = 180;//300;
         hd = 160;//230;
-        linkfull = 'users/?page=' + link;
+        linkfull = '/users/?page=' + link;
     }
     else if (atr=='con'){
         cont = document.getElementById('DOD');
@@ -989,7 +986,6 @@ function myPROFILE(link){
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
                 //window.location.hash = ;
-                history.pushState({"view": "USCON", 'lk': link }, null, null);
                 //cont.style.opacity = 1;
                 main_wrapper.style.display = 'block';
                 block_post.style.display = 'none';
@@ -1005,18 +1001,19 @@ function myPROFILE(link){
     }
 }
 
-window.addEventListener("popstate", function(e) {
-    var state = e.state;
-    if (state.view == "USCON") {
-        myPROFILE(state.lk);
-    } else if (state.view == "USS"){
-        user()
-    }else if (state.view == "USP") {
-        userPROFILE(state.lk);
-    }else if (state.view == "MES") {
-        privatMES()
-    }
-});
+//window.addEventListener("popstate", function(e) {
+//    var state = e.state;
+//    console.log("popstate............")
+//    if (state.view == "USCON") {
+//        myPROFILE(state.lk);
+//    } else if (state.view == "USS"){
+//        user()
+//    }else if (state.view == "USP") {
+//        userPROFILE(state.lk);
+//    }else if (state.view == "MES") {
+//        privatMES()
+//    }
+//});
 
 
 function geturlimg(){setTimeout(draw, 5000)}
@@ -1388,21 +1385,22 @@ function nodeScriptIs(node) {
 //////////////////////////////////////////////////////////////////
 //  личные сообщения /////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-function privatMES(){
-   var block_post = document.getElementById('block-post');
-   var http = createRequestObject();
-   if( http )   {
-        var linkfull = '/messages';
-        http.open('get', linkfull);
+function privatMES(_type){
+    _type = typeof _type !== 'undefined' ?  _type : "javascript";
+    var http = createRequestObject();
+    if (http) {
+        var linkfull = '/messages/';
+        http.open('get', linkfull+'?_type='+_type);
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
-                history.pushState({'view':'MES'}, null, null);
                 //cont.style.opacity = 1;
+                main_wrapper.innerHTML = http.responseText;
+                var block_post = document.getElementById('block-post');
                 main_wrapper.style.display = 'block';
                 block_post.style.display = 'none';
-                main_wrapper.innerHTML = http.responseText;
                 //document.body.style.overflow = 'auto';
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
+                history.pushState(null, null, linkfull);
             }
         };
         http.send(null);
@@ -1443,15 +1441,15 @@ function createMES(){
 }
 
 
-function mesID(thread_id, user_name, number_of_messages){
+function mesID(thread_id, user_name, number_of_messages, _type){
+    _type = typeof _type !== 'undefined' ?  _type : "javascript";
     isLoading = false;
     var http = createRequestObject();
     if( http )   {
         var linkfull = '/messages/chat/' + thread_id;
-        http.open('get', linkfull);
+        http.open('get', linkfull+"/?_type="+_type);
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
-                console.log( http.responseText);
                 main_wrapper.innerHTML = http.responseText;
                 activate_chat(thread_id, user_name, number_of_messages);
                 //document.body.style.overflow = "hidden";
@@ -1460,6 +1458,7 @@ function mesID(thread_id, user_name, number_of_messages){
                 window.scrollBy(0, document.getElementById("conver").scrollHeight);
                 _page = "chat";
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
+                history.pushState(null, null, linkfull);
             }
         };
         http.send(null);
@@ -1467,7 +1466,6 @@ function mesID(thread_id, user_name, number_of_messages){
         document.location = link;
     }
 }
-
 
 var ws_chat;
 function activate_chat(thread_id, user_name, number_of_messages) {

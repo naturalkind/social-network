@@ -1,25 +1,21 @@
-
-  {% block userViews %}
-              {% if users.has_next %}
-            <span id="IOP" style="display: none">{{ users.next_page_number }}</span>
-        {% endif %}
-      <div class="us-block" style="position: relative;" id="DODO" atr="users">
-  {% for x in users %}
-    <div class="views-row" onclick="userPROFILE('{{x.id}}', 'javascript')">
-     <div class="user-image">
-         {% if x.image_user != "/media/images/Fv2.png" %}
-<!--                 <div style="margin:5px;background-image: url('/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}');border:none;background-size:cover; width:180px;height:160px;" ></div>-->
-                 <img src="/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}" loading="lazy"> 
-<!--                  width="180" height="180"-->
-                
-         {% else %}
-                  <div style="margin:5px;background-image: url('/media/images/oneProf.png');border:none;background-size:cover; width:180px;height:180px;"></div>
-         {% endif %}
-     </div>
-    <div class="user-name">
-        <a atribut="{{x.id}}" id="user-link">{{ x.username|truncatechars:10 }}</a>
+{% block userViews %}
+    {% if users.has_next %}
+        <span id="IOP" style="display: none">{{ users.next_page_number }}</span>
+    {% endif %}
+    <div class="us-block" style="position: relative;" id="DODO" atr="users">
+    {% for x in users %}
+        <div class="views-row" onclick="userPROFILE('{{x.id}}', 'javascript')">
+            <div class="user-image">
+                {% if x.image_user != "/media/images/Fv2.png" %}
+                    <img src="/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}" loading="lazy"> 
+                {% else %}
+                    <div style="margin:5px;background-image: url('/media/images/oneProf.png');border:none;background-size:cover; width:180px;height:180px;"></div>
+                {% endif %}
+            </div>
+            <div class="user-name">
+                <a atribut="{{x.id}}" id="user-link">{{ x.username|truncatechars:10 }}</a>
+            </div>
+        </div>
+    {% endfor %}
     </div>
-    </div>
-      {% endfor %}
-</div>
 {% endblock %}
