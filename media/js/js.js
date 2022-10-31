@@ -829,13 +829,16 @@ function addfollow(self, link, us, id){
             if (http.readyState == 4) {
                 var follow_btn = document.getElementById("follw_"+id);
                 if  (follow=="false") {
-                    follow_btn.innerHTML = "ОТПИСАТЬСЯ";
+                
+                
+                    follow_btn.innerHTML = "<img src='/media/images/dusr.png' class='addusr'><span id='follow-text'>ОТПИСАТЬСЯ</span>";
                     var foll_coun = document.getElementById("foll_coun_"+id);
                     foll_coun.innerHTML = parseInt(foll_coun.innerHTML)+1;
                 } else {
-                   follow_btn.innerHTML = "ПОДПИСАТЬСЯ";
-                   var foll_coun = document.getElementById("foll_coun_"+id);
-                   foll_coun.innerHTML = parseInt(foll_coun.innerHTML)-1;
+                    
+                    follow_btn.innerHTML = "<img src='/media/images/addusr.png' class='addusr'><span id='follow-text'>ПОДПИСАТЬСЯ</span>";
+                    var foll_coun = document.getElementById("foll_coun_"+id);
+                    foll_coun.innerHTML = parseInt(foll_coun.innerHTML)-1;
                 }
             }
         };
@@ -1595,9 +1598,9 @@ function activate_com(post_id) {
             fc.className = 'f-c';
             var message_data = JSON.parse(event.data);
             if (message_data.comment_image != "") {
-                fc.innerHTML = '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">'+message_data.comment_user+'</a><p style="padding:4px;">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p><img id="comment-image" src="/media/data_image/'+ message_data.comment_image +'">';
+                fc.innerHTML = '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" id="user-comment">'+message_data.comment_user+'</a><p id="comment-text">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p><img id="comment-image" src="/media/data_image/'+ message_data.comment_image +'">';
             } else {
-                fc.innerHTML = '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">'+message_data.comment_user+'</a><p style="padding:4px;">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p>';
+                fc.innerHTML = '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" id="user-comment">'+message_data.comment_user+'</a><p id="comment-text">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p>';
             }
             fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
             tev.insertBefore(fc, tev.lastChild);

@@ -25,11 +25,9 @@
                     <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF()">
                 {% else %}
                 {% if foll_blank == 0 %}
-                    <img src="/media/images/addusr.png" class="addusr" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="false">
-                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="false">ПОДПИСАТЬСЯ</a>
+                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="false"><img src="/media/images/addusr.png" class="addusr"><span id="follow-text">ПОДПИСАТЬСЯ</span></a>
                 {% else %}
-                    <img src="/media/images/addusr.png" class="addusr" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true">
-                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true">ОТПИСАТЬСЯ</a>
+                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true"><img src="/media/images/dusr.png" class="addusr"><span id="follow-text">ОТПИСАТЬСЯ</span></a>
                 {% endif %}
                 <div class="pm-mes">
                     {% csrf_token %}

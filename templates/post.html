@@ -2,8 +2,12 @@
 <div id="node">
     <div id="breadcrumb" style="background: #507299;">
 <!--        <div class="title">{{post.title}}</div>-->
-        {% if username == post.user_post.username %}
-            <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>
+        {% if request.user.is_authenticated %}
+            {% if username == post.user_post.username %}
+                <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>
+            {% else %}
+                <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
+            {% endif %}
         {% endif %}
         <div class="user"> Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> 
         {{post.date_post|date:'d b o в H:i' }}
@@ -22,7 +26,6 @@
         <p id="post-text">{{post.body|linebreaksbr}}</p>
 <!--    safe|    -->
         {% if username %}
-            <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
             <div class="box-com" style="margin: 0 auto;">
                 <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px;">
                     {% for cm in comment %}
