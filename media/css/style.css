@@ -1241,14 +1241,14 @@ p#comment-text {
 
     img#like_count {
         display: block;
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
         float: left;
         margin: 0px 0px 0px 10px;
         border-radius: 6px;
-        padding: 9px;
+        padding: 3px;
         opacity: 0.9;
-        background: #e3554c;
+/*        background: #e3554c;*/
     }
         
     .pmu {
@@ -1423,7 +1423,7 @@ p#comment-text {
     }
     
     .us-name h3 {
-     font-size:70px;
+     font-size:55px;
      color: #507299;
      margin: 0;
      font-weight: bold;
@@ -1949,13 +1949,21 @@ p#comment-text {
 /*        opacity: 0.9;*/
 /*        background: #e3554c;*/
 /*    }*/
+/*    img#like_count {*/
+/*        display: block;*/
+/*        width: 22px;*/
+/*        height: 22px;*/
+/*        float: left;*/
+/*        margin: 0px 0px 0px 6px;*/
+/*    }*/
     img#like_count {
         display: block;
-        width: 22px;
-        height: 22px;
+        width: 33px;
+        height: 33px;
         float: left;
         margin: 0px 0px 0px 6px;
     }
+
 
     .pmu {
         font-size: 20px;
@@ -2069,7 +2077,6 @@ p#comment-text {
     #block-post #node .auto-images img {
         max-width: 100%;
         max-height: 100%;
-        min-width: 0;
     }
     .postview{float: left;margin: 11px 5px;}
     .datetime{float: right;margin: 11px 5px;}

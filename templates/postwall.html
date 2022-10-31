@@ -35,13 +35,26 @@
 <!--                        {{ message.body|truncatechars:87 }}  {#{{ message.body|safe}}#}-->
 <!--                    {% endif %}-->
 <!--                </div>-->
-                
                 <div id="post_like_block_{{message.id}}" style="width: 100%">
                     <img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
-                    <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE('{{message.id}}')" onmouseover="LIKEOVER('{{message.id}}')" onmouseout="LIKEDONE('{{message.id}}')">
+                    {% if request.user in message.likes.all %}
+                        <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{message.id}}')" onmouseover="LIKEOVER(this, '{{message.id}}')" onmouseout="LIKEDONE(this, '{{message.id}}')">
+                    {% else %}
+                        <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{message.id}}')" onmouseover="LIKEOVER(this, '{{message.id}}')" onmouseout="LIKEDONE(this, '{{message.id}}')">
+                    {% endif %}
+                    
                     <img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('{{ message.id }}','{{ username }}')">
                     <div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-{{ message.id }}"></div>
                 </div>
+<!--                {{ message.likes.all }}-->
+<!--                {% if foll_blank == 0 %}-->
+<!--                {% endif %}-->
+<!--                {{ message.total_likes }}-->
+<!--                {% if request.user in message.get_foll %}-->
+<!--                    {{ message.total_likes }}-->
+<!--                    {{ message.get_foll }}-->
+<!--                {% endif %}-->
+                
             </div>
         </div>
     {% endfor %}

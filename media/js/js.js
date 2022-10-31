@@ -139,54 +139,6 @@ function createRequestObject() {
         }
 }
 
-// лайк   
-function LIKENODE(link){  
-var cont = document.getElementById('like_count');
-var linkfull = '/add_like/?post_id='+link;
-    var http = createRequestObject();
-    if( http )   {
-            http.open('get', linkfull);
-            http.onreadystatechange = function () {
-                if(http.readyState == 4) {
-                    cont.innerHTML = http.responseText;
-                }
-            };
-            http.send(null);
-        } else {
-            document.location = link;
-        }
-}
-
-// лайк на страницах
-function MY(e) {  
-    document.body.onclick = function(e) {
-        t=e.target||e.srcElement;
-    };
-}
-
-// сделать лайк
-function LIKE(link){
-//    MY(link);
-    if (isNaN(link) == false) {
-        var linkfull = '/add_like/?post_id=' + link;
-        var http = createRequestObject();
-        if (http) {
-            http.open('get', linkfull);
-            http.onreadystatechange = function () {
-                if (http.readyState == 4) {
-                    document.getElementById("box-indicator-"+link).innerHTML = http.responseText;
-                    document.getElementById("box-indicator-"+link).style.display = 'block';
-                }
-            };
-            http.send(null);
-        } else {
-            document.location = link;
-        }
-    } else {
-        link.innerHTML = "регистрируйся";
-      }
-}
-
 // пользователи
 function user(_type){
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
@@ -466,13 +418,13 @@ function jsons(link, atr){
                     for (var R in g) {
                         var lkbt;
                         if (us != "") {
-                            lkbt = "LIKE(" + g[R].pk + ")";
+                            lkbt = "LIKE(this," + g[R].pk + ")";
                         } else {
                             lkbt = "LIKE(this)";
                         }
                         var onc = "showContent(" + g[R].pk + ")";
-                        var lkout = "LIKEDONE(" + g[R].pk + ")";
-                        var lkovr = "LIKEOVER(" + g[R].pk + ")";
+                        var lkout = "LIKEDONE(this," + g[R].pk + ")";
+                        var lkovr = "LIKEOVER(this," + g[R].pk + ")";
                         var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
                         if (atr == 'wall') {
                             var use = g[R].fields.user_post[2];
@@ -499,7 +451,7 @@ function jsons(link, atr){
                             } else {
                                 var ttext = "<span class='arrow'> → </span><span class='message-title'>" + g[R].fields.body + "</span>";
                             }
-                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ tuser +"</span>" + ttext + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div id='body-post-wall'><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img class='icon-like' src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img class='icon-like' src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-indicator' style='display:none;margin: 0 auto;margin-top: 15px;' id='box-indicator-"+g[R].pk+"'></div><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
+                            html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ tuser +"</span>" + ttext + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div id='body-post-wall'><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img class='icon-like' src='/media/images/frv1.png' onclick='LIKE(this,"+g[R].pk +")' onmouseover='LIKEOVER(this, "+g[R].pk +")' onmouseout='LIKEDONE(this, "+g[R].pk +")'><img class='icon-like' src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-indicator' style='display:none;margin: 0 auto;margin-top: 15px;' id='box-indicator-"+g[R].pk+"'></div><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
                         } else if (atr=='wall-nonregister') {
                             html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")' loading='lazy'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
                         } else if (atr=='user') {
@@ -678,8 +630,63 @@ function showImg(path_data){
 //    }, false);
 }
 
+// лайк   
+function LIKENODE(link){  
+var cont = document.getElementById('like_count');
+var linkfull = '/add_like/?post_id='+link;
+    var http = createRequestObject();
+    if( http )   {
+            http.open('get', linkfull);
+            http.onreadystatechange = function () {
+                if(http.readyState == 4) {
+                    cont.innerHTML = http.responseText;
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
+}
+
+// лайк на страницах
+function MY(e) {  
+    document.body.onclick = function(e) {
+        t=e.target||e.srcElement;
+    };
+}
+
+// сделать лайк
+function LIKE(self, link){
+    console.log(self, link);
+//    MY(link);
+    if (isNaN(link) == false) {
+        var linkfull = '/add_like/?post_id=' + link;
+        var http = createRequestObject();
+        if (http) {
+            http.open('get', linkfull);
+            http.onreadystatechange = function () {
+                if (http.readyState == 4) {
+                    var data = JSON.parse(http.responseText);
+                    if (data["like-indicator"] == "1"){
+                        self.setAttribute("src", "/media/images/frv1.gif");
+                    } else {
+                        self.setAttribute("src", "/media/images/frv1.png");
+                    }
+                    self.setAttribute("like-indicator", data["like-indicator"])
+//                    document.getElementById("box-indicator-"+link).innerHTML = http.responseText;
+//                    document.getElementById("box-indicator-"+link).style.display = 'block';
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
+    } else {
+        link.innerHTML = "регистрируйся";
+      }
+}
 // лайки при наведении
-function LIKEOVER(link) {
+function LIKEOVER(self, link) {
     var html= '';
     try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
     var tooltipElem = document.createElement('div');
@@ -714,7 +721,7 @@ function LIKEOVER(link) {
         document.location = link;
     }
 }
-function LIKEDONE(link){
+function LIKEDONE(self, link){
     try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
 }
 
@@ -785,6 +792,24 @@ function addPost(){
 
  
 // Репосты 
+//function rpPost(link, us) {
+//    var http = createRequestObject();
+//        var linkfull = '/rppos/'+ link +'?username=' + us+'&user_blank=1';
+//        if (http) {
+//            http.open('get', linkfull);
+//            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//            http.onreadystatechange = function () {
+//                if (http.readyState == 4) {
+//                    document.getElementById("box-indicator-"+link).innerHTML = http.responseText;
+//                    document.getElementById("box-indicator-"+link).style.display = 'block';
+//            }
+//        };
+//        http.send(null);
+//    } else {
+//        document.location = link;
+//    }
+//} 
+
 function rpPost(link, us) {
     var http = createRequestObject();
         var linkfull = '/rppos/'+ link +'?username=' + us+'&user_blank=1';
@@ -802,6 +827,67 @@ function rpPost(link, us) {
         document.location = link;
     }
 } 
+// меню 
+function menuset(self, link, username) {
+    console.log(self, link);
+    if (self.getAttribute("open-atr")=="close") {
+        self.setAttribute("open-atr", "open")
+        var tooltipElem = document.createElement('div');
+        tooltipElem.id = 'tooltip_'+link;
+        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 10px 20px;border-radius: 2px;text-align: center;background: #fff;");
+        tooltipElem.innerHTML = '<div id="post_like_block_'+link+'" style="width: 100%">'
+//        tooltipElem.innerHTML += '<img id="like_count" src="/media/images/frv1.gif" onclick="LIKE(this, '+link+')">';
+        tooltipElem.innerHTML += '<img class="icon-like" src="/media/images/frv1.gif" onclick="LIKE2(this, '+link+')">';
+        tooltipElem.innerHTML += '<img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('+link+','+"'"+ username + "'" +')">'
+        tooltipElem.innerHTML += '<div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-'+ link +'"></div></div>'
+        document.getElementById("breadcrumb").appendChild(tooltipElem);
+        var coords = self.getBoundingClientRect();
+        var left = coords.left + (self.offsetWidth - tooltipElem.offsetWidth) / 2;
+        if (left < 0) left = 0;
+        var top = coords.top - tooltipElem.offsetHeight - 5;
+        if (top < 0) {top = coords.top + self.offsetHeight + 5;}
+        console.log(self, link);
+        tooltipElem.style.left = left+10 + 'px';
+        tooltipElem.style.top = top+10 + 'px';        
+        
+    } else {
+        self.setAttribute("open-atr", "close")
+        document.getElementById('tooltip_'+link).remove();
+    }
+}
+
+
+function LIKE2(self, link){
+    console.log(self, link);
+//    MY(link);
+    if (isNaN(link) == false) {
+        var linkfull = '/add_like/?post_id=' + link;
+        var http = createRequestObject();
+        if (http) {
+            http.open('get', linkfull);
+            http.onreadystatechange = function () {
+                if (http.readyState == 4) {
+                    var data = JSON.parse(http.responseText);
+                    if (data["like-indicator"] == "1"){
+                        self.setAttribute("src", "/media/images/frv1.gif");
+                    } else {
+                        self.setAttribute("src", "/media/images/frv1.png");
+                    }
+                    self.setAttribute("like-indicator", data["like-indicator"])
+                    console.log("LIKE2", data)
+//                    document.getElementById("box-indicator-"+link).innerHTML = http.responseText;
+//                    document.getElementById("box-indicator-"+link).style.display = 'block';
+                }
+            };
+            http.send(null);
+        } else {
+            document.location = link;
+        }
+    } else {
+        link.innerHTML = "регистрируйся";
+      }
+}
+
 
 
 // Подписка пользователь 
@@ -1121,10 +1207,11 @@ function showContent(link) {
     _page = "showContent";
     document.body.style.overflow = 'hidden';
     var block_post = document.getElementById('block-post'); // ищем элемент с id
-    block_post.style.display = 'block';
-    block_post.style.background = 'rgba(0,0,0,.75)';
-    block_post.style.overflow = 'auto';
-    block_post.setAttribute('atr', 'con');
+//    block_post.innerHTML ="";
+//    block_post.style.display = 'block';
+//    block_post.style.background = 'rgba(0,0,0,.75)';
+//    block_post.style.overflow = 'auto';
+//    block_post.setAttribute('atr', 'con');
     var http = createRequestObject();
     if(link != null) {
         if(http) {
@@ -1172,6 +1259,10 @@ function showContent(link) {
                         }
                         showContent(g);
                     };
+                    block_post.style.display = 'block';
+                    block_post.style.background = 'rgba(0,0,0,.75)';
+                    block_post.style.overflow = 'auto';
+                    block_post.setAttribute('atr', 'con');
                 }
             };
             http.send(null);
@@ -1206,7 +1297,7 @@ function activate_wall(user_name) {
                 } else {
                     var ttext = "<span class='arrow'> → </span><span class='message-title'>" + message_data.text+ "</span>";
                 }
-                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="userPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + tuser + '</span>'+ ttext + '</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div id="body-post-wall"><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'" type-div="icon" indicator-ws="close"><img class="icon-like" id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE('+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER('+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE('+ "'" + message_data.id + "'" + ')"><img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-' + message_data.id +'"></div></div></div></div>';
+                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="userPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + tuser + '</span>'+ ttext + '</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div id="body-post-wall"><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'" type-div="icon" indicator-ws="close"><img class="icon-like" id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE(this,'+ "'" + message_data.id +"'" +')" onmouseover="LIKEOVER(this,'+ "'" + message_data.id + "'" + ')" onmouseout="LIKEDONE(this,'+ "'" + message_data.id + "'" + ')"><img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')"><div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-' + message_data.id +'"></div></div></div></div>';
 //                <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-' + message_data.id + '"></div>
                 try {
                     var tev = document.getElementById('conversation');

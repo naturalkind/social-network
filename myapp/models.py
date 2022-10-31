@@ -80,7 +80,7 @@ class Post(models.Model):
     slug = models.SlugField(blank=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes', blank=True)
     point_likes = models.IntegerField(default=0)
-    relike = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Relike',symmetrical=False,related_name='userlk')
+    relike = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Relike', symmetrical=False,related_name='userlk')
 
     def __unicode__(self):
             return u'name: %s , id: %s' % (self.title, self.id)

@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 # django module
 from django.shortcuts import render, redirect, HttpResponseRedirect
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 try:
     from django.utils import simplejson as json
 except ImportError:
@@ -65,7 +65,6 @@ def add_like(request):
     if ps_id:
         ans = Post.objects.get(id=(int(ps_id)))
         #votes = ans.votes
-        x = []
         if ans:
             if ans.likes.filter(id=request.user.id).exists():
             # пользователь готов к созданию лайка
@@ -73,16 +72,19 @@ def add_like(request):
               #ans.votes =+1
               ans.likes.remove(request.user)
               x = 'тебе не нравиться'
+              li = 0
               #ans.save()
               ans.point_likes -= int(1)
               ans.save()
             else:
               #ans.votes =-1
               ans.likes.add(request.user)
-              x += request.user.username +' '+ u'понравилось'
+              x = request.user.username +' '+ u'понравилось'
+              li = 1
               ans.point_likes += int(1)
               ans.save()
-    return HttpResponse(x)
+    return JsonResponse({"answer":x, "like-indicator":li})
+    #return HttpResponse(x)
 
 
 def create_post(request):
@@ -517,6 +519,13 @@ def chat_view(request):
     data = {}
     data['us'] = auth.get_user(request).username
     data['all_pages'] = paginator.num_pages   
+#    foll_blank = 0
+#    if auth.get_user(request).username in list(thread.relike.all()):
+#        foll_blank = 1    
+#    print (thread)
+#    for p in thread:
+#        print (p.get_foll())
+#        dir(p), 
     try:
         posts = paginator.page(page)
         data['op1'] = paginator.page(page).next_page_number()
