@@ -500,8 +500,10 @@ function jsons(link, atr){
                                 var ttext = "<span class='arrow'> → </span><span class='message-title'>" + g[R].fields.body + "</span>";
                             }
                             html += "<div class='message' onmouseover='getIndex(this);'><div class='views-title' style='width: 100%;float: left;'><div class='user-cord' ><img src='/media/data_image/"+ g[R].fields.user_post[1] +"/tm_"+ g[R].fields.user_post[0] +"' class='imgUs' height='400' width='auto' onclick='userPROFILE(" + use + ")' loading='lazy'><a onclick='showContent(" + g[R].pk + ")' class='postview'><span style='font-weight: bolder;' >"+ tuser +"</span>" + ttext + "</a></div><span class='datetime'>" + date.getHours() + ':' + minutes + "</span></div><div class='field-image' atribut=" + g[R].pk + "><img src='" + imgv1 + "'width='" + wd + "' height='" + hd + "' onclick='showImg(this)' imgb='"+ g[R].fields.image +"' class='wallpost' loading='lazy'></div><div id='body-post-wall'><div id='post_like_block_"+ g[R].pk +"' style='width: 100%;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close'><img class='icon-like' src='/media/images/frv1.png' onclick='LIKE("+g[R].pk +")' onmouseover='LIKEOVER("+g[R].pk +")' onmouseout='LIKEDONE("+g[R].pk +")'><img class='icon-like' src='/media/images/rpvF.png' onclick='rpPost(" + '"' +g[R].pk + '"' +","+ '"' +us +'"'+")'><div class='box-indicator' style='display:none;margin: 0 auto;margin-top: 15px;' id='box-indicator-"+g[R].pk+"'></div><div class='box-com' style='display:none;margin: 0 auto;margin-top: 15px;' id='"+ g[R].pk +"'></div></div></div></div>";
-                        } else if (atr=='wall-nonregister' || atr=='user') {
+                        } else if (atr=='wall-nonregister') {
                             html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")' loading='lazy'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'></li>";
+                        } else if (atr=='user') {
+                            html += "<li class='views-row' onmouseover='getIndex(this);'><div class='field-image' atribut=" + g[R].pk + "><img style='background: url("+ img +");width:300px;height:230px;background-size: cover;'  onclick='showContent(" + g[R].pk + ")' loading='lazy'></div><div id='" + g[R].pk + "'data-tooltip='" + g[R].pk + "'></div><div id='" + g[R].pk + "' style='position: relative; opacity: 1;pointer-events: auto; display: none;'><img class='icon-like' src='/media/images/mesvF.png' onclick='comView(this)' open-atr='close' id-comment="+ g[R].pk +" id='comment_image_id_"+g[R].pk+"' type-div='icon' indicator-ws='close' style='display:none;'></li>";                        
                         }
                     }
                     contv.innerHTML += html;
@@ -1140,6 +1142,10 @@ function showContent(link) {
                     navlis.appendChild(textElemv1, navlis.firstChild);
                     navlis.appendChild(textElemv2, navlis.lastChild);
                     block_post.insertBefore(navlis, block_post.firstChild);
+//                    console.log(document.getElementById("node").childNodes)
+//                    document.getElementById("node").insertBefore(navlis, document.getElementById("node").childNodes[3]);
+//                    document.getElementById("node").insertBefore(navlis, document.getElementById("node").childNodes[4]);
+                    
                     textElemv2.onclick = function LISTING(){
                         if (len>innode){
                             innode++;
