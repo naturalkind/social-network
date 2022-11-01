@@ -14,46 +14,85 @@ var isLoading = false;
 var all_pages;
 window.onload = function(){
     topbt = document.getElementById('topbt');
+    topbt.style.display = "none"
     main_wrapper = document.getElementById("main-wrapper");
 }
 window.addEventListener('load', (event) => {
     topbt = document.getElementById('topbt');
+    topbt.style.display = "none"
     main_wrapper = document.getElementById("main-wrapper");
 })
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("load......")
     topbt = document.getElementById('topbt');
+    topbt.style.display = "none"
     main_wrapper = document.getElementById("main-wrapper");
 }, false);
 
 // работает если в html script defer
 //topbt = document.getElementById('topbt');
 //main_wrapper = document.getElementById("main-wrapper");
-
+function getScrollPercent() {
+    var h = document.documentElement, 
+        b = document.body,
+        st = 'scrollTop',
+        sh = 'scrollHeight';
+    return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+}
+var processed_page;
 function scroll(){
+    processed_page = getScrollPercent();
     if(isLoading) return false;
-    var contentHeight = document.getElementById("main-wrapper").offsetHeight;
+//    var contentHeight = document.getElementById("main-wrapper").offsetHeight;
     yOffset = window.pageYOffset;
     var y = yOffset + window.innerHeight;
 //    console.log('scroll', yOffset, contentHeight, y, _page);
+    console.log(processed_page, _page, document.body.scrollHeight, document.getElementById('IOP').innerText, yOffset)
     if (document.getElementById('IOP').innerText!="STOP") {
         if (_page == "chat") {
-            if(y >= contentHeight){
-                isLoading = false;
-                topbt_position = y;
-                topbt_indicator = "scroll_up";
-            } else if (yOffset <= 0) {
-                document.getElementById("dot-loader").style.display = "block";
+            if(processed_page <= 30){
+//            if(y >= contentHeight){
+                isLoading = true;
+//                topbt_position = y;
+                topbt.style.display = "block";
+                topbt.style.transform = 'rotate(180deg)'
+                topbt_indicator = "scroll_down_chat";
+                temp_position = window.innerHeight;
+//            } else if (yOffset <= 1) {
+//            } else if (processed_page <= 30) {
+//                document.getElementById("dot-loader").style.display = "block";
                 ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
-            }     
+//                setTimeout(sayHi, 1000);
+            } 
         } else {
-            if(y >= contentHeight){
+//            if(y >= contentHeight){
+            if(processed_page >= 80){
                 isLoading = true;
                 topbt_position = y;
                 topbt_indicator = "scroll_up";
+                topbt.style.display = "block";
 //                console.log(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
                 jsons(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
+            }
+        }
+    } else {
+        
+        if(processed_page <= 30){
+                if (_page == "chat") {
+                    topbt_indicator = "scroll_down_chat";
+                    topbt.style.transform = 'rotate(180deg)';
+                } else {
+                    topbt_indicator = "scroll_down";
+                    topbt.style.transform = 'rotate(180deg)';
+                }
+        } else if (processed_page >= 80){
+            if (_page == "chat") {
+                topbt_indicator = "scroll_up_chat";
+                topbt.style.transform = 'rotate(0deg)';            
+            } else {
+                topbt_indicator = "scroll_up";
+                topbt.style.transform = 'rotate(0deg)';
             }
         }
     }
@@ -62,11 +101,22 @@ window.onscroll = scroll;
 
 function event_topbt(e){
 //    console.log("event_topbt", e)
+//    yOffset = window.pageYOffset;
+//    var topbt_position = yOffset + window.innerHeight;
     var block_post = document.getElementById('block-post');
     if (topbt_indicator == "editPROFF") {
         document.body.style.overflow = 'auto';
         block_post.style.display = 'none';                     
         e.style.transform = 'rotate(0deg)';                            
+    } else if (topbt_indicator == "scroll_down_chat") { 
+        console.log("scroll_down_chat...................................", document.body.scrollHeight)
+        e.style.transform = 'rotate(0deg)';
+        topbt_indicator = "scroll_up_chat";
+        window.scrollTo(0, document.body.scrollHeight);
+    } else if (topbt_indicator == "scroll_up_chat") {  
+        e.style.transform = 'rotate(180deg)';
+        topbt_indicator = "scroll_down_chat";
+        window.scrollTo(0, 0); 
     } else if (topbt_indicator == "scroll_up"){
         console.log("scroll_up...................................", topbt_position, yOffset, temp_position)
         e.style.transform = 'rotate(180deg)';
@@ -153,6 +203,7 @@ function openMenu(self){
 // пользователи
 function user(_type){
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
+    window.scrollTo(0, 0);
     var http = createRequestObject();
     if(http) {
         http.open('get', '/users/?_type='+_type);
@@ -166,7 +217,9 @@ function user(_type){
                 block_post.style.display = 'none';
                 isLoading = false;
                 _page = "users"
-                document.getElementById('topbt').style.transform = 'rotate(0deg)';
+                topbt = document.getElementById('topbt');
+                topbt.style.transform = 'rotate(0deg)';
+                topbt.style.display = "none";
                 history.pushState(null, null, '/users/');
             }
         };
@@ -265,6 +318,7 @@ function editPROFF (){
 /// пользователь
 function userPROFILE(link, _type){
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
+    window.scrollTo(0, 0);
     var http = createRequestObject();
     if(http) {
         http.open('get', '/users/'+link+"/?_type="+_type);
@@ -276,7 +330,9 @@ function userPROFILE(link, _type){
                 main_wrapper.style.opacity = 1;
                 main_wrapper.style.display = 'block';
                 document.body.style.overflow = 'auto';
-                document.getElementById('topbt').style.transform = 'rotate(0deg)';
+                topbt = document.getElementById('topbt');
+                topbt.style.transform = 'rotate(0deg)';
+                topbt.style.display = "none";
                 isLoading = false;
                 history.pushState(null, null, '/users/'+link);
                 _page = "user";
@@ -1069,6 +1125,7 @@ function UpdateBar(percent){
 /////////////////////////////////////////////////
 
 function showContent(link) {
+    topbt.style.display = "block";
     try {
         var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
         if (comv == "open") {
@@ -1303,6 +1360,7 @@ function nodeScriptIs(node) {
 //////////////////////////////////////////////////////////////////
 function privatMES(_type){
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
+    window.scrollTo(0, 0);
     var http = createRequestObject();
     if (http) {
         var linkfull = '/messages/';
@@ -1315,7 +1373,9 @@ function privatMES(_type){
                 main_wrapper.style.display = 'block';
                 block_post.style.display = 'none';
                 //document.body.style.overflow = 'auto';
-                document.getElementById('topbt').style.transform = 'rotate(0deg)';
+                topbt = document.getElementById('topbt');
+                topbt.style.transform = 'rotate(0deg)';
+                topbt.style.display = "none";
                 history.pushState(null, null, linkfull);
             }
         };
@@ -1417,9 +1477,10 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                 
             } else if (message_data["event"]=="loadmore") {
             //----------------------------------->
+//                if document.getElementById('IOP').innerText != "STOP"
                 var request_user_id = message_data["request_user_id"];
                 var g = JSON.parse(message_data.data);
-//                console.log(g)
+//                console.log("CHAT load more", message_data)
                 all_pages = message_data.all_pages;
                 document.getElementById('IOP').innerText = message_data.op1;
                 var final_string = "";
@@ -1438,9 +1499,9 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                     document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild);
                 }
                 document.getElementById("dot-loader").style.display = "none";  
-                  
+                isLoading = false; 
 //                cont.innerHTML += html;
-//                isLoading = false;
+                
             //----------------------------------->                
             }
         };
