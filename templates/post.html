@@ -32,19 +32,22 @@
     </div>
     {% if request.user.is_authenticated %}
         {% if username != post.user_post.username %}    
-            <div id="post_like_block_{{post.id}}" style="width: 100%">
+            <div id="_post_like_block_{{post.id}}" style="width: 100%">
                 {% if request.user in post.likes.all %}
-                    <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{post.id}}')" onmouseover="LIKEOVER(this, '{{post.id}}')" onmouseout="LIKEDONE(this, '{{post.id}}')">
+                    <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">
                 {% else %}
-                    <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{post.id}}')" onmouseover="LIKEOVER(this, '{{post.id}}')" onmouseout="LIKEDONE(this, '{{post.id}}')">
+<!--                    <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{post.id}}')" onmouseover="LIKEOVER(this, '{{post.id}}')" onmouseout="LIKEDONE(this, '{{post.id}}')" open-atr="close">-->
+                    <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">     
                 {% endif %}
                 
-                <img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('{{ post.id }}','{{ username }}')">
-                <div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-{{ post.id }}"></div>
+                {% if request.user in post.relike.all %}
+                    <img class="icon-like" src="/media/images/close3.png" onclick="rpPost(this, '{{ post.id }}','{{ username }}')" open-atr="close" type="post"> 
+                {% else %}
+                    <img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost(this, '{{ post.id }}','{{ username }}')" open-atr="close" type="post">
+                {% endif %}
             </div>    
         {% endif %}
     {% endif %}
-    
     <div class="about">
         <p id="post-text">{{post.body|linebreaksbr}}</p>
 <!--    safe|    -->

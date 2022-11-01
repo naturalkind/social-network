@@ -51,10 +51,14 @@ def rppos(request, id):
          
         if psse.relike.filter(id=request.user.id).exists():
             psse.remove_rela(usse, RELATIONSHIP_FOLLOWING)
-            return HttpResponse('удалили', content_type = "application/json")
+#            return HttpResponse('удалили', content_type = "application/json")
+            li = 0
+            return JsonResponse({"answer":'удалили', "like-indicator":li})
         else:
+            li = 1
             psse.add_rela(usse, RELATIONSHIP_FOLLOWING)
-            return HttpResponse('добавили', content_type = "application/json")    
+#            return HttpResponse('добавили', content_type = "application/json")    
+            return JsonResponse({"answer":'добавили', "like-indicator":li})
 
 
 @login_required
@@ -84,7 +88,8 @@ def add_like(request):
               ans.point_likes += int(1)
               ans.save()
     return JsonResponse({"answer":x, "like-indicator":li})
-    #return HttpResponse(x)
+#    return HttpResponse(json.dumps({"answer":x, "like-indicator":li}),
+#                        content_type="application/json")
 
 
 def create_post(request):
@@ -503,7 +508,7 @@ def getlkpost(request,id):
     ps = Post.objects.all().filter(likes=user)
     for x in ps:
         pid = str(x.id)
-        li = f"""<li class="views-foll" width="600px"><div class="views-title" onclick="showContent('{pid}')">{x.title}</div><img src="/media/data_image/{x.path_data}/{x.image}" id="imgf" onclick="showContent('{pid}')"></li>"""
+        li = f"""<li class="views-foll" width="600px"><div class="views-title" onclick="showContent('{pid}')">{x.title}</div><img src="/media/data_image/{x.path_data}/{x.image}" id="imgf" onclick="showContent('{pid}')"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{pid}" id="comment_image_id_{pid}" type-div="icon" indicator-ws="close" style="display:none;"></li>"""
         ht += li
 
     return HttpResponse(ht)

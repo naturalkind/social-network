@@ -38,13 +38,18 @@
                 <div id="post_like_block_{{message.id}}" style="width: 100%">
                     <img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
                     {% if request.user in message.likes.all %}
-                        <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{message.id}}')" onmouseover="LIKEOVER(this, '{{message.id}}')" onmouseout="LIKEDONE(this, '{{message.id}}')">
+<!--                        <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{message.id}}')" onmouseover="LIKEOVER(this, '{{message.id}}')" onmouseout="LIKEDONE(this, '{{message.id}}')" open-atr="close">-->
+                        <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{message.id}}')" open-atr="close" type="wall">
                     {% else %}
-                        <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{message.id}}')" onmouseover="LIKEOVER(this, '{{message.id}}')" onmouseout="LIKEDONE(this, '{{message.id}}')">
+                        <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{message.id}}')" open-atr="close" type="wall">
                     {% endif %}
                     
-                    <img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost('{{ message.id }}','{{ username }}')">
-                    <div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-{{ message.id }}"></div>
+                    {% if request.user in message.relike.all %}
+                        <img class="icon-like" src="/media/images/close3.png" onclick="rpPost(this, '{{ message.id }}','{{ username }}')" open-atr="close" type="wall"> 
+                    {% else %}
+                        <img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost(this, '{{ message.id }}','{{ username }}')" open-atr="close" type="wall">
+                    {% endif %}
+
                 </div>
 <!--                {{ message.likes.all }}-->
 <!--                {% if foll_blank == 0 %}-->

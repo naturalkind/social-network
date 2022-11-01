@@ -1,7 +1,11 @@
 {% block content %}
 {% load pluralize %}
 <div id="pages" align="center" style="display: none;">
-    {% if thread_messages.has_next %}<span id="IOP" style="display: none">{{ thread_messages.next_page_number }}</span>{% endif %}
+    {% if thread_messages.has_next %}
+        <span id="IOP" style="display: none">{{ thread_messages.next_page_number }}</span>
+    {% else %}
+        <span id="IOP" style="display: none">STOP</span>
+    {% endif %}
 </div>
 <div id="conver-chat">
 <div class="chat" id="chat">
