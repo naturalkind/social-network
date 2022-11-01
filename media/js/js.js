@@ -915,6 +915,7 @@ function foll(link){
                 //var textElem = document.createElement('div');
                 //textElem.id = 'close';
                 //cont.insertBefore(textElem, cont.firstChild);
+                topbt.style.display = "block"
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "foll";
             }
@@ -942,6 +943,7 @@ function folls(link){
                 //var textElem = document.createElement('div');
                 //textElem.id = 'close';
                 //cont.insertBefore(textElem, cont.firstChild);
+                topbt.style.display = "block"
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "foll";
             }

@@ -158,7 +158,7 @@ def crop(path, nameFile, size):
     
 def index(request):
     post = Post.objects.all().order_by('-date_post')
-    paginator = Paginator(post, 24)
+    paginator = Paginator(post, 26)
     page = request.GET.get('page')
     data = {}
     data['all_pages'] = paginator.num_pages   
@@ -174,14 +174,6 @@ def index(request):
     if page:
         data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
         return HttpResponse(json.dumps(data), content_type = "application/json")    
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
-    if page:
-        return render(request, 'indexv1.html',{'post': post, 'posts':posts, 'username': auth.get_user(request).username})
     else:
         return render(request, 'index.html',{'post': post, 'posts':posts, 'username': auth.get_user(request).username})
 
@@ -411,7 +403,7 @@ def user_page(request, user):
         p = Post.objects.filter(relike=user_info)
         for i in p:
             post.append(getps(int(i.id)))
-        paginator = Paginator(post, 15)
+        paginator = Paginator(post, 20)
         page = request.GET.get('page')
         print ("user_page>>>>>>>>>>>>", page, request, paginator.num_pages)
         
