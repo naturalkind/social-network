@@ -901,10 +901,16 @@ font-family: Arial;
 p#comment-text {
     margin: 5px 5px 0px 15px;
 }
-
+#atr-user {
+    display: none;
+}
 @media only screen and (min-width : 200px){
     div#up-like-text {
         font-size: 34px;
+        display: block;
+        width: 100%;
+        position: relative;
+        float: left;
     }
     #user-comment {
         display: block;
@@ -1378,26 +1384,44 @@ p#comment-text {
 /*        float: right;*/
 /*    }*/
 
-
-    #block-post #close {
+    a#close {
         background-image: url(/media/images/controlsv4.png);
-        width: 110px;
-        height: 105px;
+        width: 30px;
+        height: 30px;
+        padding: 4px;
+        display: block;
         background-size: cover;
+        position: relative;
         background-color: #5f5f5f;
-        border-radius: 14px;
-        padding: 2px;
-        position: fixed;
-        right: 25px;
-        bottom: 25px;
-        margin: 0 auto;
-        background-position: 1px -3px;
+        border-radius: 4px;
+        left: 0px;
+        margin: 0;
         opacity: 5.5;
         -o-transition: opacity 100ms linear;
         transition: opacity 100ms linear;
         cursor: pointer;
         z-index: 9999999;
+        float: right;  
     }
+/*    #block-post #close {*/
+/*        background-image: url(/media/images/controlsv4.png);*/
+/*        width: 110px;*/
+/*        height: 105px;*/
+/*        background-size: cover;*/
+/*        background-color: #5f5f5f;*/
+/*        border-radius: 14px;*/
+/*        padding: 2px;*/
+/*        position: fixed;*/
+/*        right: 25px;*/
+/*        bottom: 25px;*/
+/*        margin: 0 auto;*/
+/*        background-position: 1px -3px;*/
+/*        opacity: 5.5;*/
+/*        -o-transition: opacity 100ms linear;*/
+/*        transition: opacity 100ms linear;*/
+/*        cursor: pointer;*/
+/*        z-index: 9999999;*/
+/*    }*/
     .userview   {
         background: url(/media/images/showvF.png);
         background-size: cover;
@@ -1623,6 +1647,10 @@ p#comment-text {
 @media screen and (min-width: 1200px)  {
     div#up-like-text {
         font-size: 17px;
+        display: block;
+        width: 100%;
+        position: relative;
+        float: left;
     }
     span#follow-text {
         position: relative;
@@ -2009,25 +2037,45 @@ p#comment-text {
         margin-top: -16px;
         z-index: 9999999;
     }
-    #block-post #close{
+    a#close {
         background-image: url(/media/images/controlsv4.png);
-        width: 30px;
-        height: 30px;
-        padding: 5px;
+        width: 15px;
+        height: 15px;
+        padding: 4px;
+        display: block;
         background-size: cover;
-        position: fixed;
+        position: relative;
         background-color: #5f5f5f;
         border-radius: 4px;
-        right: 40px;
-        bottom: 25px;
-        margin: 0 auto;
-        background-position: 1px 0px;
+        left: 0px;
+        /* bottom: 58px; */
+        margin: 0;
         opacity: 5.5;
         -o-transition: opacity 100ms linear;
         transition: opacity 100ms linear;
         cursor: pointer;
         z-index: 9999999;
+        float: right;  
     }
+/*    #block-post #close{*/
+/*        background-image: url(/media/images/controlsv4.png);*/
+/*        width: 30px;*/
+/*        height: 30px;*/
+/*        padding: 5px;*/
+/*        background-size: cover;*/
+/*        position: fixed;*/
+/*        background-color: #5f5f5f;*/
+/*        border-radius: 4px;*/
+/*        right: 40px;*/
+/*        bottom: 25px;*/
+/*        margin: 0 auto;*/
+/*        background-position: 1px 0px;*/
+/*        opacity: 5.5;*/
+/*        -o-transition: opacity 100ms linear;*/
+/*        transition: opacity 100ms linear;*/
+/*        cursor: pointer;*/
+/*        z-index: 9999999;*/
+/*    }*/
      .userview   {
         background: url(/media/images/showvF.png);
         background-size: cover;

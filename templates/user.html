@@ -23,6 +23,7 @@
             {% if request.user.is_authenticated %}
                 {% if user_info.username == username.username %}
                     <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF()">
+                    <div id="atr-user" atr-user="self"></div>
                 {% else %}
                 {% if foll_blank == 0 %}
                     <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="false"><img src="/media/images/addusr.png" class="addusr"><span id="follow-text">ПОДПИСАТЬСЯ</span></a>

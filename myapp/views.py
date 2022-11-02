@@ -23,6 +23,7 @@ from PIL import Image
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import UserCreationForm 
+from django.template.loader import render_to_string
 
 
 
@@ -83,7 +84,8 @@ def add_like(request):
             else:
               #ans.votes =-1
               ans.likes.add(request.user)
-              x = request.user.username +' '+ u'понравилось'
+#              x = request.user.username +' '+ u'понравилось'
+              x = 'тебе понравилось'
               li = 1
               ans.point_likes += int(1)
               ans.save()
@@ -505,6 +507,16 @@ def getlkpost(request,id):
 
     return HttpResponse(ht)
 
+def is_fan(obj, user) -> bool:
+    """Проверяет, лайкнул ли `user` `obj`.
+    """
+    if not user.is_authenticated:
+        return False
+    obj_type = ContentType.objects.get_for_model(obj)
+    likes = Like.objects.filter(
+        content_type=obj_type, object_id=obj.id, user=user)
+    return likes.exists()
+
 
 def chat_view(request):
     print ("chat_view>>>>>>>>>>>>>>>>>>>")
@@ -516,13 +528,6 @@ def chat_view(request):
     data = {}
     data['us'] = auth.get_user(request).username
     data['all_pages'] = paginator.num_pages   
-#    foll_blank = 0
-#    if auth.get_user(request).username in list(thread.relike.all()):
-#        foll_blank = 1    
-#    print (thread)
-#    for p in thread:
-#        print (p.get_foll())
-#        dir(p), 
     try:
         posts = paginator.page(page)
         data['op1'] = paginator.page(page).next_page_number()
@@ -533,7 +538,7 @@ def chat_view(request):
         posts = paginator.page(paginator.num_pages)
         data['op1'] = "STOP"
     if page:
-        data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+        data['data'] = render_to_string("walload.html", { "thread_messages": posts, "username": auth.get_user(request)}, request=request)
         return HttpResponse(json.dumps(data), content_type = "application/json")
 
     return render(request, 'postwall.html',

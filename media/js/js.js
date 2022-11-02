@@ -42,6 +42,7 @@ function getScrollPercent() {
 }
 var processed_page;
 function scroll(){
+    try{document.getElementById('tooltip').remove();}catch(err) {}
     processed_page = getScrollPercent();
     if(isLoading) return false;
 //    var contentHeight = document.getElementById("main-wrapper").offsetHeight;
@@ -98,6 +99,11 @@ function scroll(){
     }
 }
 window.onscroll = scroll;
+
+//window.addEventListener("hashchange", function(e) {
+//    if(e.oldURL.length > e.newURL.length)
+//        alert("back")
+//});
 
 function event_topbt(e){
 //    yOffset = window.pageYOffset;
@@ -225,6 +231,7 @@ function user(_type){
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
                 history.pushState(null, null, '/users/');
+                document.getElementsByClassName("enter")[0].style.display = "none";
             }
         };
         http.send(null);
@@ -341,6 +348,12 @@ function userPROFILE(link, _type){
                 isLoading = false;
                 history.pushState(null, null, '/users/'+link);
                 _page = "user";
+                try {
+                    document.getElementById('atr-user').getAttribute('atr-user');
+                    document.getElementsByClassName("enter")[0].style.display = "block";
+                } catch (e) {
+                
+                }
             }
         };
         http.send(null);
@@ -410,6 +423,196 @@ function filterBEST(){
 }
 
 
+//function jsons(link, atr){
+//    console.log(link, atr)
+//    var linkfull;
+//    var wd, hd, us, contv;
+//    if (atr == 'user'){
+//        contv = document.getElementById('DODO');
+//        wd = 300;
+//        hd = 230;
+//        us = document.getElementById('user_id').innerText;
+//        linkfull = '/users/'+us+'/?page=' + link;
+//    }
+//    else if (atr == 'users'){
+//        contv = document.getElementById('DODO');
+//        wd = 180;//300;
+//        hd = 160;//230;
+//        linkfull = '/users/?page=' + link;
+//    }
+//    else if (atr == 'wall'){
+//        contv = document.getElementById('conversation');
+//        wd = "auto";
+//        hd = "auto";
+//        linkfull = '/?page=' + link;
+//    }
+//    else if (atr== "wall-nonregister"){
+//        contv = document.getElementById('DODO');
+//        wd = "auto";
+//        hd = "auto";
+//        linkfull = '/?page=' + link;
+//    }
+//    
+//    var html = '';
+//    var http = new XMLHttpRequest();
+//    if (http) {
+//        http.open('get', linkfull, true);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//            if (http.readyState == 4) {
+//                if (atr == 'users'){
+//                    var f = JSON.parse(http.responseText);
+//                    var g = JSON.parse(f.data);
+//                    all_pages = f.all_pages;
+//                    document.getElementById('IOP').innerText = f.op1;
+//                    for (var R in g) {
+//                       if (g[R].fields.username.length>15) {
+//                           var tuser =  g[R].fields.username.slice(0,12) + "...";
+//                        } else {
+//                            var tuser = g[R].fields.username;
+//                        }
+//                       html += `<div class='views-row' onclick='userPROFILE(${g[R].pk})'>
+//                                    <img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
+//                                         width='180' 
+//                                         height='180' 
+//                                         loading='lazy'>
+//                                    <div class='user-name'><a atribut='${g[R].pk}' id="user-link">${tuser}</a></div>
+//                                </div>`
+//                    }
+//                    contv.innerHTML += html;
+//                    isLoading = false;
+//                }  
+//                else {
+//                    var f = JSON.parse(http.responseText);
+//                    all_pages = f.all_pages;
+//                    document.getElementById('IOP').innerText = f.op1;
+//                    var us = f.us;
+//                    var g = JSON.parse(f.data);
+//                    for (var R in g) {
+//                        var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
+//                        if (atr == 'wall') {
+//                            var use = g[R].fields.user_post[2];
+//                            var imgv1 = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
+//                            var date = new Date(g[R].fields.date_post);
+//                            if (parseInt(date.getMinutes()) < 10) {
+//                                minutes = "0" + date.getMinutes();
+//                            } else minutes = date.getMinutes();
+//                            
+//                            if (g[R].fields.user_post[3].length>15) {
+//                               var tuser =  g[R].fields.user_post[3].slice(0,15) + "...";
+//                            } else {
+//                                var tuser = g[R].fields.user_post[3];
+//                            }
+
+//                            if (g[R].fields.body.length>16) {
+//                               var ttext = `<span class='arrow'> → </span>
+//                                            <span class='message-title'>${g[R].fields.body.slice(0,18)}...</span>`
+//                            } else if (g[R].fields.body.length == 0) {
+//                                var ttext = "";
+//                            } else {
+//                                var ttext = `<span class='arrow'> → </span>
+//                                             <span class='message-title'>${g[R].fields.body}</span>`
+//                            }
+//                            html += `<div class='message' onmouseover='getIndex(this);'>
+//                                         <div class='views-title' style='width: 100%;float: left;'>
+//                                             <div class='user-cord'>
+//                                                 <img src='/media/data_image/${g[R].fields.user_post[1]}/tm_${g[R].fields.user_post[0]}' 
+//                                                      class='imgUs' 
+//                                                      height='400' 
+//                                                      width='auto' 
+//                                                      onclick='userPROFILE(${use})' 
+//                                                      loading='lazy'>
+//                                                 <a onclick='showContent(${g[R].pk})' class='postview'>
+//                                                    <span style='font-weight: bolder;' >${tuser}</span>
+//                                                    ${ttext}</a>
+//                                             </div>
+//                                            <span class='datetime'>${date.getHours()}:${minutes}</span>
+//                                         </div>
+//                                         <div class='field-image' atribut=${g[R].pk}>
+//                                             <img src='${imgv1}'
+//                                                  width='${wd}' 
+//                                                  height='${hd}' 
+//                                                  onclick='showImg(this)' 
+//                                                  imgb='${g[R].fields.image}' 
+//                                                  class='wallpost' 
+//                                                  loading='lazy'>
+//                                         </div>
+//                                         <div id='body-post-wall'>
+//                                            <div id='post_like_block_${g[R].pk}' style='width: 100%;'>
+//                                                <img class='icon-like' 
+//                                                     src='/media/images/mesvF.png' 
+//                                                     onclick='comView(this)' 
+//                                                     open-atr='close' 
+//                                                     id-comment='${g[R].pk}' 
+//                                                     id='comment_image_id_${g[R].pk}' 
+//                                                     type-div='icon' 
+//                                                     indicator-ws='close'>
+//                                                <img class='icon-like' 
+//                                                     src='/media/images/frv1.png' 
+//                                                     onclick='LIKE(this,${g[R].pk})' 
+//                                                     open-atr='close' 
+//                                                     type='wall'>
+//                                                <img class='icon-like' 
+//                                                     src='/media/images/rpvF.png' 
+//                                                     onclick='rpPost(this, ${g[R].pk }, "${us}")' 
+//                                                     open-atr='close' 
+//                                                     type='wall'>
+//                                                <div class='box-indicator' 
+//                                                     style='display:none;margin: 0 auto;margin-top: 15px;' 
+//                                                     id='box-indicator-${g[R].pk}'></div>
+//                                                <div class='box-com' 
+//                                                      style='display:none;margin: 0 auto;margin-top: 15px;' 
+//                                                      id='${g[R].pk}'></div>
+//                                            </div>
+//                                         </div>
+//                                     </div>`;
+//                                     // END STRING
+//                        } else if (atr=='wall-nonregister') {
+//                            html += `<li class='views-row' onmouseover='getIndex(this);'>
+//                                        <div class='field-image' atribut='${g[R].pk}'>
+//                                            <img style='background: url("${img}");width:300px;height:230px;background-size: cover;'  
+//                                                 onclick='showContent(${g[R].pk})' 
+//                                                 loading='lazy'>
+//                                        </div>
+//                                        <div id='${g[R].pk}' data-tooltip='${g[R].pk}'></div>
+//                                     </li>`;
+//                                     // END STRING
+//                        } else if (atr=='user') {
+//                            html += `<li class='views-row' onmouseover='getIndex(this);'>
+//                                        <div class='field-image' atribut='${g[R].pk}'>
+//                                            <img style='background:url("${img}");width:300px;height:230px;background-size: cover;'  
+//                                                 onclick='showContent(${g[R].pk})' 
+//                                                 loading='lazy'>
+//                                        </div>
+//                                        <div id='${g[R].pk}'
+//                                             data-tooltip='${g[R].pk}'></div>
+//                                        <div id='${g[R].pk}' 
+//                                             style='position: relative; opacity: 1;pointer-events: auto; display: none;'>
+//                                                <img class='icon-like' 
+//                                                     src='/media/images/mesvF.png' 
+//                                                     onclick='comView(this)' 
+//                                                     open-atr='close' 
+//                                                     id-comment='${g[R].pk}' 
+//                                                     id='comment_image_id_${g[R].pk}' 
+//                                                     type-div='icon' 
+//                                                     indicator-ws='close' 
+//                                                     style='display:none;'>
+//                                     </li>`;
+//                                     // END STRING
+//                        }
+//                    }
+//                    contv.innerHTML += html;
+//                    isLoading = false;
+//                }
+//            }
+//        };
+//        http.send();
+//    } else {
+//        document.location = link;
+//    }
+//}
+
+
 function jsons(link, atr){
     console.log(link, atr)
     var linkfull;
@@ -474,121 +677,50 @@ function jsons(link, atr){
                     all_pages = f.all_pages;
                     document.getElementById('IOP').innerText = f.op1;
                     var us = f.us;
-                    var g = JSON.parse(f.data);
-                    for (var R in g) {
-                        var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
                         if (atr == 'wall') {
-                            var use = g[R].fields.user_post[2];
-                            var imgh ='"'+g[R].fields.image+'"';
-                            var imgv1 = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
-                            var date = new Date(g[R].fields.date_post);
-                            if (parseInt(date.getMinutes()) < 10) {
-                                minutes = "0" + date.getMinutes();
-                            } else minutes = date.getMinutes();
+                            html += f.data;
                             
-                            if (g[R].fields.user_post[3].length>15) {
-                               var tuser =  g[R].fields.user_post[3].slice(0,15) + "...";
-                            } else {
-                                var tuser = g[R].fields.user_post[3];
-                            }
-
-                            if (g[R].fields.body.length>16) {
-                               var ttext = `<span class='arrow'> → </span>
-                                            <span class='message-title'>${g[R].fields.body.slice(0,18)}...</span>`
-                            } else if (g[R].fields.body.length == 0) {
-                                var ttext = "";
-                            } else {
-                                var ttext = `<span class='arrow'> → </span>
-                                             <span class='message-title'>${g[R].fields.body}</span>`
-                            }
-                            html += `<div class='message' onmouseover='getIndex(this);'>
-                                         <div class='views-title' style='width: 100%;float: left;'>
-                                             <div class='user-cord'>
-                                                 <img src='/media/data_image/${g[R].fields.user_post[1]}/tm_${g[R].fields.user_post[0]}' 
-                                                      class='imgUs' 
-                                                      height='400' 
-                                                      width='auto' 
-                                                      onclick='userPROFILE(${use})' 
-                                                      loading='lazy'>
-                                                 <a onclick='showContent(${g[R].pk})' class='postview'>
-                                                    <span style='font-weight: bolder;' >${tuser}</span>
-                                                    ${ttext}</a>
-                                             </div>
-                                            <span class='datetime'>${date.getHours()}:${minutes}</span>
-                                         </div>
-                                         <div class='field-image' atribut=${g[R].pk}>
-                                             <img src='${imgv1}'
-                                                  width='${wd}' 
-                                                  height='${hd}' 
-                                                  onclick='showImg(this)' 
-                                                  imgb='${g[R].fields.image}' 
-                                                  class='wallpost' 
-                                                  loading='lazy'>
-                                         </div>
-                                         <div id='body-post-wall'>
-                                            <div id='post_like_block_${g[R].pk}' style='width: 100%;'>
-                                                <img class='icon-like' 
-                                                     src='/media/images/mesvF.png' 
-                                                     onclick='comView(this)' 
-                                                     open-atr='close' 
-                                                     id-comment='${g[R].pk}' 
-                                                     id='comment_image_id_${g[R].pk}' 
-                                                     type-div='icon' 
-                                                     indicator-ws='close'>
-                                                <img class='icon-like' 
-                                                     src='/media/images/frv1.png' 
-                                                     onclick='LIKE(this,${g[R].pk})' 
-                                                     open-atr='close' 
-                                                     type='wall'>
-                                                <img class='icon-like' 
-                                                     src='/media/images/rpvF.png' 
-                                                     onclick='rpPost(this, ${g[R].pk }, "${us}")' 
-                                                     open-atr='close' 
-                                                     type='wall'>
-                                                <div class='box-indicator' 
-                                                     style='display:none;margin: 0 auto;margin-top: 15px;' 
-                                                     id='box-indicator-${g[R].pk}'></div>
-                                                <div class='box-com' 
-                                                      style='display:none;margin: 0 auto;margin-top: 15px;' 
-                                                      id='${g[R].pk}'></div>
-                                            </div>
-                                         </div>
-                                     </div>`;
-                                     // END STRING
                         } else if (atr=='wall-nonregister') {
-                            html += `<li class='views-row' onmouseover='getIndex(this);'>
-                                        <div class='field-image' atribut='${g[R].pk}'>
-                                            <img style='background: url("${img}");width:300px;height:230px;background-size: cover;'  
-                                                 onclick='showContent(${g[R].pk})' 
-                                                 loading='lazy'>
-                                        </div>
-                                        <div id='${g[R].pk}' data-tooltip='${g[R].pk}'></div>
-                                     </li>`;
-                                     // END STRING
+                            var g = JSON.parse(f.data);
+                            for (var R in g) {
+                                var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
+                                html += `<li class='views-row' onmouseover='getIndex(this);'>
+                                            <div class='field-image' atribut='${g[R].pk}'>
+                                                <img style='background: url("${img}");width:300px;height:230px;background-size: cover;'  
+                                                     onclick='showContent(${g[R].pk})' 
+                                                     loading='lazy'>
+                                            </div>
+                                            <div id='${g[R].pk}' data-tooltip='${g[R].pk}'></div>
+                                         </li>`;
+                                         // END STRING
+                            }
                         } else if (atr=='user') {
-                            html += `<li class='views-row' onmouseover='getIndex(this);'>
-                                        <div class='field-image' atribut='${g[R].pk}'>
-                                            <img style='background:url("${img}");width:300px;height:230px;background-size: cover;'  
-                                                 onclick='showContent(${g[R].pk})' 
-                                                 loading='lazy'>
-                                        </div>
-                                        <div id='${g[R].pk}'
-                                             data-tooltip='${g[R].pk}'></div>
-                                        <div id='${g[R].pk}' 
-                                             style='position: relative; opacity: 1;pointer-events: auto; display: none;'>
-                                                <img class='icon-like' 
-                                                     src='/media/images/mesvF.png' 
-                                                     onclick='comView(this)' 
-                                                     open-atr='close' 
-                                                     id-comment='${g[R].pk}' 
-                                                     id='comment_image_id_${g[R].pk}' 
-                                                     type-div='icon' 
-                                                     indicator-ws='close' 
-                                                     style='display:none;'>
-                                     </li>`;
-                                     // END STRING
+                            var g = JSON.parse(f.data);
+                            for (var R in g) {
+                                var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
+                                html += `<li class='views-row' onmouseover='getIndex(this);'>
+                                            <div class='field-image' atribut='${g[R].pk}'>
+                                                <img style='background:url("${img}");width:300px;height:230px;background-size: cover;'  
+                                                     onclick='showContent(${g[R].pk})' 
+                                                     loading='lazy'>
+                                            </div>
+                                            <div id='${g[R].pk}'
+                                                 data-tooltip='${g[R].pk}'></div>
+                                            <div id='${g[R].pk}' 
+                                                 style='position: relative; opacity: 1;pointer-events: auto; display: none;'>
+                                                    <img class='icon-like' 
+                                                         src='/media/images/mesvF.png' 
+                                                         onclick='comView(this)' 
+                                                         open-atr='close' 
+                                                         id-comment='${g[R].pk}' 
+                                                         id='comment_image_id_${g[R].pk}' 
+                                                         type-div='icon' 
+                                                         indicator-ws='close' 
+                                                         style='display:none;'>
+                                         </li>`;
+                                         // END STRING
+                            }
                         }
-                    }
                     contv.innerHTML += html;
                     isLoading = false;
                 }
@@ -602,6 +734,7 @@ function jsons(link, atr){
 
 
 function showImg(path_data){
+    try{document.getElementById('tooltip').remove();}catch(err) {}
     document.body.style.overflow = 'hidden';
     var block_post = document.getElementById('block-post');
     block_post.style.display = 'block';
@@ -733,7 +866,7 @@ function addPost(){
     } catch (err){}
 }
 
- 
+
 // Репосты 
 function rpPost(self, link, us) {
     if (self.getAttribute("open-atr")=="close") {
@@ -743,7 +876,7 @@ function rpPost(self, link, us) {
         var tooltipElem = document.createElement('div');
 //        tooltipElem.id = 'tooltip_'+link;
         tooltipElem.id = 'tooltip';
-        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 10px 20px;border-radius: 2px;text-align: center;background: #fff;");  
+        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 5px 5px;border-radius: 2px;text-align: center;background: #fff;");  
         if (self.getAttribute("type")=="wall") {
             var over = document.getElementById("post_like_block_"+link);
         } else {
@@ -761,8 +894,19 @@ function rpPost(self, link, us) {
 //                        document.getElementById("box-indicator-"+link).style.display = 'block';
                         var data = JSON.parse(http.responseText);
                         tooltipElem.innerHTML = `<div id="up-like-text">${data['answer']}</div>`;
-                        over.appendChild(tooltipElem);
-//                        over.insertBefore(tooltipElem, over.firstChild);
+                        
+//                        tooltipElem.innerHTML += `<a id="close" onclick="close()"></a>`;
+
+                        var textElemv1 = document.createElement('a');
+                        textElemv1.id = 'close';
+                        textElemv1.onclick = function close() {
+                            document.getElementById('tooltip').remove();
+                            self.setAttribute("open-atr", "close");
+                        }
+    //                    tooltipElem.appendChild(textElemv1);
+                        tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
+                        
+                        over.insertBefore(tooltipElem, over.firstChild);
                         var coords = over.getBoundingClientRect();
                         var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
                         if (left < 0) left = 0;
@@ -826,7 +970,7 @@ function LIKE(self, link) {
         var tooltipElem = document.createElement('div');
 //        tooltipElem.id = 'tooltip_'+link;
         tooltipElem.id = 'tooltip';
-        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 10px 20px;border-radius: 2px;text-align: center;background: #fff;");    
+        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 5px 5px;border-radius: 2px;text-align: center;background: #fff;");    
         if (self.getAttribute("type")=="wall") {
             var over = document.getElementById("post_like_block_"+link);
         } else {
@@ -846,6 +990,17 @@ function LIKE(self, link) {
                         self.setAttribute("src", "/media/images/frv1.png");
                     }
                     tooltipElem.innerHTML = `<div id="up-like-text">${data['answer']}</div>`//;
+                    
+                    
+                    var textElemv1 = document.createElement('a');
+                    textElemv1.id = 'close';
+                    textElemv1.onclick = function close() {
+                        document.getElementById('tooltip').remove();
+                        self.setAttribute("open-atr", "close")
+                    }
+//                    tooltipElem.appendChild(textElemv1);
+                    tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
+                    
                     over.insertBefore(tooltipElem, over.firstChild);
                     var coords = over.getBoundingClientRect();
                     var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
@@ -999,6 +1154,7 @@ function getlkpost(link){
                 //var textElem = document.createElement('div');
                 //textElem.id = 'close';
                 //cont.insertBefore(textElem, cont.firstChild);
+                topbt.style.display = "block";
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "foll";
             }
@@ -1140,6 +1296,7 @@ function UpdateBar(percent){
 /////////////////////////////////////////////////
 
 function showContent(link) {
+    try{document.getElementById('tooltip').remove();}catch(err) {}
     topbt.style.display = "block";
     try {
         var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
@@ -1435,6 +1592,7 @@ function privatMES(_type){
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
                 history.pushState(null, null, linkfull);
+                document.getElementsByClassName("enter")[0].style.display = "none";
             }
         };
         http.send(null);
