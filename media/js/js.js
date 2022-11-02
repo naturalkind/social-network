@@ -753,13 +753,14 @@ var linkfull = '/add_like/?post_id='+link;
 
 
 // лайки при наведении
-function LIKEOVER(self, link) {
+function LIKEOVER(link) {
     var html= '';
     try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
     var tooltipElem = document.createElement('div');
     tooltipElem.id = 'tooltip_'+link;
     tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 200px;padding: 10px 20px;border-radius: 2px;text-align: center;font: 14px/1.3 arial, sans-serif;color: #333;background: #fff;");
-    var over = document.getElementById("post_like_block_"+link);
+//    var over = document.getElementById("post_like_block_"+link);
+    var over = document.getElementById("tooltip");
 //    over.style.display = 'block';
     var http = createRequestObject();
     var linkfull = '/likeover/?post_id=' + link;
@@ -769,8 +770,10 @@ function LIKEOVER(self, link) {
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
                 var f = JSON.parse(http.responseText);
+                
                 for (var r in f) {
-                    html += " <a>" + f[r].fields.username + "</a> ";
+                    console.log(f[r])
+                    html += `<a onclick='userPROFILE(${f[r].pk})'>${f[r].fields.username}</a>`;
                 }
                 tooltipElem.innerHTML = html;
                 over.appendChild(tooltipElem);
@@ -939,7 +942,10 @@ function menuset(self, link, username) {
 //        document.getElementById('tooltip_'+link).remove();
     }
 }
-
+function TEST() {
+    console.log("TEST");
+}
+ 
 // нравиться
 function LIKE(self, link) {
     if (self.getAttribute("open-atr")=="close") {
@@ -968,7 +974,8 @@ function LIKE(self, link) {
                     } else {
                         self.setAttribute("src", "/media/images/frv1.png");
                     }
-                    tooltipElem.innerHTML = `<div id="up-like-text">${data['answer']}</div>`//;
+                    tooltipElem.innerHTML = `<div id="up-like-text">${data['answer']}</div>
+                                             <a onclick="LIKEOVER(${link})">кому понравилось</a>`//;
                     
                     
                     var textElemv1 = document.createElement('a');
