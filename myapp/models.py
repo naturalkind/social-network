@@ -124,7 +124,7 @@ class Post(models.Model):
 class Comment(models.Model):
     post_id = models.ForeignKey(Post, default="", on_delete=models.CASCADE)
     comment_user = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE,)
-    comment_text = models.TextField()#models.TextField(max_length=250, default="", blank=True)
+    comment_text = models.TextField()
     comment_image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
     timecomment = models.DateTimeField(auto_now_add=True, db_index=True)
     

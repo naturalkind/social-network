@@ -29,8 +29,6 @@ def send_message(thread_id,
 
     for key in ("total_messages", "".join(["from_", sender_id])):
         r.hincrby(
-            #"".join([thread_id]),
-            #"".join(["thread_", thread_id, "_messages"]),
             "".join(["private_", thread_id, "_messages"]),
             key,
             1

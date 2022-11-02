@@ -48,7 +48,7 @@ function scroll(){
     yOffset = window.pageYOffset;
     var y = yOffset + window.innerHeight;
 //    console.log('scroll', yOffset, contentHeight, y, _page);
-    console.log(processed_page, _page, document.body.scrollHeight, document.getElementById('IOP').innerText, yOffset)
+//    console.log(processed_page, _page, document.body.scrollHeight, document.getElementById('IOP').innerText, yOffset)
     if (document.getElementById('IOP').innerText!="STOP") {
         if (_page == "chat") {
             if(processed_page <= 30){
@@ -61,7 +61,7 @@ function scroll(){
                 temp_position = window.innerHeight;
 //            } else if (yOffset <= 1) {
 //            } else if (processed_page <= 30) {
-//                document.getElementById("dot-loader").style.display = "block";
+                document.getElementById("dot-loader").style.display = "block";
                 ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
 //                setTimeout(sayHi, 1000);
             } 
@@ -615,7 +615,8 @@ function showImg(path_data){
     var startPoint={};
     var nowPoint;
     var ldelay;
-    topbt.style.transform = 'rotate(90deg)';
+    topbt.style.transform = "rotate(90deg)";
+    topbt.style.display = "block";
     topbt_indicator = "handler";
 }
 
@@ -735,10 +736,12 @@ function addPost(){
 // Репосты 
 function rpPost(self, link, us) {
     if (self.getAttribute("open-atr")=="close") {
-        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}  
+//        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}  
+        try{document.getElementById('tooltip').remove();}catch(err) {}  
         self.setAttribute("open-atr", "open")
         var tooltipElem = document.createElement('div');
-        tooltipElem.id = 'tooltip_'+link;
+//        tooltipElem.id = 'tooltip_'+link;
+        tooltipElem.id = 'tooltip';
         tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 10px 20px;border-radius: 2px;text-align: center;background: #fff;");  
         if (self.getAttribute("type")=="wall") {
             var over = document.getElementById("post_like_block_"+link);
@@ -781,7 +784,8 @@ function rpPost(self, link, us) {
             
     }else {
         self.setAttribute("open-atr", "close")
-        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}   
+//        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}   
+        try{document.getElementById('tooltip').remove();}catch(err) {} 
     }  
 } 
 // меню 
@@ -815,10 +819,12 @@ function menuset(self, link, username) {
 // нравиться
 function LIKE(self, link) {
     if (self.getAttribute("open-atr")=="close") {
-        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
+//        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
+        try{document.getElementById('tooltip').remove();}catch(err) {}
         self.setAttribute("open-atr", "open")
         var tooltipElem = document.createElement('div');
-        tooltipElem.id = 'tooltip_'+link;
+//        tooltipElem.id = 'tooltip_'+link;
+        tooltipElem.id = 'tooltip';
         tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 10px 20px;border-radius: 2px;text-align: center;background: #fff;");    
         if (self.getAttribute("type")=="wall") {
             var over = document.getElementById("post_like_block_"+link);
@@ -855,7 +861,8 @@ function LIKE(self, link) {
         }
     } else {
         self.setAttribute("open-atr", "close")
-        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}    
+//        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}  
+        try{document.getElementById('tooltip').remove();}catch(err) {}  
     }  
 } 
 
@@ -1240,8 +1247,50 @@ function activate_wall(user_name) {
                 } else {
                     var ttext = "<span class='arrow'> → </span><span class='message-title'>" + message_data.text+ "</span>";
                 }
-                fc.innerHTML = '<div class="views-title" style="width: 100%;float: left;"><div class="user-cord" atribut="1165"><a onclick="userPROFILE(' +"'"+message_data.user_post+"'"+')">' + '<img src="/media/data_image/'+ message_data.path_data + '/'+ message_data.image_user +'" width="30" height="30"></a><a class="postview" onclick="showContent('+ message_data.id +')"><span style="font-weight: bolder;">' + tuser + '</span>'+ ttext + '</a></div><span class="datetime">' + date.getHours() + ':' + date.getMinutes() + '</span></div><div class="field-image"><img src="/media/data_image/'+ message_data.path_data +'/'+ message_data.image +'" height="auto" width="auto" onclick="showImg(this)" class="wallpost"><div id="body-post-wall"><div id="post_like_block_'+ message_data.id +'" style="width: 100%"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment='+message_data.id+' id="comment_image_id_'+message_data.id+'" type-div="icon" indicator-ws="close"><img class="icon-like" id="post_image_'+ message_data.id + '" src="/media/images/frv1.gif" onclick="LIKE(this,'+ "'" + message_data.id +"'" +')" open-atr="close" type="wall"><img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost(this,'+ "'" + message_data.id + "','" + message_data.user_post + "'" + ')" open-atr="close" type="wall"><div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-' + message_data.id +'"></div></div></div></div>';
-//                <div class="box-com" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-com-' + message_data.id + '"></div>
+                fc.innerHTML = `<div class="views-title" style="width: 100%;float: left;">
+                                    <div class="user-cord" atribut="1165">
+                                        <a onclick="userPROFILE(${message_data.user_id})">
+                                            <img src="/media/data_image/${message_data.path_data}/${message_data.image_user}" width="30" height="30">
+                                        </a>
+                                        <a class="postview" onclick="showContent(${message_data.id})">
+                                            <span style="font-weight: bolder;">${tuser}</span>${ttext}</a>
+                                    </div>
+                                    <span class="datetime">${date.getHours()}:${date.getMinutes()}</span>
+                                </div>
+                                <div class="field-image">
+                                    <img src="/media/data_image/${message_data.path_data}/${message_data.image}"
+                                         height="auto" 
+                                         width="auto" 
+                                         onclick="showImg(this)" 
+                                         class="wallpost">
+                                    <div id="body-post-wall">
+                                        <div id="post_like_block_${message_data.id}" style="width: 100%">
+                                            <img class="icon-like" 
+                                                 src="/media/images/mesvF.png" 
+                                                 onclick="comView(this)" 
+                                                 open-atr="close" 
+                                                 id-comment=${message_data.id} 
+                                                 id="comment_image_id_${message_data.id}" 
+                                                 type-div="icon" 
+                                                 indicator-ws="close">
+                                            <img class="icon-like" 
+                                                 id="post_image_${message_data.id}" 
+                                                 src="/media/images/frv1.gif" 
+                                                 onclick="LIKE(this, ${message_data.id})" 
+                                                 open-atr="close" 
+                                                 type="wall">
+                                            <img class="icon-like" 
+                                                 src="/media/images/rpvF.png" 
+                                                 onclick="rpPost(this, ${message_data.id},'${message_data.user_post}')" 
+                                                 open-atr="close" 
+                                                 type="wall">
+                                            <div class="box-indicator" 
+                                                 style="display:none;margin: 0 auto;margin-top: 15px;" 
+                                                 id="box-indicator-${message_data.id}"></div>
+                                        </div>
+                                    </div>
+                                </div>`
+                                // END STRING
                 try {
                     var tev = document.getElementById('conversation');
                     tev.insertBefore(fc, tev.firstChild);
@@ -1605,6 +1654,10 @@ function send_com(self, cip) {
     if (comment_text.innerText == "") {
         return false;
     }
+    document.getElementsByClassName('compose_'+cip)[0].style.display = "none";
+//    document.getElementById('results').style.display = "none";
+//    document.getElementById('field-comment_'+cip).appendChild(t_el);
+    document.getElementById('results_'+cip).appendChild(t_el);
 //    console.log(ws_dict, cip);
     var data = JSON.stringify({ comment_text : comment_text.innerText,
                                 comment_image: dataURL_v1 });
@@ -1617,10 +1670,16 @@ function send_com(self, cip) {
             }
             ws_dict[cip].send(data);
             comment_text.innerText = "";
+            if (typeof context !== 'undefined') {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                dataURL_v1 = "";
+                canvas.width = 0;
+                canvas.height = 0;
+            }
+
         }
     } catch(e) {
-//                        <img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
-        
+        console.log(e, context);
         zetr.setAttribute("indicator-ws", "open");
         ws_dict[cip] = activate_com(cip);
         ws_dict[cip].send(data);
@@ -1648,9 +1707,6 @@ function activate_com(post_id) {
                                 <img id="comment-image" 
                                      src="/media/data_image/${message_data.comment_image}" 
                                      onclick="showImg(this)">`
-                
-                
-//                '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" id="user-comment">'+message_data.comment_user+'</a><p id="comment-text">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p><img id="comment-image" src="/media/data_image/'+ message_data.comment_image +'" onclick="showImg(this)">';
             } else {
                 fc.innerHTML = `<img id="image-user" 
                                      src="/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"
@@ -1661,11 +1717,13 @@ function activate_com(post_id) {
                                 <a onclick="userPROFILE(${message_data.user_id})" 
                                    id="user-comment">${message_data.comment_user}</a>
                                 <p id="comment-text">${message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}</p>`
-                
-//                '<img id="image-user" src="/media/data_image/' + message_data.path_data +'/tm_'+message_data.image_user+'" class="imgUs" onclick="userPROFILE('+message_data.user_id+')" style="cursor:pointer;" loading="lazy"><a onclick="userPROFILE('+ message_data.user_id +')" id="user-comment">'+message_data.comment_user+'</a><p id="comment-text">'+message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '</p>';
             }
             fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
             tev.insertBefore(fc, tev.lastChild);
+//            document.getElementById('results').style.display = "block";
+//            document.getElementById('field-comment_'+post_id).removeChild(t_el);
+            document.getElementsByClassName('compose_'+post_id)[0].style.display = "block";
+            document.getElementById('results_'+post_id).removeChild(t_el);
         };
         return ws_com
     }

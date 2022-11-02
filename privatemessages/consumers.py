@@ -100,7 +100,6 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                     }
             for key in ("total_messages", "".join(["from_", str(self.sender_id )])):
                 await self.connection.hincrby(
-                            #"".join([thread_id]),
                             "".join(["private_", str(self.room_name), "_messages"]),
                             key,
                             1
@@ -109,45 +108,14 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
             await self.channel_layer.group_send(self.room_group_name, _data)
                     
         if event == "loadmore":
-#            print ("LOAD MORE PAGES")
             _data = await get_pages(self.room_name, self.sender_id, message_res)
-            print ("LOAD MORE PAGES",  response)   
+            print ("LOAD MORE PAGES PRIVATEMESSAGES",  response)   
             await self.channel_layer.group_send(self.room_group_name, _data)
-            
-#            await self.channel_layer.group_send(self.room_group_name, {
-#                'type': 'send_message',
-#                'message': message,
-#                "event": "privatemessages"
-#            })
-        
-#        if event == 'MOVE':
-#            # Send message to room group
-#            await self.channel_layer.group_send(self.room_group_name, {
-#                'type': 'send_message',
-#                'message': message,
-#                "event": "MOVE"
-#            })
-#            
-#        if event == 'START':
-#            # Send message to room group
-#            await self.channel_layer.group_send(self.room_group_name, {
-#                'type': 'send_message',
-#                'message': message,
-#                'event': "START"
-#            })
-#            
-#        if event == 'END':
-#            # Send message to room group
-#            await self.channel_layer.group_send(self.room_group_name, {
-#                'type': 'send_message',
-#                'message': message,
-#                'event': "END"
-#            })
 
     async def send_message(self, res):
         """ Receive message from room group """
         # Send message to WebSocket
-        #print ("Receive message from room group", res)
+        #print ("Receive message from PRIVATEMESSAGES >>>>>>>>>>>>>>>>>", res)
         await self.send(text_data=json.dumps(res))
         
         

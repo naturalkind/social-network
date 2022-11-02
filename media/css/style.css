@@ -1042,6 +1042,7 @@ p#comment-text {
         background: #507299;
         padding: 6px;
         border-radius: 7px;
+        margin-top: 10px;
     }
     #send-img {
         outline: 0;
@@ -1785,6 +1786,7 @@ p#comment-text {
         background: #507299;
         padding: 6px;
         border-radius: 7px;
+        margin-top: 10px;
     }
     #send-img {
         outline: 0;
