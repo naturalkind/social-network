@@ -100,14 +100,15 @@ function scroll(){
 window.onscroll = scroll;
 
 function event_topbt(e){
-//    console.log("event_topbt", e)
 //    yOffset = window.pageYOffset;
 //    var topbt_position = yOffset + window.innerHeight;
     var block_post = document.getElementById('block-post');
+    console.log("event_topbt", topbt_indicator);
     if (topbt_indicator == "editPROFF") {
-        document.body.style.overflow = 'auto';
-        block_post.style.display = 'none';                     
-        e.style.transform = 'rotate(0deg)';                            
+//        document.body.style.overflow = 'auto';
+//        block_post.style.display = 'none';                     
+//        e.style.transform = 'rotate(0deg)';       
+        handler(e);                     
     } else if (topbt_indicator == "scroll_down_chat") { 
         console.log("scroll_down_chat...................................", document.body.scrollHeight)
         e.style.transform = 'rotate(0deg)';
@@ -131,16 +132,19 @@ function event_topbt(e){
     } else if (topbt_indicator == "handler") {
         handler(e)
     } else if (topbt_indicator == "addPost") {
-        document.body.style.overflow = 'auto';
-        block_post.style.display = 'none';
-        e.style.transform = 'rotate(0deg)';
+//        document.body.style.overflow = 'auto';
+//        main_wrapper.style.opacity = 1;
+//        block_post.style.display = 'none';
+//        e.style.transform = 'rotate(0deg)';
+        handler(e);
         isLoading = false;                            
     } else if (topbt_indicator == "foll") {
-        document.body.style.overflow = 'auto';
-        block_post.style.display = 'none';
-        main_wrapper.style.opacity = 1;
-        e.style.transform = 'rotate(0deg)';
-        topbt_indicator = "scroll";
+//        document.body.style.overflow = 'auto';
+//        block_post.style.display = 'none';
+//        main_wrapper.style.opacity = 1;
+//        e.style.transform = 'rotate(0deg)';
+//        topbt_indicator = "scroll";
+        handler(e);
     } else if (topbt_indicator = "") {
     
     }
@@ -211,7 +215,7 @@ function user(_type){
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
                 var block_post = document.getElementById('block-post');
-                //cont.style.opacity = 1;
+                main_wrapper.style.opacity = 1;
                 main_wrapper.style.display = 'block'
                 document.body.style.overflow = 'auto';
                 block_post.style.display = 'none';
@@ -715,7 +719,7 @@ function OnOnreg() {
 /// добвать пост
 function addPost(){
     try{
-        html ='<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">загрузка картинки</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea></div><div id="send"><img src="/media/images/cloud.png" onclick="send_wall()" id="send-img"></div></form></div>'; // maxlength="400" onfocus="geturlimg()" <input id="id_title" inputmode="search" placeholder="НАЗВАНИЕ" maxlength="100">
+        html = '<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">загрузка картинки</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea></div><div id="send"><img src="/media/images/cloud.png" onclick="send_wall()" id="send-img"></div></form></div>'; // maxlength="400" onfocus="geturlimg()" <input id="id_title" inputmode="search" placeholder="НАЗВАНИЕ" maxlength="100">
         document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post');
         block_post.style.display = 'block';
@@ -723,6 +727,7 @@ function addPost(){
         block_post.innerHTML = html;
         topbt.style.transform = 'rotate(90deg)';
         topbt_indicator = "addPost";
+        topbt.style.display = "block";
     } catch (err){}
 }
 
@@ -1372,6 +1377,7 @@ function privatMES(_type){
                 //cont.style.opacity = 1;
                 main_wrapper.innerHTML = http.responseText;
                 var block_post = document.getElementById('block-post');
+                main_wrapper.style.opacity = 1;
                 main_wrapper.style.display = 'block';
                 block_post.style.display = 'none';
                 //document.body.style.overflow = 'auto';
