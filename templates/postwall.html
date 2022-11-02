@@ -7,7 +7,6 @@
     <div id="conversation">
     {% for message in thread_messages %}
         <div class="message" onmouseover="getIndex(this);">
-<!--        <div class="message">-->
             <div onclick="showContent('{{message.id}}')" class="views-title" style="width: 100%;float: left;">
                 <div class="user-cord" >
                     {% if message.user_post.image_user != "/media/images/Fv2.png" %}
@@ -21,7 +20,6 @@
                                 <span class="arrow"> → </span>
                                 <span class="message-title">{{ message.body|truncatechars:20 }}</span>
                             {% endif %}
-<!--                            <span class="message-title">{{ message.title|truncatechars:20 }}</span>-->
                         </a>
                 </div>
                 <span class="datetime">{{ message.date_post|date:'H:i' }}</span> <!--{# {{ message.date_post|date:'d b o в H:i' }}#}-->
@@ -30,15 +28,9 @@
                 <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy">
             </div>
             <div id="body-post-wall">
-<!--                <div class="text" style="padding:5px;text-align: left;">-->
-<!--                    {% if message.body  %}-->
-<!--                        {{ message.body|truncatechars:87 }}  {#{{ message.body|safe}}#}-->
-<!--                    {% endif %}-->
-<!--                </div>-->
                 <div id="post_like_block_{{message.id}}" style="width: 100%">
                     <img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
                     {% if request.user in message.likes.all %}
-<!--                        <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{message.id}}')" onmouseover="LIKEOVER(this, '{{message.id}}')" onmouseout="LIKEDONE(this, '{{message.id}}')" open-atr="close">-->
                         <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{message.id}}')" open-atr="close" type="wall">
                     {% else %}
                         <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{message.id}}')" open-atr="close" type="wall">

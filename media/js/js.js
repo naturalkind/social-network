@@ -100,20 +100,11 @@ function scroll(){
 }
 window.onscroll = scroll;
 
-//window.addEventListener("hashchange", function(e) {
-//    if(e.oldURL.length > e.newURL.length)
-//        alert("back")
-//});
 
 function event_topbt(e){
-//    yOffset = window.pageYOffset;
-//    var topbt_position = yOffset + window.innerHeight;
     var block_post = document.getElementById('block-post');
     console.log("event_topbt", topbt_indicator);
     if (topbt_indicator == "editPROFF") {
-//        document.body.style.overflow = 'auto';
-//        block_post.style.display = 'none';                     
-//        e.style.transform = 'rotate(0deg)';       
         handler(e);                     
     } else if (topbt_indicator == "scroll_down_chat") { 
         console.log("scroll_down_chat...................................", document.body.scrollHeight)
@@ -138,18 +129,9 @@ function event_topbt(e){
     } else if (topbt_indicator == "handler") {
         handler(e)
     } else if (topbt_indicator == "addPost") {
-//        document.body.style.overflow = 'auto';
-//        main_wrapper.style.opacity = 1;
-//        block_post.style.display = 'none';
-//        e.style.transform = 'rotate(0deg)';
         handler(e);
         isLoading = false;                            
     } else if (topbt_indicator == "foll") {
-//        document.body.style.overflow = 'auto';
-//        block_post.style.display = 'none';
-//        main_wrapper.style.opacity = 1;
-//        e.style.transform = 'rotate(0deg)';
-//        topbt_indicator = "scroll";
         handler(e);
     } else if (topbt_indicator = "") {
     
@@ -165,10 +147,7 @@ function handler(e) {
     document.body.style.overflow = 'auto';
     topbt.style.transform = 'rotate(0deg)';
     main_wrapper.style.opacity = 1
-    //e.target.removeEventListener(e.type, arguments.callee);
     var contentHeight = main_wrapper.offsetHeight;
-    //var yOffset = window.pageYOffset;
-    //topbt_position = yOffset + window.innerHeight;
     if (topbt_position > contentHeight) {
         topbt_indicator = "scroll_down";
     } else {

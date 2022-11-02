@@ -507,16 +507,6 @@ def getlkpost(request,id):
 
     return HttpResponse(ht)
 
-def is_fan(obj, user) -> bool:
-    """Проверяет, лайкнул ли `user` `obj`.
-    """
-    if not user.is_authenticated:
-        return False
-    obj_type = ContentType.objects.get_for_model(obj)
-    likes = Like.objects.filter(
-        content_type=obj_type, object_id=obj.id, user=user)
-    return likes.exists()
-
 
 def chat_view(request):
     print ("chat_view>>>>>>>>>>>>>>>>>>>")
