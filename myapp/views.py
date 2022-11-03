@@ -474,7 +474,7 @@ def users_all(request):
         data['op1'] = "STOP"
     if page:
         
-        data['data'] = serializers.serialize('json', posts)
+        data['data'] = serializers.serialize('json', posts, fields=('username', 'image_user', 'path_data'))
         return HttpResponse(json.dumps(data), content_type = "application/json")
     if _type == "javascript":    
         return render(request, 'users.html', {

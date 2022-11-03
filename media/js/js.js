@@ -632,6 +632,7 @@ function jsons(link, atr){
                 if (atr == 'users'){
                     var f = JSON.parse(http.responseText);
                     var g = JSON.parse(f.data);
+                    console.log(g);
                     all_pages = f.all_pages;
                     document.getElementById('IOP').innerText = f.op1;
                     for (var R in g) {
