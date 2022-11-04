@@ -754,13 +754,52 @@ var linkfull = '/add_like/?post_id='+link;
 
 
 // лайки при наведении
+//function LIKEOVER(link) {
+//    var html= '';
+//    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
+//    var tooltipElem = document.createElement('div');
+//    tooltipElem.id = 'tooltip_'+link;
+//    tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 200px;padding: 10px 20px;border-radius: 2px;text-align: center;font: 14px/1.3 arial, sans-serif;color: #333;background: #fff;");
+////    var over = document.getElementById("post_like_block_"+link);
+//    var over = document.getElementById("tooltip");
+////    over.style.display = 'block';
+//    var http = createRequestObject();
+//    var linkfull = '/likeover/?post_id=' + link;
+//    if (http) {
+//        http.open('get', linkfull);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//            if (http.readyState == 4) {
+//                var f = JSON.parse(http.responseText);
+//                
+//                for (var r in f) {
+//                    console.log(f[r])
+//                    html += `<a onclick='userPROFILE(${f[r].pk})'>${f[r].fields.username}</a>`;
+//                }
+//                tooltipElem.innerHTML = html;
+//                over.appendChild(tooltipElem);
+//                var coords = over.getBoundingClientRect();
+//                var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
+//                if (left < 0) left = 0;
+//                var top = coords.top - tooltipElem.offsetHeight - 5;
+//                if (top < 0) {top = coords.top + over.offsetHeight + 5;}
+//                tooltipElem.style.left = left + 'px';
+//                tooltipElem.style.top = top + 'px';
+//            }
+//        };
+//        http.send(null);
+//    } else {
+//        document.location = link;
+//    }
+//}
+
 function LIKEOVER(link) {
     var html= '';
     try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
     var tooltipElem = document.createElement('div');
     tooltipElem.id = 'tooltip_'+link;
-    tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 200px;padding: 10px 20px;border-radius: 2px;text-align: center;font: 14px/1.3 arial, sans-serif;color: #333;background: #fff;");
-//    var over = document.getElementById("post_like_block_"+link);
+//    tooltipElem.setAttribute("style", "z-index: 100;padding: 5px;border-radius: 2px;color: #333;background: #fff;");
+//    var over = document.getElementById("post_like_block_"+link); position: fixed; text-align: center;font: 14px/1.3 arial, sans-serif;
     var over = document.getElementById("tooltip");
 //    over.style.display = 'block';
     var http = createRequestObject();
@@ -773,10 +812,19 @@ function LIKEOVER(link) {
                 var f = JSON.parse(http.responseText);
                 
                 for (var r in f) {
-                    console.log(f[r])
-                    html += `<a onclick='userPROFILE(${f[r].pk})'>${f[r].fields.username}</a>`;
+                    html += `<div class="user-cord">
+                                 <img src="/media/data_image/${f[r].fields.path_data}/tm_${f[r].fields.image_user}" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">
+  
+                             </div>`
+//                                                   <a class="postview">
+//                                     <span style="font-weight: bolder;">${f[r].fields.username}</span>
+//                                 </a>
+                    //`<img src="/media/data_image/${f[r].fields.path_data}/tm_${f[r].fields.image_user}" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">
+                  //           <a onclick='userPROFILE(${f[r].pk})'>${f[r].fields.username}</a>`;
                 }
                 tooltipElem.innerHTML = html;
+//                over.insertBefore(tooltipElem, over.firstChild);
+                
                 over.appendChild(tooltipElem);
                 var coords = over.getBoundingClientRect();
                 var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
@@ -792,6 +840,7 @@ function LIKEOVER(link) {
         document.location = link;
     }
 }
+
 // отследить убрать наведение с обьекта при лайке
 function LIKEDONE(self, link){
     try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
@@ -851,21 +900,75 @@ function addPost(){
 
 
 // Репосты 
+//function rpPost(self, link, us) {
+//    if (self.getAttribute("open-atr")=="close") {
+////        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}  
+//        try{document.getElementById('tooltip').remove();}catch(err) {}  
+//        self.setAttribute("open-atr", "open")
+//        var tooltipElem = document.createElement('div');
+////        tooltipElem.id = 'tooltip_'+link;
+//        tooltipElem.id = 'tooltip';
+//        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 5px 5px;border-radius: 2px;text-align: center;background: #fff;");  
+//        if (self.getAttribute("type")=="wall") {
+//            var over = document.getElementById("post_like_block_"+link);
+//        } else {
+//            var over = document.getElementById("_post_like_block_"+link);
+//        }   
+//        
+//        var http = createRequestObject();
+//            var linkfull = '/rppos/'+ link +'?username=' + us+'&user_blank=1';
+//            if (http) {
+//                http.open('get', linkfull);
+//                http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//                http.onreadystatechange = function () {
+//                    if (http.readyState == 4) {
+////                        document.getElementById("box-indicator-"+link).innerHTML = http.responseText;
+////                        document.getElementById("box-indicator-"+link).style.display = 'block';
+//                        var data = JSON.parse(http.responseText);
+//                        tooltipElem.innerHTML = `<div id="up-like-text">${data['answer']}</div>`;
+//                        
+////                        tooltipElem.innerHTML += `<a id="close" onclick="close()"></a>`;
+
+//                        var textElemv1 = document.createElement('a');
+//                        textElemv1.id = 'close';
+//                        textElemv1.onclick = function close() {
+//                            document.getElementById('tooltip').remove();
+//                            self.setAttribute("open-atr", "close");
+//                        }
+//    //                    tooltipElem.appendChild(textElemv1);
+//                        tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
+//                        
+//                        over.insertBefore(tooltipElem, over.firstChild);
+//                        var coords = over.getBoundingClientRect();
+//                        var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
+//                        if (left < 0) left = 0;
+//                        var top = coords.top - tooltipElem.offsetHeight - 5;
+//                        if (top < 0) {top = coords.top + over.offsetHeight + 5;}
+//                        tooltipElem.style.left = left + 'px';
+//                        tooltipElem.style.top = top + 'px';
+//                        if (data["like-indicator"]==1) { 
+//                            self.setAttribute("src", "/media/images/close3.png");                     
+//                        } else {
+//                            self.setAttribute("src", "/media/images/rpvF.png");
+//                        }
+//                }
+//            };
+//            http.send(null);
+//        } else {
+//            document.location = link;
+//        }
+//    } else if (self.getAttribute("open-atr")=="switch") {
+//            
+//    }else {
+//        self.setAttribute("open-atr", "close")
+////        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}   
+//        try{document.getElementById('tooltip').remove();}catch(err) {} 
+//    }  
+//} 
+
+// простая версия репоста
 function rpPost(self, link, us) {
     if (self.getAttribute("open-atr")=="close") {
-//        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}  
-        try{document.getElementById('tooltip').remove();}catch(err) {}  
-        self.setAttribute("open-atr", "open")
-        var tooltipElem = document.createElement('div');
-//        tooltipElem.id = 'tooltip_'+link;
-        tooltipElem.id = 'tooltip';
-        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 5px 5px;border-radius: 2px;text-align: center;background: #fff;");  
-        if (self.getAttribute("type")=="wall") {
-            var over = document.getElementById("post_like_block_"+link);
-        } else {
-            var over = document.getElementById("_post_like_block_"+link);
-        }   
-        
         var http = createRequestObject();
             var linkfull = '/rppos/'+ link +'?username=' + us+'&user_blank=1';
             if (http) {
@@ -873,30 +976,7 @@ function rpPost(self, link, us) {
                 http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
                 http.onreadystatechange = function () {
                     if (http.readyState == 4) {
-//                        document.getElementById("box-indicator-"+link).innerHTML = http.responseText;
-//                        document.getElementById("box-indicator-"+link).style.display = 'block';
                         var data = JSON.parse(http.responseText);
-                        tooltipElem.innerHTML = `<div id="up-like-text">${data['answer']}</div>`;
-                        
-//                        tooltipElem.innerHTML += `<a id="close" onclick="close()"></a>`;
-
-                        var textElemv1 = document.createElement('a');
-                        textElemv1.id = 'close';
-                        textElemv1.onclick = function close() {
-                            document.getElementById('tooltip').remove();
-                            self.setAttribute("open-atr", "close");
-                        }
-    //                    tooltipElem.appendChild(textElemv1);
-                        tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
-                        
-                        over.insertBefore(tooltipElem, over.firstChild);
-                        var coords = over.getBoundingClientRect();
-                        var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
-                        if (left < 0) left = 0;
-                        var top = coords.top - tooltipElem.offsetHeight - 5;
-                        if (top < 0) {top = coords.top + over.offsetHeight + 5;}
-                        tooltipElem.style.left = left + 'px';
-                        tooltipElem.style.top = top + 'px';
                         if (data["like-indicator"]==1) { 
                             self.setAttribute("src", "/media/images/close3.png");                     
                         } else {
@@ -908,60 +988,125 @@ function rpPost(self, link, us) {
         } else {
             document.location = link;
         }
-    } else if (self.getAttribute("open-atr")=="switch") {
-            
-    }else {
-        self.setAttribute("open-atr", "close")
-//        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}   
-        try{document.getElementById('tooltip').remove();}catch(err) {} 
-    }  
+    } 
 } 
+
+
+
 // меню 
 function menuset(self, link, username) {
-    console.log(self, link);
     if (self.getAttribute("open-atr")=="close") {
+        console.log(self);
+        self.style.transform = "rotate(90deg)"; 
         self.setAttribute("open-atr", "open")
-//        var tooltipElem = document.createElement('div');
-//        tooltipElem.id = 'tooltip_'+link;
-//        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 10px 20px;border-radius: 2px;text-align: center;background: #fff;");
+        var tooltipElem = document.createElement('div');
+        tooltipElem.id = 'tooltip';
+//        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;padding: 10px;border-radius: 2px;text-align: center;background: #fff;"); //max-width: 950px;
+        tooltipElem.innerHTML = `<div id="post_like_block_${link}" style="width: 100%">
+                                 <a onclick="LIKEOVER(${link})">кому понравилось</a>
+                                 <a>переслать другу</a>
+                                 </div>
+                                `; //<a>статистика</a>
+        
+        
 //        tooltipElem.innerHTML = '<div id="post_like_block_'+link+'" style="width: 100%">'
 //        tooltipElem.innerHTML += '<img id="like_count" src="/media/images/frv1.gif" onclick="LIKE(this, '+link+')" open-atr="close" type="post">';
 //        tooltipElem.innerHTML += '<img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost(this, '+link+','+"'"+ username + "'" +')">'
 //        tooltipElem.innerHTML += '<div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-'+ link +'"></div></div>'
-//        document.getElementById("breadcrumb").appendChild(tooltipElem);
-//        var coords = self.getBoundingClientRect();
-//        var left = coords.left + (self.offsetWidth - tooltipElem.offsetWidth) / 2;
-//        if (left < 0) left = 0;
-//        var top = coords.top - tooltipElem.offsetHeight - 5;
-//        if (top < 0) {top = coords.top + self.offsetHeight + 5;}
-//        console.log(self, link);
+        var textElemv1 = document.createElement('a');
+        textElemv1.id = 'close';
+        textElemv1.onclick = function close() {
+            self.style.transform = "rotate(0deg)"; 
+            document.getElementById('tooltip').remove();
+            self.setAttribute("open-atr", "close");
+        }
+        tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
+        document.getElementById("breadcrumb").appendChild(tooltipElem);
+        var coords = self.getBoundingClientRect();
+        var left = coords.left + (self.offsetWidth - tooltipElem.offsetWidth) / 2;
+        if (left < 0) left = 0;
+        var top = coords.top - tooltipElem.offsetHeight - 5;
+        if (top < 0) {top = coords.top + self.offsetHeight + 5;}
 //        tooltipElem.style.left = left+10 + 'px';
-//        tooltipElem.style.top = top+10 + 'px';        
+        tooltipElem.style.top = top+10 + 'px';   
+        function test_scroll() {
+            document.getElementById("block-post").removeEventListener('onscroll', test_scroll);
+        }   
+        document.getElementById("block-post").onscroll = test_scroll;
         
     } else {
+        self.style.transform = "rotate(0deg)"; 
         self.setAttribute("open-atr", "close")
-//        document.getElementById('tooltip_'+link).remove();
+        document.getElementById('tooltip').remove();
     }
 }
-function TEST() {
-    console.log("TEST");
-}
- 
+
 // нравиться
+//function LIKE(self, link) {
+//    if (self.getAttribute("open-atr")=="close") {
+////        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
+//        try{document.getElementById('tooltip').remove();}catch(err) {}
+//        self.setAttribute("open-atr", "open")
+//        var tooltipElem = document.createElement('div');
+////        tooltipElem.id = 'tooltip_'+link;
+//        tooltipElem.id = 'tooltip';
+//        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 5px 5px;border-radius: 2px;text-align: center;background: #fff;");    
+//        if (self.getAttribute("type")=="wall") {
+//            var over = document.getElementById("post_like_block_"+link);
+//        } else {
+//            var over = document.getElementById("_post_like_block_"+link);
+//        }   
+//        var http = createRequestObject();
+//        var linkfull = '/add_like/?post_id=' + link;
+//        if (http) {
+//            http.open('get', linkfull);
+//            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//            http.onreadystatechange = function () {
+//                if (http.readyState == 4) {
+//                    var data = JSON.parse(http.responseText);
+//                  if (data["like-indicator"] == "1"){
+//                        self.setAttribute("src", "/media/images/frv1.gif");
+//                    } else {
+//                        self.setAttribute("src", "/media/images/frv1.png");
+//                    }
+//                    tooltipElem.innerHTML = `<div id="up-like-text">${data['answer']}</div>
+//                                             <a onclick="LIKEOVER(${link})">кому понравилось</a>`;//ещё понравилось
+//                    
+//                    
+//                    var textElemv1 = document.createElement('a');
+//                    textElemv1.id = 'close';
+//                    textElemv1.onclick = function close() {
+//                        document.getElementById('tooltip').remove();
+//                        self.setAttribute("open-atr", "close")
+//                    }
+////                    tooltipElem.appendChild(textElemv1);
+//                    tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
+//                    
+//                    over.insertBefore(tooltipElem, over.firstChild);
+//                    var coords = over.getBoundingClientRect();
+//                    var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
+//                    if (left < 0) left = 0;
+//                    var top = coords.top - tooltipElem.offsetHeight - 5;
+//                    if (top < 0) {top = coords.top + over.offsetHeight + 5;}
+//                    tooltipElem.style.left = left + 'px';
+//                    tooltipElem.style.top = top + 'px';                        
+//                }
+//            };
+//            http.send(null);
+//        } else {
+//            document.location = link;
+//        }
+//    } else {
+//        self.setAttribute("open-atr", "close")
+////        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}  
+//        try{document.getElementById('tooltip').remove();}catch(err) {}  
+//    }  
+//} 
+
+// простая версия лайка
+
 function LIKE(self, link) {
     if (self.getAttribute("open-atr")=="close") {
-//        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
-        try{document.getElementById('tooltip').remove();}catch(err) {}
-        self.setAttribute("open-atr", "open")
-        var tooltipElem = document.createElement('div');
-//        tooltipElem.id = 'tooltip_'+link;
-        tooltipElem.id = 'tooltip';
-        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;max-width: 600px;padding: 5px 5px;border-radius: 2px;text-align: center;background: #fff;");    
-        if (self.getAttribute("type")=="wall") {
-            var over = document.getElementById("post_like_block_"+link);
-        } else {
-            var over = document.getElementById("_post_like_block_"+link);
-        }   
         var http = createRequestObject();
         var linkfull = '/add_like/?post_id=' + link;
         if (http) {
@@ -975,41 +1120,14 @@ function LIKE(self, link) {
                     } else {
                         self.setAttribute("src", "/media/images/frv1.png");
                     }
-                    tooltipElem.innerHTML = `<div id="up-like-text">${data['answer']}</div>
-                                             <a onclick="LIKEOVER(${link})">кому понравилось</a>`//;
-                    
-                    
-                    var textElemv1 = document.createElement('a');
-                    textElemv1.id = 'close';
-                    textElemv1.onclick = function close() {
-                        document.getElementById('tooltip').remove();
-                        self.setAttribute("open-atr", "close")
-                    }
-//                    tooltipElem.appendChild(textElemv1);
-                    tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
-                    
-                    over.insertBefore(tooltipElem, over.firstChild);
-                    var coords = over.getBoundingClientRect();
-                    var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
-                    if (left < 0) left = 0;
-                    var top = coords.top - tooltipElem.offsetHeight - 5;
-                    if (top < 0) {top = coords.top + over.offsetHeight + 5;}
-                    tooltipElem.style.left = left + 'px';
-                    tooltipElem.style.top = top + 'px';                        
                 }
             };
             http.send(null);
         } else {
             document.location = link;
         }
-    } else {
-        self.setAttribute("open-atr", "close")
-//        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}  
-        try{document.getElementById('tooltip').remove();}catch(err) {}  
-    }  
+    } 
 } 
-
-
 
 // Подписка пользователь 
 function addfollow(self, link, us, id){

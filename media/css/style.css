@@ -561,17 +561,17 @@ input#myPROFILE {
     position: relative;
 }
 
-#tooltip {
-      position: fixed;
-      z-index: 100;
-      max-width: 200px;
-      padding: 10px 20px;
-      border-radius: 2px;
-      text-align: center;
-      font: 14px/1.3 arial, sans-serif;
-      color: #333;
-      background: #fff;
-}
+/*#tooltip {*/
+/*      position: fixed;*/
+/*      z-index: 100;*/
+/*      max-width: 200px;*/
+/*      padding: 10px 20px;*/
+/*      border-radius: 2px;*/
+/*      text-align: center;*/
+/*      font: 14px/1.3 arial, sans-serif;*/
+/*      color: #333;*/
+/*      background: #fff;*/
+/*}*/
 
 .field-text {
     margin: 13px 0px;
@@ -905,6 +905,39 @@ p#comment-text {
     display: none;
 }
 @media only screen and (min-width : 200px){
+    #tooltip {
+        position: fixed;
+        z-index: 100;
+        padding: 10px;
+        border-radius: 2px;
+        text-align: center;
+        background: rgb(255, 255, 255);
+        top: 55px;
+        max-width: 960px;
+    }
+    #tooltip img {
+        width: 60px;
+        height: 60px;
+    }
+
+    #tooltip .user-cord {
+        display: block;
+        float: left;
+        margin: 5px;
+    }
+    #tooltip a {
+        font-size: 30px;
+        margin: 8px auto;
+        display: block;
+        float: right;
+        text-align: left;
+        position: relative;
+        width: 100%;
+    }
+    .private_messages .partners p {
+        font-size: 34px;
+        margin:0px 0px;
+    }
     div#up-like-text {
         font-size: 34px;
         display: block;
@@ -1391,17 +1424,17 @@ p#comment-text {
         padding: 4px;
         display: block;
         background-size: cover;
-        position: relative;
+        margin: 0px;
+/*        position: absolute;*/
         background-color: #5f5f5f;
         border-radius: 4px;
-        left: 0px;
-        margin: 0;
+/*        right: 5px;*/
+/*        bottom: 5px;*/
         opacity: 5.5;
         -o-transition: opacity 100ms linear;
         transition: opacity 100ms linear;
         cursor: pointer;
         z-index: 9999999;
-        float: right;  
     }
 /*    #block-post #close {*/
 /*        background-image: url(/media/images/controlsv4.png);*/
@@ -1526,6 +1559,13 @@ p#comment-text {
         float: right;
         margin: 16px 5px;
     }
+    #tooltip img {
+        border-radius: 100px;
+        margin: 7px;
+        float: left;
+        width: 70px;
+        height: 70px;
+    }
     #image-user,
     .message .views-title img {
         border-radius: 100px;
@@ -1645,12 +1685,38 @@ p#comment-text {
 }
 
 @media screen and (min-width: 1200px)  {
+    #tooltip {
+        position: fixed;
+        z-index: 100;
+        padding: 10px;
+        border-radius: 2px;
+        text-align: center;
+        background: rgb(255, 255, 255);
+        top: 55px;
+        max-width: 780px;
+    }
+/*    #tooltip a{*/
+/*        font-size: 17px;*/
+/*        margin: 0px 5px;*/
+/*    }*/
+    #tooltip a {
+        font-size: 17px;
+        margin: 8px auto;
+        float: right;
+        display: block;
+        width: 100%;
+    }
+    .private_messages .partners p {
+        font-size: 18px;
+        margin:0px 0px;
+    }
     div#up-like-text {
         font-size: 17px;
         display: block;
         width: 100%;
         position: relative;
         float: left;
+        color: #5c5c5c;
     }
     span#follow-text {
         position: relative;
@@ -2037,6 +2103,25 @@ p#comment-text {
         margin-top: -16px;
         z-index: 9999999;
     }
+/*    a#close {*/
+/*        background-image: url(/media/images/controlsv4.png);*/
+/*        width: 15px;*/
+/*        height: 15px;*/
+/*        padding: 4px;*/
+/*        display: block;*/
+/*        background-size: cover;*/
+/*        position: absolute;*/
+/*        background-color: #5f5f5f;*/
+/*        border-radius: 4px;*/
+/*        right: 0px;*/
+/*        bottom: 58px; */
+/*        margin: 0;*/
+/*        opacity: 5.5;*/
+/*        -o-transition: opacity 100ms linear;*/
+/*        transition: opacity 100ms linear;*/
+/*        cursor: pointer;*/
+/*        z-index: 9999999;*/
+/*    }*/
     a#close {
         background-image: url(/media/images/controlsv4.png);
         width: 15px;
@@ -2044,38 +2129,21 @@ p#comment-text {
         padding: 4px;
         display: block;
         background-size: cover;
-        position: relative;
+        /* position: relative; */
+/*        position: absolute;*/
         background-color: #5f5f5f;
         border-radius: 4px;
-        left: 0px;
-        /* bottom: 58px; */
+/*        right: 5px;*/
+/*        bottom: 5px;*/
         margin: 0;
         opacity: 5.5;
         -o-transition: opacity 100ms linear;
         transition: opacity 100ms linear;
         cursor: pointer;
         z-index: 9999999;
-        float: right;  
     }
-/*    #block-post #close{*/
-/*        background-image: url(/media/images/controlsv4.png);*/
-/*        width: 30px;*/
-/*        height: 30px;*/
-/*        padding: 5px;*/
-/*        background-size: cover;*/
-/*        position: fixed;*/
-/*        background-color: #5f5f5f;*/
-/*        border-radius: 4px;*/
-/*        right: 40px;*/
-/*        bottom: 25px;*/
-/*        margin: 0 auto;*/
-/*        background-position: 1px 0px;*/
-/*        opacity: 5.5;*/
-/*        -o-transition: opacity 100ms linear;*/
-/*        transition: opacity 100ms linear;*/
-/*        cursor: pointer;*/
-/*        z-index: 9999999;*/
-/*    }*/
+  
+
      .userview   {
         background: url(/media/images/showvF.png);
         background-size: cover;

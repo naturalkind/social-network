@@ -64,9 +64,6 @@ def messages_view(request):
         participants=request.user
     ).order_by("-last_message")
     _type = request.GET.get('_type')
-    if not threads:
-        return render(request, 'private_messages.html', {})
-
     r = redis.StrictRedis()
 
     user_id = str(request.user.id)
@@ -77,6 +74,7 @@ def messages_view(request):
              "".join(["private_", str(thread.id), "_messages"]),
              "total_messages"
         ).decode("utf-8")
+    print (_type)
     if _type == "javascript":    
         return render(request, 'private_messages.html',
                                   {

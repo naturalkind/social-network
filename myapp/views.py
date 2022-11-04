@@ -492,7 +492,7 @@ def likeover(request):
     if ps_id:
         ans = Post.objects.get(id=(int(ps_id)))
         df = ans.likes.all()
-        lk = serializers.serialize('json', df)
+        lk = serializers.serialize('json', df, fields=('username', 'image_user', 'path_data'))
     return HttpResponse(lk, content_type = "application/json")
     
 
