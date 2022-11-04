@@ -992,12 +992,20 @@ p#comment-text {
         color: #9a9a9a;    
     }
 
+/*    a#deletepost {*/
+/*        float: left;*/
+/*        background: #507299;*/
+/*        color: white;*/
+/*        font-size: 23px;*/
+/*        margin: 30px 0px 25px 10px;*/
+/*    }*/
     a#deletepost {
-        float: left;
         background: #507299;
-        color: white;
+        color: white;    
+        float: left;
         font-size: 23px;
-        margin: 30px 0px 25px 10px;
+        padding: 4px;
+        width: 113px;
     }
 
     img#comment-image {
@@ -1773,12 +1781,19 @@ p#comment-text {
         text-align: left;
         color: #9a9a9a;    
     }
+/*    a#deletepost {*/
+/*        float: left;*/
+/*        background: #507299;*/
+/*        color: white;*/
+/*        font-size: 17px;*/
+/*        margin: 12px 0px 10px 10px;*/
+/*    }*/
+
     a#deletepost {
         float: left;
-        background: #507299;
-        color: white;
         font-size: 17px;
-        margin: 12px 0px 10px 10px;
+        padding: 4px;
+        width: 80px;
     }
     img#comment-image {
         max-width: 240px;

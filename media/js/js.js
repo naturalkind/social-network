@@ -25,6 +25,7 @@ window.addEventListener('load', (event) => {
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("load......")
+    history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
     topbt = document.getElementById('topbt');
     topbt.style.display = "none"
     main_wrapper = document.getElementById("main-wrapper");
@@ -190,7 +191,7 @@ function openMenu(self){
 
 
 // пользователи
-function user(_type){
+function users(_type){
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
     window.scrollTo(0, 0);
     var http = createRequestObject();
@@ -209,7 +210,7 @@ function user(_type){
                 topbt = document.getElementById('topbt');
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
-                history.pushState(null, null, '/users/');
+                history.pushState({"view": "users", 'lk': '/users/' }, null, '/users/');
                 document.getElementsByClassName("enter")[0].style.display = "none";
             }
         };
@@ -312,7 +313,7 @@ function userPROFILE(link, _type){
     window.scrollTo(0, 0);
     var http = createRequestObject();
     if(http) {
-        http.open('get', '/users/'+link+"/?_type="+_type);
+        http.open('get', '/user/'+link+"/?_type="+_type);
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
@@ -325,7 +326,9 @@ function userPROFILE(link, _type){
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
                 isLoading = false;
-                history.pushState(null, null, '/users/'+link);
+//                history.pushState(null, null, '/user/'+link);
+                console.log(link);
+                history.pushState({"view": "user", 'lk': '/user/'+link }, null, '/user/'+link);
                 _page = "user";
                 try {
                     document.getElementById('atr-user').getAttribute('atr-user');
@@ -601,7 +604,7 @@ function jsons(link, atr){
         wd = 300;
         hd = 230;
         us = document.getElementById('user_id').innerText;
-        linkfull = '/users/'+us+'/?page=' + link;
+        linkfull = '/user/'+us+'/?page=' + link;
     }
     else if (atr == 'users'){
         contv = document.getElementById('DODO');
@@ -994,25 +997,27 @@ function rpPost(self, link, us) {
 
 
 // меню 
-function menuset(self, link, username) {
+function menuset(self, link, username, del_indicator, like_count) {
+    console.log(self, link, username, del_indicator);
+    
     if (self.getAttribute("open-atr")=="close") {
-        console.log(self);
         self.style.transform = "rotate(90deg)"; 
         self.setAttribute("open-atr", "open")
         var tooltipElem = document.createElement('div');
         tooltipElem.id = 'tooltip';
 //        tooltipElem.setAttribute("style", "position: fixed;z-index: 100;padding: 10px;border-radius: 2px;text-align: center;background: #fff;"); //max-width: 950px;
+        if (del_indicator == 'true') {
+            var t = `<a id="deletepost" onclick="deletepost(this, ${link})" del-atr="false">УДАЛИТЬ</a>`;
+        } else {
+            var t = "";
+        }
         tooltipElem.innerHTML = `<div id="post_like_block_${link}" style="width: 100%">
-                                 <a onclick="LIKEOVER(${link})">кому понравилось</a>
-                                 <a>переслать другу</a>
+                                 ${t}
+                                 <a onclick="LIKEOVER(${link})">понравилось ${like_count}</a>
+                                 <a>отправить</a>
                                  </div>
                                 `; //<a>статистика</a>
         
-        
-//        tooltipElem.innerHTML = '<div id="post_like_block_'+link+'" style="width: 100%">'
-//        tooltipElem.innerHTML += '<img id="like_count" src="/media/images/frv1.gif" onclick="LIKE(this, '+link+')" open-atr="close" type="post">';
-//        tooltipElem.innerHTML += '<img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost(this, '+link+','+"'"+ username + "'" +')">'
-//        tooltipElem.innerHTML += '<div class="box-indicator" style="display:none;margin: 0 auto;margin-top: 15px;" id="box-indicator-'+ link +'"></div></div>'
         var textElemv1 = document.createElement('a');
         textElemv1.id = 'close';
         textElemv1.onclick = function close() {
@@ -1030,7 +1035,11 @@ function menuset(self, link, username) {
 //        tooltipElem.style.left = left+10 + 'px';
         tooltipElem.style.top = top+10 + 'px';   
         function test_scroll() {
-            document.getElementById("block-post").removeEventListener('onscroll', test_scroll);
+            try{document.getElementById('tooltip').remove();
+                self.setAttribute("open-atr", "close");
+                self.style.transform = "rotate(0deg)"; 
+                }catch(err) {}
+            
         }   
         document.getElementById("block-post").onscroll = test_scroll;
         
@@ -1136,12 +1145,12 @@ function addfollow(self, link, us, id){
     var linkfull;
     if (follow=="false") {
         console.log(follow, link, us, id);
-        linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=1';
+        linkfull = '/user/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=1';
         self.setAttribute("atr-follow", "true");
         
     } else {
         console.log(follow, link, us, id);
-        linkfull = '/users/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=0';
+        linkfull = '/user/'+ link +'/?username=' + us +'&userid='+ id +'&user_blank=0';
         self.setAttribute("atr-follow", "false");
     }
     var http = createRequestObject();
@@ -1271,10 +1280,20 @@ function getlkpost(link){
 }
 
 
-//window.addEventListener("popstate", function(e) {
-//    var state = e.state;
-//    console.log("popstate............")
-//    if (state.view == "USCON") {
+window.addEventListener("popstate", function(e) {
+    var state = e.state;
+    console.log("popstate............", state )
+    if (state.view == "post" || state.view == "wallpost") {
+        handler("o");
+        history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+    } else if (state.view == "privatMES") {
+        privatMES();
+    } else if (state.view == "user") {
+        userPROFILE(state.lk.split('/')[2]);
+    }  else if (state.view == "users"){
+        users()
+    }
+        
 //        myPROFILE(state.lk);
 //    } else if (state.view == "USS"){
 //        user()
@@ -1283,7 +1302,7 @@ function getlkpost(link){
 //    }else if (state.view == "MES") {
 //        privatMES()
 //    }
-//});
+});
 
 
 function geturlimg(){setTimeout(draw, 5000)}
@@ -1400,9 +1419,11 @@ function UpdateBar(percent){
 // стена ////////////////////////////////////////
 /////////////////////////////////////////////////
 
-function showContent(link) {
+function showContent(link, _type) {
+    _type = typeof _type !== 'undefined' ?  _type : "javascript";
     try{document.getElementById('tooltip').remove();}catch(err) {}
-    topbt.style.display = "block";
+    
+    try{topbt.style.display = "block";}catch(err) {}
     try {
         var comv = document.getElementById("comment_image_id_"+link).getAttribute("open-atr");
         if (comv == "open") {
@@ -1419,7 +1440,7 @@ function showContent(link) {
     isLoading = false;
     _page = "showContent";
     document.body.style.overflow = 'hidden';
-    var block_post = document.getElementById('block-post'); // ищем элемент с id
+//    var block_post = document.getElementById('block-post'); // ищем элемент с id
 //    block_post.innerHTML ="";
 //    block_post.style.display = 'block';
 //    block_post.style.background = 'rgba(0,0,0,.75)';
@@ -1428,9 +1449,10 @@ function showContent(link) {
     var http = createRequestObject();
     if(link != null) {
         if(http) {
-            http.open('get', '/'+link);
+            http.open('get', '/data/'+link +"?_type="+_type); 
             http.onreadystatechange = function () {
                 if(http.readyState == 4) {
+                    var block_post = document.getElementById('block-post'); // ищем элемент с id
                     block_post.innerHTML = http.responseText;
                     topbt = document.getElementById('topbt');
                     topbt.style.transform = 'rotate(90deg)';
@@ -1476,6 +1498,7 @@ function showContent(link) {
                     block_post.style.background = 'rgba(0,0,0,.75)';
                     block_post.style.overflow = 'auto';
                     block_post.setAttribute('atr', 'con');
+                    history.pushState({"view": "post", 'lk': `/data/${link}` }, null, `/data/${link}`);
                 }
             };
             http.send(null);
@@ -1636,10 +1659,15 @@ function send_wall() {
         ws_wall.send(data);
 }
 // удалить
-function deletepost(id){
-    var event = { id : id, event: "deletepost"};
-    var data = JSON.stringify(event);
-    ws_wall.send(data);
+function deletepost(self, id){
+    if (self.getAttribute("del-atr")=="false") {
+        self.innerText = "ДА"
+        self.setAttribute("del-atr", "true");
+    } else if (self.getAttribute("del-atr")=="true") {
+        var event = { id : id, event: "deletepost"};
+        var data = JSON.stringify(event);
+        ws_wall.send(data);
+    }
 }
 
 
@@ -1696,7 +1724,8 @@ function privatMES(_type){
                 topbt = document.getElementById('topbt');
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
-                history.pushState(null, null, linkfull);
+//                history.pushState(null, null, linkfull);
+                history.pushState({"view": "privatMES", 'lk': linkfull }, null, linkfull);
                 document.getElementsByClassName("enter")[0].style.display = "none";
             }
         };
@@ -1755,7 +1784,8 @@ function mesID(thread_id, user_name, number_of_messages, _type){
                 window.scrollBy(0, document.getElementById("conver").scrollHeight);
                 _page = "chat";
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
-                history.pushState(null, null, linkfull);
+//                history.pushState(null, null, linkfull);
+                history.pushState({"view": "mesID", 'lk': linkfull }, null, linkfull);
             }
         };
         http.send(null);
@@ -1876,7 +1906,7 @@ function comView(z){
         z.setAttribute("open-atr", "open");
         var http = createRequestObject();
         if (http) {
-            http.open('get', 'comment/'+link);
+            http.open('get', '/comment/'+link);
             http.onreadystatechange = function () {
                 if(http.readyState == 4) {
                     var apcom = document.createElement('div');

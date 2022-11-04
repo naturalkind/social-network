@@ -214,6 +214,7 @@ def post(request, post):
     data = {} 
     comment  = Comment.objects.filter(post_id=post_id)
     page = request.GET.get('page')
+    _type = request.GET.get('_type')
     posts = Post.objects.filter(user_post__id=post_id.user_post.id).order_by('-date_post').exclude(id=post)
     paginator = Paginator(posts, 3)
     data['us'] = auth.get_user(request).username
@@ -228,11 +229,18 @@ def post(request, post):
     if page:
         data['data'] = serializers.serialize('json', post_user)
         return HttpResponse(json.dumps(data), content_type = "application/json")
-    data['post_user_likes'] = post_id.likes.all()
+#    data['post_user_likes'] = post_id.likes.all()
 
-    return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
-                                         'comment':comment, 'post_user_likes': post_id.likes.all()})
-
+#    return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
+#                                         'comment':comment, 'post_user_likes': post_id.likes.all()})
+        
+    print (_type)                                 
+    if _type == "javascript":    
+        return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
+                                             'comment':comment})
+    else:
+        return render(request, '_post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
+                                              'comment':comment})                                      
 
 def viewcom(request, post_id):
     comment  = Comment.objects.filter(post_id=post_id)
