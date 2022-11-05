@@ -66,7 +66,6 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
         else:
             comment_image = ""
             nameFile = ""
-#        print ("COMMET......", response)
         ps = await database_sync_to_async(Post.objects.get)(id=self.post_name)
         comment = Comment()
         comment.comment_text = message_res
@@ -92,5 +91,4 @@ class CommentHandler(AsyncJsonWebsocketConsumer):
     async def send_comment(self, res):
         """ Receive message from room group """
         # Send message to WebSocket
-#        print ("Receive message from COMMET >>>>>>>>>>>>", res)
         await self.send(text_data=json.dumps(res))         

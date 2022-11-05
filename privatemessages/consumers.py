@@ -115,7 +115,6 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
     async def send_message(self, res):
         """ Receive message from room group """
         # Send message to WebSocket
-        #print ("Receive message from PRIVATEMESSAGES >>>>>>>>>>>>>>>>>", res)
         await self.send(text_data=json.dumps(res))
         
         

@@ -39,7 +39,6 @@ class WallHandler(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, close_code):
         print("Disconnected", close_code)
-        #------------------->
         # Leave room group
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -79,46 +78,34 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             await self.channel_layer.group_send(self.room_group_name, _data)
             
         if event == "Start":
-#            print ("START UPLOAD..............")
             self.namefile = f'{str(uuid.uuid4())[:12]}_{response["Name"]}'
             self.myfile = open(f'media/data_image/{self.path_data}/{self.namefile}', "wb")
             
             _data = {"type": "wallpost", "status":"MoreData"}
             await self.channel_layer.group_send(self.room_group_name, _data)
-            #self.write_message(json.dumps({"process":"MoreData"}))     
 
         if event == "Upload":
             da = response["Data"]
             da = da.split(",")[1]
             file_bytes = io.BytesIO(base64.b64decode(da)).read()
             self.myfile.write(file_bytes)
-#            print("MoreData UPLOAD..................")
             _data = {"type": "wallpost", "status":"MoreData"}
             await self.channel_layer.group_send(self.room_group_name, _data)
-            #self.write_message(json.dumps({"process":"MoreData"}))            
             
         if event == "Done":
-            #Adata = func_celery.delay(self.namefile)
-            #self.Blist.append(Adata)
-#            print("DONE..................")
             _data = {"type": "wallpost", "status":"Done"}
             await self.channel_layer.group_send(self.room_group_name, _data)
-            #self.write_message(json.dumps({"process":"Done"}))
 
         
         if event == "deletepost":
-#            print ("DELETE..............", response)
             post = await database_sync_to_async(Post.objects.get)(id=response["id"])
             await sync_to_async(post.delete)()
-            #post_async = sync_to_async(post.delete)
-            #await post.delete()
             _data = {"type": "wallpost", "status":"deletepost"}
             await self.channel_layer.group_send(self.room_group_name, _data)
 
     async def wallpost(self, res):
         """ Receive message from room group """
         # Send message to WebSocket
-#        print ("Receive message from WALLPOST >>>>>>>>>>>>", res)
         await self.send(text_data=json.dumps(res))
 
 

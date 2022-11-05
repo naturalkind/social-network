@@ -36,7 +36,6 @@ def create_comment(request):
     if ps_id:
         ans = Post.objects.get(id=(int(ps_id)))
         if ans:
-
               Comment.objects.create(comment_text=text, comment_user=request.user, post_id=ans)
               x = 'тебе не нравиться'
     return HttpResponse(x)
@@ -49,16 +48,13 @@ def rppos(request, id):
         username = request.GET.get('username')
         psse = Post.objects.get(id=int(id))
         usse = User.objects.get(username=username)
-         
         if psse.relike.filter(id=request.user.id).exists():
             psse.remove_rela(usse, RELATIONSHIP_FOLLOWING)
-#            return HttpResponse('удалили', content_type = "application/json")
             li = 0
             return JsonResponse({"answer":'удалили', "like-indicator":li})
         else:
             li = 1
             psse.add_rela(usse, RELATIONSHIP_FOLLOWING)
-#            return HttpResponse('добавили', content_type = "application/json")    
             return JsonResponse({"answer":'добавили', "like-indicator":li})
 
 
@@ -229,12 +225,6 @@ def post(request, post):
     if page:
         data['data'] = serializers.serialize('json', post_user)
         return HttpResponse(json.dumps(data), content_type = "application/json")
-#    data['post_user_likes'] = post_id.likes.all()
-
-#    return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
-#                                         'comment':comment, 'post_user_likes': post_id.likes.all()})
-        
-    print (_type)                                 
     if _type == "javascript":    
         return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
                                              'comment':comment})
@@ -329,9 +319,6 @@ def register(request):
             return redirect('/')
         else:
             args['form'] = newuser_form
-#            print (">>>>>>>>>>>>>", error_str)
-#            return HttpResponse(error_str)
-#    else:
     return render(request, 'register.html', args)
 
 
@@ -346,7 +333,6 @@ def user(request):
         data = json.loads(request.body)
         image_post = data['my_image']
         imgstr = re.search(r'base64,(.*)', image_post).group(1)
-        #----------->
         nameFile = f"{str(uuid.uuid4())[:12]}_{str(auth.get_user(request).username)}.png"
         img_file = open(f"media/data_image/{userP.path_data}/{nameFile}", 'wb+')
         img_file.write(base64.b64decode(imgstr))
@@ -415,8 +401,6 @@ def user_page(request, user):
             post.append(getps(int(i.id)))
         paginator = Paginator(post, 20)
         page = request.GET.get('page')
-        print ("user_page>>>>>>>>>>>>", page, request, paginator.num_pages)
-        
         data = {}
         data['us'] = auth.get_user(request).username
         data['all_pages'] = paginator.num_pages  
@@ -430,7 +414,6 @@ def user_page(request, user):
             data['op1'] = "STOP"
             posts = paginator.page(paginator.num_pages)
         if page:
-            print (data)
             data['data'] = serializers.serialize('json', posts)
             return HttpResponse(json.dumps(data), content_type = "application/json")
             
@@ -466,7 +449,6 @@ def users_all(request):
     paginator = Paginator(users, 40)
     page = request.GET.get('page', None)
     _type = request.GET.get('_type')
-    print (page, _type, paginator.num_pages)
     posts = paginator.page(1)
     data = {}
     data['us'] = auth.get_user(request).username
@@ -517,7 +499,6 @@ def getlkpost(request,id):
 
 
 def chat_view(request):
-    print ("chat_view>>>>>>>>>>>>>>>>>>>")
     if not request.user.is_authenticated:
         return index(request)
     thread = Post.objects.all().order_by("-date_post")
