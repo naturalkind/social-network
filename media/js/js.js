@@ -129,6 +129,7 @@ function event_topbt(e){
         topbt_indicator = "scroll_up";
     } else if (topbt_indicator == "handler") {
         handler(e)
+        history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
     } else if (topbt_indicator == "addPost") {
         handler(e);
         isLoading = false;                            
@@ -154,16 +155,6 @@ function handler(e) {
     } else {
         topbt_indicator = "scroll_up";
     }
-}
-
-
-function getIndex(node) {
-    var childs = node.parentNode.children;
-    for (i = 0; i < childs.length; i++) {
-        len = childs.length;
-    if (node == childs[i]) break;
-    }
-    return  innode=i;
 }
 
 
@@ -635,7 +626,8 @@ function jsons(link, atr){
                 if (atr == 'users'){
                     var f = JSON.parse(http.responseText);
                     var g = JSON.parse(f.data);
-                    console.log(g);
+//                    console.log(g.length);
+                    len += g.length;
                     all_pages = f.all_pages;
                     document.getElementById('IOP').innerText = f.op1;
                     for (var R in g) {
@@ -662,9 +654,11 @@ function jsons(link, atr){
                     var us = f.us;
                         if (atr == 'wall') {
                             html += f.data;
+                            len += 6;
                             
                         } else if (atr=='wall-nonregister') {
                             var g = JSON.parse(f.data);
+                            len += g.length;
                             for (var R in g) {
                                 var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
                                 html += `<li class='views-row' onmouseover='getIndex(this);'>
@@ -679,6 +673,7 @@ function jsons(link, atr){
                             }
                         } else if (atr=='user') {
                             var g = JSON.parse(f.data);
+                            len += g.length;
                             for (var R in g) {
                                 var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
                                 html += `<li class='views-row' onmouseover='getIndex(this);'>
@@ -1293,15 +1288,6 @@ window.addEventListener("popstate", function(e) {
     }  else if (state.view == "users"){
         users()
     }
-        
-//        myPROFILE(state.lk);
-//    } else if (state.view == "USS"){
-//        user()
-//    }else if (state.view == "USP") {
-//        userPROFILE(state.lk);
-//    }else if (state.view == "MES") {
-//        privatMES()
-//    }
 });
 
 
@@ -1419,6 +1405,15 @@ function UpdateBar(percent){
 // стена ////////////////////////////////////////
 /////////////////////////////////////////////////
 
+function getIndex(node) {
+    var childs = node.parentNode.children;
+    for (i = 0; i < childs.length; i++) {
+        len = childs.length;
+    if (node == childs[i]) break;
+    }
+    return  innode=i;
+}
+
 function showContent(link, _type) {
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
     try{document.getElementById('tooltip').remove();}catch(err) {}
@@ -1470,29 +1465,33 @@ function showContent(link, _type) {
 //                    console.log(document.getElementById("node").childNodes)
 //                    document.getElementById("node").insertBefore(navlis, document.getElementById("node").childNodes[3]);
 //                    document.getElementById("node").insertBefore(navlis, document.getElementById("node").childNodes[4]);
-                    
+                    console.log(len, innode);
+                    if (innode == 0) {
+                       textElemv1.style.display = 'none';
+                       textElemv2.style.display = 'block';
+                    }
+                    if ((len-2)==innode) {
+                        jsons(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
+//                        len += 6;
+                    }
                     textElemv2.onclick = function LISTING(){
-                        if (len>innode){
-                            innode++;
-                            var h = document.getElementsByClassName('field-image')[innode];
-                            try{var g = h.getAttribute('atribut');}catch (err){}
-
-                        } else {
-                            textElemv2.style.display = 'none';
-                            textElemv1.style.display = 'block';
+                        if ((len-1)>=innode){
+                            try{
+                                innode++;
+                                var h = document.getElementsByClassName('field-image')[innode];
+                                var g = h.getAttribute('atribut');
+                                showContent(g);
+                            } catch (err){
+                            }
                         }
-                        showContent(g);
                     };
                     textElemv1.onclick = function LISTING(){
-                        if (innode != 0){
+                        if (innode > 0){
                             innode--;
                             var h = document.getElementsByClassName('field-image')[innode];
                             try{var g = h.getAttribute('atribut');}catch (err){}
-                        } else {
-                           textElemv1.style.display = 'none';
-                           textElemv2.style.display = 'block';
-                        }
-                        showContent(g);
+                            showContent(g);
+                        } 
                     };
                     block_post.style.display = 'block';
                     block_post.style.background = 'rgba(0,0,0,.75)';
