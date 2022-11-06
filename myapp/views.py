@@ -362,7 +362,10 @@ def follow(request, id):
     ht = ''
     p = User.objects.get(id=id)
     for x in p.get_followers():
-        img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
+        if x.image_user != "oneProf.png":
+            img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
+        else:
+            img = f'/media/images/oneProf.png'
         idu = str(x.pk)
         if len(str(x.username)) > 15:
             uname = f"str(x.username)[:15]..."
@@ -377,7 +380,10 @@ def follows(request, id):
     ht = ''
     p = User.objects.get(id=id)
     for x in p.get_following():
-        img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
+        if x.image_user != "oneProf.png":
+            img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
+        else:
+            img = f'/media/images/oneProf.png'    
         idu = str(x.pk)
         if len(str(x.username)) > 15:
             uname = f"{str(x.username)[:10]}..."
