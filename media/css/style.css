@@ -877,6 +877,18 @@ p#comment-text {
 #atr-user {
     display: none;
 }
+img#QR {
+    width: auto;
+    height: auto;
+    float: right;
+    position: absolute;
+}
+.canvas-user {
+    max-width: 600px;
+    display: block;
+    margin: 0 auto;
+}
+
 @media only screen and (min-width : 200px){
     #tooltip {
         position: fixed;

@@ -13,21 +13,27 @@ var temp_position;
 var isLoading = false;
 var all_pages;
 window.onload = function(){
-    topbt = document.getElementById('topbt');
-    topbt.style.display = "none"
+    try {    
+        topbt = document.getElementById('topbt');
+        topbt.style.display = "none"
+    } catch (e) {};
     main_wrapper = document.getElementById("main-wrapper");
 }
 window.addEventListener('load', (event) => {
-    topbt = document.getElementById('topbt');
-    topbt.style.display = "none"
+    try {    
+        topbt = document.getElementById('topbt');
+        topbt.style.display = "none"
+    } catch (e) {};
     main_wrapper = document.getElementById("main-wrapper");
 })
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("load......")
     history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
-    topbt = document.getElementById('topbt');
-    topbt.style.display = "none"
+    try {    
+        topbt = document.getElementById('topbt');
+        topbt.style.display = "none"
+    } catch (e) {};
     main_wrapper = document.getElementById("main-wrapper");
 }, false);
 
@@ -243,6 +249,7 @@ function addREG(){
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
+                history.pushState({"view": "register", 'lk': `/register` }, null, `/register`);
             }
         };
         http.send(null);

@@ -18,6 +18,8 @@
             {% else %}
                 <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy">
             {% endif %}
+            <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.username }}_qr.svg" height="auto" width="auto" loading="lazy" id="QR">
+            
         </div>
         <div class="soc">
             {% if request.user.is_authenticated %}
