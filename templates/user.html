@@ -13,7 +13,7 @@
             <h3>{{ user_info.username }}</h3>
         </div>
         <div class="uspgimg">
-            {% if user_info.image_user %}
+            {% if user_info.image_user != "oneProf.png" %}
                 <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.image_user }}" loading="lazy">
             {% else %}
                 <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy">

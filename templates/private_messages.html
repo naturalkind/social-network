@@ -6,7 +6,15 @@
     <h1>СОБЕСЕДНИКИ</h1>
     <div class="partners">
     {% for thread in threads %}
-        <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/data_image/{{ thread.partner.path_data }}/tm_{{ thread.partner.image_user }}" class="usPr" style="float:none;border: 2px solid #a9a9a9;"><div class="pmu">{{ thread.partner.username }} ({{ thread.total_messages|default_if_none:"0" }} {{ thread.total_messages|rupluralize:"сообщение,сообщения,сообщений" }})</div>
+        
+            {% if thread.partner.image_user != "oneProf.png" %}
+                <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/data_image/{{ thread.partner.path_data }}/tm_{{ thread.partner.image_user }}" class="usPr" style="float:none;border: 2px solid #a9a9a9;">
+            {% else %}
+                <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/images/oneProf.png" class="usPr" style="float:none;border: 2px solid #a9a9a9;">
+            {% endif %}
+            
+            <div class="pmu">{{ thread.partner.username }} ({{ thread.total_messages|default_if_none:"0" }} {{ thread.total_messages|rupluralize:"сообщение,сообщения,сообщений" }})
+            </div>
         </div>
     {% empty %}
         <p>Пока что собеседников нет.</p>

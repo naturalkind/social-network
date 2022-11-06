@@ -130,20 +130,18 @@ class Comment(models.Model):
     
 # новый модуль
 class Media(models.Model):
-    about = models.CharField(max_length=50, default="", verbose_name='О файле', blank=True)
-    media = models.TextField(max_length=200, default="", verbose_name='Название файла', blank=True)
-    video = models.TextField(max_length=200, default="", verbose_name='Название видео', blank=True)
-    audio = models.TextField(max_length=200, default="", verbose_name='Название аудио', blank=True)
-    image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
-    path_data = models.TextField(max_length=200, default="", verbose_name='Расположение', blank=True)
-    style = models.TextField(max_length=999999, default="", verbose_name='Текст', blank=True)
+    about = models.CharField(max_length=1000, default="", verbose_name='О файле', blank=True)
+    media = models.TextField(max_length=1000, default="", verbose_name='Название файла', blank=True)
+    path_data = models.TextField(max_length=1000, default="", verbose_name='Расположение', blank=True)
     user_post = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE)
-
-class Community(models.Model):
-    user_community = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE)
-    users_community = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='users_community', blank=True)
-    community_post = models.ManyToManyField(Post, related_name='community_post', blank=True)
-    community_media = models.ManyToManyField(Media, related_name='community_media', blank=True)
+    attachment = models.ManyToManyField(Post, related_name='community_post', blank=True) 
+      
+#    style = models.TextField(max_length=999999, default="", verbose_name='Текст', blank=True)
+#class Community(models.Model):
+#    user_community = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE)
+#    users_community = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='users_community', blank=True)
+#    community_post = models.ManyToManyField(Post, related_name='community_post', blank=True)
+#    community_media = models.ManyToManyField(Media, related_name='community_media', blank=True)
 
 class Relike(models.Model):
     from_post = models.ForeignKey(Post, related_name='from_post_lk', on_delete=models.CASCADE)

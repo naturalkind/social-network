@@ -6,10 +6,10 @@
     {% for x in users %}
         <div class="views-row" onclick="userPROFILE('{{x.id}}', 'javascript')">
             <div class="user-image">
-                {% if x.image_user != "/media/images/Fv2.png" %}
+                {% if x.image_user != "oneProf.png" %}
                     <img src="/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}" loading="lazy"> 
                 {% else %}
-                    <div style="margin:5px;background-image: url('/media/images/oneProf.png');border:none;background-size:cover; width:180px;height:180px;"></div>
+                    <img src="/media/images/oneProf.png" loading="lazy"> 
                 {% endif %}
             </div>
             <div class="user-name">

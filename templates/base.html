@@ -17,7 +17,7 @@
             <a onclick="users()" id="userA"></a>
             {#<a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a>#}
             <img src="/media/images/mesv4.png" onclick="privatMES()" id="mespr">
-            {% if username.image_user %}
+            {% if request.user.image_user !=  "oneProf.png" %}
                 <img onclick="userPROFILE('{{ username.id }}')" src="/media/data_image/{{ username.path_data }}/tm_{{ username.image_user }}" class="usPr"/>
             {% else %}
                 <img onclick="userPROFILE('{{ username.id }}')" src="/media/images/oneProf.png"  class="usPr" />

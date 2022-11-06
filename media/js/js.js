@@ -421,11 +421,21 @@ function jsons(link, atr){
                         } else {
                             var tuser = g[R].fields.username;
                         }
+                        
+                       if (g[R].fields.image_user!="oneProf.png") {
+                           var div_image_user = `<img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
+                                                      width='180' 
+                                                      height='180' 
+                                                      loading='lazy'>`;
+                        } else {
+                            var div_image_user = `<img src='/media/images/oneProf.png' 
+                                                      width='180' 
+                                                      height='180' 
+                                                      loading='lazy'>`;
+                        }                        
+                            
                        html += `<div class='views-row' onclick='userPROFILE(${g[R].pk})'>
-                                    <img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
-                                         width='180' 
-                                         height='180' 
-                                         loading='lazy'>
+                                    ${div_image_user}
                                     <div class='user-name'><a atribut='${g[R].pk}' id="user-link">${tuser}</a></div>
                                 </div>`
                     }
@@ -790,6 +800,7 @@ function foll(link){
                 topbt.style.display = "block"
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "foll";
+                history.pushState({"view": "follow", 'lk': linkfull  }, null, linkfull);
             }
         };
         http.send(null);
@@ -814,6 +825,7 @@ function folls(link){
                 topbt.style.display = "block"
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "foll";
+                history.pushState({"view": "follows", 'lk': linkfull  }, null, linkfull);
             }
         };
         http.send(null);
@@ -1106,10 +1118,16 @@ function activate_wall(user_name) {
                 } else {
                     var ttext = "<span class='arrow'> → </span><span class='message-title'>" + message_data.text+ "</span>";
                 }
+                if (message_data.image_user != "oneProf.png"){
+                    var div_image_user = `<img src="/media/data_image/${message_data.path_data}/${message_data.image_user}" width="30" height="30">`
+                } else {
+                    var div_image_user = `<img src="/media/images/oneProf.png" width="30" height="30">`
+                }
+                
                 fc.innerHTML = `<div class="views-title" style="width: 100%;float: left;">
                                     <div class="user-cord" atribut="1165">
                                         <a onclick="userPROFILE(${message_data.user_id})">
-                                            <img src="/media/data_image/${message_data.path_data}/${message_data.image_user}" width="30" height="30">
+                                            ${div_image_user}
                                         </a>
                                         <a class="postview" onclick="showContent(${message_data.id})">
                                             <span style="font-weight: bolder;">${tuser}</span>${ttext}</a>
@@ -1363,7 +1381,26 @@ function activate_chat(thread_id, user_name, number_of_messages) {
             var message_data = JSON.parse(event.data);
             if (message_data["event"] == "privatemessages") {
                 var date = new Date(message_data.timestamp*1000);
-                tev.innerHTML += '<div class="message"><p class="author ' + ((message_data.sender == user_name) ? 'we' : 'partner') + '"><img src="/media/data_image/'+ message_data.path_data +'/tm_'+ message_data.image_user +'" class="usPr" onclick="userPROFILE('+ "'" + message_data.sender_id + "'" +')"></p><p class="txtmessage '+((message_data.sender == user_name) ? 'we' : 'partner') + '">' + message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '<span class="datetime" style="font-size: 15px;color: #afafaf;">' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '</span></p></div>';
+                if (message_data.image_user != "oneProf.png") {
+                    var div_image_user = `<img src="/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"
+                                             class="usPr" 
+                                             onclick="userPROFILE(${message_data.sender_id})">`;
+                } else {
+                    var div_image_user = `<img src="/media/images/oneProf.png"
+                                             class="usPr" 
+                                             onclick="userPROFILE(${message_data.sender_id})">`;
+                }
+                tev.innerHTML += `<div class="message">
+                                    <p class="author ${((message_data.sender == user_name) ? 'we' : 'partner')}">
+                                    ${div_image_user}
+                                    </p>
+                                    <p class="txtmessage ${((message_data.sender == user_name) ? 'we' : 'partner')}">
+                                        ${message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}
+                                        <span class="datetime" style="font-size: 15px;color: #afafaf;">${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}
+                                        </span>
+                                    </p>
+                                  </div>`;
+//                 '<div class="message"><p class="author ' + ((message_data.sender == user_name) ? 'we' : 'partner') + '"><img src="/media/data_image/'+ message_data.path_data +'/tm_'+ message_data.image_user +'" class="usPr" onclick="userPROFILE('+ "'" + message_data.sender_id + "'" +')"></p><p class="txtmessage '+((message_data.sender == user_name) ? 'we' : 'partner') + '">' + message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '<span class="datetime" style="font-size: 15px;color: #afafaf;">' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '</span></p></div>';
 
                 number_of_messages++;
                 if (message_data.sender == user_name) {
@@ -1392,10 +1429,21 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                     var sender_name = g[R].fields.sender[3];
                     var temp_string = document.createElement('div');
                     temp_string.className = "message";
+                    if (image_file != "oneProf.png") {
+                        var div_image_user = `<img src="/media/data_image/${data_path}/tm_${image_file}"
+                                                 class="usPr" 
+                                                 onclick="userPROFILE(${sender_id})"
+                                                 style="float:none;">`;
+                    } else {
+                        var div_image_user = `<img src="/media/images/oneProf.png"
+                                                 class="usPr" 
+                                                 onclick="userPROFILE(${sender_id})"
+                                                 style="float:none;">`;
+                    }
                     if (request_user_id == sender_id) {
-                        temp_string.innerHTML += '<p class="author we"><img src="/media/data_image/'+ data_path +'/tm_'+ image_file +'" class="usPr" onclick="userPROFILE('+ sender_id +')" style="float:none;"><p class="txtmessage we">'+ g[R].fields.text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
+                        temp_string.innerHTML += '<p class="author we">'+ div_image_user +'<p class="txtmessage we">'+ g[R].fields.text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
                     } else { 
-                        temp_string.innerHTML += '<p class="author partner"><img src="/media/data_image/'+ data_path +'/tm_'+ image_file +'" class="usPr" onclick="userPROFILE('+ sender_id +')" style="float:none;"><p class="txtmessage partner">'+ g[R].fields.text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
+                        temp_string.innerHTML += '<p class="author partner">'+ div_image_user +'<p class="txtmessage partner">'+ g[R].fields.text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
                     }
                     document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild);
                 }

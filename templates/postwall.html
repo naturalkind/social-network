@@ -9,7 +9,7 @@
         <div class="message" onmouseover="getIndex(this);">
             <div onclick="showContent('{{message.id}}')" class="views-title" style="width: 100%;float: left;">
                 <div class="user-cord" >
-                    {% if message.user_post.image_user != "/media/images/Fv2.png" %}
+                    {% if message.user_post.image_user != "oneProf.png" %}
                         <img src="/media/data_image/{{message.user_post.path_data}}/tm_{{message.user_post.image_user}}" class="imgUs" onclick="userPROFILE('{{message.user_post.id }}')" style="cursor:pointer;" loading="lazy">
                     {% else %}
                         <img src="/media/images/oneProf.png" height="400" width="auto" onclick="userPROFILE('{{message.user_post.id }}')" loading="lazy">

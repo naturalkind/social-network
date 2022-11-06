@@ -1,7 +1,12 @@
 <div id="field-comment_{{ id }}" style="background: #f2f2f2;">
     {% for cm in comment %}
         <div class="f-c">
-            <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+            {% if cm.comment_user.image_user != "oneProf.png" %}
+                <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+            {% else %}
+                <img id="image-user" src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+            {% endif %}
+            
             <a onclick="userPROFILE('{{ cm.comment_user.id }}')" id="user-comment">{{ cm.comment_user }}</a>
             <p id="comment-text">{{ cm.comment_text|linebreaksbr }}</p>
 <!--             style="padding:4px;"-->
