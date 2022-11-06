@@ -226,10 +226,10 @@ def post(request, post):
         data['data'] = serializers.serialize('json', post_user)
         return HttpResponse(json.dumps(data), content_type = "application/json")
     if _type == "javascript":    
-        return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
+        return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request),
                                              'comment':comment})
     else:
-        return render(request, '_post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request).username,
+        return render(request, '_post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request),
                                               'comment':comment})                                      
 
 def viewcom(request, post_id):
