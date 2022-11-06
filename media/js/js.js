@@ -561,11 +561,14 @@ function LIKEOVER(link) {
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
                 var f = JSON.parse(http.responseText);
-                
                 for (var r in f) {
+                    if (f[r].fields.image_user != "oneProf.png"){
+                        var div_image_user = `<img src="/media/data_image/${f[r].fields.path_data}/tm_${f[r].fields.image_user}" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">`;
+                    } else {
+                        var div_image_user = `<img src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">`;
+                    }                
                     html += `<div class="user-cord">
-                                 <img src="/media/data_image/${f[r].fields.path_data}/tm_${f[r].fields.image_user}" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">
-  
+                                ${div_image_user}  
                              </div>`
                 }
                 tooltipElem.innerHTML = html;
