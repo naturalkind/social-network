@@ -887,7 +887,8 @@ function getlkpost(link){
 
 window.addEventListener("popstate", function(e) {
     var state = e.state;
-    console.log("popstate............", state )
+    state = typeof state !== 'null' ?  state : "wallpost";
+    console.log("popstate............", state);
     if (state.view == "post" || state.view == "wallpost") {
         handler("o");
         history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);

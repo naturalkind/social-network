@@ -3,7 +3,7 @@
     <div id="breadcrumb" style="background: #507299;">
 <!--        <div class="title">{{post.title}}</div>-->
         {% if request.user.is_authenticated %}
-            {% if username == post.user_post.username %}
+            {% if request.user.username == post.user_post.username %}
 <!--                <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>-->
                 <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, {{post.id}}, '{{username}}', 'true', {{ post.total_likes }})" open-atr="close">
             {% else %}
