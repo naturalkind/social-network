@@ -1554,10 +1554,22 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                                                  onclick="userPROFILE(${sender_id})"
                                                  style="float:none;">`;
                     }
+//                        {% if message.resend != "False" %}
+//                            <a onclick="showContent({{message.text}})">СМОТРЕТЬ→</a>
+//                        {% else %}
+//                            {{ message.text|linebreaksbr }}
+//                        {% endif %}                    
+  
+                    if (g[R].fields.resend != "False") {
+                        var field_text = `<a onclick="showContent(${g[R].fields.text})">СМОТРЕТЬ→</a>`;
+                    } else {
+                        var field_text = g[R].fields.text;
+                    }
+                    
                     if (request_user_id == sender_id) {
-                        temp_string.innerHTML += '<p class="author we">'+ div_image_user +'<p class="txtmessage we">'+ g[R].fields.text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
+                        temp_string.innerHTML += '<p class="author we">'+ div_image_user +'<p class="txtmessage we">'+ field_text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
                     } else { 
-                        temp_string.innerHTML += '<p class="author partner">'+ div_image_user +'<p class="txtmessage partner">'+ g[R].fields.text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
+                        temp_string.innerHTML += '<p class="author partner">'+ div_image_user +'<p class="txtmessage partner">'+ field_text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
                     }
                     document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild);
                 }

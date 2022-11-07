@@ -26,7 +26,7 @@
                     {% else %}
                         <img src="/media/images/oneProf.png" class="usPr" onclick="userPROFILE('{{ message.sender.id }}')" style="float:none;">
                     {% endif %}
-                    <p class="txtmessage we"
+                    <p class="txtmessage we">
                         {% if message.resend != "False" %}
                             <a onclick="showContent({{message.text}})">СМОТРЕТЬ→</a>
                         {% else %}
