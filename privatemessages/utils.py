@@ -12,10 +12,12 @@ def json_response(obj):
 def send_message(thread_id,
                  sender_id,
                  message_text,
-                 sender_name=None):
+                 sender_name=None,
+                 resend="False"):
                  
     message = Message()
     message.text = message_text
+    message.resend = resend
     message.thread_id = thread_id
     message.sender_id = sender_id
     message.save()

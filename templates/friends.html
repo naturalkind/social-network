@@ -1,0 +1,17 @@
+{% block content %}
+<div class="fr">
+    <h1>ДРУЗЕЙ: {{ username.get_friends.count }}</h1>
+    {% for fr in username.get_friends %}
+        <div class="user-cord">
+<!--        <div class="fr-cell">-->
+            {% if fr.image_user != "oneProf.png" %}
+                <img src="/media/data_image/{{ fr.path_data }}/tm_{{ fr.image_user }}" loading="lazy" class="imgUs" onclick="reSend({{ fr.id }})">
+            {% else %}
+                <img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="reSend({{ fr.id }})">
+            {% endif %}
+            
+<!--            <a onclick="userPROFILE({{ fr.id }}, 'javascript')">{{ fr.username|truncatechars:10 }}</a>-->
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}

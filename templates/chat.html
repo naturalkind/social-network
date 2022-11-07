@@ -26,7 +26,12 @@
                     {% else %}
                         <img src="/media/images/oneProf.png" class="usPr" onclick="userPROFILE('{{ message.sender.id }}')" style="float:none;">
                     {% endif %}
-                    <p class="txtmessage we">{{ message.text|linebreaksbr }}
+                    <p class="txtmessage we"
+                        {% if message.resend != "False" %}
+                            <a onclick="showContent({{message.text}})">СМОТРЕТЬ→</a>
+                        {% else %}
+                            {{ message.text|linebreaksbr }}
+                        {% endif %}
                         <span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span>
                     </p>
                 </p>
@@ -38,9 +43,19 @@
                         <img src="/media/images/oneProf.png" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;">
                     {% endif %}                
 <!--                    <img src="/media/data_image/{{ partner.path_data }}/tm_{{ partner.image_user }}" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;">-->
-                    <p class="txtmessage partner">{{ message.text|linebreaksbr }}
+
+
+                    <p class="txtmessage partner">
+                        {% if message.resend != "False" %}
+                            <a onclick="showContent({{message.text}})"> </a>
+                        {% else %}
+                            {{ message.text|linebreaksbr }}
+                        {% endif %}
                         <span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span>
                     </p>
+<!--                    <p class="txtmessage partner">{{ message.text|linebreaksbr }}-->
+<!--                        <span class="datetime" style="font-size: 15px;color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span>-->
+<!--                    </p>-->
                 </p>
             {% endif %}
         </div>

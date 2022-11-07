@@ -665,21 +665,21 @@ function addPost(){
 function rpPost(self, link, us) {
     if (self.getAttribute("open-atr")=="close") {
         var http = createRequestObject();
-            var linkfull = '/rppos/'+ link +'?username=' + us+'&user_blank=1';
-            if (http) {
-                http.open('get', linkfull);
-                http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-                http.onreadystatechange = function () {
-                    if (http.readyState == 4) {
-                        var data = JSON.parse(http.responseText);
-                        if (data["like-indicator"]==1) { 
-                            self.setAttribute("src", "/media/images/close3.png");                     
-                        } else {
-                            self.setAttribute("src", "/media/images/rpvF.png");
-                        }
-                }
-            };
-            http.send(null);
+        var linkfull = '/rppos/'+ link +'?username=' + us+'&user_blank=1';
+        if (http) {
+            http.open('get', linkfull);
+            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+            http.onreadystatechange = function () {
+                if (http.readyState == 4) {
+                    var data = JSON.parse(http.responseText);
+                    if (data["like-indicator"]==1) { 
+                        self.setAttribute("src", "/media/images/close3.png");                     
+                    } else {
+                        self.setAttribute("src", "/media/images/rpvF.png");
+                    }
+            }
+        };
+        http.send(null);
         } else {
             document.location = link;
         }
@@ -687,9 +687,103 @@ function rpPost(self, link, us) {
 } 
 
 
+//function profilePOST(link){
+//    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
+//    var linkfull = '/profile/?username='+link;
+//    var http = new XMLHttpRequest();
+//    if (http) {
+//        event = { my_image: dataURL_v1 };
+//        data = JSON.stringify(event);
+//        http.open('post', linkfull, true);
+//        http.setRequestHeader('X-CSRFToken', crsv);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//            if (http.readyState == 4) {
+//                alert('Все загружено!!!')
+//            }
+//        };
+//        http.send(data);
+//    } else {
+//        document.location = link;
+//    }
+//}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function reSend(user_id, post_id) {
+    var crsv = getCookie('csrftoken'); // токен
+    console.log(user_id, post_id, crsv);
+    var http = createRequestObject();
+    var linkfull = '/friends/';
+    if (http) {
+        http.open('post', linkfull);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.setRequestHeader('X-CSRFToken', crsv);
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+//                console.log(http.responseText);
+            }
+        }
+        //)
+        http.send(JSON.stringify({"user_id":user_id, "post_id":post_id}));   
+    } 
+}
+
+function FRIENDS(link) {
+    console.log("OK");
+    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
+    var tooltipElem = document.createElement('div');
+    tooltipElem.id = 'tooltip_'+link;
+    var over = document.getElementById("tooltip");
+    var http = createRequestObject();
+    var linkfull = '/friends';
+    var html = ""
+    if (http) {
+        http.open('get', linkfull);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+        if (http.readyState == 4) {
+            var data = JSON.parse(http.responseText);
+            data = JSON.parse(data.data);
+            for (var z in data) {
+//                console.log(data[z].fields.image_user != "oneProf.png")
+                if (data[z].fields.image_user != "oneProf.png") {
+                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="reSend(${data[z].pk}, ${link})">`;
+                } else {
+                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="reSend(${data[z].pk}, ${link})">`;
+                }
+                html += div_image_user
+            }
+            tooltipElem.innerHTML = html;
+            over.appendChild(tooltipElem);              
+//            tooltipElem.innerHTML = http.responseText;
+//            over.appendChild(tooltipElem);            
+        }
+    };
+    http.send(null);
+    } else {
+        document.location = link;
+    }
+}
+
 
 // меню 
 function menuset(self, link, username, del_indicator, like_count) {
+    console.log(link, username, del_indicator, like_count)
     if (self.getAttribute("open-atr")=="close") {
         self.style.transform = "rotate(90deg)"; 
         self.setAttribute("open-atr", "open")
@@ -703,7 +797,7 @@ function menuset(self, link, username, del_indicator, like_count) {
         tooltipElem.innerHTML = `<div id="post_like_block_${link}" style="width: 100%">
                                  ${t}
                                  <a onclick="LIKEOVER(${link})">понравилось ${like_count}</a>
-                                 <a>отправить</a>
+                                 <a onclick="FRIENDS(${link})">отправить</a>
                                  </div>
                                 `; //<a>статистика</a>
         

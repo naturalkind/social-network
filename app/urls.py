@@ -48,6 +48,9 @@ urlpatterns = [
     re_path(r'^follows/(?P<id>.*)$', myapp.follows),
     re_path(r'^getlkpost/(?P<id>.*)$', myapp.getlkpost), 
     
+    # друзья
+    re_path(r'^friends/', myapp.friends), 
+    
     # лайки/репосты
     re_path(r'add_like/$', myapp.add_like, name='add_like'),
     re_path(r'likeover/$', myapp.likeover),

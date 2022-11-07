@@ -352,11 +352,6 @@ def user(request):
     return render(request, 'profile.html', args)
 
 
-def getps(i):
-    ps = Post.objects.get(id=int(i))
-    return ps
-
-
 def addfolow(request, user_info, username, userid):
     usse = User.objects.get(username=username)
     user_info.add_relationship(usse, RELATIONSHIP_FOLLOWING)
@@ -402,6 +397,11 @@ def follows(request, id):
         ht += li
     return HttpResponse("<div id='foll'>%s</div>" % ht)
 
+
+def getps(i):
+    ps = Post.objects.get(id=int(i))
+    return ps
+
 # страница пользователя
 def user_page(request, user):
     user_info = User.objects.get(pk=user)
@@ -443,8 +443,6 @@ def user_page(request, user):
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})
-
-
     if request.method == 'POST':
         username = request.GET.get('username')
         userid = request.GET.get('userid')
@@ -456,6 +454,37 @@ def user_page(request, user):
             delfolow(request, user_info, username, userid)
             return HttpResponse('ok', content_type = "application/json")
 
+# друзья
+#def friends(request):
+#    return render(request, 'friends.html', {'username':auth.get_user(request)})
+from privatemessages.utils import send_message
+from privatemessages.models import Thread
+def friends(request):
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            user = auth.get_user(request).get_friends()
+            data = {}
+            data["data"] = serializers.serialize('json', user, fields=('username', 'image_user', 'path_data'))
+            return JsonResponse(data)
+        if request.method == 'POST':
+#            print ("POST FR", request.user.is_authenticated, request.user)
+            data = json.loads(request.body)
+            recipient = User.objects.get(pk=data["user_id"])
+            print (data, recipient)
+            thread_queryset = Thread.objects.filter(participants=recipient).filter(participants=request.user)
+            if thread_queryset.exists():
+                thread = thread_queryset[0]
+            else:
+                thread = Thread.objects.create()
+                thread.participants.add(request.user, recipient)            
+            send_message(
+                            thread.id,
+                            request.user.id,
+                            data["post_id"],
+                            request.user.username,
+                            "True"
+                        )
+            return JsonResponse({"data":"ok"})
 
 
 # страница пользователей

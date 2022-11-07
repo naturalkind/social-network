@@ -12,6 +12,7 @@ class Thread(models.Model):
 
 class Message(models.Model):
     text = models.TextField()
+    resend = models.TextField(max_length=200, default="False", verbose_name='resend')
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     datetime = models.DateTimeField(auto_now_add=True, db_index=True)
