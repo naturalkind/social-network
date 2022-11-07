@@ -1,0 +1,21 @@
+{% block content %}
+
+<div class="fr" style="margin: 0 33px;height: 205px;background: #f2f2f2;border-radius: 5px;">
+          <h1>ДРУЗЬЯ {{ username.get_friends.count }}</h1>
+
+           {% for fr in username.get_friends %}
+               <div class="fr-cell" style="width: 90px;height: 105px;float: left;margin: 2px 5px;padding: 2px;background: #ffffff;border-radius: 4px;">
+          <div class="pm-mes">
+<form action="messages" method="post" class="new_message">
+<input id="recipient_name" placeholder="Имя получателя" value="{{ fr.username }}" style="display: none">
+ <p><input id="message" placeholder="Сообщение"></p>
+</form>
+<p>
+    <a onclick="createMES()">Отправить</a>
+</p>
+           </div>
+                   <a onclick="userPROFILE('{{ fr.id }}')"><img src="/media/data_image/tm_{{ fr.username }}.png" width="85px" style="border-radius: 5px;">{{ fr.username|truncatechars:10 }}</a></div>
+           {% endfor %}
+</div>
+
+{% endblock content %}

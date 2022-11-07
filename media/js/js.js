@@ -513,7 +513,8 @@ function jsons(link, atr){
 }
 
 
-function showImg(path_data){
+function showImg(path_data, _type){
+    _type = typeof _type !== 'undefined' ?  _type : "javascript";
     try{document.getElementById('tooltip').remove();}catch(err) {}
     document.body.style.overflow = 'hidden';
     var block_post = document.getElementById('block-post');
@@ -521,9 +522,17 @@ function showImg(path_data){
     var img = document.createElement('img');
     img.id = 'conimg';
     img.src = path_data.src;
-    img.style.maxHeight = document.body.offsetHeight;
-    img.style.maxWidth = document.body.offsetWidth;
-    img.style.minWidth = document.body.offsetHeight/1.7;
+    if (document.body.offsetHeight > document.body.offsetWidth) {
+        img.style.maxHeight = document.body.offsetHeight;
+        img.style.maxWidth = document.body.offsetWidth;
+        img.style.width = "100%";    
+    } else {
+        img.style.maxHeight = document.body.offsetHeight;
+        img.style.maxWidth = document.body.offsetWidth;
+    }
+    if (_type == "qr") {
+        img.style.background = "#ffffff";
+    }
     block_post.innerHTML = '';
     block_post.appendChild(img);
     var startPoint={};

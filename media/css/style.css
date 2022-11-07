@@ -878,8 +878,10 @@ p#comment-text {
     display: none;
 }
 img#QR {
-    width: auto;
-    height: auto;
+/*    width: auto;*/
+/*    height: auto;*/
+    width: 80px;
+    height: 80px;
     float: right;
     position: absolute;
 }
