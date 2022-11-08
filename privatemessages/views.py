@@ -14,29 +14,29 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 def send_message_view(request):
     if not request.method == "POST":
-        return HttpResponse("Please use POST.")
+        return HttpResponse("<div id='error_msg'><p>только POST запросы</p></div>")
 
     if not request.user.is_authenticated:
-        return HttpResponse("Please sign in.")
+        return HttpResponse("<div id='error_msg'><p>войдите</p></div>")
 
     data = json.loads(request.body)
     message_text = data['message']
 
     if not message_text:
-        return HttpResponse("No message found.")
+        return HttpResponse("<div id='error_msg'><p>не найдены сообщения</p></div>")
 
     if len(message_text) > 10000:
-        return HttpResponse("The message is too long.")
+        return HttpResponse("<div id='error_msg'><p>сообщение очень длинное</p></div>")
 
     recipient_name = data['recipient_name']
 
     try:
         recipient = User.objects.get(username=recipient_name)
     except User.DoesNotExist:
-        return HttpResponse("No such user.")
+        return HttpResponse("<div id='error_msg'><p>пользователь не найден</p></div>")
 
     if recipient == request.user:
-        return HttpResponse("You cannot send messages to yourself.")
+        return HttpResponse("<div id='error_msg'><p>вы не можете посылать сообщения себе</p></div>")
 
     thread_queryset = Thread.objects.filter(participants=recipient).filter(participants=request.user)
 

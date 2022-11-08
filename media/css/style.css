@@ -415,6 +415,11 @@ p.author.partner {
     transform: translate(-50%,-50%);
     overflow-y: auto;
 }
+div#error_msg {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
 
 #user-page{
     position: relative;
