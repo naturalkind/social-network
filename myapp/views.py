@@ -25,10 +25,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import UserCreationForm 
 from django.template.loader import render_to_string
 
-# qr code
-import qrcode
-import qrcode.image.svg
-
 
 @login_required
 def create_comment(request):
@@ -321,10 +317,6 @@ def register(request):
                                         password=newuser_form.cleaned_data['password2'],
                                         )
             auth.login(request, newuser)
-#            img = qrcode.make(f'http://xn--90aci8aadpej1e.com/user/{newuser.id}', image_factory=qrcode.image.svg.SvgImage)
-#            with open(f'media/data_image/{path}/{new_author.username}_qr.svg', 'wb') as qr:
-#                img.save(qr)
-#            print (path, newuser.id)
             return redirect('/')
         else:
             args['form'] = newuser_form
