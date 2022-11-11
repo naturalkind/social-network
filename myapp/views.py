@@ -321,9 +321,9 @@ def register(request):
                                         password=newuser_form.cleaned_data['password2'],
                                         )
             auth.login(request, newuser)
-            img = qrcode.make(f'http://xn--90aci8aadpej1e.com/user/{newuser.id}', image_factory=qrcode.image.svg.SvgImage)
-            with open(f'media/data_image/{path}/{new_author.username}_qr.svg', 'wb') as qr:
-                img.save(qr)
+#            img = qrcode.make(f'http://xn--90aci8aadpej1e.com/user/{newuser.id}', image_factory=qrcode.image.svg.SvgImage)
+#            with open(f'media/data_image/{path}/{new_author.username}_qr.svg', 'wb') as qr:
+#                img.save(qr)
 #            print (path, newuser.id)
             return redirect('/')
         else:

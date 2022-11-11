@@ -3,11 +3,13 @@
 При создании, учитывал возможность использовать в проектах с высокой нагрузкой
 
 #### Для запуска нужно:
+
 * Django 3.2.16 - работа с БД
 * Channels 3.0.1 - websocket
 * Channels-redis 2.4.2 - django channels, которые используют Redis в качестве резервного хранилища
 * Daphne - ASGI сервер протоколов Django
 * Gunicorn - python WSGI HTTP сервер для UNIX
+
 #### Пуск:
 
 установка нужных компонентов   
@@ -35,20 +37,32 @@ pip uninstall channels
 pip install channels==3.0.1
 ```
 
-запуск
+создание базы данных с sqlite3   
 ```
 python3 manage.py migrate --run-syncdb
 ```
 
+создание базы данных с postgresql
+```
+./manage.py makemigrations   
+./manage.py migrate auth   
+./manage.py migrate --run-syncdb   
+./manage.py createsuperuser   
+```
+
+пуск   
 ```
 gunicorn app.wsgi:application --bind 192.168.1.50:8888 & daphne app.asgi:application --bind 0.0.0.0 --port 8889
 ```
 
-генирация пользователей и контента   
+### Генирация пользователей и контента  
+ 
+простой пример взаимодействия web   
 ```
-python3 gen_user.py
+python3 simple_api_client.py
 ```
 
+простой пример генирации данных локально
 ```
 ./manage.py shell < gen_content.py
 ```

@@ -29,7 +29,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             self.image_user = self.scope['user'].image_user
             self.path_data = self.scope['user'].path_data
             self.namefile = str()
-        print ("CHANNEL_LAYERS", self.channel_name, self.room_group_name)
+        print ("CHANNEL_LAYERS", self.channel_name, self.room_group_name, self.scope['user'])
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -52,56 +52,59 @@ class WallHandler(AsyncJsonWebsocketConsumer):
         """
         response = json.loads(text_data)
         event = response.get("event", None)
-        if event == "wallpost":
-            user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)
-            post = Post()
-            post.title = response["title"]
-            post.body = response["body"]
-            post.image = self.namefile
-            post.path_data = self.path_data
-            post.user_post = user_postv
-            post_async = sync_to_async(post.save)
-            await post_async()
+        if self.scope['user'].is_authenticated:        
+            if event == "wallpost":
+                    user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)
+                    post = Post()
+                    post.title = response["title"]
+                    post.body = response["body"]
+                    post.image = self.namefile
+                    post.path_data = self.path_data
+                    post.user_post = user_postv
+                    post_async = sync_to_async(post.save)
+                    await post_async()
 
-            _data = {"type": "wallpost",
-                     "timestamp": dateformat.format(post.date_post, 'U'),
-                     "image": self.namefile,
-                     "text":response["body"],
-                     "user_post": str(self.sender_name),
-                     "user_id": self.sender_id,
-                     "title": response["title"],
-                     "id": post.id,
-                     "image_user" : self.image_user, 
-                     "path_data" : self.path_data,
-                     "status" : "wallpost"
-                    }
-            await self.channel_layer.group_send(self.room_group_name, _data)
-            
-        if event == "Start":
-            self.namefile = f'{str(uuid.uuid4())[:12]}_{response["Name"]}'
-            self.myfile = open(f'media/data_image/{self.path_data}/{self.namefile}', "wb")
-            
-            _data = {"type": "wallpost", "status":"MoreData"}
-            await self.channel_layer.group_send(self.room_group_name, _data)
+                    _data = {"type": "wallpost",
+                             "timestamp": dateformat.format(post.date_post, 'U'),
+                             "image": self.namefile,
+                             "text":response["body"],
+                             "user_post": str(self.sender_name),
+                             "user_id": self.sender_id,
+                             "title": response["title"],
+                             "id": post.id,
+                             "image_user" : self.image_user, 
+                             "path_data" : self.path_data,
+                             "status" : "wallpost"
+                            }
+                    await self.channel_layer.group_send(self.room_group_name, _data)
+                
+            if event == "Start":
+                self.namefile = f'{str(uuid.uuid4())[:12]}_{response["Name"]}'
+                self.myfile = open(f'media/data_image/{self.path_data}/{self.namefile}', "wb")
+                
+                _data = {"type": "wallpost", "status":"MoreData"}
+                await self.channel_layer.group_send(self.room_group_name, _data)
 
-        if event == "Upload":
-            da = response["Data"]
-            da = da.split(",")[1]
-            file_bytes = io.BytesIO(base64.b64decode(da)).read()
-            self.myfile.write(file_bytes)
-            _data = {"type": "wallpost", "status":"MoreData"}
-            await self.channel_layer.group_send(self.room_group_name, _data)
-            
-        if event == "Done":
-            _data = {"type": "wallpost", "status":"Done"}
-            await self.channel_layer.group_send(self.room_group_name, _data)
+            if event == "Upload":
+                da = response["Data"]
+                da = da.split(",")[1]
+                file_bytes = io.BytesIO(base64.b64decode(da)).read()
+                self.myfile.write(file_bytes)
+                _data = {"type": "wallpost", "status":"MoreData"}
+                await self.channel_layer.group_send(self.room_group_name, _data)
+                
+            if event == "Done":
+                _data = {"type": "wallpost", "status":"Done"}
+                await self.channel_layer.group_send(self.room_group_name, _data)
 
-        
-        if event == "deletepost":
-            post = await database_sync_to_async(Post.objects.get)(id=response["id"])
-            await sync_to_async(post.delete)()
-            _data = {"type": "wallpost", "status":"deletepost"}
-            await self.channel_layer.group_send(self.room_group_name, _data)
+            
+            if event == "deletepost":
+                post = await database_sync_to_async(Post.objects.get)(id=response["id"])
+                await sync_to_async(post.delete)()
+                _data = {"type": "wallpost", "status":"deletepost"}
+                await self.channel_layer.group_send(self.room_group_name, _data)
+        else:
+            await self.channel_layer.group_send(self.room_group_name, {"type": "wallpost"})           
 
     async def wallpost(self, res):
         """ Receive message from room group """

@@ -2,12 +2,18 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 
+from django.db.models.signals import post_save
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
 from datetime import datetime
 import base64
 import re
+
+# qr code
+import qrcode
+import qrcode.image.svg
 
 # Create your models here.
 RELATIONSHIP_FOLLOWING = 1
@@ -62,6 +68,15 @@ class User(AbstractUser):
     
     def natural_key(self):
         return (self.image_user, self.path_data, self.id, self.username)
+        
+def generate_qr(sender, instance, created, **kwargs):
+    print (instance.id, instance.username, instance.path_data)
+    img = qrcode.make(f'http://xn--90aci8aadpej1e.com/user/{instance.id}', image_factory=qrcode.image.svg.SvgImage)
+    with open(f'media/data_image/{instance.path_data}/{instance.username}_qr.svg', 'wb') as qr:
+        img.save(qr)
+
+post_save.connect(generate_qr, sender=User)
+
 
 class Relationship(models.Model):
     from_person = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='from_people', on_delete=models.CASCADE)

@@ -1,5 +1,5 @@
 var IP_ADDR = "xn--90aci8aadpej1e.com";
-var PORT = "80"
+var PORT = "80";
 
 var innode;
 var len;
@@ -7,7 +7,7 @@ var topbt;
 var topbt_indicator;
 var topbt_position;
 var main_wrapper;
-var _page = "home";
+var _page = "wallpost";
 var yOffset;
 var temp_position;
 var isLoading = false;
@@ -991,10 +991,16 @@ function getlkpost(link){
 window.addEventListener("popstate", function(e) {
     var state = e.state;
     state = typeof state !== 'null' ?  state : "wallpost";
-    console.log("popstate............", state);
+    console.log("popstate............", state, _page, state.lk);
     if (state.view == "post" || state.view == "wallpost") {
         handler("o");
-        history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+        if (_page == "wallpost") {
+            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+        } if (_page == "user") {
+            history.pushState({"view": "user", 
+                               'lk': `/user/${document.getElementById("user_id"),innerText}` }, 
+                                null, `/`);
+        }
     } else if (state.view == "privatMES") {
         privatMES();
     } else if (state.view == "user") {
@@ -1146,7 +1152,7 @@ function showContent(link, _type) {
         }
     } catch (e) {} 
     isLoading = false;
-    _page = "showContent";
+    //_page = "showContent";
     document.body.style.overflow = 'hidden';
     var http = createRequestObject();
     if(link != null) {
@@ -1293,6 +1299,17 @@ function activate_wall(user_name) {
                     document.getElementById('message_form').style.display = "block";
                 } catch (e) {};
             } else if (message_data["status"]=="deletepost") {
+                try { 
+                    var conversation = document.getElementById("conversation");
+                    console.log(conversation.children, innode); //conversation, 
+                    conversation.children[innode].remove();
+                    handler(0);
+                } catch(e) {
+                    var conversation = document.getElementById("DODO");
+                    console.log(conversation.children, conversation.children[innode]);
+                    conversation.children[innode].remove();
+                    handler(0);
+                }
                 
             } else if (message_data["status"]=="MoreData") {
                 console.log("More Data", currentChunk <= totalChunks);
