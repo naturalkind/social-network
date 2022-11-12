@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // работает если в html script defer
 //topbt = document.getElementById('topbt');
 //main_wrapper = document.getElementById("main-wrapper");
+
 function getScrollPercent() {
     var h = document.documentElement, 
         b = document.body,
@@ -54,52 +55,54 @@ function scroll(){
     if(isLoading) return false;
     yOffset = window.pageYOffset;
     var y = yOffset + window.innerHeight;
-    if (document.getElementById('IOP').innerText!="STOP") {
-        if (_page == "chat") {
-            if(processed_page <= 30){
-                isLoading = true;
-                topbt.style.display = "block";
-                topbt.style.transform = 'rotate(180deg)'
-                topbt_indicator = "scroll_down_chat";
-                temp_position = window.innerHeight;
-                document.getElementById("dot-loader").style.display = "block";
-                ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
-            } 
-        } else {
-            if(processed_page >= 80){
-                isLoading = true;
-                topbt_position = y;
-                topbt_indicator = "scroll_up";
-                topbt.style.display = "block";
-                jsons(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
-            }
-        }
-    } else {
-        if(processed_page <= 30){
-                if (_page == "chat") {
-                    topbt_indicator = "scroll_down_chat";
-                    topbt.style.transform = 'rotate(180deg)';
-                } else {
-                    topbt_indicator = "scroll_down";
-                    topbt.style.transform = 'rotate(180deg)';
-                }
-        } else if (processed_page >= 80){
+    try {
+        if (document.getElementById('IOP').innerText!="STOP") {
             if (_page == "chat") {
-                topbt_indicator = "scroll_up_chat";
-                topbt.style.transform = 'rotate(0deg)';            
+                if(processed_page <= 30){
+                    isLoading = true;
+                    topbt.style.display = "block";
+                    topbt.style.transform = 'rotate(180deg)'
+                    topbt_indicator = "scroll_down_chat";
+                    temp_position = window.innerHeight;
+                    document.getElementById("dot-loader").style.display = "block";
+                    ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
+                } 
             } else {
-                topbt_indicator = "scroll_up";
-                topbt.style.transform = 'rotate(0deg)';
+                if(processed_page >= 80){
+                    isLoading = true;
+                    topbt_position = y;
+                    topbt_indicator = "scroll_up";
+                    topbt.style.display = "block";
+                    jsons(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
+                }
+            }
+        } else {
+            if(processed_page <= 30){
+                    if (_page == "chat") {
+                        topbt_indicator = "scroll_down_chat";
+                        topbt.style.transform = 'rotate(180deg)';
+                    } else {
+                        topbt_indicator = "scroll_down";
+                        topbt.style.transform = 'rotate(180deg)';
+                    }
+            } else if (processed_page >= 80){
+                if (_page == "chat") {
+                    topbt_indicator = "scroll_up_chat";
+                    topbt.style.transform = 'rotate(0deg)';            
+                } else {
+                    topbt_indicator = "scroll_up";
+                    topbt.style.transform = 'rotate(0deg)';
+                }
             }
         }
-    }
+    } catch (e) {};
 }
 window.onscroll = scroll;
 
 
 function event_topbt(e){
     var block_post = document.getElementById('block-post');
-    console.log("event_topbt", topbt_indicator);
+    console.log("event_topbt", topbt_indicator, _page);
     if (topbt_indicator == "editPROFF") {
         handler(e);                     
     } else if (topbt_indicator == "scroll_down_chat") { 
@@ -121,7 +124,13 @@ function event_topbt(e){
         topbt_indicator = "scroll_up";
     } else if (topbt_indicator == "handler") {
         handler(e)
-        history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+        if (_page == "wallpost") {
+            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+        } else if (_page == "user") {
+            history.pushState({"view": "user", 'lk': `/user/${document.getElementById("user_id").innerText}` }, 
+                                null, `/user/${document.getElementById("user_id").innerText}`);
+        }
+        //history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
     } else if (topbt_indicator == "addPost") {
         handler(e);
         isLoading = false;                            
@@ -134,7 +143,6 @@ function event_topbt(e){
 
 
 function handler(e) {
-    // remove this handler
     var block_post = document.getElementById('block-post');
     block_post.innerHTML = "";
     block_post.style.display = 'none';
@@ -148,6 +156,39 @@ function handler(e) {
         topbt_indicator = "scroll_up";
     }
 }
+
+
+
+window.addEventListener("popstate", function(e) {
+    var state = e.state;
+    state = typeof state !== 'null' ?  state : "wallpost";
+    console.log("popstate............", state, _page, state.lk);
+    if (state.view == "post" || state.view == "wallpost") {
+        handler("o");
+        if (_page == "wallpost") {
+            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+        } else {
+            history.pushState({"view": "user", 
+                               'lk': `/user/${document.getElementById("user_id").innerText}` }, 
+                                null, `/user/${document.getElementById("user_id").innerText}`);
+        }
+    } else if (state.view == "privatmes") {
+        privatMES();
+    } else if (state.view == "user") {
+        if (_page=="user") {
+            handler("o");
+            history.pushState({"view": "user", 
+                               'lk': `/user/${document.getElementById("user_id").innerText}` }, 
+                                null, `/user/${document.getElementById("user_id").innerText}`);
+        } else {
+            userPROFILE(state.lk.split('/')[2]);
+        }
+    }  else if (state.view == "users"){
+        users()
+    }
+});
+
+
 
 
 function createRequestObject() {
@@ -532,6 +573,7 @@ function showImg(path_data, _type){
     }
     if (_type == "qr") {
         img.style.background = "#ffffff";
+        img.style.minWidth = "280px";
     }
     block_post.innerHTML = '';
     block_post.appendChild(img);
@@ -620,17 +662,19 @@ function OnOn(id) {
     context = canvas.getContext('2d');
     var input = document.getElementById('id_image_'+id);
     file = input.files;
-    reader.readAsDataURL(file[0]);
-    reader.onload = function (e) {
-                im = new Image();
-                im.onload = function (e) {
-                    canvas.width = im.width;
-                    canvas.height = im.height;
-                    context.drawImage(im, 0, 0, im.width, im.height);
-                    dataURL_v1 = canvas.toDataURL("image/png");
-                };
-                im.src = reader.result;
-    };
+    try {
+        reader.readAsDataURL(file[0]);
+        reader.onload = function (e) {
+                    im = new Image();
+                    im.onload = function (e) {
+                        canvas.width = im.width;
+                        canvas.height = im.height;
+                        context.drawImage(im, 0, 0, im.width, im.height);
+                        dataURL_v1 = canvas.toDataURL("image/png");
+                    };
+                    im.src = reader.result;
+        };
+    } catch (e) {}
 }
 
 
@@ -913,7 +957,7 @@ function foll(link){
                 topbt.style.display = "block"
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "foll";
-                history.pushState({"view": "follow", 'lk': linkfull  }, null, linkfull);
+                //history.pushState({"view": "follow", 'lk': linkfull  }, null, linkfull);
             }
         };
         http.send(null);
@@ -938,7 +982,7 @@ function folls(link){
                 topbt.style.display = "block"
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "foll";
-                history.pushState({"view": "follows", 'lk': linkfull  }, null, linkfull);
+                //history.pushState({"view": "follows", 'lk': linkfull  }, null, linkfull);
             }
         };
         http.send(null);
@@ -986,30 +1030,6 @@ function getlkpost(link){
         document.location = link;
     }
 }
-
-
-window.addEventListener("popstate", function(e) {
-    var state = e.state;
-    state = typeof state !== 'null' ?  state : "wallpost";
-    console.log("popstate............", state, _page, state.lk);
-    if (state.view == "post" || state.view == "wallpost") {
-        handler("o");
-        if (_page == "wallpost") {
-            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
-        } if (_page == "user") {
-            history.pushState({"view": "user", 
-                               'lk': `/user/${document.getElementById("user_id"),innerText}` }, 
-                                null, `/`);
-        }
-    } else if (state.view == "privatMES") {
-        privatMES();
-    } else if (state.view == "user") {
-        userPROFILE(state.lk.split('/')[2]);
-    }  else if (state.view == "users"){
-        users()
-    }
-});
-
 
 function geturlimg(){setTimeout(draw, 5000)}
 function draw() {
@@ -1144,7 +1164,7 @@ function showContent(link, _type) {
             comView(document.getElementById("comment_image_id_"+link));
         } else {
             if (link in ws_dict){
-                console.log("showContent", ws_dict, link in ws_dict);
+                console.log("showContent", link in ws_dict); //ws_dict
             } else {
                 ws_dict[link] = activate_com(link);
             }
@@ -1439,7 +1459,8 @@ function privatMES(_type){
                 topbt = document.getElementById('topbt');
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
-                history.pushState({"view": "privatMES", 'lk': linkfull }, null, linkfull);
+                _page = "privatmes";
+                history.pushState({"view": "privatmes", 'lk': linkfull }, null, linkfull);
                 document.getElementsByClassName("enter")[0].style.display = "none";
             }
         };
@@ -1720,9 +1741,14 @@ function activate_com(post_id) {
             var fc = document.createElement('div');
             fc.className = 'f-c';
             var message_data = JSON.parse(event.data);
+            if (message_data.image_user != "oneProf.png") {
+                var img_com_user = `"/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"`;
+            } else {
+                var img_com_user = `"/media/images/oneProf.png"`;
+            }
             if (message_data.comment_image != "") {
                 fc.innerHTML = `<img id="image-user" 
-                                     src="/media/data_image/${message_data.path_data}/tm_${message_data.image_user}" 
+                                     src=${img_com_user} 
                                      class="imgUs" 
                                      onclick="userPROFILE(${message_data.user_id})" s
                                      tyle="cursor:pointer;" loading="lazy">
@@ -1734,7 +1760,7 @@ function activate_com(post_id) {
                                      onclick="showImg(this)">`
             } else {
                 fc.innerHTML = `<img id="image-user" 
-                                     src="/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"
+                                     src=${img_com_user} 
                                      class="imgUs" 
                                      onclick="userPROFILE(${message_data.user_id})" 
                                      style="cursor:pointer;" 

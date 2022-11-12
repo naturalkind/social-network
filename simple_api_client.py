@@ -222,12 +222,13 @@ def post_datas(user="sadko_1", password="1"):
 
 if __name__ == "__main__":
     print ("RUN...", sys.argv[1])
+    #"naturalkind", "1"
     if sys.argv[1] == "register":
         register() # создание пользователей
     elif sys.argv[1] == "post_datas":
-        post_datas("naturalkind", "1") # отправить много данных пользователя через websocket USER, PASSWORD ->
+        post_datas(sys.argv[2], sys.argv[3]) # отправить много данных пользователя через websocket USER, PASSWORD ->
     elif sys.argv[1] == "post_data":        
-        post_data("naturalkind", "1") # отправить данные пользователя через websocket USER, PASSWORD ->
+        post_data(sys.argv[2], sys.argv[3]) # отправить данные пользователя через websocket USER, PASSWORD ->
     elif sys.argv[1] == "user_data":
         user_data(1, 1) # данные пользователя ID, PAGE ->
     elif sys.argv[1] == "users":

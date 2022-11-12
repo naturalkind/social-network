@@ -52,6 +52,70 @@
   }
 }
 
+/* ---------- Color Module Styles ----------- */
+
+body,
+body.overlay {
+  color: #3b3b3b;
+}
+.comment .comment-arrow {
+  border-color: #ffffff;
+}
+#page,
+#main-wrapper,
+#main-menu-links li a.active,
+#main-menu-links li.active-trail a {
+    background-size: contain;
+}
+
+a {
+    color: #507299;
+    cursor: pointer;
+}
+.sidebar .block {
+    background-color: #f6f6f2;
+    border-color: #f9f9f9;
+}
+#logo input {
+    border-radius: 7px;
+    border: 1px solid #f9fefe;
+    border-left-width: medium;
+    border-bottom-width: medium;
+    background: #70b8b5;
+    margin-left: 10px;
+    color: white;
+    height: 20px;
+    margin: 10px;
+    font-style: initial;
+    text-transform: uppercase;
+    float: right;
+    font-family: sans-serif;
+}
+.butNav a {
+    border-radius: 5px;
+    border: 1px solid #f9fefe;
+    border-right-width: medium;
+    border-top-width: medium;
+    background: #70b8b5;
+    color: white;
+    height: 20px;
+    margin: 5px;
+    padding: 2px 10px 2px 10px;;
+    font-style: initial;
+    text-transform: uppercase;
+    float: right;
+    font-family: sans-serif;
+}
+#logo input.text:focus {
+    background-color: #ffffff;
+    color: #ffffff;
+}
+#logo input:-webkit-input-placeholder{
+    background-color: #ffffff;
+    color: #ffffff;
+}
+
+
 /* ---------- Overall Specifications ---------- */
 html,
 body,
@@ -889,6 +953,7 @@ img#QR {
     height: 80px;
     float: right;
     position: absolute;
+    right: 40px;
 }
 .canvas-user {
     max-width: 600px;
