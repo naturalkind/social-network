@@ -1726,6 +1726,7 @@ function send_com(self, cip) {
 
         }
     } catch(e) {
+        console.log(cip, e);
         zetr.setAttribute("indicator-ws", "open");
         ws_dict[cip] = activate_com(cip);
         ws_dict[cip].send(data);
