@@ -59,6 +59,8 @@ urlpatterns = [
     # комментарии
     re_path(r'^comment/(?P<post_id>.*)$', myapp.viewcom),
     
-     
+    # тест выбора цвета
+    re_path(r'^test_js/', myapp.test_js), 
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

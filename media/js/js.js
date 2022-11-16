@@ -50,7 +50,10 @@ function getScrollPercent() {
 }
 var processed_page;
 function scroll(){
-    try{document.getElementById('tooltip').remove();}catch(err) {}
+    try{
+        document.getElementById('tooltip').remove();
+        document.getElementsByClassName('edprof')[0].setAttribute("open-atr", "close");
+    }catch(err) {}
     processed_page = getScrollPercent();
     if(isLoading) return false;
     yOffset = window.pageYOffset;
@@ -104,6 +107,7 @@ function event_topbt(e){
     var block_post = document.getElementById('block-post');
     console.log("event_topbt", topbt_indicator, _page);
     if (topbt_indicator == "editPROFF") {
+        document.getElementsByClassName("edprof")[0].setAttribute("open-atr", "close");
         handler(e);                     
     } else if (topbt_indicator == "scroll_down_chat") { 
         e.style.transform = 'rotate(0deg)';
@@ -300,29 +304,196 @@ function addREG(){
 }
 
 
-/// редактировать профиль
-function editPROFF (){
+/// редактировать профиль простой способ
+//function editPROFF (){
+//        document.body.style.overflow = 'hidden';
+//        var block_post = document.getElementById('block-post'); // ищем элемент с id
+//        block_post.style.overflow = 'auto';
+//        var http = createRequestObject();
+//            if( http )   {
+//                http.open('get', '/profile');
+//                http.onreadystatechange = function () {
+//                if(http.readyState == 4) {
+//                block_post.innerHTML = http.responseText;
+//                block_post.style.display = 'block';
+//                topbt.style.display = "block";
+//                topbt.style.transform = 'rotate(90deg)';
+//                topbt_indicator = "editPROFF"
+//                }
+//            };
+//            http.send(null);
+//        } else {
+//            document.location = link;
+//        }
+
+//}
+
+
+function editPROFF(self){
+    if (self.getAttribute("open-atr")=="close") {
         document.body.style.overflow = 'hidden';
-        var block_post = document.getElementById('block-post'); // ищем элемент с id
-        block_post.style.overflow = 'auto';
+        var block_post = document.getElementById('block-post'); 
         var http = createRequestObject();
-            if( http )   {
-                http.open('get', '/profile');
-                http.onreadystatechange = function () {
-                if(http.readyState == 4) {
+        if (http) {
+            http.open('get', '/profile');
+            http.onreadystatechange = function () {
+            if(http.readyState == 4) {
                 block_post.innerHTML = http.responseText;
                 block_post.style.display = 'block';
                 topbt.style.display = "block";
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "editPROFF"
-                }
-            };
-            http.send(null);
+                
+                var color_picker = document.createElement('div');
+                color_picker.id = 'color-picker';
+                color_picker.className = "cp-default";
+//                block_post.appendChild(color_picker);
+         
+//                // выпадающее сообщение
+                var tooltipElem = document.createElement('div');
+                tooltipElem.id = 'YO2'//+user_id;
+                tooltipElem.setAttribute("style", `margin:0 auto;
+                                                   width:264px;
+                                                   position:relative;
+                                                    `)
+//                var over = document.getElementById("user-page");  
+                tooltipElem.appendChild(color_picker);  
+                block_post.appendChild(tooltipElem);  
+//                // координаты кнопки редактировать профиль        
+//                var coords_button = self.getBoundingClientRect()["top"];
+//                console.log(coords_button);
+//                
+//                over.appendChild(tooltipElem);
+//                
+//                tooltipElem.style.top = coords_button+ 50 + 'px';   
+                
+                self.setAttribute("open-atr", "open");
+                topbt_indicator = "editPROFF"
+                ColorPicker(
+                    color_picker,
+                    function(hex, hsv, rgb) {
+                      //console.log(hsv.h, hsv.s, hsv.v);         // [0-359], [0-1], [0-1]
+                      console.log(rgb.r, rgb.g, rgb.b);         // [0-255], [0-255], [0-255]
+                      //document.body.style.backgroundColor = hex;        // #HEX
+                      //us_name_class.style.backgroundColor = hex;
+                      user_page_name.style.color = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                      console.log(user_page_name.style.color);
+                });                 
+            }
+        };
+        http.send(null);
         } else {
             document.location = link;
-        }
+        }    
+//        var block_post = document.getElementById('block-post'); // ищем элемент с id
+//        var user_id = document.getElementById('user_id').innerText;
+//        var user_page_name = document.getElementById('user_page_name');
+//        var us_name_class = document.getElementsByClassName('us-name')[0];
+////        console.log(self, user_id, us_name_class, user_page_name);
+//        var uspgimg = document.getElementsByClassName('uspgimg')[0];
+//        
+//        // выбор цвета
+//        var color_picker = document.createElement('div');
+//        color_picker.id = 'color-picker';
+//        color_picker.className = "cp-default";
+// 
+//        // выпадающее сообщение
+//        var tooltipElem = document.createElement('div');
+//        tooltipElem.id = 'tooltip'//+user_id;
+//        var over = document.getElementById("user-page");  
+//        tooltipElem.appendChild(color_picker);
+//        over.appendChild(tooltipElem);
+//        uspgimg.appendChild(tooltipElem);
+//// ----------------------------------->
+        
+//        var img_icon_load = document.createElement("img");
+//        var img_icon_load = document.createElement("a");
+//        img_icon_load.id = "img_icon_load";
+//        img_icon_load.style.background = `url(/media/images/ADDICONvF.png)0 30px;`;
+//        img_icon_load.setAttribute('style', `background:url(/media/images/ADDICONvF.png)0 0px;
+//                                             background-size: cover;
+//                                             border: none;
+//                                             padding: 0;
+//                                             border-radius: 0px;
+//                                             `)
+//        img_icon_load.innerHTML = "img_icon_load";
+//                                             background-size: 100% 100%;
+//                                             width: 39px;
+//                                             height: 30px;
+                                             
+//        tooltipElem.appendChild(img_icon_load);                                             
+//        uspgimg.appendChild(img_icon_load);
 
+        // координаты кнопки редактировать профиль
+//        var coords_button = self.getBoundingClientRect()["top"];
+//        console.log(coords_button);
+
+
+//        over.appendChild(tooltipElem);
+//        uspgimg.appendChild(tooltipElem);
+        
+//        var coords = over.getBoundingClientRect();
+//        var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
+//        var top = over.offsetHeight+30;
+//        console.log(left, top)
+//        tooltipElem.style.left = left + 'px';
+//        tooltipElem.style.top = top + 'px';   
+  
+        
+//        var coords = over.getBoundingClientRect();
+//        var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
+//        if (left < 0) left = 0;
+//        var top = coords.top - tooltipElem.offsetHeight - 5;
+//        if (top < 0) {top = coords.top + over.offsetHeight + 5;}
+//        console.log(left, top)
+//        tooltipElem.style.left = left + 'px';
+//        tooltipElem.style.top = coords_button+ 50 + 'px';   
+//        
+//        self.setAttribute("open-atr", "open");
+//        ColorPicker(
+//            color_picker,
+//            function(hex, hsv, rgb) {
+//              //console.log(hsv.h, hsv.s, hsv.v);         // [0-359], [0-1], [0-1]
+//              console.log(rgb.r, rgb.g, rgb.b);         // [0-255], [0-255], [0-255]
+//              //document.body.style.backgroundColor = hex;        // #HEX
+//              //us_name_class.style.backgroundColor = hex;
+//              user_page_name.style.color = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+//              console.log(user_page_name.style.color);
+//        });                        
+    } else {
+        try {
+            document.getElementById('tooltip').remove();
+            self.setAttribute("open-atr", "close")
+        } catch (e) {
+            
+            editPROFF(self);
+        };
+    }
 }
+
+
+
+
+//function profilePOST(link){
+//    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
+//    var linkfull = '/profile/?username='+link;
+//    var http = new XMLHttpRequest();
+//    if (http) {
+//        event = { my_image: dataURL_v1 };
+//        data = JSON.stringify(event);
+//        http.open('post', linkfull, true);
+//        http.setRequestHeader('X-CSRFToken', crsv);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//            if (http.readyState == 4) {
+//                alert('Все загружено!!!')
+//            }
+//        };
+//        http.send(data);
+//    } else {
+//        document.location = link;
+//    }
+//}
 
 
 /// пользователь
@@ -361,26 +532,28 @@ function userPROFILE(link, _type){
 }
 
 
-function profilePOST(link){
-    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-    var linkfull = '/profile/?username='+link;
-    var http = new XMLHttpRequest();
-    if (http) {
-        event = { my_image: dataURL_v1 };
-        data = JSON.stringify(event);
-        http.open('post', linkfull, true);
-        http.setRequestHeader('X-CSRFToken', crsv);
-        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        http.onreadystatechange = function () {
-            if (http.readyState == 4) {
-                alert('Все загружено!!!')
-            }
-        };
-        http.send(data);
-    } else {
-        document.location = link;
-    }
-}
+// простая версия
+
+//function profilePOST(link){
+//    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
+//    var linkfull = '/profile/?username='+link;
+//    var http = new XMLHttpRequest();
+//    if (http) {
+//        event = { my_image: dataURL_v1 };
+//        data = JSON.stringify(event);
+//        http.open('post', linkfull, true);
+//        http.setRequestHeader('X-CSRFToken', crsv);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//            if (http.readyState == 4) {
+//                alert('Все загружено!!!')
+//            }
+//        };
+//        http.send(data);
+//    } else {
+//        document.location = link;
+//    }
+//}
 
 
 function getNumEnding(iNumber, aEndings) {

@@ -364,7 +364,7 @@ def follow(request, id):
             img = f'/media/images/oneProf.png'
         idu = str(x.pk)
         if len(str(x.username)) > 15:
-            uname = f"str(x.username)[:15]..."
+            uname = f"{str(x.username)[:10]}..."
         else:
             uname = str(x.username)
         li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, uname)
@@ -562,3 +562,8 @@ def chat_view(request):
                                   "username": auth.get_user(request)
                               },
                               )
+                              
+                              
+                              
+def test_js(request):
+    return render(request, 'test_js.html')                              

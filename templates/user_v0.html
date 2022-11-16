@@ -9,7 +9,7 @@
 <div id="user_id" style="display:none;">{{ user_info.id }}</div>
 <div id="user-page">
     <div class="info">
-        <div class="us-name" id="user_page_name">
+        <div class="us-name">
             <h3>{{ user_info.username }}</h3>
         </div>
         <div class="uspgimg">
@@ -24,7 +24,7 @@
         <div class="soc">
             {% if request.user.is_authenticated %}
                 {% if user_info.username == username.username %}
-                    <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF(this)" open-atr="close">
+                    <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF()">
                     <div id="atr-user" atr-user="self"></div>
                 {% else %}
                 {% if foll_blank == 0 %}
