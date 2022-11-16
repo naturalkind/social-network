@@ -936,7 +936,7 @@ font-family: Arial;
 
 #YO {
     display: block;
-    width: 600px;
+/*    width: 600px;*/
     margin: 0 auto;
 }
 
@@ -1229,8 +1229,8 @@ img#QR {
     #id_image_user_lb {
         font-size: 40px;
         text-align: center;
-        background: #507299;
-        color: white;
+/*        background: #507299;*/
+/*        color: white;*/
         cursor: pointer;
         border-radius: 6px;
         z-index: 9999;
@@ -1238,6 +1238,7 @@ img#QR {
         margin-top: 15px;
         display: block;
         padding: 5px 0px;
+        border: 2px solid;
     }
     .title {
         float: left;
@@ -1315,7 +1316,25 @@ img#QR {
         max-width: 900px;
         max-height: 600px;
     }
-    .pm-mes a, #YO a, .private_messages a {
+    #YO a {
+        cursor: pointer;
+        border-radius: 5px;
+        background: #507299;
+        color: #ffffff;
+        top: 0;
+        position: relative;
+        font-size: 36px;
+        display: block;
+        margin: 0 auto;
+        margin-top: 30px;
+        padding: 5px 0 5px 0;
+        font-style: initial;
+        text-transform: uppercase;
+        font-family: sans-serif;  
+        text-align: center;  
+    }
+    
+    .pm-mes a, .private_messages a {
         cursor: pointer;
         border-radius: 5px;
         background: #507299;
@@ -1851,11 +1870,11 @@ img#QR {
      #id_image_user_lb{
         font-size: 23px;
         text-align: center;
-        background: #507299;
-        color: white;
+/*        background: #507299;*/
+/*        color: white;*/
         margin-top: 15px;
         cursor: pointer;
-        border-radius: 0;
+        border-radius: 6;
         z-index: 9999;
         padding: 4px 0px;
     }
@@ -1941,7 +1960,22 @@ img#QR {
         text-transform: uppercase;
         font-family: sans-serif;
     }
-    .pm-mes a, #YO a, .private_messages a{
+    #YO a {
+        cursor: pointer;
+        border-radius: 5px;
+        background: #507299;
+        color: #ffffff;
+        top: 5px;
+        position: relative;
+        font-size: 20px;
+        display: block;
+        margin: 8px auto;
+        padding: 5px 0 5px 0;
+        font-style: initial;
+        text-transform: uppercase;
+        font-family: sans-serif;    
+    }
+    .pm-mes a,.private_messages a{
         cursor: pointer;
         border-radius: 5px;
         background: #507299;

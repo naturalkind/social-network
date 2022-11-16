@@ -329,36 +329,102 @@ function addREG(){
 //}
 
 
+//function OnOn(id) {
+//    canvas = document.getElementById('canvas_'+id);
+//    context = canvas.getContext('2d');
+//    var input = document.getElementById('id_image_'+id);
+//    file = input.files;
+//    try {
+//        reader.readAsDataURL(file[0]);
+//        reader.onload = function (e) {
+//                    im = new Image();
+//                    im.onload = function (e) {
+//                        canvas.width = im.width;
+//                        canvas.height = im.height;
+//                        context.drawImage(im, 0, 0, im.width, im.height);
+//                        dataURL_v1 = canvas.toDataURL("image/png");
+//                    };
+//                    im.src = reader.result;
+//        };
+//    } catch (e) {}
+//}
+
+function load_image_profile(self, id) {
+    console.log(self, id)
+    var input = document.getElementById('id_image_'+id);
+    file = input.files;
+    try {
+        reader.readAsDataURL(file[0]);
+        reader.onload = function (e) {
+                    var im = document.getElementById("image-user-profile");
+//                    im = new Image();
+//                    im.onload = function (e) {
+//                        canvas.width = im.width;
+//                        canvas.height = im.height;
+//                        context.drawImage(im, 0, 0, im.width, im.height);
+//                        dataURL_v1 = canvas.toDataURL("image/png");
+//                    };
+                    dataURL_v1 = reader.result;
+                    im.src = reader.result;
+        };
+    } catch (e) {}    
+
+}
+
+
+
 function editPROFF(self){
     if (self.getAttribute("open-atr")=="close") {
-        document.body.style.overflow = 'hidden';
+//        document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post'); 
         var http = createRequestObject();
         if (http) {
             http.open('get', '/profile');
             http.onreadystatechange = function () {
             if(http.readyState == 4) {
-                block_post.innerHTML = http.responseText;
-                block_post.style.display = 'block';
-                topbt.style.display = "block";
-                topbt.style.transform = 'rotate(90deg)';
-                topbt_indicator = "editPROFF"
-                
+//                block_post.innerHTML = http.responseText;
+//                block_post.style.display = 'block';
+//                topbt.style.display = "block";
+//                topbt.style.transform = 'rotate(90deg)';
+//                topbt_indicator = "editPROFF"
+//                
                 var color_picker = document.createElement('div');
                 color_picker.id = 'color-picker';
                 color_picker.className = "cp-default";
 //                block_post.appendChild(color_picker);
-         
+                  // получить координаты картинки
+                var image_user_profile = document.getElementById("image-user-profile");
+                var _coord = image_user_profile.getBoundingClientRect();
+                
+                var header_height = document.getElementById("header").getBoundingClientRect()["height"];
+                console.log("--------->", _coord, _coord["top"], header_height);
+                var z = document.createElement('div');
+                z.id = 'tooltip'//+user_id;
+                z.setAttribute("style", `top:${(_coord["top"]-header_height)+124}px; 
+                                         left:${_coord["left"]}px;
+                                         height: 0;
+                                         width:${_coord["width"]}px;
+                                         position:absolute;
+                                         opacity: 1;
+                                         padding:0;
+                                         `)   //background:#1797a7; height:${_coord["height"]}px;
+                z.innerHTML = http.responseText;             
+                var uspgimg = document.getElementsByClassName('uspgimg')[0];
+//                z.appendChild(color_picker);
+//                uspgimg.appendChild(z);
 //                // выпадающее сообщение
                 var tooltipElem = document.createElement('div');
                 tooltipElem.id = 'YO2'//+user_id;
-                tooltipElem.setAttribute("style", `margin:0 auto;
-                                                   width:264px;
-                                                   position:relative;
-                                                    `)
+//                tooltipElem.setAttribute("style", `margin:0 auto;
+//                                                   width:264px;
+//                                                   position:relative;
+//                                                    `)
+
 //                var over = document.getElementById("user-page");  
                 tooltipElem.appendChild(color_picker);  
-                block_post.appendChild(tooltipElem);  
+                z.appendChild(tooltipElem);
+                uspgimg.appendChild(z);                
+//                block_post.appendChild(tooltipElem);  
 //                // координаты кнопки редактировать профиль        
 //                var coords_button = self.getBoundingClientRect()["top"];
 //                console.log(coords_button);
@@ -461,9 +527,10 @@ function editPROFF(self){
 //              console.log(user_page_name.style.color);
 //        });                        
     } else {
+        self.setAttribute("open-atr", "close");
         try {
             document.getElementById('tooltip').remove();
-            self.setAttribute("open-atr", "close")
+//            self.setAttribute("open-atr", "close")
         } catch (e) {
             
             editPROFF(self);
@@ -474,26 +541,26 @@ function editPROFF(self){
 
 
 
-//function profilePOST(link){
-//    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-//    var linkfull = '/profile/?username='+link;
-//    var http = new XMLHttpRequest();
-//    if (http) {
-//        event = { my_image: dataURL_v1 };
-//        data = JSON.stringify(event);
-//        http.open('post', linkfull, true);
-//        http.setRequestHeader('X-CSRFToken', crsv);
-//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-//        http.onreadystatechange = function () {
-//            if (http.readyState == 4) {
-//                alert('Все загружено!!!')
-//            }
-//        };
-//        http.send(data);
-//    } else {
-//        document.location = link;
-//    }
-//}
+function profilePOST(link){
+    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
+    var linkfull = '/profile/?username='+link;
+    var http = new XMLHttpRequest();
+    if (http) {
+        event = { my_image: dataURL_v1 };
+        data = JSON.stringify(event);
+        http.open('post', linkfull, true);
+        http.setRequestHeader('X-CSRFToken', crsv);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+                alert('Все загружено!!!')
+            }
+        };
+        http.send(data);
+    } else {
+        document.location = link;
+    }
+}
 
 
 /// пользователь

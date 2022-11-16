@@ -14,9 +14,9 @@
         </div>
         <div class="uspgimg">
             {% if user_info.image_user != "oneProf.png" %}
-                <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.image_user }}" loading="lazy">
+                <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.image_user }}" loading="lazy" id="image-user-profile">
             {% else %}
-                <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy">
+                <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy" id="image-user-profile">
             {% endif %}
             <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.username }}_qr.svg" height="auto" width="auto" loading="lazy" id="QR" onclick="showImg(this, 'qr')">
             
