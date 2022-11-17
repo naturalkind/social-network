@@ -546,7 +546,7 @@ li.views-row {
     margin: 0 auto;
     left: 0;
     right: 0;
-    position: fixed;
+/*    position: fixed;*/
     bottom: 11px;
 }
 
@@ -557,7 +557,7 @@ li.views-row {
     margin: 0 auto;
     left: 0;
     right: 0;
-    position: fixed;
+    position: absolute;
     top: 20px;
 }
 
@@ -568,7 +568,7 @@ li.views-row {
     left: 0;
     right: 0;
     position: fixed;
-    bottom: 25px;
+    bottom: 0px;
 }
 
 textarea#message_textarea {
@@ -788,15 +788,6 @@ div#cn {
     margin: 0 auto;
 }
 
-#send {
-    display: block;
-    position: fixed;
-    bottom: 25px;
-    left: 49%;
-    background: #507299;
-    padding: 6px;
-    border-radius: 10px;
-}
 
 #imginreg {
     position: relative;
@@ -1035,8 +1026,8 @@ img#QR {
     }
 
     .cp-default .picker {
-/*        width: 300px;*/
-        width: 535px;
+        width: 300px;
+/*        width: 535px;*/
         height: 300px;
     }
     #tooltip {
@@ -1142,7 +1133,7 @@ img#QR {
     #SIMPLE {
         display: block;
         position: relative;
-        height: 177px;
+        height: 190px;
         width: 200px;
         float: left;
     }
@@ -1201,13 +1192,10 @@ img#QR {
         font-size: 36px;
         border-radius: 10px;
         color: #7b7b7b;
-        margin-bottom: 10px;
+/*        margin-bottom: 10px;*/
         text-align: left;
     }
 
-    #send {
-        left: 45%;
-    }
     img.send-img {
         outline: 0;
         width: 98px;
@@ -1261,8 +1249,8 @@ img#QR {
         display: block;
         background: #507299;
         color: white;
-        font-size: 40px;
-        margin: auto auto 35px auto;
+        font-size: 36px;
+/*        margin: auto auto 35px auto;*/
         width: 600px;
         cursor: pointer;
     }
@@ -1302,15 +1290,6 @@ img#QR {
         right: 0;
         background: white;
         max-width: 100%;
-    }
-    .send button {
-        color: #ffffff;
-        border: 1px solid #507298;
-        font-size: 30px;
-        background: #507299;
-        border-radius: 7px;
-        margin-top: 5px;
-        width: 100%;
     }
     .uspgimg img{
         max-width: 900px;
@@ -1515,6 +1494,7 @@ img#QR {
         border-radius: 7px;
         width: 100%;
         border: none;
+        margin: 15px auto;
     }
     .message .views-title {
         background: #507299;
@@ -1762,7 +1742,7 @@ img#QR {
     #SIMPLE {
         display: block;
         position: relative;
-        height: 128px;
+        height: 130px;
         width: 200px;
         float: left;
     }               
@@ -1823,15 +1803,6 @@ img#QR {
         background-size: cover;
     }
 
-    .send button {
-        color: #ffffff;
-        border: 1px solid #507298;
-        font-size: 26px;
-        background: #507299;
-        border-radius: 7px;
-        margin-top: 5px;
-        width: 100%;
-    }
     .compose .message_textarea,
     .box-com .message_textarea,
     .compose #message_textarea {
@@ -1841,13 +1812,10 @@ img#QR {
         font-size: 20px;
         border-radius: 2px;
         color: #7b7b7b;
-        margin-bottom: 10px;
+/*        margin-bottom: 10px;*/
         text-align: left;
     }
 
-    #send {
-        left: 49%;
-    }
     img.send-img {
         outline: 0;
         width: 48px;
@@ -1899,7 +1867,7 @@ img#QR {
         display: block;
         background: #507299;
         color: white;
-        font-size: 26px;
+        font-size: 25px;
         margin: 0 auto;
         width: 600px;
         cursor: pointer;
@@ -1933,15 +1901,6 @@ img#QR {
         background: #FFFFFF;
         max-width: 800px;
         margin: 0 auto;
-    }
-    #send button {
-        color: #ffffff;
-        border: 1px solid #507298;
-        font-size: 26px;
-        background: #507299;
-        border-radius: 7px;
-        width: 600px;
-        margin-top: 20px;
     }
     .uspgimg img {
         height: 300px;
@@ -2132,8 +2091,9 @@ img#QR {
         background: #507299;
         border: none;
         padding: 5px;
-        border-radius: 0px;
+        border-radius: 7px;
         width: 100%;
+        margin: 15px auto;
     }
     #userA, #addPost {
         width: 39px;

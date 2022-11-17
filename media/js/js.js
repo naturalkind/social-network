@@ -133,16 +133,18 @@ function event_topbt(e){
         } else if (_page == "user") {
             history.pushState({"view": "user", 'lk': `/user/${document.getElementById("user_id").innerText}` }, 
                                 null, `/user/${document.getElementById("user_id").innerText}`);
+        } else if (_page == "chat") {
+            history.pushState({"view": "user", 'lk': `/messages/chat/${document.getElementById("chat_id").innerText}` }, 
+                                null, `/messages/chat/${document.getElementById("chat_id").innerText}`);            
         }
+        
         //history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
     } else if (topbt_indicator == "addPost") {
         handler(e);
         isLoading = false;                            
     } else if (topbt_indicator == "foll") {
         handler(e);
-    } else if (topbt_indicator = "") {
-    
-    }
+    } 
 };
 
 
@@ -187,8 +189,11 @@ window.addEventListener("popstate", function(e) {
         } else {
             userPROFILE(state.lk.split('/')[2]);
         }
-    }  else if (state.view == "users"){
+    } else if (state.view == "users") {
         users()
+    } else if (state.view == "mesID") {
+        handler("o");
+        console.log("CHAT")
     }
 });
 
@@ -387,7 +392,9 @@ function editPROFF(self){
 //                topbt.style.display = "block";
 //                topbt.style.transform = 'rotate(90deg)';
 //                topbt_indicator = "editPROFF"
-//                
+//              
+                var self_coord = self.getBoundingClientRect();
+                  
                 var color_picker = document.createElement('div');
                 color_picker.id = 'color-picker';
                 color_picker.className = "cp-default";
@@ -397,17 +404,19 @@ function editPROFF(self){
                 var _coord = image_user_profile.getBoundingClientRect();
                 
                 var header_height = document.getElementById("header").getBoundingClientRect()["height"];
-                console.log("--------->", _coord, _coord["top"], header_height);
+                console.log("--------->", _coord, _coord["top"], header_height, self_coord);
                 var z = document.createElement('div');
                 z.id = 'tooltip'//+user_id;
-                z.setAttribute("style", `top:${(_coord["top"]-header_height)+124}px; 
+                z.setAttribute("style", `top:${(_coord["top"]-header_height)}px; 
                                          left:${_coord["left"]}px;
                                          height: 0;
                                          width:${_coord["width"]}px;
                                          position:absolute;
                                          opacity: 1;
                                          padding:0;
-                                         `)   //background:#1797a7; height:${_coord["height"]}px;
+                                         `)   //background:#1797a7; height:${_coord["height"]}px; 
+                                              //top:${(_coord["top"]-header_height)}px; 
+                                              //top:${self_coord["top"]}px; 
                 z.innerHTML = http.responseText;             
                 var uspgimg = document.getElementsByClassName('uspgimg')[0];
 //                z.appendChild(color_picker);
@@ -415,10 +424,13 @@ function editPROFF(self){
 //                // выпадающее сообщение
                 var tooltipElem = document.createElement('div');
                 tooltipElem.id = 'YO2'//+user_id;
-//                tooltipElem.setAttribute("style", `margin:0 auto;
-//                                                   width:264px;
-//                                                   position:relative;
-//                                                    `)
+//                tooltipElem.innerHTML = "<a>цвет имени</a>"
+//                _coord = self.getBoundingClientRect();
+                tooltipElem.setAttribute("style", `
+                                                   top:${_coord["top"]+_coord["height"]+header_height+10}px; 
+                                                   left:${_coord["left"]}px;
+                                                   position: fixed;
+                                                    `)
 
 //                var over = document.getElementById("user-page");  
                 tooltipElem.appendChild(color_picker);  
@@ -933,7 +945,7 @@ function OnOnreg() {
 /// добвать пост
 function addPost(){
     try{
-        html = '<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">загрузка картинки</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea></div><div id="send"><img src="/media/images/cloud.png" onclick="send_wall()" id="send-img"></div></form></div>'; 
+        html = '<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea></div><button onclick="send_wall()" type="button">ОТПРАВИТЬ</button></form></div>'; 
         document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post');
         block_post.style.display = 'block';
@@ -943,7 +955,8 @@ function addPost(){
         topbt.style.display = "block";
     } catch (err){}
 }
-
+//<div id="send"><img src="/media/images/cloud.png" onclick="send_wall()" id="send-img"></div>
+//<button onclick="createMES()">ОТПРАВИТЬ</button>
 
 // простая версия репоста
 function rpPost(self, link, us) {
@@ -1435,15 +1448,26 @@ function showContent(link, _type) {
                     navlis.appendChild(textElemv1, navlis.firstChild);
                     navlis.appendChild(textElemv2, navlis.lastChild);
                     block_post.insertBefore(navlis, block_post.firstChild);
+//                    _type = typeof _type !== 'undefined' ?  _type : "javascript";
+                    console.log("```````````", innode, len, typeof innode == 'undefined')
                     if (innode == 0) {
                        textElemv1.style.display = 'none';
                        textElemv2.style.display = 'block';
+                    } else if (innode==(len-1)) {
+                       textElemv1.style.display = 'block';
+                       textElemv2.style.display = 'none';
+                    } 
+                    else if (typeof innode == 'undefined' && typeof len == 'undefined') {
+                       textElemv1.style.display = 'none';
+                       textElemv2.style.display = 'none';                    
                     }
-                    if ((len-2)==innode) {
+                    
+                    if ((len-2)==innode && document.getElementById("IOP").innerText != "STOP") {
                         jsons(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
                     }
                     textElemv2.onclick = function LISTING(){
                         if ((len-1)>=innode){
+                            console.log("```````````", innode, len);
                             try{
                                 innode++;
                                 var h = document.getElementsByClassName('field-image')[innode];
@@ -1806,7 +1830,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                 }
                 var tempNewVal = parseInt(document.getElementById("wscroll").scrollHeight) + 100;
                 document.getElementById("wscroll").height = tempNewVal;
-                window.scrollBy(0, tempNewVal);
+                window.scrollBy(0, document.getElementById("conver").getBoundingClientRect()["height"]);
                 
             } else if (message_data["event"]=="loadmore") {
                 var request_user_id = message_data["request_user_id"];
@@ -2013,7 +2037,12 @@ function activate_com(post_id) {
             fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
             tev.insertBefore(fc, tev.lastChild);
             document.getElementsByClassName('compose_'+post_id)[0].style.display = "block";
-            document.getElementById('results_'+post_id).removeChild(t_el);
+            try {
+                document.getElementById('results_'+post_id).removeChild(t_el);
+            } catch (e) {}
+            try {
+                document.getElementById("block-post").scrollTo(0, document.getElementById("node").getBoundingClientRect()['height']);
+            } catch (e) {}
         };
         return ws_com
     }

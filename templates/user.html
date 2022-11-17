@@ -5,8 +5,8 @@
     {% else %}
         <span id="IOP" style="display: none">STOP</span>
     {% endif %}
+    <div id="user_id" style="display:none;">{{ user_info.id }}</div>
 </div>
-<div id="user_id" style="display:none;">{{ user_info.id }}</div>
 <div id="user-page">
     <div class="info">
         <div class="us-name" id="user_page_name">
@@ -44,10 +44,11 @@
                              aria-required="true" 
                              placeholder="Введите ваше сообщение..." 
                              contentEditable=true></div>
-                    </div>                    
-                    <p>
-                        <a onclick="createMES()">Отправить</a>
-                    </p>
+                    </div>   
+                    <button onclick="createMES()" type="button">ОТПРАВИТЬ</button>                 
+<!--                    <p>-->
+<!--                        <a onclick="createMES()">Отправить</a>-->
+<!--                    </p>-->
                 </div>
                 {% endif %}
             {% endif %}

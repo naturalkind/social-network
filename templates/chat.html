@@ -6,6 +6,7 @@
     {% else %}
         <span id="IOP" style="display: none">STOP</span>
     {% endif %}
+    <div id="chat_id" style="display:none;">{{ thread_id }}</div>
 </div>
 <div id="conver-chat">
 <div class="chat" id="chat">
@@ -74,9 +75,10 @@
                  placeholder="Введите ваше сообщение..." 
                  contentEditable=true></div>
         </div>
-        <div class="send">
-            <button id="btn" type="button">ОТПРАВИТЬ</button>
-        </div>
+        <button id="btn" type="button">ОТПРАВИТЬ</button>
+<!--        <div class="send">-->
+<!--            -->
+<!--        </div>-->
     </form>
 <script>
 activate_chat('{{ thread_id }}', '{{ request.user }}', '{{messages_total}}');
