@@ -5,9 +5,9 @@
         {% if request.user.is_authenticated %}
             {% if request.user.username == post.user_post.username %}
 <!--                <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>-->
-                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, {{post.id}}, '{{username}}', 'true', {{ post.total_likes }})" open-atr="close">
+                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, {{post.id}}, '{{username}}', 'true', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
             {% else %}
-                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, {{post.id}}, '{{username}}', 'false', {{ post.total_likes }})" open-atr="close">
+                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, {{post.id}}, '{{username}}', 'false', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
             {% endif %}
         {% endif %}
         <div class="user"> Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> 
@@ -15,11 +15,11 @@
         </div>
     </div>
     <div class="auto-images" id="auto-images">
-        {% if post.video == '' %}
+        {% if post.image != "" %}
             <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.title}}" title="{{post.title}}">
         <!--    onclick="youps('{{ post.video }}')"-->
         {% else %}
-            <div id="video-placeholder" idv="{{ post.video }}"></div>
+            <img src="/media/images/no_image.png" width="auto" loading="lazy">
         {% endif %}
     </div>
     {% if request.user.is_authenticated %}

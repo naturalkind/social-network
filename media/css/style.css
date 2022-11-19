@@ -309,7 +309,16 @@ textarea, select, a.button {
     float: left;margin: 5px;width: 39px;height: 30px;
     background: url(/media/images/ADDICONvF.png);position: relative;background-size: cover;border: none;padding: 0;
 }
-
+#addImage{
+    cursor: pointer;
+    float: left;margin: 5px;width: 39px;height: 30px;
+    background: url(/media/images/ADDICONvF1.png);position: relative;background-size: cover;border: none;padding: 0;
+}
+#addAppend{
+    cursor: pointer;
+    float: left;margin: 5px;width: 39px;height: 30px;
+    background: url(/media/images/appendicon.png);position: relative;background-size: cover;border: none;padding: 0;
+}
 /* Animated throbber */
 html.js input.form-autocomplete {
     background-position: 100% 4px; /* LTR */
@@ -1020,6 +1029,10 @@ img#QR {
 
 
 @media only screen and (min-width : 200px){
+    div#error_msg {
+        font-size:45px;
+    }
+
     .cp-default .slide {
         width: 30px;
         height: 300px;
@@ -1290,6 +1303,12 @@ img#QR {
         right: 0;
         background: white;
         max-width: 100%;
+    }
+    img#image-user-profile {
+        min-height: 500px;
+    }
+    .uspgimg img{
+        height: 600px;
     }
     .uspgimg img{
         max-width: 900px;
@@ -1573,7 +1592,14 @@ img#QR {
     .enter {width:80px; height:80px;float: right;cursor: pointer;}
     
     .imglogo {height: 80px;}
-    
+    #addAppend {
+        width: 100px;
+        height: 80px;     
+    }
+    #addImage{
+        width: 100px;
+        height: 80px;    
+    }
     #userA,#addPost{
         width: 125px;
         height: 100px;
@@ -1585,7 +1611,17 @@ img#QR {
         width: 125px;
         height: 100px;
     }
+    #addImage:hover{
+        background: url(/media/images/ADDICONvF1.png)0 80px;position: relative;background-size: cover;border: none;padding: 0;
+        width: 100px;
+        height: 80px;
+    }    
     
+    #addAppend:hover{
+        background: url(/media/images/appendicon.png)0 80px;position: relative;background-size: cover;border: none;padding: 0;
+        width: 100px;
+        height: 80px;
+    }     
     #addPost:hover{
         background: url(/media/images/ADDICONvF.png)0 100px;position: relative;background-size: cover;border: none;padding: 0;
         width: 125px;
@@ -1637,6 +1673,9 @@ img#QR {
 }
 
 @media screen and (min-width: 1200px)  {
+    div#error_msg {
+        font-size:24px;
+    }
     .cp-default .slide {
         width: 30px;
         height: 200px;
@@ -1902,6 +1941,9 @@ img#QR {
         max-width: 800px;
         margin: 0 auto;
     }
+    img#image-user-profile {
+        min-height: 300px;
+    }
     .uspgimg img {
         height: 300px;
     }
@@ -2095,7 +2137,7 @@ img#QR {
         width: 100%;
         margin: 15px auto;
     }
-    #userA, #addPost {
+    #userA, #addPost, #addImage, #addAppend {
         width: 39px;
         height: 30px;
     }
@@ -2117,6 +2159,24 @@ img#QR {
         width: 39px;
         height: 30px;
     }
+    #addImage:hover{
+        background: url(/media/images/ADDICONvF1.png)0 30px;
+        position: relative;
+        background-size: cover;
+        border: none;
+        padding: 0;
+        width: 39px;
+        height: 30px;
+    }
+    #addAppend:hover{
+        background: url(/media/images/appendicon.png)0 30px;
+        position: relative;
+        background-size: cover;
+        border: none;
+        padding: 0;
+        width: 39px;
+        height: 30px;    
+    }    
     .message .views-title {
         background: #507299;
         color: white;

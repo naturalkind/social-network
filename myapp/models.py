@@ -10,6 +10,7 @@ from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 import base64
 import re
+import uuid, os
 
 # qr code
 import qrcode
@@ -26,6 +27,7 @@ class User(AbstractUser):
     relationship = models.ManyToManyField('self', through='Relationship',symmetrical=False, related_name='related_to')
     image_user = models.TextField(max_length=200, default="oneProf.png", verbose_name='Название картинки', blank=True)
     path_data = models.TextField(max_length=200, default="", verbose_name='Название каталога', blank=True)
+    color = models.TextField(max_length=200, default="#507299", verbose_name='Цвет шрифта', blank=False)
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
         
@@ -68,6 +70,25 @@ class User(AbstractUser):
     
     def natural_key(self):
         return (self.image_user, self.path_data, self.id, self.username)
+    
+    def save(self, *args, **kwargs):
+        if self.path_data == "":
+            self.path_data = str(uuid.uuid4())[:12]
+            if not os.path.exists(f"media/data_image/{self.path_data}"):
+                os.makedirs(f"media/data_image/{self.path_data}")
+        return super(User, self).save(*args, **kwargs)
+
+    @property
+    def total_friends(self):
+        """
+        Likes for the company
+        :return: Integer: Likes for the company
+        """
+        return self.get_friends().count()
+
+    @property
+    def total_likes(self):
+        return Post.objects.filter(likes=self).count()
         
 def generate_qr(sender, instance, created, **kwargs):
     print (instance.id, instance.username, instance.path_data)
@@ -85,7 +106,7 @@ class Relationship(models.Model):
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=50, default="", verbose_name='Загаловок', blank=True)
+    title = models.CharField(max_length=999999, default="", verbose_name='Загаловок', blank=True)
     video = models.TextField(max_length=200, default="", verbose_name='Название видео', blank=True)
     image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
     path_data = models.TextField(max_length=200, default="", verbose_name='Расположение', blank=True)

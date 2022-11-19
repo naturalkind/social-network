@@ -106,6 +106,7 @@ window.onscroll = scroll;
 function event_topbt(e){
     var block_post = document.getElementById('block-post');
     console.log("event_topbt", topbt_indicator, _page);
+    try{document.getElementById('tooltip').remove();}catch(err) {}
     if (topbt_indicator == "editPROFF") {
         document.getElementsByClassName("edprof")[0].setAttribute("open-atr", "close");
         handler(e);                     
@@ -193,7 +194,7 @@ window.addEventListener("popstate", function(e) {
         users()
     } else if (state.view == "mesID") {
         handler("o");
-        console.log("CHAT")
+//        console.log("CHAT")
     }
 });
 
@@ -223,7 +224,7 @@ function openMenu(self){
 }
 
 
-// пользователи
+/// пользователи
 function users(_type){
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
     window.scrollTo(0, 0);
@@ -254,7 +255,7 @@ function users(_type){
 }
 
 
-// выйти
+/// выйти
 function quit(){
     var cont = document.querySelector('body'); // ищем элемент с id
     var http = createRequestObject();
@@ -334,7 +335,7 @@ function addREG(){
 //}
 
 
-//function OnOn(id) {
+///function OnOn(id) {
 //    canvas = document.getElementById('canvas_'+id);
 //    context = canvas.getContext('2d');
 //    var input = document.getElementById('id_image_'+id);
@@ -355,20 +356,13 @@ function addREG(){
 //}
 
 function load_image_profile(self, id) {
-    console.log(self, id)
+//    console.log(self, id)
     var input = document.getElementById('id_image_'+id);
     file = input.files;
     try {
         reader.readAsDataURL(file[0]);
         reader.onload = function (e) {
                     var im = document.getElementById("image-user-profile");
-//                    im = new Image();
-//                    im.onload = function (e) {
-//                        canvas.width = im.width;
-//                        canvas.height = im.height;
-//                        context.drawImage(im, 0, 0, im.width, im.height);
-//                        dataURL_v1 = canvas.toDataURL("image/png");
-//                    };
                     dataURL_v1 = reader.result;
                     im.src = reader.result;
         };
@@ -387,12 +381,6 @@ function editPROFF(self){
             http.open('get', '/profile');
             http.onreadystatechange = function () {
             if(http.readyState == 4) {
-//                block_post.innerHTML = http.responseText;
-//                block_post.style.display = 'block';
-//                topbt.style.display = "block";
-//                topbt.style.transform = 'rotate(90deg)';
-//                topbt_indicator = "editPROFF"
-//              
                 var self_coord = self.getBoundingClientRect();
                   
                 var color_picker = document.createElement('div');
@@ -404,16 +392,23 @@ function editPROFF(self){
                 var _coord = image_user_profile.getBoundingClientRect();
                 
                 var header_height = document.getElementById("header").getBoundingClientRect()["height"];
-                console.log("--------->", _coord, _coord["top"], header_height, self_coord);
+                console.log("--------->", _coord)//_coord, _coord["top"], header_height, self_coord);
+//                var center_pos = self_coord["left"]+(self_coord["width"]/2)
+//                center_pos = center_pos - (264/2)
+                
                 var z = document.createElement('div');
-                z.id = 'tooltip'//+user_id;
-                z.setAttribute("style", `top:${(_coord["top"]-header_height)}px; 
+                z.id = 'tooltip'//+user_id; (_coord["top"]-header_height) 
+                // ${_coord["height"]-(_coord["top"]-header_height)-self_coord["height"]}
+                //top:${_coord["top"]};
+                z.setAttribute("style", ` 
+                                         top:${_coord["height"]/2}px;
                                          left:${_coord["left"]}px;
                                          height: 0;
                                          width:${_coord["width"]}px;
                                          position:absolute;
                                          opacity: 1;
                                          padding:0;
+                                         max-width: 100%; 
                                          `)   //background:#1797a7; height:${_coord["height"]}px; 
                                               //top:${(_coord["top"]-header_height)}px; 
                                               //top:${self_coord["top"]}px; 
@@ -426,6 +421,11 @@ function editPROFF(self){
                 tooltipElem.id = 'YO2'//+user_id;
 //                tooltipElem.innerHTML = "<a>цвет имени</a>"
 //                _coord = self.getBoundingClientRect();
+//                tooltipElem.setAttribute("style", `
+//                                                   top:${_coord["top"]+_coord["height"]+header_height+10}px; 
+//                                                   left:${_coord["left"]}px;
+//                                                   position: fixed;
+//                                                    `)
                 tooltipElem.setAttribute("style", `
                                                    top:${_coord["top"]+_coord["height"]+header_height+10}px; 
                                                    left:${_coord["left"]}px;
@@ -463,81 +463,6 @@ function editPROFF(self){
         } else {
             document.location = link;
         }    
-//        var block_post = document.getElementById('block-post'); // ищем элемент с id
-//        var user_id = document.getElementById('user_id').innerText;
-//        var user_page_name = document.getElementById('user_page_name');
-//        var us_name_class = document.getElementsByClassName('us-name')[0];
-////        console.log(self, user_id, us_name_class, user_page_name);
-//        var uspgimg = document.getElementsByClassName('uspgimg')[0];
-//        
-//        // выбор цвета
-//        var color_picker = document.createElement('div');
-//        color_picker.id = 'color-picker';
-//        color_picker.className = "cp-default";
-// 
-//        // выпадающее сообщение
-//        var tooltipElem = document.createElement('div');
-//        tooltipElem.id = 'tooltip'//+user_id;
-//        var over = document.getElementById("user-page");  
-//        tooltipElem.appendChild(color_picker);
-//        over.appendChild(tooltipElem);
-//        uspgimg.appendChild(tooltipElem);
-//// ----------------------------------->
-        
-//        var img_icon_load = document.createElement("img");
-//        var img_icon_load = document.createElement("a");
-//        img_icon_load.id = "img_icon_load";
-//        img_icon_load.style.background = `url(/media/images/ADDICONvF.png)0 30px;`;
-//        img_icon_load.setAttribute('style', `background:url(/media/images/ADDICONvF.png)0 0px;
-//                                             background-size: cover;
-//                                             border: none;
-//                                             padding: 0;
-//                                             border-radius: 0px;
-//                                             `)
-//        img_icon_load.innerHTML = "img_icon_load";
-//                                             background-size: 100% 100%;
-//                                             width: 39px;
-//                                             height: 30px;
-                                             
-//        tooltipElem.appendChild(img_icon_load);                                             
-//        uspgimg.appendChild(img_icon_load);
-
-        // координаты кнопки редактировать профиль
-//        var coords_button = self.getBoundingClientRect()["top"];
-//        console.log(coords_button);
-
-
-//        over.appendChild(tooltipElem);
-//        uspgimg.appendChild(tooltipElem);
-        
-//        var coords = over.getBoundingClientRect();
-//        var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
-//        var top = over.offsetHeight+30;
-//        console.log(left, top)
-//        tooltipElem.style.left = left + 'px';
-//        tooltipElem.style.top = top + 'px';   
-  
-        
-//        var coords = over.getBoundingClientRect();
-//        var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
-//        if (left < 0) left = 0;
-//        var top = coords.top - tooltipElem.offsetHeight - 5;
-//        if (top < 0) {top = coords.top + over.offsetHeight + 5;}
-//        console.log(left, top)
-//        tooltipElem.style.left = left + 'px';
-//        tooltipElem.style.top = coords_button+ 50 + 'px';   
-//        
-//        self.setAttribute("open-atr", "open");
-//        ColorPicker(
-//            color_picker,
-//            function(hex, hsv, rgb) {
-//              //console.log(hsv.h, hsv.s, hsv.v);         // [0-359], [0-1], [0-1]
-//              console.log(rgb.r, rgb.g, rgb.b);         // [0-255], [0-255], [0-255]
-//              //document.body.style.backgroundColor = hex;        // #HEX
-//              //us_name_class.style.backgroundColor = hex;
-//              user_page_name.style.color = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-//              console.log(user_page_name.style.color);
-//        });                        
     } else {
         self.setAttribute("open-atr", "close");
         try {
@@ -558,7 +483,8 @@ function profilePOST(link){
     var linkfull = '/profile/?username='+link;
     var http = new XMLHttpRequest();
     if (http) {
-        event = { my_image: dataURL_v1 };
+        dataURL_v1 = typeof dataURL_v1 !== 'undefined' ?  dataURL_v1 : 'undefined';
+        event = { my_image: dataURL_v1, color: user_page_name.style.color };
         data = JSON.stringify(event);
         http.open('post', linkfull, true);
         http.setRequestHeader('X-CSRFToken', crsv);
@@ -770,7 +696,12 @@ function jsons(link, atr){
                             var g = JSON.parse(f.data);
                             len += g.length;
                             for (var R in g) {
-                                var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
+                                if (g[R].fields.image != "") {
+                                    var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
+                                } else {
+                                    var img = "/media/images/no_image.png";// + '.png';
+                                }
+                                
                                 html += `<li class='views-row' onmouseover='getIndex(this);'>
                                             <div class='field-image' atribut='${g[R].pk}'>
                                                 <img style='background:url("${img}");width:300px;height:230px;background-size: cover;'  
@@ -944,8 +875,31 @@ function OnOnreg() {
 
 /// добвать пост
 function addPost(){
+    try{document.getElementById('tooltip').remove();}catch(err) {}
     try{
-        html = '<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea></div><button onclick="send_wall()" type="button">ОТПРАВИТЬ</button></form></div>'; 
+        
+//        html = '<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea></div><button onclick="send_wall()" type="button">ОТПРАВИТЬ</button></form></div>'; 
+        html = `<div id="node">
+                    <form class="message_form" id="message_form" style="display: block;" id="formsend">
+                        <div class="field-image" style="width: auto;border: none;margin: 0 auto;">
+                            <div id="UploadBox">
+                                <span id="UploadArea"></span>
+                            </div>
+                            <input type="file" 
+                                   id="image_file" 
+                                   onchange="OnOnW()" 
+                                   style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
+                            <label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label>
+                            <div id="cn">
+                                <canvas id="canvas" width="0" height="0"></canvas>
+                            </div>
+                        </div>
+                        <div class="field-text">
+                            <textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea>
+                        </div>
+                        <button onclick="send_wall()" type="button">ОТПРАВИТЬ</button>
+                    </form>
+                </div>`; //<div id="addImage"></div>
         document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post');
         block_post.style.display = 'block';
@@ -1040,6 +994,97 @@ function reSend(user_id, post_id) {
     } 
 }
 
+
+
+//    console.log(link, username, del_indicator, like_count)
+//    if (self.getAttribute("open-atr")=="close") {
+//        self.style.transform = "rotate(90deg)"; 
+//        self.setAttribute("open-atr", "open")
+//        var tooltipElem = document.createElement('div');
+//        tooltipElem.id = 'tooltip';
+//        if (del_indicator == 'true') {
+//            var t = `<a id="deletepost" onclick="deletepost(this, ${link})" del-atr="false">УДАЛИТЬ</a>`;
+//        } else {
+//            var t = "";
+//        }
+//        tooltipElem.innerHTML = `<div id="post_like_block_${link}" style="width: 100%">
+//                                 ${t}
+//                                 <a onclick="LIKEOVER(${link})">понравилось ${like_count}</a>
+//                                 <a onclick="FRIENDS(${link})">отправить</a>
+//                                 </div>
+//                                `; //<a>статистика</a>
+//        
+//        var textElemv1 = document.createElement('a');
+//        textElemv1.id = 'close';
+//        textElemv1.onclick = function close() {
+//            self.style.transform = "rotate(0deg)"; 
+//            document.getElementById('tooltip').remove();
+//            self.setAttribute("open-atr", "close");
+//        }
+//        tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
+//        document.getElementById("breadcrumb").appendChild(tooltipElem);
+//        var coords = self.getBoundingClientRect();
+//        var left = coords.left + (self.offsetWidth - tooltipElem.offsetWidth) / 2;
+//        if (left < 0) left = 0;
+//        var top = coords.top - tooltipElem.offsetHeight - 5;
+//        if (top < 0) {top = coords.top + self.offsetHeight + 5;}
+//        tooltipElem.style.top = top+10 + 'px';   
+//        function test_scroll() {
+//            try{document.getElementById('tooltip').remove();
+//                self.setAttribute("open-atr", "close");
+//                self.style.transform = "rotate(0deg)"; 
+//                }catch(err) {}
+//            
+//        }   
+//        document.getElementById("block-post").onscroll = test_scroll;
+//        
+//    } else {
+//        self.style.transform = "rotate(0deg)"; 
+//        self.setAttribute("open-atr", "close")
+//        document.getElementById('tooltip').remove();
+//    }
+//}
+
+
+function FRIENDS_PAGE(link) {
+    console.log(link);
+    var tooltipElem = document.createElement('div');
+    tooltipElem.id = 'tooltip';
+    tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;top:0;")
+    var http = createRequestObject();
+    var linkfull = '/friends';
+    var html = ""
+    if (http) {
+        http.open('get', linkfull);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+        if (http.readyState == 4) {
+            var data = JSON.parse(http.responseText);
+            data = JSON.parse(data.data);
+            for (var z in data) {
+//                console.log(data[z].fields.image_user != "oneProf.png")
+                if (data[z].fields.image_user != "oneProf.png") {
+                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" >`;
+                } else {
+                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" >`;
+                }
+                html += div_image_user
+            }
+            tooltipElem.innerHTML = html;
+//            document.getElementById("DODO").appendChild(tooltipElem);
+            document.getElementById("DODO").insertBefore(tooltipElem, document.getElementById("DODO").firstChild);
+//            tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
+//            over.appendChild(tooltipElem);              
+//            tooltipElem.innerHTML = http.responseText;
+//            over.appendChild(tooltipElem);            
+        }
+    };
+    http.send(null);
+    } else {
+        document.location = link;
+    }
+}
+
 function FRIENDS(link) {
     console.log("OK");
     try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
@@ -1079,7 +1124,7 @@ function FRIENDS(link) {
 
 
 // меню 
-function menuset(self, link, username, del_indicator, like_count) {
+function menuset(self, link, username, del_indicator, like_count, total_friends) {
     console.log(link, username, del_indicator, like_count)
     if (self.getAttribute("open-atr")=="close") {
         self.style.transform = "rotate(90deg)"; 
@@ -1094,7 +1139,7 @@ function menuset(self, link, username, del_indicator, like_count) {
         tooltipElem.innerHTML = `<div id="post_like_block_${link}" style="width: 100%">
                                  ${t}
                                  <a onclick="LIKEOVER(${link})">понравилось ${like_count}</a>
-                                 <a onclick="FRIENDS(${link})">отправить</a>
+                                 <a onclick="FRIENDS(${link})">отправить ${total_friends}</a>
                                  </div>
                                 `; //<a>статистика</a>
         
@@ -1449,7 +1494,6 @@ function showContent(link, _type) {
                     navlis.appendChild(textElemv2, navlis.lastChild);
                     block_post.insertBefore(navlis, block_post.firstChild);
 //                    _type = typeof _type !== 'undefined' ?  _type : "javascript";
-                    console.log("```````````", innode, len, typeof innode == 'undefined')
                     if (innode == 0) {
                        textElemv1.style.display = 'none';
                        textElemv2.style.display = 'block';
@@ -1467,7 +1511,6 @@ function showContent(link, _type) {
                     }
                     textElemv2.onclick = function LISTING(){
                         if ((len-1)>=innode){
-                            console.log("```````````", innode, len);
                             try{
                                 innode++;
                                 var h = document.getElementsByClassName('field-image')[innode];
@@ -1527,6 +1570,21 @@ function activate_wall(user_name) {
                 } else {
                     var div_image_user = `<img src="/media/images/oneProf.png" width="30" height="30">`
                 }
+
+                if (message_data.image != ""){
+                    var div_image_post = `<img src="/media/data_image/${message_data.path_data}/${message_data.image}"
+                                                 height="auto" 
+                                                 width="auto" 
+                                                 onclick="showImg(this)" 
+                                                 class="wallpost">`;
+                                                 
+                } else {
+                    var div_image_post = `<img src="/media/images/no_image.png"
+                                                 height="auto" 
+                                                 width="auto" 
+                                                 onclick="showImg(this)" 
+                                                 class="wallpost">`;
+                }
                 
                 fc.innerHTML = `<div class="views-title" style="width: 100%;float: left;">
                                     <div class="user-cord" atribut="1165">
@@ -1539,11 +1597,7 @@ function activate_wall(user_name) {
                                     <span class="datetime">${date.getHours()}:${date.getMinutes()}</span>
                                 </div>
                                 <div class="field-image">
-                                    <img src="/media/data_image/${message_data.path_data}/${message_data.image}"
-                                         height="auto" 
-                                         width="auto" 
-                                         onclick="showImg(this)" 
-                                         class="wallpost">
+                                    ${div_image_post}
                                     <div id="body-post-wall">
                                         <div id="post_like_block_${message_data.id}" style="width: 100%">
                                             <img class="icon-like" 
@@ -1990,7 +2044,7 @@ function send_com(self, cip) {
 
         }
     } catch(e) {
-        console.log(cip, e);
+//        console.log(cip, e);
         zetr.setAttribute("indicator-ws", "open");
         ws_dict[cip] = activate_com(cip);
         ws_dict[cip].send(data);

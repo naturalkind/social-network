@@ -333,13 +333,16 @@ def user(request):
         userP = User.objects.get(username=str(usn))
         data = json.loads(request.body)
         image_post = data['my_image']
-        imgstr = re.search(r'base64,(.*)', image_post).group(1)
-        nameFile = f"{str(uuid.uuid4())[:12]}_{str(auth.get_user(request).username)}.png"
-        img_file = open(f"media/data_image/{userP.path_data}/{nameFile}", 'wb+')
-        img_file.write(base64.b64decode(imgstr))
-        img_file.close()
-        crop(userP.path_data, nameFile, (150, 150))  
-        userP.image_user = nameFile
+        color = data['color']
+        if image_post != "undefined":
+            imgstr = re.search(r'base64,(.*)', image_post).group(1)
+            nameFile = f"{str(uuid.uuid4())[:12]}_{str(auth.get_user(request).username)}.png"
+            img_file = open(f"media/data_image/{userP.path_data}/{nameFile}", 'wb+')
+            img_file.write(base64.b64decode(imgstr))
+            img_file.close()
+            crop(userP.path_data, nameFile, (150, 150))  
+            userP.image_user = nameFile
+        userP.color = color
         userP.save()
     return render(request, 'profile.html', args)
 
@@ -528,7 +531,23 @@ def getlkpost(request,id):
     ps = Post.objects.all().filter(likes=user)
     for x in ps:
         pid = str(x.id)
-        li = f"""<li class="views-foll" width="600px"><div class="views-title" onclick="showContent('{pid}')">{x.title}</div><img src="/media/data_image/{x.path_data}/{x.image}" id="imgf" onclick="showContent('{pid}')"><img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{pid}" id="comment_image_id_{pid}" type-div="icon" indicator-ws="close" style="display:none;"></li>"""
+        if x.image != "":
+            image_div = f"""<img src="/media/data_image/{x.path_data}/{x.image}" id="imgf" onclick="showContent('{pid}')">"""
+        else:
+            image_div = f"""<img src="/media/images/no_image.png" id="imgf" onclick="showContent('{pid}')">"""
+        li = f"""<li class="views-foll" width="600px">
+                    <div class="views-title" onclick="showContent('{pid}')">{x.title}</div>
+                    {image_div}
+                    <img class="icon-like" 
+                         src="/media/images/mesvF.png" 
+                         onclick="comView(this)" 
+                         open-atr="close" 
+                         id-comment="{pid}" 
+                         id="comment_image_id_{pid}" 
+                         type-div="icon" 
+                         indicator-ws="close" 
+                         style="display:none;">
+                 </li>"""
         ht += li
 
     return HttpResponse(ht)

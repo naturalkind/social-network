@@ -29,7 +29,11 @@
                 <span class="datetime">{{ message.date_post|date:'H:i' }}</span> <!--{# {{ message.date_post|date:'d b o в H:i' }}#}-->
             </div>
             <div class="field-image" atribut="{{message.id}}">
-                <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy">
+                {% if message.image != "" %}
+                    <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy">
+                {% else %}
+                    <img src="/media/images/no_image.png" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy">
+                {% endif %}
             </div>
             <div id="body-post-wall">
                 <div id="post_like_block_{{message.id}}" style="width: 100%">
