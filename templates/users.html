@@ -5,7 +5,7 @@
         <span id="IOP" style="display: none">STOP</span>
     {% endif %}
     <div class="us-block" style="position: relative;" id="DODO" atr="users">
-    <p><a>все</a> / <a onclick="FRIENDS_PAGE({{username.id}})">друзья</a</p>
+    <div id="filter-users-page"><a onclick="FRIENDS_PAGE({{username.id}})">друзья {{username.total_friends}}</a></div>
     {% for x in users %}
         <div class="views-row" onclick="userPROFILE('{{x.id}}', 'javascript')">
             <div class="user-image">

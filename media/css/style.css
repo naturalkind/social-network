@@ -841,18 +841,6 @@ li.views-foll {
     float: left;
 }
 
-.fr-cell img {
-    max-height: 200px;
-    height: 100%;
-    max-width: 190px;
-}
-
-.fr-cell {
-    float: left;
-    margin: 5px;
-    width: 190px;
-}
-
 h2 {
     font-size: 40px;
     margin-top: 6px;
@@ -1029,6 +1017,9 @@ img#QR {
 
 
 @media only screen and (min-width : 200px){
+    div#filter-users-page {
+        font-size: 40px;
+    }
     div#error_msg {
         font-size:45px;
     }
@@ -1053,11 +1044,6 @@ img#QR {
         top: 55px;
         max-width: 960px;
     }
-    #tooltip img {
-        width: 60px;
-        height: 60px;
-    }
-
     #tooltip .user-cord {
         display: block;
         float: left;
@@ -1088,8 +1074,17 @@ img#QR {
         padding: 4px;
         margin: 13px 0px 13px 50px;
     }
+    .fr-cell img {
+        border-radius:10px;
+        max-height: 190px;
+        height: 100%;
+        max-width: 190px;
+    }
 
-    .fr-cell{
+    .fr-cell {
+        float: left;
+        margin: 5px;
+        width: 190px;
         font-size: 28px;
     }
     .large span{
@@ -1532,10 +1527,10 @@ img#QR {
     }
     #tooltip img {
         border-radius: 100px;
-        margin: 7px;
+        margin: 10px;
         float: left;
-        width: 70px;
-        height: 70px;
+        width: 115px;
+        height: 115px;
     }
     #image-user,
     .message .views-title img {
@@ -1673,6 +1668,14 @@ img#QR {
 }
 
 @media screen and (min-width: 1200px)  {
+    div#filter-users-page {
+        font-size: 20px;
+    }
+    #tooltip img {
+        margin: 5px;
+        width: 60px;
+        height: 60px;
+    }
     div#error_msg {
         font-size:24px;
     }
@@ -1724,9 +1727,19 @@ img#QR {
         padding: 4px;
         margin: 9px 0px 9px 50px;   
     }
-    .fr-cell{
-        font-size: 24px;
+    .fr-cell img {
+        border-radius:10px;
+        max-height: 150px;
+        height: 100%;
+        max-width: 150px;
     }
+
+    .fr-cell {
+        float: left;
+        margin: 5px;
+        width: 150px;
+        font-size: 24px;
+    }    
     .large .button {
         font-size: 23px;
         border: 1px solid #507299;

@@ -1048,9 +1048,14 @@ function reSend(user_id, post_id) {
 
 function FRIENDS_PAGE(link) {
     console.log(link);
+    document.body.style.overflow = 'hidden';
+    try{topbt.style.display = "block";
+        topbt.style.transform = 'rotate(90deg)';
+        topbt_indicator = "handler";
+    }catch(err) {}
     var tooltipElem = document.createElement('div');
     tooltipElem.id = 'tooltip';
-    tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;top:0;")
+    tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;")
     var http = createRequestObject();
     var linkfull = '/friends';
     var html = ""
@@ -1072,7 +1077,13 @@ function FRIENDS_PAGE(link) {
             }
             tooltipElem.innerHTML = html;
 //            document.getElementById("DODO").appendChild(tooltipElem);
-            document.getElementById("DODO").insertBefore(tooltipElem, document.getElementById("DODO").firstChild);
+//            document.getElementById("DODO").insertBefore(tooltipElem, document.getElementById("DODO").firstChild);
+            var node = document.createElement('div');
+            node.id = 'node';
+            var block_post = document.getElementById('block-post');
+            block_post.style.display = 'block';
+            node.appendChild(tooltipElem);
+            block_post.appendChild(node);
 //            tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
 //            over.appendChild(tooltipElem);              
 //            tooltipElem.innerHTML = http.responseText;
