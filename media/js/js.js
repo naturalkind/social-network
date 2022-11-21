@@ -925,7 +925,7 @@ function FRIENDS_PAGE(link, count_users) {
 //                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}<div id="user_friends_name">${data[z].fields.username}</div></div>`
                 //${data[z].fields.username}
             }
-            tooltipElem.innerHTML = `<h1>ДРУЗЬЯ ${count_users}</h1>`;
+            tooltipElem.innerHTML = `<h1 id="h1-friends">ДРУЗЬЯ ${count_users}</h1>`;
             tooltipElem.innerHTML += `<div id="friends_list">${html}</div>`;
 //            document.getElementById("DODO").appendChild(tooltipElem);
 //            document.getElementById("DODO").insertBefore(tooltipElem, document.getElementById("DODO").firstChild);

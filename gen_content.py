@@ -1,7 +1,7 @@
 import os
 import time
 import random
-from myapp.models import User, Post
+from myapp.models import User, Post, RELATIONSHIP_FOLLOWING
 
 class DATA(object):
    def __init__(self):
@@ -26,7 +26,6 @@ def cop(x, y):
      f_file = open(x, "rb").read()
      to_file = open(y,"wb").write(f_file)
 
-#print (dir(User))
 def gen_post():
     user_count = User.objects.count()
     U = User.objects.all()
@@ -53,13 +52,18 @@ def gen_post():
                 post.user_post = i
                 post.save()             
 
+
 def gen_like():
     print ("START")
     users_all = User.objects.all()
-    print (len(list(users_all)))
+    users_all_count = User.objects.all().count()
     posts_all = Post.objects.all()
-    print (len(list(posts_all)))
-    
+    for u in users_all:
+        file_path = random.choice(range(users_all_count))
+        if u.pk != file_path:
+            u.add_relationship(list(users_all)[file_path], RELATIONSHIP_FOLLOWING)
+            list(users_all)[file_path].add_relationship(u, RELATIONSHIP_FOLLOWING)
+    print (f"Пользоветели: {len(list(users_all))}; Посты: {len(list(posts_all))}")
     
 gen_like()    
 

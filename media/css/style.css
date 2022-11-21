@@ -522,10 +522,6 @@ li.views-row {
     height: auto;
 }
 
-.parchat {
-    font-size: 25px;
-}
-
 .parchat p { margin: 0 auto; }
 
 .new_message {
@@ -1017,6 +1013,13 @@ img#QR {
 
 
 @media only screen and (min-width : 200px){
+    .parchat {
+        font-size: 35px;
+    }
+    h1#h1-friends {
+        font-size: 40px;
+/*        font-size: 45px !important;*/
+    }
     div#filter-users-page {
         font-size: 40px;
     }
@@ -1116,6 +1119,7 @@ img#QR {
         font-size: 30px;
         color: #507299;
         font-family: sans-serif;
+/*        font-weight: bold;*/
     }
     p#post-text {
         font-size: 36px;
@@ -1665,6 +1669,12 @@ img#QR {
 }
 
 @media screen and (min-width: 1200px)  {
+    .parchat {
+        font-size: 22px;
+    }
+    h1#h1-friends {
+        font-size: 20px;
+    }
     div#filter-users-page {
         font-size: 20px;
     }
