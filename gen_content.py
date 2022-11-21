@@ -26,30 +26,40 @@ def cop(x, y):
      f_file = open(x, "rb").read()
      to_file = open(y,"wb").write(f_file)
 
-from myapp.models import User
 #print (dir(User))
-user_count = User.objects.count()
-U = User.objects.all()
-print (user_count)
+def gen_post():
+    user_count = User.objects.count()
+    U = User.objects.all()
+    print (user_count)
 
-def chunks(lst, count):
-    start = 0
-    for i in range(count):
-          stop = start + len(lst[i::count])
-          yield lst[start:stop]
-          start = stop 
-test = chunks(U, 5)
-for us in test:
-    for i in us:
-        for jj in range(10):
-            post = Post()
-            post.title = "test"
-            post.body = ""
-            file_path = random.choice(list(images.file.keys()))
-            old_name = images.file[file_path][0].split("/")[-1]#.split(".")[0]
-            cop(images.file[file_path][0], f"media/data_image/{i.path_data}/{old_name}")
-            post.image = old_name
-            post.path_data = str(i.path_data)
-            post.user_post = i
-            post.save()             
+    def chunks(lst, count):
+        start = 0
+        for i in range(count):
+              stop = start + len(lst[i::count])
+              yield lst[start:stop]
+              start = stop 
+    test = chunks(U, 5)
+    for us in test:
+        for i in us:
+            for jj in range(10):
+                post = Post()
+                post.title = "test"
+                post.body = ""
+                file_path = random.choice(list(images.file.keys()))
+                old_name = images.file[file_path][0].split("/")[-1]#.split(".")[0]
+                cop(images.file[file_path][0], f"media/data_image/{i.path_data}/{old_name}")
+                post.image = old_name
+                post.path_data = str(i.path_data)
+                post.user_post = i
+                post.save()             
+
+def gen_like():
+    print ("START")
+    users_all = User.objects.all()
+    print (len(list(users_all)))
+    posts_all = Post.objects.all()
+    print (len(list(posts_all)))
+    
+    
+gen_like()    
 

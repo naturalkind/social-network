@@ -536,7 +536,7 @@ def getlkpost(request,id):
         else:
             image_div = f"""<img src="/media/images/no_image.png" id="imgf" onclick="showContent('{pid}')">"""
         li = f"""<li class="views-foll" width="600px">
-                    <div class="views-title" onclick="showContent('{pid}')">{x.title}</div>
+                    <div class="views-title" onclick="showContent('{pid}')">{x.body}</div>
                     {image_div}
                     <img class="icon-like" 
                          src="/media/images/mesvF.png" 

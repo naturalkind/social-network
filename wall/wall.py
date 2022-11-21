@@ -56,6 +56,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             if event == "wallpost":
                     user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)
                     post = Post()
+                    print (".................", response["title"])
                     post.title = response["title"]
                     post.body = response["body"]
                     post.image = self.namefile
@@ -70,7 +71,6 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                              "text":response["body"],
                              "user_post": str(self.sender_name),
                              "user_id": self.sender_id,
-                             "title": response["title"],
                              "id": post.id,
                              "image_user" : self.image_user, 
                              "path_data" : self.path_data,

@@ -16,7 +16,7 @@
     </div>
     <div class="auto-images" id="auto-images">
         {% if post.image != "" %}
-            <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.title}}" title="{{post.title}}">
+            <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.body}}" title="{{post.body}}">
         <!--    onclick="youps('{{ post.video }}')"-->
         {% else %}
             <img src="/media/images/no_image.png" width="auto" loading="lazy">
@@ -42,7 +42,7 @@
     <div class="about">
         <p id="post-text">{{post.body|linebreaksbr}}</p>
 <!--    safe|    -->
-        {% if username %}
+        {% if request.user.is_authenticated %}
             <div class="box-com" style="margin: 0 auto;">
                 <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px;">
                     {% for cm in comment %}

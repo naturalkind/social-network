@@ -1050,7 +1050,7 @@ img#QR {
         margin: 5px;
     }
     #tooltip a {
-        font-size: 30px;
+        font-size: 33px;
         margin: 8px auto;
         display: block;
         float: right;
@@ -1128,9 +1128,9 @@ img#QR {
         background: #507299;
         color: white;    
         float: left;
-        font-size: 23px;
+        font-size: 30px;
         padding: 4px;
-        width: 113px;
+        width: 150px;
     }
 
     img#comment-image {
@@ -1249,7 +1249,7 @@ img#QR {
         margin-left: 20px;
         border-radius: 7px;
         color: #6f6f6f;
-        font-size: 30px !important;
+        font-size: 33px !important;
     }
     
    .video_file,
@@ -1301,9 +1301,6 @@ img#QR {
     }
     img#image-user-profile {
         min-height: 500px;
-    }
-    .uspgimg img{
-        height: 600px;
     }
     .uspgimg img{
         max-width: 900px;
@@ -1464,8 +1461,8 @@ img#QR {
     }
     #breadcrumb .user {
         float: right;
-        font-size: 21px;
-        margin: 30px 10px;
+        font-size: 25px;
+        margin: 28px 10px;
     }
     textarea#id_body {
         width: 100%;
@@ -1514,7 +1511,7 @@ img#QR {
         background: #507299;
         color: white;
         border-radius: 0px;
-        font-size: 30px;
+        font-size: 33px;
     }
     
     .postview {
@@ -1537,8 +1534,8 @@ img#QR {
         border-radius: 100px;
         margin: 9px;
         float: left;
-        width: 60px;
-        height: 60px;
+        width: 64px;
+        height: 64px;
     }
     .usPr {
         height: 125px;

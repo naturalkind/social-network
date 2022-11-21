@@ -310,51 +310,6 @@ function addREG(){
 }
 
 
-/// редактировать профиль простой способ
-//function editPROFF (){
-//        document.body.style.overflow = 'hidden';
-//        var block_post = document.getElementById('block-post'); // ищем элемент с id
-//        block_post.style.overflow = 'auto';
-//        var http = createRequestObject();
-//            if( http )   {
-//                http.open('get', '/profile');
-//                http.onreadystatechange = function () {
-//                if(http.readyState == 4) {
-//                block_post.innerHTML = http.responseText;
-//                block_post.style.display = 'block';
-//                topbt.style.display = "block";
-//                topbt.style.transform = 'rotate(90deg)';
-//                topbt_indicator = "editPROFF"
-//                }
-//            };
-//            http.send(null);
-//        } else {
-//            document.location = link;
-//        }
-
-//}
-
-
-///function OnOn(id) {
-//    canvas = document.getElementById('canvas_'+id);
-//    context = canvas.getContext('2d');
-//    var input = document.getElementById('id_image_'+id);
-//    file = input.files;
-//    try {
-//        reader.readAsDataURL(file[0]);
-//        reader.onload = function (e) {
-//                    im = new Image();
-//                    im.onload = function (e) {
-//                        canvas.width = im.width;
-//                        canvas.height = im.height;
-//                        context.drawImage(im, 0, 0, im.width, im.height);
-//                        dataURL_v1 = canvas.toDataURL("image/png");
-//                    };
-//                    im.src = reader.result;
-//        };
-//    } catch (e) {}
-//}
-
 function load_image_profile(self, id) {
 //    console.log(self, id)
     var input = document.getElementById('id_image_'+id);
@@ -392,14 +347,10 @@ function editPROFF(self){
                 var _coord = image_user_profile.getBoundingClientRect();
                 
                 var header_height = document.getElementById("header").getBoundingClientRect()["height"];
-                console.log("--------->", _coord)//_coord, _coord["top"], header_height, self_coord);
-//                var center_pos = self_coord["left"]+(self_coord["width"]/2)
-//                center_pos = center_pos - (264/2)
+                console.log("--------->", _coord)
                 
                 var z = document.createElement('div');
-                z.id = 'tooltip'//+user_id; (_coord["top"]-header_height) 
-                // ${_coord["height"]-(_coord["top"]-header_height)-self_coord["height"]}
-                //top:${_coord["top"]};
+                z.id = 'tooltip';
                 z.setAttribute("style", ` 
                                          top:${_coord["height"]/2}px;
                                          left:${_coord["left"]}px;
@@ -442,8 +393,6 @@ function editPROFF(self){
 //                console.log(coords_button);
 //                
 //                over.appendChild(tooltipElem);
-//                
-//                tooltipElem.style.top = coords_button+ 50 + 'px';   
                 
                 self.setAttribute("open-atr", "open");
                 topbt_indicator = "editPROFF"
@@ -535,30 +484,6 @@ function userPROFILE(link, _type){
         document.location = link;
     }
 }
-
-
-// простая версия
-
-//function profilePOST(link){
-//    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-//    var linkfull = '/profile/?username='+link;
-//    var http = new XMLHttpRequest();
-//    if (http) {
-//        event = { my_image: dataURL_v1 };
-//        data = JSON.stringify(event);
-//        http.open('post', linkfull, true);
-//        http.setRequestHeader('X-CSRFToken', crsv);
-//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-//        http.onreadystatechange = function () {
-//            if (http.readyState == 4) {
-//                alert('Все загружено!!!')
-//            }
-//        };
-//        http.send(data);
-//    } else {
-//        document.location = link;
-//    }
-//}
 
 
 function getNumEnding(iNumber, aEndings) {
@@ -877,8 +802,6 @@ function OnOnreg() {
 function addPost(){
     try{document.getElementById('tooltip').remove();}catch(err) {}
     try{
-        
-//        html = '<div id="node"><form class="message_form" id="message_form" style="display: block;" id="formsend"><div class="field-image" style="width: auto;border: none;margin: 0 auto;"><div id="UploadBox"><span id="UploadArea"></span></div><input type="file" id="image_file" onchange="OnOnW()" style="overflow: hidden;z-index: -1;opacity: 0;display: none;"><label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label><div id="cn"><canvas id="canvas" width="0" height="0"></canvas></div></div><div class="field-text"><textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea></div><button onclick="send_wall()" type="button">ОТПРАВИТЬ</button></form></div>'; 
         html = `<div id="node">
                     <form class="message_form" id="message_form" style="display: block;" id="formsend">
                         <div class="field-image" style="width: auto;border: none;margin: 0 auto;">
@@ -899,7 +822,7 @@ function addPost(){
                         </div>
                         <button onclick="send_wall()" type="button">ОТПРАВИТЬ</button>
                     </form>
-                </div>`; //<div id="addImage"></div>
+                </div>`; 
         document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post');
         block_post.style.display = 'block';
@@ -909,8 +832,7 @@ function addPost(){
         topbt.style.display = "block";
     } catch (err){}
 }
-//<div id="send"><img src="/media/images/cloud.png" onclick="send_wall()" id="send-img"></div>
-//<button onclick="createMES()">ОТПРАВИТЬ</button>
+
 
 // простая версия репоста
 function rpPost(self, link, us) {
@@ -937,27 +859,6 @@ function rpPost(self, link, us) {
     } 
 } 
 
-
-//function profilePOST(link){
-//    var crsv = document.getElementsByName('csrfmiddlewaretoken')[0].value; // токен
-//    var linkfull = '/profile/?username='+link;
-//    var http = new XMLHttpRequest();
-//    if (http) {
-//        event = { my_image: dataURL_v1 };
-//        data = JSON.stringify(event);
-//        http.open('post', linkfull, true);
-//        http.setRequestHeader('X-CSRFToken', crsv);
-//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-//        http.onreadystatechange = function () {
-//            if (http.readyState == 4) {
-//                alert('Все загружено!!!')
-//            }
-//        };
-//        http.send(data);
-//    } else {
-//        document.location = link;
-//    }
-//}
 
 function getCookie(name) {
     var cookieValue = null;
@@ -989,64 +890,11 @@ function reSend(user_id, post_id) {
 //                console.log(http.responseText);
             }
         }
-        //)
         http.send(JSON.stringify({"user_id":user_id, "post_id":post_id}));   
     } 
 }
 
-
-
-//    console.log(link, username, del_indicator, like_count)
-//    if (self.getAttribute("open-atr")=="close") {
-//        self.style.transform = "rotate(90deg)"; 
-//        self.setAttribute("open-atr", "open")
-//        var tooltipElem = document.createElement('div');
-//        tooltipElem.id = 'tooltip';
-//        if (del_indicator == 'true') {
-//            var t = `<a id="deletepost" onclick="deletepost(this, ${link})" del-atr="false">УДАЛИТЬ</a>`;
-//        } else {
-//            var t = "";
-//        }
-//        tooltipElem.innerHTML = `<div id="post_like_block_${link}" style="width: 100%">
-//                                 ${t}
-//                                 <a onclick="LIKEOVER(${link})">понравилось ${like_count}</a>
-//                                 <a onclick="FRIENDS(${link})">отправить</a>
-//                                 </div>
-//                                `; //<a>статистика</a>
-//        
-//        var textElemv1 = document.createElement('a');
-//        textElemv1.id = 'close';
-//        textElemv1.onclick = function close() {
-//            self.style.transform = "rotate(0deg)"; 
-//            document.getElementById('tooltip').remove();
-//            self.setAttribute("open-atr", "close");
-//        }
-//        tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
-//        document.getElementById("breadcrumb").appendChild(tooltipElem);
-//        var coords = self.getBoundingClientRect();
-//        var left = coords.left + (self.offsetWidth - tooltipElem.offsetWidth) / 2;
-//        if (left < 0) left = 0;
-//        var top = coords.top - tooltipElem.offsetHeight - 5;
-//        if (top < 0) {top = coords.top + self.offsetHeight + 5;}
-//        tooltipElem.style.top = top+10 + 'px';   
-//        function test_scroll() {
-//            try{document.getElementById('tooltip').remove();
-//                self.setAttribute("open-atr", "close");
-//                self.style.transform = "rotate(0deg)"; 
-//                }catch(err) {}
-//            
-//        }   
-//        document.getElementById("block-post").onscroll = test_scroll;
-//        
-//    } else {
-//        self.style.transform = "rotate(0deg)"; 
-//        self.setAttribute("open-atr", "close")
-//        document.getElementById('tooltip').remove();
-//    }
-//}
-
-
-function FRIENDS_PAGE(link) {
+function FRIENDS_PAGE(link, count_users) {
     console.log(link);
     document.body.style.overflow = 'hidden';
     try{topbt.style.display = "block";
@@ -1069,13 +917,16 @@ function FRIENDS_PAGE(link) {
             for (var z in data) {
 //                console.log(data[z].fields.image_user != "oneProf.png")
                 if (data[z].fields.image_user != "oneProf.png") {
-                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" >`;
+                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
                 } else {
-                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" >`;
+                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
                 }
-                html += div_image_user
+                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}</div>`
+//                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}<div id="user_friends_name">${data[z].fields.username}</div></div>`
+                //${data[z].fields.username}
             }
-            tooltipElem.innerHTML = html;
+            tooltipElem.innerHTML = `<h1>ДРУЗЬЯ ${count_users}</h1>`;
+            tooltipElem.innerHTML += `<div id="friends_list">${html}</div>`;
 //            document.getElementById("DODO").appendChild(tooltipElem);
 //            document.getElementById("DODO").insertBefore(tooltipElem, document.getElementById("DODO").firstChild);
             var node = document.createElement('div');
@@ -1083,6 +934,7 @@ function FRIENDS_PAGE(link) {
             var block_post = document.getElementById('block-post');
             block_post.style.display = 'block';
             node.appendChild(tooltipElem);
+            block_post.innerHTML = "";
             block_post.appendChild(node);
 //            tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
 //            over.appendChild(tooltipElem);              
@@ -1459,10 +1311,12 @@ function getIndex(node) {
         len = childs.length;
     if (node == childs[i]) break;
     }
+//    console.log(node, i)
     return  innode=i;
 }
 
 function showContent(link, _type) {
+    console.log(innode, len)
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
     try{document.getElementById('tooltip').remove();}catch(err) {}
     
@@ -1560,6 +1414,7 @@ function activate_wall(user_name) {
         ws_wall.onmessage = function(event) {
             var fc = document.createElement('div');
             fc.className = 'message';
+            fc.setAttribute("onmouseover", "getIndex(this);");
             var message_data = JSON.parse(event.data);
             if (message_data["status"]=="wallpost") {
                 var date = new Date(message_data.timestamp*1000);
@@ -1607,7 +1462,7 @@ function activate_wall(user_name) {
                                     </div>
                                     <span class="datetime">${date.getHours()}:${date.getMinutes()}</span>
                                 </div>
-                                <div class="field-image">
+                                <div class="field-image" atribut="${message_data.id}">
                                     ${div_image_post}
                                     <div id="body-post-wall">
                                         <div id="post_like_block_${message_data.id}" style="width: 100%">
@@ -1658,6 +1513,14 @@ function activate_wall(user_name) {
                     console.log(conversation.children, conversation.children[innode]);
                     conversation.children[innode].remove();
                     handler(0);
+                }
+                
+                if (_page=="user") {
+                        history.pushState({"view": "user", 
+                                           'lk': `/user/${document.getElementById("user_id").innerText}` }, 
+                                            null, `/user/${document.getElementById("user_id").innerText}`);
+                } else if(_page=="wallpost") {
+                    history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
                 }
                 
             } else if (message_data["status"]=="MoreData") {

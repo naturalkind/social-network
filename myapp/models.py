@@ -153,7 +153,7 @@ class Post(models.Model):
         return self.likes.count()
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        self.slug = slugify(self.title[:40])
         super(Post, self).save(*args, **kwargs)
 
 
