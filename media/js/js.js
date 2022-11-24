@@ -830,6 +830,11 @@ function addPost(){
         topbt.style.transform = 'rotate(90deg)';
         topbt_indicator = "addPost";
         topbt.style.display = "block";
+        
+        function test_scroll() {
+        }
+        block_post.onscroll = test_scroll;   
+        
     } catch (err){}
 }
 
@@ -894,59 +899,195 @@ function reSend(user_id, post_id) {
     } 
 }
 
-function FRIENDS_PAGE(link, count_users) {
-    console.log(link);
-    document.body.style.overflow = 'hidden';
-    try{topbt.style.display = "block";
-        topbt.style.transform = 'rotate(90deg)';
-        topbt_indicator = "handler";
-    }catch(err) {}
-    var tooltipElem = document.createElement('div');
-    tooltipElem.id = 'tooltip';
-    tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;")
+// Стиль подписчиков
+function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
+    if(isLoading) return false;
+    page_num = typeof page_num !== 'undefined' ?  page_num : 1;
+    if (loadmore == "loadmore") {
+        var div_iop2 = document.getElementById("IOP2");
+        var block_post = document.getElementById('friends_list');
+    } else { 
+        var block_post = document.getElementById('block-post');
+        block_post.innerHTML = "";
+        var div_iop2 = document.createElement("div");
+        div_iop2.id = "IOP2";
+        document.body.style.overflow = 'hidden';
+        var tooltipElem = document.createElement('div');
+        tooltipElem.id = 'tooltip';
+        tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;")
+        
+    }
+    document.getElementById("block-post").scrollTo(0,0);
     var http = createRequestObject();
-    var linkfull = '/friends';
-    var html = ""
+    var linkfull = '/friends/'+ link + "/?page="+page_num;
     if (http) {
         http.open('get', linkfull);
         http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         http.onreadystatechange = function () {
-        if (http.readyState == 4) {
-            var data = JSON.parse(http.responseText);
-            data = JSON.parse(data.data);
-            for (var z in data) {
-//                console.log(data[z].fields.image_user != "oneProf.png")
-                if (data[z].fields.image_user != "oneProf.png") {
-                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
-                } else {
-                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
+            if (http.readyState == 4) {
+                var html = ""
+                var data_0 = JSON.parse(http.responseText);
+                all_pages = data_0.all_pages; 
+                data = JSON.parse(data_0.data);
+                               
+                for (var z in data) {
+                    if (data[z].fields.image_user != "oneProf.png") {
+                        var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
+                    } else {
+                        var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
+                    }
+                    html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}</div>`
                 }
-                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}</div>`
-//                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}<div id="user_friends_name">${data[z].fields.username}</div></div>`
-                //${data[z].fields.username}
+                if (loadmore == "loadmore") {
+                    block_post.innerHTML += html; 
+                    div_iop2.innerText = data_0.op1; 
+                } else { 
+                
+                    tooltipElem.innerHTML = `<h1 id="h1-friends">ДРУЗЬЯ ${count_users}</h1>`;
+                    tooltipElem.innerHTML += `<div id="friends_list">${html}</div>`;
+                    var node = document.createElement('div');
+                    node.id = 'node';
+                    node.appendChild(tooltipElem);
+                    block_post.appendChild(node);         
+                              
+                    block_post.style.display = 'block';
+                    main_wrapper.style.opacity = 0.2;
+                    topbt.style.display = "block"
+                    topbt.style.transform = 'rotate(90deg)';
+                    topbt_indicator = "foll";
+                    div_iop2.innerText = data_0.op1;
+                    block_post.appendChild(div_iop2);
+                }
+
+                //------------------------------->
+                function getScrollPercent() {
+                    var h = document.getElementById("block-post"), 
+                        b = document.body,
+                        st = 'scrollTop',
+                        sh = 'scrollHeight';
+                    return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+                }                
+                function test_scroll() {
+                    processed_page = getScrollPercent();
+                    if (div_iop2.innerText!="STOP") {
+                        if (processed_page >= 80) {
+                            FRIENDS_PAGE(link, count_users, div_iop2.innerText, "loadmore");
+                            isLoading = true;
+                        }
+                    }
+                    
+                }
+                isLoading = false;   
+                document.getElementById("block-post").onscroll = test_scroll;                
+                //
             }
-            tooltipElem.innerHTML = `<h1 id="h1-friends">ДРУЗЬЯ ${count_users}</h1>`;
-            tooltipElem.innerHTML += `<div id="friends_list">${html}</div>`;
-//            document.getElementById("DODO").appendChild(tooltipElem);
-//            document.getElementById("DODO").insertBefore(tooltipElem, document.getElementById("DODO").firstChild);
-            var node = document.createElement('div');
-            node.id = 'node';
-            var block_post = document.getElementById('block-post');
-            block_post.style.display = 'block';
-            node.appendChild(tooltipElem);
-            block_post.innerHTML = "";
-            block_post.appendChild(node);
-//            tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
-//            over.appendChild(tooltipElem);              
-//            tooltipElem.innerHTML = http.responseText;
-//            over.appendChild(tooltipElem);            
-        }
-    };
-    http.send(null);
+        };
+        http.send(null);
     } else {
         document.location = link;
     }
 }
+
+//function FRIENDS_PAGE(link, count_users) {
+//    console.log(link);
+//    document.body.style.overflow = 'hidden';
+//    try{topbt.style.display = "block";
+//        topbt.style.transform = 'rotate(90deg)';
+//        topbt_indicator = "handler";
+//    }catch(err) {}
+//    var tooltipElem = document.createElement('div');
+//    tooltipElem.id = 'tooltip';
+//    tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;")
+//    var http = createRequestObject();
+//    var linkfull = '/friends/?page=1';
+//    var html = ""
+//    if (http) {
+//        http.open('get', linkfull);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//        if (http.readyState == 4) {
+//            var data = JSON.parse(http.responseText);
+//            data = JSON.parse(data.data);
+//            for (var z in data) {
+//                if (data[z].fields.image_user != "oneProf.png") {
+//                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
+//                } else {
+//                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
+//                }
+//                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}</div>`
+//            }
+//            tooltipElem.innerHTML = `<h1 id="h1-friends">ДРУЗЬЯ ${count_users}</h1>`;
+//            tooltipElem.innerHTML += `<div id="friends_list">${html}</div>`;
+//            var node = document.createElement('div');
+//            node.id = 'node';
+//            var block_post = document.getElementById('block-post');
+//            block_post.style.display = 'block';
+//            node.appendChild(tooltipElem);
+//            block_post.innerHTML = "";
+//            block_post.appendChild(node);
+//            
+//        }
+//    };
+//    http.send(null);
+//    } else {
+//        document.location = link;
+//    }
+//}
+
+
+//function FRIENDS_PAGE(link, count_users) {
+//    console.log(link);
+//    document.body.style.overflow = 'hidden';
+//    try{topbt.style.display = "block";
+//        topbt.style.transform = 'rotate(90deg)';
+//        topbt_indicator = "handler";
+//    }catch(err) {}
+//    var tooltipElem = document.createElement('div');
+//    tooltipElem.id = 'tooltip';
+//    tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;")
+//    var http = createRequestObject();
+//    var linkfull = '/friends';
+//    var html = ""
+//    if (http) {
+//        http.open('get', linkfull);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//        if (http.readyState == 4) {
+//            var data = JSON.parse(http.responseText);
+//            data = JSON.parse(data.data);
+//            for (var z in data) {
+////                console.log(data[z].fields.image_user != "oneProf.png")
+//                if (data[z].fields.image_user != "oneProf.png") {
+//                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
+//                } else {
+//                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
+//                }
+//                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}</div>`
+////                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}<div id="user_friends_name">${data[z].fields.username}</div></div>`
+//                //${data[z].fields.username}
+//            }
+//            tooltipElem.innerHTML = `<h1 id="h1-friends">ДРУЗЬЯ ${count_users}</h1>`;
+//            tooltipElem.innerHTML += `<div id="friends_list">${html}</div>`;
+////            document.getElementById("DODO").appendChild(tooltipElem);
+////            document.getElementById("DODO").insertBefore(tooltipElem, document.getElementById("DODO").firstChild);
+//            var node = document.createElement('div');
+//            node.id = 'node';
+//            var block_post = document.getElementById('block-post');
+//            block_post.style.display = 'block';
+//            node.appendChild(tooltipElem);
+//            block_post.innerHTML = "";
+//            block_post.appendChild(node);
+////            tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
+////            over.appendChild(tooltipElem);              
+////            tooltipElem.innerHTML = http.responseText;
+////            over.appendChild(tooltipElem);            
+//        }
+//    };
+//    http.send(null);
+//    } else {
+//        document.location = link;
+//    }
+//}
 
 function FRIENDS(link) {
     console.log("OK");
@@ -1102,23 +1243,88 @@ function addfollow(self, link, us, id){
     }
 }
 
-function foll(link){
-    document.body.style.overflow = 'hidden';
-    var block_post = document.getElementById('block-post');
+// подписчики
+function foll(link, page_num, loadmore){
+    if(isLoading) return false;
+    page_num = typeof page_num !== 'undefined' ?  page_num : 1;
+    if (loadmore == "loadmore") {
+        var div_iop2 = document.getElementById("IOP2");
+        var block_post = document.getElementById('foll');
+    } else { 
+        var block_post = document.getElementById('block-post');
+        var div_iop2 = document.createElement("div");
+        div_iop2.id = "IOP2";
+        document.body.style.overflow = 'hidden';
+    }
+    document.getElementById("block-post").scrollTo(0,0);
     var http = createRequestObject();
-    var linkfull = '/follow/'+ link;
+    var linkfull = '/follow/'+ link + "/?page="+page_num;
     if (http) {
         http.open('get', linkfull);
         http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
-                block_post.innerHTML = http.responseText;
-                block_post.style.display = 'block';
-                main_wrapper.style.opacity = 0.2;
-                topbt.style.display = "block"
-                topbt.style.transform = 'rotate(90deg)';
-                topbt_indicator = "foll";
-                //history.pushState({"view": "follow", 'lk': linkfull  }, null, linkfull);
+                var f = JSON.parse(http.responseText);
+                var g = JSON.parse(f.data);
+                len += g.length;
+                all_pages = f.all_pages;
+                var html = "";
+                for (var R in g) {
+                    if (g[R].fields.image_user!="oneProf.png") {
+                           var div_image_user = `<img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
+                                                      width='180' 
+                                                      height='180' 
+                                                      loading='lazy'>`;
+                    } else {
+                            var div_image_user = `<img src='/media/images/oneProf.png' 
+                                                      width='180' 
+                                                      height='180' 
+                                                      loading='lazy'>`;
+                    }       
+                   if (g[R].fields.username.length>15) {
+                       var tuser =  g[R].fields.username.slice(0,10) + "...";
+                    } else {
+                        var tuser = g[R].fields.username;
+                    }            
+                    html += `<div class="fr-cell">
+                              <a onclick='userPROFILE(${g[R].pk})' style="color:#ffffff">
+                              ${div_image_user}${tuser}</a></div>`   
+                }
+                if (loadmore == "loadmore") {
+                    block_post.innerHTML += html; 
+                    div_iop2.innerText = f.op1; 
+                } else { 
+                    block_post.innerHTML = `<div id='foll'>${html}</div>`;
+                    block_post.style.display = 'block';
+                    main_wrapper.style.opacity = 0.2;
+                    topbt.style.display = "block"
+                    topbt.style.transform = 'rotate(90deg)';
+                    topbt_indicator = "foll";
+                    div_iop2.innerText = f.op1;
+                    block_post.appendChild(div_iop2);
+                }
+
+                //------------------------------->
+                function getScrollPercent() {
+                    var h = document.getElementById("block-post"), 
+                        b = document.body,
+                        st = 'scrollTop',
+                        sh = 'scrollHeight';
+                    return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+                }                
+                function test_scroll() {
+                    processed_page = getScrollPercent();
+                    if (div_iop2.innerText!="STOP") {
+                        if (processed_page >= 80) {
+                            foll(link, div_iop2.innerText, "loadmore");
+                            isLoading = true;
+                        }
+                    }
+                    
+                }
+                isLoading = false;   
+                document.getElementById("block-post").onscroll = test_scroll;                
+                //
             }
         };
         http.send(null);
@@ -1127,23 +1333,88 @@ function foll(link){
     }
 }
 
-function folls(link){
-    document.body.style.overflow = 'hidden';
-    var block_post = document.getElementById('block-post');
+// подписан 
+function folls(link, page_num, loadmore){
+    if(isLoading) return false;
+    page_num = typeof page_num !== 'undefined' ?  page_num : 1;
+    if (loadmore == "loadmore") {
+        var div_iop2 = document.getElementById("IOP2");
+        var block_post = document.getElementById('foll');
+    } else { 
+        var block_post = document.getElementById('block-post');
+        var div_iop2 = document.createElement("div");
+        div_iop2.id = "IOP2";
+        document.body.style.overflow = 'hidden';
+    }
+    document.getElementById("block-post").scrollTo(0,0);
     var http = createRequestObject();
-    var linkfull = '/follows/'+ link;
+    var linkfull = '/follows/'+ link + "/?page="+page_num;
     if (http) {
         http.open('get', linkfull);
         http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
-                block_post.innerHTML = http.responseText;
-                block_post.style.display = 'block';
-                main_wrapper.style.opacity = 0.2;
-                topbt.style.display = "block"
-                topbt.style.transform = 'rotate(90deg)';
-                topbt_indicator = "foll";
-                //history.pushState({"view": "follows", 'lk': linkfull  }, null, linkfull);
+                var f = JSON.parse(http.responseText);
+                var g = JSON.parse(f.data);
+                len += g.length;
+                all_pages = f.all_pages;
+                var html = "";
+                for (var R in g) {
+                    if (g[R].fields.image_user!="oneProf.png") {
+                           var div_image_user = `<img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
+                                                      width='180' 
+                                                      height='180' 
+                                                      loading='lazy'>`;
+                    } else {
+                            var div_image_user = `<img src='/media/images/oneProf.png' 
+                                                      width='180' 
+                                                      height='180' 
+                                                      loading='lazy'>`;
+                    }       
+                   if (g[R].fields.username.length>15) {
+                       var tuser =  g[R].fields.username.slice(0,10) + "...";
+                    } else {
+                        var tuser = g[R].fields.username;
+                    }            
+                    html += `<div class="fr-cell">
+                              <a onclick='userPROFILE(${g[R].pk})' style="color:#ffffff">
+                              ${div_image_user}${tuser}</a></div>`   
+                }
+                if (loadmore == "loadmore") {
+                    block_post.innerHTML += html; 
+                    div_iop2.innerText = f.op1; 
+                } else { 
+                    block_post.innerHTML = `<div id='foll'>${html}</div>`;
+                    block_post.style.display = 'block';
+                    main_wrapper.style.opacity = 0.2;
+                    topbt.style.display = "block"
+                    topbt.style.transform = 'rotate(90deg)';
+                    topbt_indicator = "foll";
+                    div_iop2.innerText = f.op1;
+                    block_post.appendChild(div_iop2);
+                }
+
+                //------------------------------->
+                function getScrollPercent() {
+                    var h = document.getElementById("block-post"), 
+                        b = document.body,
+                        st = 'scrollTop',
+                        sh = 'scrollHeight';
+                    return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+                }                
+                function test_scroll() {
+                    processed_page = getScrollPercent();
+                    if (div_iop2.innerText!="STOP") {
+                        if (processed_page >= 80) {
+                            folls(link, div_iop2.innerText, "loadmore");
+                            isLoading = true;
+                        }
+                    }
+                    
+                }
+                isLoading = false;   
+                document.getElementById("block-post").onscroll = test_scroll;                
+                //
             }
         };
         http.send(null);
@@ -1151,6 +1422,8 @@ function folls(link){
         document.location = link;
     }
 }
+
+/////////////////////////////
 
 
 // нарезка файлов 
@@ -1184,6 +1457,11 @@ function getlkpost(link){
                 topbt.style.display = "block";
                 topbt.style.transform = 'rotate(90deg)';
                 topbt_indicator = "foll";
+                
+                function test_scroll() {
+                    
+                }   
+                document.getElementById("block-post").onscroll = test_scroll;
             }
         };
         http.send(null);
@@ -1334,13 +1612,27 @@ function showContent(link, _type) {
             document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws", "open")  
         }
     } catch (e) {} 
+                    //------------------------------->
+    function getScrollPercent() {
+        var h = document.getElementById("block-post"), 
+            b = document.body,
+            st = 'scrollTop',
+            sh = 'scrollHeight';
+        return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+    }                
+    function test_scroll() {
+        processed_page = getScrollPercent();
+    }
+    try {
+        document.getElementById("block-post").onscroll = test_scroll;  
+    } catch (e) {}
     isLoading = false;
     //_page = "showContent";
     document.body.style.overflow = 'hidden';
     var http = createRequestObject();
     if(link != null) {
         if(http) {
-            http.open('get', '/data/'+link +"?_type="+_type); 
+            http.open('get', '/data/'+link +"?_type="+_type+"&page=-1"); 
             http.onreadystatechange = function () {
                 if(http.readyState == 4) {
                     var block_post = document.getElementById('block-post'); // ищем элемент с id
@@ -1398,6 +1690,28 @@ function showContent(link, _type) {
                     block_post.style.overflow = 'auto';
                     block_post.setAttribute('atr', 'con');
                     history.pushState({"view": "post", 'lk': `/data/${link}` }, null, `/data/${link}`);
+                    block_post.scrollTo(0,0);
+                    
+                    
+                    function getScrollPercent() {
+                        var h = document.getElementById("block-post"), 
+                            b = document.body,
+                            st = 'scrollTop',
+                            sh = 'scrollHeight';
+                        return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+                    }                
+                    function test_scroll() {
+                        processed_page = getScrollPercent();
+                        var cord_y = document.getElementById("_post_like_block_"+link).getBoundingClientRect()["y"];
+                        console.log(processed_page, (cord_y/document.getElementById("block-post")['scrollHeight'])*100)
+                    }
+                    block_post.onscroll = test_scroll;
+                    try { 
+                        document.getElementById("see_more_button").onclick = function() {
+                            console.log("see_more_button", document.getElementById("IOPcom").innerText);
+                            load_more_comment(link, document.getElementById("IOPcom").innerText)
+                        }
+                    } catch (e) {}
                 }
             };
             http.send(null);
@@ -1406,6 +1720,7 @@ function showContent(link, _type) {
         }
     }
 }
+
 
 var ws_wall;
 function activate_wall(user_name) {
@@ -1873,6 +2188,14 @@ function comView(z){
                         z.setAttribute("indicator-ws", "open")
                         ws_dict[link] = activate_com(link);
                     }
+                    
+                    try { 
+                        document.getElementById("see_more_button").onclick = function() {
+                            console.log("SCKKJDJKF", document.getElementById("IOPcom").innerText);
+                            load_more_comment(link, document.getElementById("IOPcom").innerText)
+                        }
+                    } catch (e) {}
+                    
                 }
             };
             http.send(null);
@@ -1883,6 +2206,62 @@ function comView(z){
         z.setAttribute("open-atr", "close");
         document.getElementById('box-com-'+link).remove();
     }
+}
+
+// загрузить еще комментарии
+function load_more_comment(link, page) {
+    if (document.getElementById("IOPcom").innerText != "STOP") {      
+        var http = createRequestObject();
+        if(link != null) {
+            if(http) {
+                http.open('get', '/comment/'+link +"?&page="+page); 
+                http.onreadystatechange = function () {
+                    if(http.readyState == 4) {
+    //                    document.getElementById("field-comment_"+link).insertBefore()
+                        var f = JSON.parse(http.responseText);
+                        var data = JSON.parse(f["data"]);
+                        console.log("load_more_comment................", data)
+                        for (var z in data) {
+                            var f_c = document.createElement('div');
+                            f_c.className = 'f-c';
+                            if (data[z].fields.comment_user[0] != "oneProf.png") {
+                                var div_image_user = `<img id="image-user" src="/media/data_image/${data[z].fields.comment_user[1]}/tm_${data[z].fields.comment_user[0]}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].fields.comment_user[2]}', 'javascript')">`;
+                            } else {
+                                var div_image_user = `<img id="image-user" src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].fields.comment_user[2]}', 'javascript')">`;
+                            }
+                            
+                            if (data[z].fields.comment_image) {
+                                var comment_image = `<img id="comment-image" src="/media/data_image/${data[z].fields.comment_user[1]}/${data[z].fields.comment_image}.png" onclick="showImg(this)">`;
+                            } else {
+                                var comment_image = "";
+                            }
+    //            {% if cm.comment_image %}
+    //                
+    //<!--                display:block;margin:0 auto;max-width:400px;width: auto;height:auto;max-height: 240px;-->
+    //            {% endif %}                        
+                            var comment_date = new Date(data[z].fields.timecomment);
+                            var comment_month = comment_date.toLocaleString('en-US', { month: 'short' });
+                            f_c.innerHTML = `${div_image_user}<a onclick="userPROFILE('${data[z].fields.comment_user[2]}', 'javascript')" id="user-comment">${data[z].fields.comment_user[3]}</a>
+                <p id="comment-text">${data[z].fields.comment_text}</p>
+                ${comment_image}
+                <div id="time-comment">${comment_date.getDate()} ${comment_month.toLowerCase()} ${comment_date.getFullYear()} в ${comment_date.getHours()}:${comment_date.getMinutes()}</div>
+            </div>`
+                            document.getElementById("field-comment_"+link).insertBefore(f_c ,document.getElementById("field-comment_"+link).firstChild);
+                            
+                            document.getElementById("IOPcom").innerText = f.op1;
+                            if (f.op1 == "STOP") {
+                                document.getElementById("see_more_button").style.display = "none";
+                            }
+                        }
+                    
+                    }
+                }
+                http.send(null); 
+            }
+        } else {
+                document.location = link;
+        }  
+    }          
 }
 
 
@@ -1960,7 +2339,7 @@ function activate_com(post_id) {
                                      loading="lazy">
                                 <a onclick="userPROFILE(${message_data.user_id})" 
                                    id="user-comment">${message_data.comment_user}</a>
-                                <p id="comment-text">${message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}</p>`
+                                <p id="comment-text">${message_data.comment_text}</p>`
             }
             fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
             tev.insertBefore(fc, tev.lastChild);

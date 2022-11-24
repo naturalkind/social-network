@@ -644,7 +644,6 @@ input#myPROFILE {
 #conver {
     overflow-x: hidden;
     overflow-y: auto;
-    margin: 48px;
     position: relative;
     margin: 0 auto;
 
@@ -1013,6 +1012,10 @@ img#QR {
 
 
 @media only screen and (min-width : 200px){
+    a#see_more_button {
+        font-size: 40px;
+    }
+
     .parchat {
         font-size: 35px;
     }
@@ -1494,7 +1497,7 @@ img#QR {
     }
     
     #conver{
-        font-size: 30px;
+        font-size: 33px;
     }
     
     #conversation {
@@ -1523,6 +1526,7 @@ img#QR {
         margin: 14px 5px;
     }
     .datetime {
+        font-size: 30px;
         float: right;
         margin: 16px 5px;
     }
@@ -1530,8 +1534,10 @@ img#QR {
         border-radius: 100px;
         margin: 10px;
         float: left;
-        width: 115px;
-        height: 115px;
+/*        width: 115px;*/
+/*        height: 115px;*/
+        width: 140px;
+        height: 140px;
     }
     #image-user,
     .message .views-title img {
@@ -1669,6 +1675,9 @@ img#QR {
 }
 
 @media screen and (min-width: 1200px)  {
+    a#see_more_button {
+        font-size: 18px;
+    }
     .parchat {
         font-size: 22px;
     }
@@ -1680,8 +1689,10 @@ img#QR {
     }
     #tooltip img {
         margin: 5px;
-        width: 60px;
-        height: 60px;
+/*        width: 60px;*/
+/*        height: 60px;*/
+        width: 75px;
+        height: 75px;
     }
     div#error_msg {
         font-size:24px;
@@ -2146,7 +2157,11 @@ img#QR {
         max-height: 100%;
     }
     .postview{float: left;margin: 11px 5px;}
-    .datetime{float: right;margin: 11px 5px;}
+    .datetime {
+        font-size: 15px;
+        float: right;
+        margin: 11px 5px;
+    }
     button {
         color: #ffffff;
         font-size: 25px;

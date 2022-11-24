@@ -201,40 +201,110 @@ def new(request):
    
     
 # На выходе мы получим в ответе post_id если не было ошибки
+#def post(request, post):
+#    try:
+#        post_id = Post.objects.get(id=post)
+#    except ObjectDoesNotExist:
+#        return HttpResponse("Больше не существует")
+#    data = {} 
+#    comment  = Comment.objects.filter(post_id=post_id)
+#    page = request.GET.get('page')
+#    _type = request.GET.get('_type')
+#    posts = Post.objects.filter(user_post__id=post_id.user_post.id).order_by('-date_post').exclude(id=post)
+#    paginator = Paginator(posts, 3)
+#    data['us'] = auth.get_user(request).username
+#    try:
+#        post_user = paginator.page(page)
+#        data['op1'] = paginator.page(page).next_page_number()
+#        data['op2'] = paginator.page(page).previous_page_number()
+#    except PageNotAnInteger:
+#        post_user = paginator.page(1)
+#    except EmptyPage:
+#        post_user = paginator.page(paginator.num_pages)
+#    if page:
+#        data['data'] = serializers.serialize('json', post_user)
+#        return HttpResponse(json.dumps(data), content_type = "application/json")
+#    if _type == "javascript":    
+#        return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request),
+#                                             'comment':comment})
+#    else:
+#        return render(request, '_post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request),
+#                                              'comment':comment})                                      
+
+
+
 def post(request, post):
     try:
         post_id = Post.objects.get(id=post)
     except ObjectDoesNotExist:
         return HttpResponse("Больше не существует")
     data = {} 
-    comment  = Comment.objects.filter(post_id=post_id)
-    page = request.GET.get('page')
+    page = 1 #request.GET.get('page')
     _type = request.GET.get('_type')
-    posts = Post.objects.filter(user_post__id=post_id.user_post.id).order_by('-date_post').exclude(id=post)
-    paginator = Paginator(posts, 3)
     data['us'] = auth.get_user(request).username
+    comment  = Comment.objects.filter(post_id=post_id)#.order_by('-timecomment')
+    comment_paginator = Paginator(comment, 10)
+    comment_data = comment_paginator.get_page(page)
     try:
-        post_user = paginator.page(page)
-        data['op1'] = paginator.page(page).next_page_number()
-        data['op2'] = paginator.page(page).previous_page_number()
-    except PageNotAnInteger:
-        post_user = paginator.page(1)
+        data['op1'] = comment_paginator.page(page).next_page_number()
     except EmptyPage:
-        post_user = paginator.page(paginator.num_pages)
-    if page:
-        data['data'] = serializers.serialize('json', post_user)
-        return HttpResponse(json.dumps(data), content_type = "application/json")
+        data['op1'] = "STOP"
+    except PageNotAnInteger:
+        data['op1'] = "STOP"
+        
+    try:
+        data['op2'] = comment_paginator.page(page).previous_page_number()
+    except EmptyPage:
+        data['op2'] = "STOP"    
+    except PageNotAnInteger:
+        data['op2'] = "STOP"    
+#    if page:
+#        data['data'] = serializers.serialize('json', comment_data)
+#        return HttpResponse(json.dumps(data), content_type = "application/json")
     if _type == "javascript":    
-        return render(request, 'post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request),
-                                             'comment':comment})
+        return render(request, 'post.html', {'post':post_id, 'username':auth.get_user(request),
+                                             'comment':comment_data})
     else:
-        return render(request, '_post.html', {'post_user': post_user, 'post':post_id, 'username':auth.get_user(request),
-                                              'comment':comment})                                      
+        return render(request, '_post.html', {'post':post_id, 'username':auth.get_user(request),
+                                              'comment':comment_data})                                      
+
+
+
+
+                              
+
+
 
 def viewcom(request, post_id):
-    comment  = Comment.objects.filter(post_id=post_id)
-    return render(request, 'comv.html',{'comment':comment,'id':post_id})
-    
+#    comment  = Comment.objects.filter(post_id=post_id)
+#    return render(request, 'comv.html',{'comment':comment,'id':post_id})
+    comment = Comment.objects.filter(post_id=post_id)#.order_by('timecomment')#.reverse() # .order_by('-timecomment')
+    paginator = Paginator(comment, 10)
+    page = request.GET.get('page')
+    data = {}
+    data['us'] = auth.get_user(request).username
+    data['all_pages'] = paginator.num_pages 
+    comments = paginator.get_page(page) 
+    try:
+        data['op1'] = paginator.page(page).next_page_number()
+    except EmptyPage:
+        data['op1'] = "STOP"
+    except PageNotAnInteger:
+        data['op1'] = "STOP"
+        
+    try:
+        data['op2'] = paginator.page(page).previous_page_number()
+    except EmptyPage:
+        data['op2'] = "STOP"    
+    except PageNotAnInteger:
+        data['op2'] = "STOP"
+        
+    if page:
+        data['data'] = serializers.serialize('json', comments, use_natural_foreign_keys=True, use_natural_primary_keys=True)
+        #render_to_string('comv.html', {'comment':comments,'id':post_id}, request=request)
+        return HttpResponse(json.dumps(data), content_type = "application/json")
+
+    return render(request, 'comv.html',{'comment':comments,'id':post_id})
     
 def best(request):
     post = Post.objects.all().order_by('-point_likes')
@@ -358,39 +428,57 @@ def delfolow(request, user_info, username, userid):
 
 
 def follow(request, id):
-    ht = ''
-    p = User.objects.get(id=id)
-    for x in p.get_followers():
-        if x.image_user != "oneProf.png":
-            img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
-        else:
-            img = f'/media/images/oneProf.png'
-        idu = str(x.pk)
-        if len(str(x.username)) > 15:
-            uname = f"{str(x.username)[:10]}..."
-        else:
-            uname = str(x.username)
-        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, uname)
-        ht += li
-    return HttpResponse("<div id='foll'>%s</div>" % ht)
+    p = User.objects.get(id=id).get_followers()
+    paginator = Paginator(p, 50) #.all() orphans=3
+    page = request.GET.get('page', 0)
+    data = {}
+    data['us'] = auth.get_user(request).username
+    data['all_pages'] = paginator.num_pages 
+    users = paginator.get_page(page) 
+    try:
+        data['op1'] = paginator.page(page).next_page_number()
+    except EmptyPage:
+        data['op1'] = "STOP"
+    except PageNotAnInteger:
+        data['op1'] = "STOP"
+        
+    try:
+        data['op2'] = paginator.page(page).previous_page_number()
+    except EmptyPage:
+        data['op2'] = "STOP"    
+    except PageNotAnInteger:
+        data['op2'] = "STOP"
+            
+    print (len(users), data) #/paginator.page(page).previous_page_number()
+    data['data'] = serializers.serialize('json', users, fields=('username', 'image_user', 'path_data', 'date_joined'))
+    return HttpResponse(json.dumps(data), content_type = "application/json")
 
 
 def follows(request, id):
-    ht = ''
-    p = User.objects.get(id=id)
-    for x in p.get_following():
-        if x.image_user != "oneProf.png":
-            img = f'/media/data_image/{x.path_data}/tm_{x.image_user}'
-        else:
-            img = f'/media/images/oneProf.png'    
-        idu = str(x.pk)
-        if len(str(x.username)) > 15:
-            uname = f"{str(x.username)[:10]}..."
-        else:
-            uname = str(x.username)
-        li = """<div class="fr-cell"><a onclick="userPROFILE('%s')" style="color:#ffffff"><img src="%s">%s</a></div>""" % (idu, img, uname)
-        ht += li
-    return HttpResponse("<div id='foll'>%s</div>" % ht)
+    p = User.objects.get(id=id).get_following()
+    paginator = Paginator(p, 50) #.all() orphans=3
+    page = request.GET.get('page', 0)
+    data = {}
+    data['us'] = auth.get_user(request).username
+    data['all_pages'] = paginator.num_pages 
+    users = paginator.get_page(page) 
+    try:
+        data['op1'] = paginator.page(page).next_page_number()
+    except EmptyPage:
+        data['op1'] = "STOP"
+    except PageNotAnInteger:
+        data['op1'] = "STOP"
+        
+    try:
+        data['op2'] = paginator.page(page).previous_page_number()
+    except EmptyPage:
+        data['op2'] = "STOP"    
+    except PageNotAnInteger:
+        data['op2'] = "STOP"
+            
+    print (len(users), data) #/paginator.page(page).previous_page_number()
+    data['data'] = serializers.serialize('json', users, fields=('username', 'image_user', 'path_data', 'date_joined'))
+    return HttpResponse(json.dumps(data), content_type = "application/json")
 
 
 def getps(i):
@@ -450,19 +538,66 @@ def user_page(request, user):
             return HttpResponse('ok', content_type = "application/json")
 
 # друзья
-#def friends(request):
-#    return render(request, 'friends.html', {'username':auth.get_user(request)})
 from privatemessages.utils import send_message
 from privatemessages.models import Thread
+#def friends(request):
+#    if request.user.is_authenticated:
+#        if request.method == 'GET':
+#            user = auth.get_user(request).get_friends()
+#            data = {}
+#            data["data"] = serializers.serialize('json', user, fields=('username', 'image_user', 'path_data'))
+#            return JsonResponse(data)
+#        if request.method == 'POST':
+##            print ("POST FR", request.user.is_authenticated, request.user)
+#            data = json.loads(request.body)
+#            recipient = User.objects.get(pk=data["user_id"])
+#            print (data, recipient)
+#            thread_queryset = Thread.objects.filter(participants=recipient).filter(participants=request.user)
+#            if thread_queryset.exists():
+#                thread = thread_queryset[0]
+#            else:
+#                thread = Thread.objects.create()
+#                thread.participants.add(request.user, recipient)            
+#            send_message(
+#                            thread.id,
+#                            request.user.id,
+#                            data["post_id"],
+#                            request.user.username,
+#                            "True"
+#                        )
+#            return JsonResponse({"data":"ok"})
+
+
 def friends(request):
     if request.user.is_authenticated:
         if request.method == 'GET':
             user = auth.get_user(request).get_friends()
+            paginator = Paginator(user, 100) #.all() orphans=3
+            page = request.GET.get('page', 0)
             data = {}
-            data["data"] = serializers.serialize('json', user, fields=('username', 'image_user', 'path_data'))
-            return JsonResponse(data)
+            data['us'] = auth.get_user(request).username
+            data['all_pages'] = paginator.num_pages 
+            users = paginator.get_page(page) 
+            try:
+                data['op1'] = paginator.page(page).next_page_number()
+            except EmptyPage:
+                data['op1'] = "STOP"
+            except PageNotAnInteger:
+                data['op1'] = "STOP"
+                
+            try:
+                data['op2'] = paginator.page(page).previous_page_number()
+            except EmptyPage:
+                data['op2'] = "STOP"    
+            except PageNotAnInteger:
+                data['op2'] = "STOP"
+                    
+            print (len(users), data)
+            data['data'] = serializers.serialize('json', users, fields=('username', 'image_user', 'path_data', 'date_joined'))
+            
+            return HttpResponse(json.dumps(data), content_type = "application/json")
+            
         if request.method == 'POST':
-#            print ("POST FR", request.user.is_authenticated, request.user)
             data = json.loads(request.body)
             recipient = User.objects.get(pk=data["user_id"])
             print (data, recipient)
@@ -480,7 +615,6 @@ def friends(request):
                             "True"
                         )
             return JsonResponse({"data":"ok"})
-
 
 # страница пользователей
 def users_all(request):

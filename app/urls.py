@@ -44,9 +44,9 @@ urlpatterns = [
     path(r'messages/', include('privatemessages.urls')), 
     
     # подписки/подписчики, любимый контент
-    re_path(r'^follow/(?P<id>.*)$', myapp.follow),
-    re_path(r'^follows/(?P<id>.*)$', myapp.follows),
-    re_path(r'^getlkpost/(?P<id>.*)$', myapp.getlkpost), 
+    re_path(r'^follow/(?P<id>.*)/', myapp.follow),
+    re_path(r'^follows/(?P<id>.*)/', myapp.follows),
+    re_path(r'^getlkpost/(?P<id>.*)/', myapp.getlkpost), 
     
     # друзья
     re_path(r'^friends/', myapp.friends), 
@@ -57,7 +57,8 @@ urlpatterns = [
     re_path(r'^rppos/(?P<id>.*)$', myapp.rppos),
     
     # комментарии
-    re_path(r'^comment/(?P<post_id>.*)$', myapp.viewcom),
+#    re_path(r'^comment/(?P<post_id>.*)$', myapp.viewcom),
+    re_path(r'^comment/(?P<post_id>.*)/', myapp.viewcom),
     
     # тест выбора цвета
     re_path(r'^test_js/', myapp.test_js), 

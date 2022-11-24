@@ -44,8 +44,14 @@
 <!--    safe|    -->
         {% if request.user.is_authenticated %}
             <div class="box-com" style="margin: 0 auto;">
+                {% if comment.has_next %}
+                    <a id="see_more_button">Показать следующие комментарии</a>
+                    <span id="IOPcom" style="display: none">{{ comment.next_page_number }}</span>
+                {% else %}
+                    <span id="IOPcom" style="display: none">STOP</span>
+                {% endif %}
                 <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px;">
-                    {% for cm in comment %}
+                    {% for cm in comment reversed %}
                         <div class="f-c">
                             {% if cm.comment_user.image_user != "oneProf.png" %}
                                 <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
@@ -61,7 +67,7 @@
                         </div>
                     {% endfor %}
                 </div>
-<!--                <div id="SIMPLE"></div>-->
+                <div id="SIMPLE" style="display:none;"></div>
                 <div id="message_form_comment">
                     <div id="results_{{post.id}}">
                         <div class="compose_{{post.id}}">
@@ -82,19 +88,6 @@
             </div>
         {% else %}
         <div class="user-post">
-            <h3 style="color: #ffffff">- ПОДБОРКА АВТОРА -</h3>
-            <div id="pages" align="center" style="display: none;">
-                {% if post_user.has_next %}
-                    <span id="IOPv" style="display: none">{{ post_user.next_page_number }}</span>
-                {% endif %}
-            </div>
-            <ul class="day-block" id="DOD" icon="{{ post.id }}">
-                {% for f in post_user %}
-                    <li class="views-row"  onmouseover="getIndex(this);">
-                        <h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/data_image/{{ f.path_data }}/{{ f.image }}');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3>
-                    </li>
-                {% endfor %}
-            </ul>
         </div>
         {% endif %}
     </div>
