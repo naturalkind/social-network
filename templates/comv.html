@@ -1,8 +1,8 @@
 {% if comment.has_next %}
-    <a id="see_more_button">Показать следующие комментарии</a>
-    <span id="IOPcom" style="display: none">{{ comment.next_page_number }}</span>
+    <a id="see_more_button_{{ id }}">Показать следующие комментарии</a>
+    <span id="IOPcom_{{ id }}" style="display: none">{{ comment.next_page_number }}</span>
 {% else %}
-    <span id="IOPcom" style="display: none">STOP</span>
+    <span id="IOPcom_{{ id }}" style="display: none">STOP</span>
 {% endif %}
 <div id="field-comment_{{ id }}" style="background: #f2f2f2;">
     {% for cm in comment reversed %}

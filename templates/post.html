@@ -45,10 +45,10 @@
         {% if request.user.is_authenticated %}
             <div class="box-com" style="margin: 0 auto;">
                 {% if comment.has_next %}
-                    <a id="see_more_button">Показать следующие комментарии</a>
-                    <span id="IOPcom" style="display: none">{{ comment.next_page_number }}</span>
+                    <a id="see_more_button_{{post.id}}">Показать следующие комментарии</a>
+                    <span id="IOPcom_{{post.id}}" style="display: none">{{ comment.next_page_number }}</span>
                 {% else %}
-                    <span id="IOPcom" style="display: none">STOP</span>
+                    <span id="IOPcom_{{post.id}}" style="display: none">STOP</span>
                 {% endif %}
                 <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px;">
                     {% for cm in comment reversed %}

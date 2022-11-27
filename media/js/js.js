@@ -194,7 +194,6 @@ window.addEventListener("popstate", function(e) {
         users()
     } else if (state.view == "mesID") {
         handler("o");
-//        console.log("CHAT")
     }
 });
 
@@ -347,8 +346,6 @@ function editPROFF(self){
                 var _coord = image_user_profile.getBoundingClientRect();
                 
                 var header_height = document.getElementById("header").getBoundingClientRect()["height"];
-                console.log("--------->", _coord)
-                
                 var z = document.createElement('div');
                 z.id = 'tooltip';
                 z.setAttribute("style", ` 
@@ -1090,7 +1087,6 @@ function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
 //}
 
 function FRIENDS(link) {
-    console.log("OK");
     try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
     var tooltipElem = document.createElement('div');
     tooltipElem.id = 'tooltip_'+link;
@@ -1106,7 +1102,6 @@ function FRIENDS(link) {
             var data = JSON.parse(http.responseText);
             data = JSON.parse(data.data);
             for (var z in data) {
-//                console.log(data[z].fields.image_user != "oneProf.png")
                 if (data[z].fields.image_user != "oneProf.png") {
                     var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="reSend(${data[z].pk}, ${link})">`;
                 } else {
@@ -1256,7 +1251,6 @@ function foll(link, page_num, loadmore){
         div_iop2.id = "IOP2";
         document.body.style.overflow = 'hidden';
     }
-    document.getElementById("block-post").scrollTo(0,0);
     var http = createRequestObject();
     var linkfull = '/follow/'+ link + "/?page="+page_num;
     if (http) {
@@ -1302,6 +1296,8 @@ function foll(link, page_num, loadmore){
                     topbt_indicator = "foll";
                     div_iop2.innerText = f.op1;
                     block_post.appendChild(div_iop2);
+                    block_post.scrollTo(0,0);
+                    block_post.onscroll = test_scroll;
                 }
 
                 //------------------------------->
@@ -1323,8 +1319,6 @@ function foll(link, page_num, loadmore){
                     
                 }
                 isLoading = false;   
-                document.getElementById("block-post").onscroll = test_scroll;                
-                //
             }
         };
         http.send(null);
@@ -1346,7 +1340,6 @@ function folls(link, page_num, loadmore){
         div_iop2.id = "IOP2";
         document.body.style.overflow = 'hidden';
     }
-    document.getElementById("block-post").scrollTo(0,0);
     var http = createRequestObject();
     var linkfull = '/follows/'+ link + "/?page="+page_num;
     if (http) {
@@ -1392,6 +1385,8 @@ function folls(link, page_num, loadmore){
                     topbt_indicator = "foll";
                     div_iop2.innerText = f.op1;
                     block_post.appendChild(div_iop2);
+                    block_post.scrollTo(0,0);
+                    block_post.onscroll = test_scroll; 
                 }
 
                 //------------------------------->
@@ -1413,8 +1408,6 @@ function folls(link, page_num, loadmore){
                     
                 }
                 isLoading = false;   
-                document.getElementById("block-post").onscroll = test_scroll;                
-                //
             }
         };
         http.send(null);
@@ -1441,34 +1434,198 @@ function FileSlicer(file) {
 
 
 // показать понравившееся
-function getlkpost(link){
-        document.body.style.overflow = 'hidden';
+//Вариант 2
+
+function getlkpost(link, page_num, loadmore) {
+        if(isLoading) return false;
+        page_num = typeof page_num !== 'undefined' ?  page_num : 1;
         var block_post = document.getElementById('block-post');
+        if (loadmore == "loadmore") {
+            var div_iop2 = document.getElementById("IOP2");
+            var node = document.getElementById('foll');
+        } else { 
+            block_post.innerHTML = "";
+            var div_iop2 = document.createElement("div");
+            div_iop2.id = "IOP2";
+            document.body.style.overflow = 'hidden';
+            var node = document.createElement('div');
+            node.id = 'foll';
+            block_post.appendChild(div_iop2)
+        }  
         var http = createRequestObject();
-        var linkfull = '/getlkpost/'+ link;
+        var linkfull = '/getlkpost/'+ link + "/?page="+page_num;
         if (http) {
-        http.open('get', linkfull);
-        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-        http.onreadystatechange = function () {
-            if (http.readyState == 4) {
-                block_post.innerHTML = http.responseText;
-                block_post.style.display = 'block';
-                main_wrapper.style.opacity = 0.2;
-                topbt.style.display = "block";
-                topbt.style.transform = 'rotate(90deg)';
-                topbt_indicator = "foll";
-                
-                function test_scroll() {
+            http.open('get', linkfull);
+            http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+            http.onreadystatechange = function () {
+                if (http.readyState == 4) {
+                    var f = JSON.parse(http.responseText);
+                    div_iop2.innerText = f.op1; 
+                    if (loadmore == "loadmore") {
+                        node.innerHTML += f["data"]; 
+                    } else { 
+                        node.innerHTML = f["data"];
+                        block_post.appendChild(node);                
+                                   
+                        block_post.style.display = 'block';
+                        main_wrapper.style.opacity = 0.2;
+                        topbt.style.display = "block";
+                        topbt.style.transform = 'rotate(90deg)';
+                        topbt_indicator = "foll";
+                        block_post.scrollTo(0,0); 
+                        block_post.onscroll = test_scroll;
+                    }
                     
-                }   
-                document.getElementById("block-post").onscroll = test_scroll;
-            }
-        };
-        http.send(null);
+                    function getScrollPercent() {
+                        var h = document.getElementById("block-post"), 
+                            b = document.body,
+                            st = 'scrollTop',
+                            sh = 'scrollHeight';
+                        return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+                    }                
+                    function test_scroll() {
+                        processed_page = getScrollPercent();
+                        if (div_iop2.innerText!="STOP") {
+                            if (processed_page >= 80) {
+                                getlkpost(link, div_iop2.innerText, "loadmore");
+                                isLoading = true;
+                            }
+                        }
+                    } 
+                    isLoading = false;
+//                    block_post.onscroll = test_scroll;
+                }
+            };
+            http.send(null);
     } else {
         document.location = link;
     }
 }
+
+
+// Вариант 1
+
+//function getlkpost(link){
+//        document.body.style.overflow = 'hidden';
+//        var block_post = document.getElementById('block-post');
+//        var http = createRequestObject();
+//        var linkfull = '/getlkpost/'+ link;
+//        if (http) {
+//        http.open('get', linkfull);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//            if (http.readyState == 4) {
+//                var f = JSON.parse(http.responseText);
+//                var data = JSON.parse(f["data"]);
+//                console.log(data)
+//                for (var ix in data) {
+//                    var fc = document.createElement('div');
+//                    fc.className = 'message';
+//                    fc.setAttribute("onmouseover", "getIndex(this);");                
+//                    if (data[ix].fields.user_post[3].length>15) {
+//                       var tuser =  data[ix].fields.user_post[3].slice(0,15) + "...";
+//                    } else {
+//                        var tuser = data[ix].fields.user_post[3];
+//                    }
+
+//                    if (data[ix].fields.body.length>18) {
+//                       var ttext =  "<span class='arrow'> → </span><span class='message-title'>" + data[ix].fields.body.slice(0,20) + "...</span>";
+//                    } else if (data[ix].fields.body.length == 0) {
+//                        var ttext = "";
+//                    } else {
+//                        var ttext = "<span class='arrow'> → </span><span class='message-title'>" + data[ix].fields.body+ "</span>";
+//                    }
+//                    
+////                    data[ix].fields.path_data
+////                    data[ix].fields.user_post[1]
+
+//                    if (data[ix].fields.user_post[0] != "oneProf.png"){
+//                        var div_image_user = `<img src="/media/data_image/${data[ix].fields.user_post[1]}/${data[ix].fields.user_post[0]}" width="30" height="30">`
+//                    } else {
+//                        var div_image_user = `<img src="/media/images/oneProf.png" width="30" height="30">`
+//                    }
+
+//                    if (data[ix].fields.image != ""){
+//                        var div_image_post = `<img src="/media/data_image/${data[ix].fields.path_data}/${data[ix].fields.image}"
+//                                                     height="auto" 
+//                                                     width="auto" 
+//                                                     onclick="showImg(this)" 
+//                                                     class="wallpost">`;
+//                                                     
+//                    } else {
+//                        var div_image_post = `<img src="/media/images/no_image.png"
+//                                                     height="auto" 
+//                                                     width="auto" 
+//                                                     onclick="showImg(this)" 
+//                                                     class="wallpost">`;
+//                    }
+//                    var date = new Date(data[ix].fields.date_post);
+//                    fc.innerHTML = `<div class="views-title" style="width: 100%;float: left;">
+//                                        <div class="user-cord" atribut="1165">
+//                                            <a onclick="userPROFILE(${data[ix].fields.user_post[2]})">
+//                                                ${div_image_user}
+//                                            </a>
+//                                            <a class="postview" onclick="showContent(${data[ix].pk})">
+//                                                <span style="font-weight: bolder;">${tuser}</span>${ttext}</a>
+//                                        </div>
+//                                        <span class="datetime">${date.getHours()}:${date.getMinutes()}</span>
+//                                    </div>
+//                                    <div class="field-image" atribut="${data[ix].pk}">
+//                                        ${div_image_post}
+//                                        <div id="body-post-wall">
+//                                            <div id="post_like_block_${data[ix].pk}" style="width: 100%">
+//                                                <img class="icon-like" 
+//                                                     src="/media/images/mesvF.png" 
+//                                                     onclick="comView(this)" 
+//                                                     open-atr="close" 
+//                                                     id-comment=${data[ix].pk} 
+//                                                     id="comment_image_id_${data[ix].pk}" 
+//                                                     type-div="icon" 
+//                                                     indicator-ws="close">
+//                                                <img class="icon-like" 
+//                                                     id="post_image_${data[ix].pk}" 
+//                                                     src="/media/images/frv1.png" 
+//                                                     onclick="LIKE(this, ${data[ix].pk})" 
+//                                                     open-atr="close" 
+//                                                     type="wall">
+//                                                <img class="icon-like" 
+//                                                     src="/media/images/rpvF.png" 
+//                                                     onclick="rpPost(this, ${data[ix].pk},'${data[ix].fields.user_post[3]}')" 
+//                                                     open-atr="close" 
+//                                                     type="wall">
+//                                                <div class="box-indicator" 
+//                                                     style="display:none;margin: 0 auto;margin-top: 15px;" 
+//                                                     id="box-indicator-${data[ix].pk}"></div>
+//                                            </div>
+//                                        </div>
+//                                    </div>`                
+////                    var data_path = data[ix].fields.sender[1];
+////                    console.log(data_path)
+//                    var node = document.createElement('div');
+//                    node.id = 'foll';
+//                    node.appendChild(fc);
+//                    block_post.appendChild(node);
+//                }
+//                
+//                block_post.style.display = 'block';
+//                main_wrapper.style.opacity = 0.2;
+//                topbt.style.display = "block";
+//                topbt.style.transform = 'rotate(90deg)';
+//                topbt_indicator = "foll";
+//                
+//                function test_scroll() {
+//                    
+//                }   
+//                document.getElementById("block-post").onscroll = test_scroll;
+//            }
+//        };
+//        http.send(null);
+//    } else {
+//        document.location = link;
+//    }
+//}
+
+
 
 function geturlimg(){setTimeout(draw, 5000)}
 function draw() {
@@ -1589,7 +1746,6 @@ function getIndex(node) {
         len = childs.length;
     if (node == childs[i]) break;
     }
-//    console.log(node, i)
     return  innode=i;
 }
 
@@ -1612,7 +1768,10 @@ function showContent(link, _type) {
             document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws", "open")  
         }
     } catch (e) {} 
-                    //------------------------------->
+    if (_page=="chat") {
+        ws_dict[link] = activate_com(link);
+    }
+    //------------------------------->
     function getScrollPercent() {
         var h = document.getElementById("block-post"), 
             b = document.body,
@@ -1703,13 +1862,13 @@ function showContent(link, _type) {
                     function test_scroll() {
                         processed_page = getScrollPercent();
                         var cord_y = document.getElementById("_post_like_block_"+link).getBoundingClientRect()["y"];
-                        console.log(processed_page, (cord_y/document.getElementById("block-post")['scrollHeight'])*100)
+//                        console.log(processed_page, (cord_y/document.getElementById("block-post")['scrollHeight'])*100)
                     }
                     block_post.onscroll = test_scroll;
                     try { 
-                        document.getElementById("see_more_button").onclick = function() {
-                            console.log("see_more_button", document.getElementById("IOPcom").innerText);
-                            load_more_comment(link, document.getElementById("IOPcom").innerText)
+                        document.getElementById("see_more_button_"+link).onclick = function() {
+                            console.log("see_more_button", document.getElementById("IOPcom_"+link).innerText);
+                            load_more_comment(link, document.getElementById("IOPcom_"+link).innerText)
                         }
                     } catch (e) {}
                 }
@@ -1820,12 +1979,10 @@ function activate_wall(user_name) {
             } else if (message_data["status"]=="deletepost") {
                 try { 
                     var conversation = document.getElementById("conversation");
-                    console.log(conversation.children, innode); //conversation, 
                     conversation.children[innode].remove();
                     handler(0);
                 } catch(e) {
                     var conversation = document.getElementById("DODO");
-                    console.log(conversation.children, conversation.children[innode]);
                     conversation.children[innode].remove();
                     handler(0);
                 }
@@ -1969,6 +2126,7 @@ function privatMES(_type){
                 _page = "privatmes";
                 history.pushState({"view": "privatmes", 'lk': linkfull }, null, linkfull);
                 document.getElementsByClassName("enter")[0].style.display = "none";
+                document.body.style.overflow = 'auto';
             }
         };
         http.send(null);
@@ -2169,7 +2327,6 @@ function comView(z){
     var comv = z.getAttribute('open-atr');
     var link = z.getAttribute('id-comment');
     var type_div = z.getAttribute('type-div');
-    var conr = document.getElementById("post_like_block_"+link);
     if (comv == 'close') {
         z.setAttribute("open-atr", "open");
         var http = createRequestObject();
@@ -2177,6 +2334,7 @@ function comView(z){
             http.open('get', '/comment/'+link);
             http.onreadystatechange = function () {
                 if(http.readyState == 4) {
+                    var conr = document.getElementById("post_like_block_"+link);
                     var apcom = document.createElement('div');
                     apcom.id = 'box-com-'+link;
                     apcom.className = "box-com";
@@ -2188,13 +2346,17 @@ function comView(z){
                         z.setAttribute("indicator-ws", "open")
                         ws_dict[link] = activate_com(link);
                     }
-                    
                     try { 
-                        document.getElementById("see_more_button").onclick = function() {
-                            console.log("SCKKJDJKF", document.getElementById("IOPcom").innerText);
-                            load_more_comment(link, document.getElementById("IOPcom").innerText)
+                        document.getElementById("see_more_button_"+link).onclick = function() {
+                            load_more_comment(link, document.getElementById("IOPcom_"+link).innerText)
+                            //)
                         }
                     } catch (e) {}
+//                    if (document.getElementById("IOPcom").innerText == "STOP") {
+//                        try {
+//                            document.getElementById("see_more_button").style.display = "none";
+//                        } catch (e) {};
+//                    }
                     
                 }
             };
@@ -2210,7 +2372,7 @@ function comView(z){
 
 // загрузить еще комментарии
 function load_more_comment(link, page) {
-    if (document.getElementById("IOPcom").innerText != "STOP") {      
+    if (page != "STOP") {      
         var http = createRequestObject();
         if(link != null) {
             if(http) {
@@ -2248,11 +2410,11 @@ function load_more_comment(link, page) {
             </div>`
                             document.getElementById("field-comment_"+link).insertBefore(f_c ,document.getElementById("field-comment_"+link).firstChild);
                             
-                            document.getElementById("IOPcom").innerText = f.op1;
-                            if (f.op1 == "STOP") {
-                                document.getElementById("see_more_button").style.display = "none";
-                            }
                         }
+                        document.getElementById("IOPcom_"+link).innerText = f.op1;
+                        if (f.op1 == "STOP") {
+                            document.getElementById("see_more_button_"+link).style.display = "none";
+                        }                        
                     
                     }
                 }
@@ -2271,7 +2433,6 @@ function send_com(self, cip) {
         dataURL_v1 = "";
     }
     var zetr = document.getElementById("comment_image_id_"+cip);
-    
     var comment_text = document.getElementById('comment_text_' + cip);
     if (comment_text.innerText == "") {
         return false;
@@ -2303,6 +2464,7 @@ function send_com(self, cip) {
         ws_dict[cip].send(data);
         comment_text.innerText = "";
     }
+    console.log(zetr, _page, ws_dict, cip);
 }
 
 function activate_com(post_id) {
