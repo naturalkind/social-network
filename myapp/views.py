@@ -614,7 +614,6 @@ def users_all(request):
     paginator = Paginator(users, 40)
     page = request.GET.get('page', None)
     _type = request.GET.get('_type')
-    posts = paginator.page(1)
     data = {}
     data['us'] = auth.get_user(request).username
     data['all_pages'] = paginator.num_pages    
@@ -646,13 +645,32 @@ def users_all(request):
 
 
 def likeover(request):
-    if request.method == 'GET':
-        ps_id = request.GET['post_id']
-    if ps_id:
-        ans = Post.objects.get(id=(int(ps_id)))
-        df = ans.likes.all()
-        lk = serializers.serialize('json', df, fields=('username', 'image_user', 'path_data'))
-    return HttpResponse(lk, content_type = "application/json")
+    page = request.GET.get('page', None)
+    ps_id = request.GET.get('post_id', None)
+    posts = Post.objects.get(id=int(ps_id)).likes.all()
+    print (posts)
+    paginator = Paginator(posts, 100)
+    
+    data = {}
+    data['us'] = auth.get_user(request).username
+    data['all_pages'] = paginator.num_pages    
+    posts = paginator.get_page(page) 
+    try:
+        data['op1'] = paginator.page(page).next_page_number()
+    except EmptyPage:
+        data['op1'] = "STOP"
+    except PageNotAnInteger:
+        data['op1'] = "STOP"
+        
+    try:
+        data['op2'] = paginator.page(page).previous_page_number()
+    except EmptyPage:
+        data['op2'] = "STOP"    
+    except PageNotAnInteger:
+        data['op2'] = "STOP"
+
+    data['data'] = serializers.serialize('json', posts, fields=('username', 'image_user', 'path_data'))
+    return HttpResponse(json.dumps(data), content_type = "application/json")
     
 
 def getlkpost(request, id):

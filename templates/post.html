@@ -45,7 +45,7 @@
         {% if request.user.is_authenticated %}
             <div class="box-com" style="margin: 0 auto;">
                 {% if comment.has_next %}
-                    <a id="see_more_button_{{post.id}}">Показать следующие комментарии</a>
+                    <a id="see_more_button_{{post.id}}" class="see_more_button">Показать следующие комментарии</a>
                     <span id="IOPcom_{{post.id}}" style="display: none">{{ comment.next_page_number }}</span>
                 {% else %}
                     <span id="IOPcom_{{post.id}}" style="display: none">STOP</span>

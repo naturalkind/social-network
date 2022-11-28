@@ -1,5 +1,5 @@
 {% if comment.has_next %}
-    <a id="see_more_button_{{ id }}">Показать следующие комментарии</a>
+    <a id="see_more_button_{{ id }}" class="see_more_button">Показать следующие комментарии</a>
     <span id="IOPcom_{{ id }}" style="display: none">{{ comment.next_page_number }}</span>
 {% else %}
     <span id="IOPcom_{{ id }}" style="display: none">STOP</span>

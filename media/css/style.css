@@ -1012,7 +1012,7 @@ img#QR {
 
 
 @media only screen and (min-width : 200px){
-    a#see_more_button {
+    a.see_more_button {
         font-size: 40px;
     }
 
@@ -1042,6 +1042,7 @@ img#QR {
     }
     #tooltip {
         position: fixed;
+/*        position: absolute;*/
         z-index: 100;
         padding: 10px;
         border-radius: 2px;
@@ -1675,7 +1676,7 @@ img#QR {
 }
 
 @media screen and (min-width: 1200px)  {
-    a#see_more_button {
+    a.see_more_button {
         font-size: 18px;
     }
     .parchat {
@@ -1707,6 +1708,7 @@ img#QR {
     }
     #tooltip {
         position: fixed;
+/*        position: absolute;*/
         z-index: 100;
         padding: 10px;
         border-radius: 2px;

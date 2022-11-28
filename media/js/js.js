@@ -53,6 +53,8 @@ function scroll(){
     try{
         document.getElementById('tooltip').remove();
         document.getElementsByClassName('edprof')[0].setAttribute("open-atr", "close");
+        document.getElementsByClassName('edprof')[0].src = "/media/images/edprof.png";
+        document.getElementsByClassName('edprof')[0].style.background = " #507299";  
     }catch(err) {}
     processed_page = getScrollPercent();
     if(isLoading) return false;
@@ -360,7 +362,7 @@ function editPROFF(self){
                                          `)   //background:#1797a7; height:${_coord["height"]}px; 
                                               //top:${(_coord["top"]-header_height)}px; 
                                               //top:${self_coord["top"]}px; 
-                z.innerHTML = http.responseText;             
+                z.innerHTML = http.responseText             
                 var uspgimg = document.getElementsByClassName('uspgimg')[0];
 //                z.appendChild(color_picker);
 //                uspgimg.appendChild(z);
@@ -379,18 +381,34 @@ function editPROFF(self){
                                                    left:${_coord["left"]}px;
                                                    position: fixed;
                                                     `)
+                                                    
+                //                                    
+//                var textElemv1 = document.createElement('img');
+//                textElemv1.id = 'close';//id = 'close'; //
+//                textElemv1.className = "icon-like";
+//                textElemv1.onclick = function close() {
+//                    self.style.transform = "rotate(0deg)"; 
+//                    document.getElementById('tooltip').remove();
+//                    self.setAttribute("open-atr", "close");
+//                } 
+//                textElemv1.src = "/media/images/close3.png";   
+//                textElemv1.setAttribute("style", "width:100px;height:100px;background-image:url(/media/images/controlsv4.png)") 
 
-//                var over = document.getElementById("user-page");  
+
+//                var over = document.getElementById("user-page"); 
+
                 tooltipElem.appendChild(color_picker);  
+//                tooltipElem.appendChild(textElemv1);  
                 z.appendChild(tooltipElem);
-                uspgimg.appendChild(z);                
+                uspgimg.appendChild(z);  
+                
 //                block_post.appendChild(tooltipElem);  
 //                // координаты кнопки редактировать профиль        
 //                var coords_button = self.getBoundingClientRect()["top"];
 //                console.log(coords_button);
 //                
 //                over.appendChild(tooltipElem);
-                
+          
                 self.setAttribute("open-atr", "open");
                 topbt_indicator = "editPROFF"
                 ColorPicker(
@@ -402,7 +420,11 @@ function editPROFF(self){
                       //us_name_class.style.backgroundColor = hex;
                       user_page_name.style.color = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
                       console.log(user_page_name.style.color);
-                });                 
+                });  
+                self.src = "/media/images/close3.png"  
+                self.style.background = " #ffffff";    
+                console.log(self)  
+//                self.className = "icon-like"  
             }
         };
         http.send(null);
@@ -411,6 +433,9 @@ function editPROFF(self){
         }    
     } else {
         self.setAttribute("open-atr", "close");
+//        self.className = "edprof"
+        self.src = "/media/images/edprof.png"
+        self.style.background = " #507299";  
         try {
             document.getElementById('tooltip').remove();
 //            self.setAttribute("open-atr", "close")
@@ -710,46 +735,124 @@ var linkfull = '/add_like/?post_id='+link;
 
 
 // лайки при наведении
-function LIKEOVER(link) {
-    var html= '';
-    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
-    var tooltipElem = document.createElement('div');
-    tooltipElem.id = 'tooltip_'+link;
-    var over = document.getElementById("tooltip");
+
+function LIKEOVER(link, page_num, loadmore) {
+    if(isLoading) return false;
+    page_num = typeof page_num !== 'undefined' ?  page_num : 1;
+    console.log(link, page_num, loadmore)
+    if (loadmore == "loadmore") {
+        var div_iop3 = document.getElementById("IOP3");
+        var block_post = document.getElementById('friends_list');
+        var tooltipElem = document.getElementById('tooltip_'+link);
+    } else { 
+        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
+        var tooltipElem = document.createElement('div');
+        tooltipElem.id = 'tooltip_'+link;
+        tooltipElem.setAttribute("style", `max-height: ${window.innerHeight*0.7};overflow-y: scroll;float: left;position: relative;`);
+        document.getElementById("block-post").style.overflowY = 'hidden';
+        var over = document.getElementById("tooltip");
+        var div_iop3 = document.createElement("div");
+        div_iop3.id = "IOP3";
+    }    
     var http = createRequestObject();
-    var linkfull = '/likeover/?post_id=' + link;
+    var linkfull = '/likeover/?post_id=' + link + "&page="+page_num;
+    var html = ""
     if (http) {
         http.open('get', linkfull);
         http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         http.onreadystatechange = function () {
-            if (http.readyState == 4) {
-                var f = JSON.parse(http.responseText);
-                for (var r in f) {
-                    if (f[r].fields.image_user != "oneProf.png"){
-                        var div_image_user = `<img src="/media/data_image/${f[r].fields.path_data}/tm_${f[r].fields.image_user}" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">`;
-                    } else {
-                        var div_image_user = `<img src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">`;
-                    }                
-                    html += `<div class="user-cord">
-                                ${div_image_user}  
-                             </div>`
+        if (http.readyState == 4) {
+            var data = JSON.parse(http.responseText);
+            console.log(data.op1)
+            div_iop3.innerText = data.op1;
+            data = JSON.parse(data.data);
+            for (var z in data) {
+                if (data[z].fields.image_user != "oneProf.png") {
+                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" class="imgUs" onclick="userPROFILE(${data[z].pk})" style="cursor:pointer;" loading="lazy">`;
+                } else {
+                    var div_image_user = `<img src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE(${data[z].pk})" style="cursor:pointer;" loading="lazy">`;
                 }
-                tooltipElem.innerHTML = html;
-                over.appendChild(tooltipElem);
-                var coords = over.getBoundingClientRect();
-                var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
-                if (left < 0) left = 0;
-                var top = coords.top - tooltipElem.offsetHeight - 5;
-                if (top < 0) {top = coords.top + over.offsetHeight + 5;}
-                tooltipElem.style.left = left + 'px';
-                tooltipElem.style.top = top + 'px';
+                html += div_image_user
             }
-        };
-        http.send(null);
+            if (loadmore == "loadmore") { 
+                tooltipElem.innerHTML += html;
+            } else {
+                tooltipElem.innerHTML = html;
+                over.appendChild(tooltipElem); 
+                over.appendChild(div_iop3);
+            }
+//            tooltipElem.innerHTML = http.responseText;
+//            over.appendChild(tooltipElem); 
+  
+            function getScrollPercent() {
+                var h = tooltipElem, 
+                    b = document.body,
+                    st = 'scrollTop',
+                    sh = 'scrollHeight';
+                return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+            }                
+            function test_scroll() {
+                processed_page = getScrollPercent();  
+                if (div_iop3.innerText!="STOP") {
+                    if (processed_page >= 80) {
+                        LIKEOVER(link, div_iop3.innerText, "loadmore");
+                        isLoading = true;
+                    }
+                }
+            }   
+            tooltipElem.onscroll = test_scroll;
+            isLoading = false;          
+        }
+    };
+    http.send(null);
     } else {
         document.location = link;
     }
 }
+
+
+
+
+//function LIKEOVER(link) {
+//    var html= '';
+//    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
+//    var tooltipElem = document.createElement('div');
+//    tooltipElem.id = 'tooltip_'+link;
+//    var over = document.getElementById("tooltip");
+//    var http = createRequestObject();
+//    var linkfull = '/likeover/?post_id=' + link;
+//    if (http) {
+//        http.open('get', linkfull);
+//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+//        http.onreadystatechange = function () {
+//            if (http.readyState == 4) {
+//                var f = JSON.parse(http.responseText);
+//                for (var r in f) {
+//                    if (f[r].fields.image_user != "oneProf.png"){
+//                        var div_image_user = `<img src="/media/data_image/${f[r].fields.path_data}/tm_${f[r].fields.image_user}" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">`;
+//                    } else {
+//                        var div_image_user = `<img src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">`;
+//                    }                
+//                    html += `<div class="user-cord">
+//                                ${div_image_user}  
+//                             </div>`
+//                }
+//                tooltipElem.innerHTML = html;
+//                over.appendChild(tooltipElem);
+//                var coords = over.getBoundingClientRect();
+//                var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
+//                if (left < 0) left = 0;
+//                var top = coords.top - tooltipElem.offsetHeight - 5;
+//                if (top < 0) {top = coords.top + over.offsetHeight + 5;}
+//                tooltipElem.style.left = left + 'px';
+//                tooltipElem.style.top = top + 'px';
+//            }
+//        };
+//        http.send(null);
+//    } else {
+//        document.location = link;
+//    }
+//}
 
 // отследить убрать наведение с обьекта при лайке
 function LIKEDONE(self, link){
@@ -896,7 +999,7 @@ function reSend(user_id, post_id) {
     } 
 }
 
-// Стиль подписчиков
+// Друзья
 function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
     if(isLoading) return false;
     page_num = typeof page_num !== 'undefined' ?  page_num : 1;
@@ -985,114 +1088,27 @@ function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
     }
 }
 
-//function FRIENDS_PAGE(link, count_users) {
-//    console.log(link);
-//    document.body.style.overflow = 'hidden';
-//    try{topbt.style.display = "block";
-//        topbt.style.transform = 'rotate(90deg)';
-//        topbt_indicator = "handler";
-//    }catch(err) {}
-//    var tooltipElem = document.createElement('div');
-//    tooltipElem.id = 'tooltip';
-//    tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;")
-//    var http = createRequestObject();
-//    var linkfull = '/friends/?page=1';
-//    var html = ""
-//    if (http) {
-//        http.open('get', linkfull);
-//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-//        http.onreadystatechange = function () {
-//        if (http.readyState == 4) {
-//            var data = JSON.parse(http.responseText);
-//            data = JSON.parse(data.data);
-//            for (var z in data) {
-//                if (data[z].fields.image_user != "oneProf.png") {
-//                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
-//                } else {
-//                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
-//                }
-//                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}</div>`
-//            }
-//            tooltipElem.innerHTML = `<h1 id="h1-friends">ДРУЗЬЯ ${count_users}</h1>`;
-//            tooltipElem.innerHTML += `<div id="friends_list">${html}</div>`;
-//            var node = document.createElement('div');
-//            node.id = 'node';
-//            var block_post = document.getElementById('block-post');
-//            block_post.style.display = 'block';
-//            node.appendChild(tooltipElem);
-//            block_post.innerHTML = "";
-//            block_post.appendChild(node);
-//            
-//        }
-//    };
-//    http.send(null);
-//    } else {
-//        document.location = link;
-//    }
-//}
-
-
-//function FRIENDS_PAGE(link, count_users) {
-//    console.log(link);
-//    document.body.style.overflow = 'hidden';
-//    try{topbt.style.display = "block";
-//        topbt.style.transform = 'rotate(90deg)';
-//        topbt_indicator = "handler";
-//    }catch(err) {}
-//    var tooltipElem = document.createElement('div');
-//    tooltipElem.id = 'tooltip';
-//    tooltipElem.setAttribute("style", "position:relative;max-width: 100%;float:left;")
-//    var http = createRequestObject();
-//    var linkfull = '/friends';
-//    var html = ""
-//    if (http) {
-//        http.open('get', linkfull);
-//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-//        http.onreadystatechange = function () {
-//        if (http.readyState == 4) {
-//            var data = JSON.parse(http.responseText);
-//            data = JSON.parse(data.data);
-//            for (var z in data) {
-////                console.log(data[z].fields.image_user != "oneProf.png")
-//                if (data[z].fields.image_user != "oneProf.png") {
-//                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
-//                } else {
-//                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
-//                }
-//                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}</div>`
-////                html += `<div id="user_friends_list" style="float: left;display: block;">${div_image_user}<div id="user_friends_name">${data[z].fields.username}</div></div>`
-//                //${data[z].fields.username}
-//            }
-//            tooltipElem.innerHTML = `<h1 id="h1-friends">ДРУЗЬЯ ${count_users}</h1>`;
-//            tooltipElem.innerHTML += `<div id="friends_list">${html}</div>`;
-////            document.getElementById("DODO").appendChild(tooltipElem);
-////            document.getElementById("DODO").insertBefore(tooltipElem, document.getElementById("DODO").firstChild);
-//            var node = document.createElement('div');
-//            node.id = 'node';
-//            var block_post = document.getElementById('block-post');
-//            block_post.style.display = 'block';
-//            node.appendChild(tooltipElem);
-//            block_post.innerHTML = "";
-//            block_post.appendChild(node);
-////            tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
-////            over.appendChild(tooltipElem);              
-////            tooltipElem.innerHTML = http.responseText;
-////            over.appendChild(tooltipElem);            
-//        }
-//    };
-//    http.send(null);
-//    } else {
-//        document.location = link;
-//    }
-//}
-
-function FRIENDS(link) {
-    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
-    var tooltipElem = document.createElement('div');
-    tooltipElem.id = 'tooltip_'+link;
-    var over = document.getElementById("tooltip");
+// друзья переслать
+function FRIENDS(link, page_num, loadmore) {
+    if(isLoading) return false;
+    page_num = typeof page_num !== 'undefined' ?  page_num : 1;
+    console.log(link, page_num, loadmore)
+    if (loadmore == "loadmore") {
+        var div_iop3 = document.getElementById("IOP3");
+        var block_post = document.getElementById('friends_list');
+        var tooltipElem = document.getElementById('tooltip_'+link);
+    } else { 
+        try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
+        var tooltipElem = document.createElement('div');
+        tooltipElem.id = 'tooltip_'+link;
+        tooltipElem.setAttribute("style", `max-height: ${window.innerHeight*0.7};overflow-y: scroll;float: left;position: relative;`);
+        document.getElementById("block-post").style.overflowY = 'hidden';
+        var over = document.getElementById("tooltip");
+        var div_iop3 = document.createElement("div");
+        div_iop3.id = "IOP3";
+    }    
     var http = createRequestObject();
-    var linkfull = '/friends';
+    var linkfull = '/friends/'+ link + "/?page="+page_num;
     var html = ""
     if (http) {
         http.open('get', linkfull);
@@ -1100,6 +1116,8 @@ function FRIENDS(link) {
         http.onreadystatechange = function () {
         if (http.readyState == 4) {
             var data = JSON.parse(http.responseText);
+            console.log(data.op1)
+            div_iop3.innerText = data.op1;
             data = JSON.parse(data.data);
             for (var z in data) {
                 if (data[z].fields.image_user != "oneProf.png") {
@@ -1109,10 +1127,35 @@ function FRIENDS(link) {
                 }
                 html += div_image_user
             }
-            tooltipElem.innerHTML = html;
-            over.appendChild(tooltipElem);              
+            if (loadmore == "loadmore") { 
+                tooltipElem.innerHTML += html;
+                 
+            } else {
+                tooltipElem.innerHTML = html;
+                over.appendChild(tooltipElem); 
+                over.appendChild(div_iop3);
+            }
 //            tooltipElem.innerHTML = http.responseText;
-//            over.appendChild(tooltipElem);            
+//            over.appendChild(tooltipElem); 
+  
+            function getScrollPercent() {
+                var h = tooltipElem, 
+                    b = document.body,
+                    st = 'scrollTop',
+                    sh = 'scrollHeight';
+                return (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+            }                
+            function test_scroll() {
+                processed_page = getScrollPercent();  
+                if (div_iop3.innerText!="STOP") {
+                    if (processed_page >= 80) {
+                        FRIENDS(link, div_iop3.innerText, "loadmore");
+                        isLoading = true;
+                    }
+                }
+            }   
+            tooltipElem.onscroll = test_scroll;
+            isLoading = false;          
         }
     };
     http.send(null);
@@ -1148,6 +1191,7 @@ function menuset(self, link, username, del_indicator, like_count, total_friends)
             self.style.transform = "rotate(0deg)"; 
             document.getElementById('tooltip').remove();
             self.setAttribute("open-atr", "close");
+            document.getElementById("block-post").style.overflowY = 'scroll';
         }
         tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
         document.getElementById("breadcrumb").appendChild(tooltipElem);
@@ -1158,10 +1202,10 @@ function menuset(self, link, username, del_indicator, like_count, total_friends)
         if (top < 0) {top = coords.top + self.offsetHeight + 5;}
         tooltipElem.style.top = top+10 + 'px';   
         function test_scroll() {
-            try{document.getElementById('tooltip').remove();
-                self.setAttribute("open-atr", "close");
-                self.style.transform = "rotate(0deg)"; 
-                }catch(err) {}
+//            try{document.getElementById('tooltip').remove();
+//                self.setAttribute("open-atr", "close");
+//                self.style.transform = "rotate(0deg)"; 
+//                }catch(err) {}
             
         }   
         document.getElementById("block-post").onscroll = test_scroll;
@@ -1750,7 +1794,6 @@ function getIndex(node) {
 }
 
 function showContent(link, _type) {
-    console.log(innode, len)
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
     try{document.getElementById('tooltip').remove();}catch(err) {}
     

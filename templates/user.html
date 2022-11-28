@@ -57,6 +57,12 @@
             <a onclick="folls('{{ user_info.id }}')">Подписан <span id="folls_coun_{{ user_info.id }}">{{ user_info.get_following.count }}</span></a>
             <em>•</em>
             <a onclick="getlkpost('{{ user_info.id }}')">Нравится <span id="folls_coun_{{ user_info.id }}">{{ user_info.total_likes }}</span></a>
+
+<!--            <a onclick="foll('{{ user_info.id }}', {{ user_info.get_followers.count }})">Подписчики</a>-->
+<!--            <em>•</em>-->
+<!--            <a onclick="folls('{{ user_info.id }}'), '{{ user_info.get_following.count }}'">Подписан</a>-->
+<!--            <em>•</em>-->
+<!--            <a onclick="getlkpost('{{ user_info.id }}', '{{ user_info.total_likes }}')">Нравится</a>-->
         </div>
     </div>
 {#    <div onclick="userViewPost('{{ user_info.username }}')" class="userview"></div>#}
