@@ -811,8 +811,6 @@ function LIKEOVER(link, page_num, loadmore) {
 }
 
 
-
-
 //function LIKEOVER(link) {
 //    var html= '';
 //    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
@@ -1009,6 +1007,7 @@ function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
     } else { 
         var block_post = document.getElementById('block-post');
         block_post.innerHTML = "";
+        document.getElementById("block-post").style.overflowY = 'scroll';
         var div_iop2 = document.createElement("div");
         div_iop2.id = "IOP2";
         document.body.style.overflow = 'hidden';
