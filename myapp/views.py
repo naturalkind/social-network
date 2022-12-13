@@ -487,8 +487,7 @@ def user_page(request, user):
     if request.method == 'GET':
         post = list(Post.objects.filter(user_post__id=user))
         p = Post.objects.filter(relike=user_info)
-        for i in p:
-            post.append(getps(int(i.id)))
+        post += p
         paginator = Paginator(post, 20)
         page = request.GET.get('page')
         data = {}

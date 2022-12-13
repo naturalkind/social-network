@@ -63,24 +63,22 @@ def gen_relationship_user_random():
     print ("START GEN_RELATIONSHIP_USER_RANDOM")
     users_all = User.objects.all()
     users_all_count = User.objects.all().count()
-    posts_all = Post.objects.all()
     for u in users_all:
         file_path = random.choice(range(users_all_count))
         if u.pk != file_path:
             u.add_relationship(list(users_all)[file_path], RELATIONSHIP_FOLLOWING)
             list(users_all)[file_path].add_relationship(u, RELATIONSHIP_FOLLOWING)
-    print (f"Пользоветели: {len(list(users_all))}; Посты: {len(list(posts_all))}")
+    print (f"Пользоветели: {users_all_count}")
     
 
 # генирация друзья
 def gen_relationship_user():
     print ("START GEN_RELATIONSHIP_USER")
     users_all = User.objects.all()
-    posts_all = Post.objects.all()
-    for u in users_all[:2]:
+    for u in users_all[:]:
         for uu in users_all: 
             u.add_relationship(uu , RELATIONSHIP_FOLLOWING)
-    print (f"Пользоветели: {users_all.count()}; Посты: {posts_all.count()}")
+    print (f"Пользоветели: {users_all.count()}")
  
 
 # генирация комментариев
@@ -131,11 +129,11 @@ def gen_repost():
                 ans.add_rela(u, RELATIONSHIP_FOLLOWING)
     
 
-#gen_post() # генерация материала
+gen_post() # генерация материала
 #gen_relationship_user_random() # генирация друзья random.choice
-#gen_relationship_user() # генирация друзья
-#gen_comment() # генерация комментариев 
-#gen_like_post() # генирация 'лайков'
+gen_relationship_user() # генирация друзья
+gen_comment() # генерация комментариев 
+gen_like_post() # генирация 'лайков'
 gen_repost() # генирация репоста
 
 
