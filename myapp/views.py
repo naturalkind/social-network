@@ -473,10 +473,6 @@ def follows(request, id):
     return HttpResponse(json.dumps(data), content_type = "application/json")
 
 
-def getps(i):
-    ps = Post.objects.get(id=int(i))
-    return ps
-
 # страница пользователя
 def user_page(request, user):
     user_info = User.objects.get(pk=user)
