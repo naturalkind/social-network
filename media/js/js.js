@@ -2058,8 +2058,12 @@ function activate_wall(user_name) {
                 }            
             
             } else if (message_data["status"]=="Done") { 
-                    console.log("DONE");
+                console.log("DONE");
                     
+            } else if (message_data["status"]=="Kandinsky-2.0") {
+                var ImGen = document.querySelector("[atribut='"+message_data["post"]+"']");
+                console.log("Kandinsky-2.0", message_data, ImGen.getElementsByTagName('img')[0]);
+                ImGen.getElementsByTagName('img')[0].src = `/media/data_image/${message_data["path_data"]}/${message_data["data"]}`;
             }
         };
         ws_wall.onclose = function(){

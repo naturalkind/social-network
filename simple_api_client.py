@@ -209,7 +209,7 @@ def post_datas(user="sadko_1", password="1"):
         login_data = dict(username=user, password=password, csrfmiddlewaretoken=csrftoken, next='/')
         r = client.post(url, data=login_data, headers=dict(Referer=url))
         get_reg = client.get("http://178.158.131.41:8888/")
-        ws = websocket.WebSocketApp("ws://xn--90aci8aadpej1e.com:80/",
+        ws = websocket.WebSocketApp("ws://xn--90aci8aadpej1e.com:8888/",
                                      on_message=on_message,
                                      on_error=on_error,
                                      cookie = f"csrftoken={client.cookies['csrftoken']}; sessionid={client.cookies['sessionid']}")
@@ -221,16 +221,17 @@ def post_datas(user="sadko_1", password="1"):
 
 
 if __name__ == "__main__":
-    print ("RUN...", sys.argv[1])
     #"naturalkind", "1"
-    if sys.argv[1] == "register":
-        register() # создание пользователей
-    elif sys.argv[1] == "post_datas":
-        post_datas(sys.argv[2], sys.argv[3]) # отправить много данных пользователя через websocket USER, PASSWORD ->
-    elif sys.argv[1] == "post_data":        
-        post_data(sys.argv[2], sys.argv[3]) # отправить данные пользователя через websocket USER, PASSWORD ->
-    elif sys.argv[1] == "user_data":
-        user_data(1, 1) # данные пользователя ID, PAGE ->
-    elif sys.argv[1] == "users":
-        users(1) # пользователи PAGE ->
+    if len(list(sys.argv)) > 1:
+        print ("RUN...", sys.argv)
+        if sys.argv[1] == "register":
+            register() # создание пользователей
+        elif sys.argv[1] == "post_datas":
+            post_datas(sys.argv[2], sys.argv[3]) # отправить много данных пользователя через websocket USER, PASSWORD ->
+        elif sys.argv[1] == "post_data":        
+            post_data(sys.argv[2], sys.argv[3]) # отправить данные пользователя через websocket USER, PASSWORD ->
+        elif sys.argv[1] == "user_data":
+            user_data(1, 1) # данные пользователя ID, PAGE ->
+        elif sys.argv[1] == "users":
+            users(1) # пользователи PAGE ->
 
