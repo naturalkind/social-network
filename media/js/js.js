@@ -1958,14 +1958,16 @@ function activate_wall(user_name) {
                                                  height="auto" 
                                                  width="auto" 
                                                  onclick="showImg(this)" 
-                                                 class="wallpost">`;
+                                                 class="wallpost"
+                                                 id="image-post-${message_data.id}">`;
                                                  
                 } else {
                     var div_image_post = `<img src="/media/images/no_image.png"
                                                  height="auto" 
                                                  width="auto" 
                                                  onclick="showImg(this)" 
-                                                 class="wallpost">`;
+                                                 class="wallpost"
+                                                 id="image-post-${message_data.id}">`;
                 }
                 
                 fc.innerHTML = `<div class="views-title" style="width: 100%;float: left;">
@@ -2061,9 +2063,14 @@ function activate_wall(user_name) {
                 console.log("DONE");
                     
             } else if (message_data["status"]=="Kandinsky-2.0") {
-                var ImGen = document.querySelector("[atribut='"+message_data["post"]+"']");
-                console.log("Kandinsky-2.0", message_data, ImGen.getElementsByTagName('img')[0]);
-                ImGen.getElementsByTagName('img')[0].src = `/media/data_image/${message_data["path_data"]}/${message_data["data"]}`;
+//                var ImGen = document.querySelector("[atribut='"+message_data["post"]+"']");
+//                console.log("Kandinsky-2.0", message_data, ImGen, ImGen.getElementsByTagName('img')[0]);
+//                ImGen.getElementsByTagName('img')[0].src = `/media/data_image/${message_data["path_data"]}/${message_data["data"]}`;
+                try {
+                    var ImGen = document.getElementById(`image-post-${message_data["post"]}`)
+                    ImGen.src = `/media/data_image/${message_data["path_data"]}/${message_data["data"]}`;
+                } catch(e) {};
+
             }
         };
         ws_wall.onclose = function(){

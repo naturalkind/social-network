@@ -19,9 +19,9 @@
         </div>
         <div class="field-image" atribut="{{message.id}}">
             {% if message.image != "" %}
-                <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy">
+                <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy" id="image-post-{{message.id}}">
             {% else %}
-                <img src="/media/images/no_image.png" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy">
+                <img src="/media/images/no_image.png" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy" id="image-post-{{message.id}}">
             {% endif %}
         </div>
         <div id="body-post-wall">
