@@ -75,9 +75,8 @@
                  placeholder="Введите ваше сообщение..." 
                  contentEditable=true></div>
         </div>
-        <button id="btn" type="button">ОТПРАВИТЬ</button>
+        <button id="btn" type="button" onclick="send_message(this, '{{ thread_id }}');">ОТПРАВИТЬ</button>
 <!--        <div class="send">-->
-<!--            -->
 <!--        </div>-->
     </form>
 <script>

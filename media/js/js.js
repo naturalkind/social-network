@@ -2270,6 +2270,7 @@ function mesID(thread_id, user_name, number_of_messages, _type){
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
+//                console.log(activate_chat(thread_id, user_name, number_of_messages))
                 activate_chat(thread_id, user_name, number_of_messages);
                 window.scrollBy(0, document.getElementById("conver").scrollHeight);
                 _page = "chat";
@@ -2283,15 +2284,18 @@ function mesID(thread_id, user_name, number_of_messages, _type){
     }
 }
 
-var ws_chat;
+
+var ws_dict = {}
 function activate_chat(thread_id, user_name, number_of_messages) {
-    var received = document.getElementById('received').innerText;
-    var sent = document.getElementById('sent').innerText;
     console.log("activate_chat", thread_id);
     function start_chat_ws() {
-        var tev = document.getElementById('conver');
-        ws_chat = new WebSocket("ws://"+ IP_ADDR +":"+PORT+"/" + thread_id + "/");
+        var ws_chat = new WebSocket("ws://"+ IP_ADDR +":"+PORT+"/" + thread_id + "/");
         ws_chat.onmessage = function(event) {
+            var received = document.getElementById('received').innerText;
+            var sent = document.getElementById('sent').innerText;
+            var tev = document.getElementById('conver');
+            
+            
             var message_data = JSON.parse(event.data);
             if (message_data["event"] == "privatemessages") {
                 var date = new Date(message_data.timestamp*1000);
@@ -2314,7 +2318,6 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                                         </span>
                                     </p>
                                   </div>`;
-//                 '<div class="message"><p class="author ' + ((message_data.sender == user_name) ? 'we' : 'partner') + '"><img src="/media/data_image/'+ message_data.path_data +'/tm_'+ message_data.image_user +'" class="usPr" onclick="userPROFILE('+ "'" + message_data.sender_id + "'" +')"></p><p class="txtmessage '+((message_data.sender == user_name) ? 'we' : 'partner') + '">' + message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />') + '<span class="datetime" style="font-size: 15px;color: #afafaf;">' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '</span></p></div>';
 
                 number_of_messages++;
                 if (message_data.sender == user_name) {
@@ -2383,6 +2386,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
             // переподключение через 5 секунд
             setTimeout(function() {start_chat_ws()}, 5000);
         };
+        ws_dict[thread_id] = ws_chat;
     }
 
     if ("WebSocket" in window) {
@@ -2393,24 +2397,20 @@ function activate_chat(thread_id, user_name, number_of_messages) {
 
         return false;
     }
-
-    var onMESv1 = document.getElementById('btn');
-    onMESv1.addEventListener('click', send_message);
-    onMESv1.onclick = function (){
-        send_message();
-    };
     
 }
 
-function send_message() {
+function send_message(self, link) {
     var textarea = document.getElementById('message_textarea');
     if (textarea.innerText == "") {
         return false;
     }
-    if (ws_chat.readyState != WebSocket.OPEN) {
+    console.log(ws_dict);
+    if (ws_dict[link].readyState != WebSocket.OPEN) {
         return false;
     }
-    ws_chat.send(JSON.stringify({"event":"privatemessages", "message":textarea.innerText}));
+    ws_dict[link].send(JSON.stringify({"event":"privatemessages", "message":textarea.innerText}));
+//    ws_chat.send(JSON.stringify({"event":"privatemessages", "message":textarea.innerText}));
     textarea.innerText = "";
 }
 
@@ -2544,108 +2544,6 @@ function send_com(self, cip) {
         canvas.height = 0;
     } 
 }
-
-
-
-//function send_com(self, cip) {
-//    if (typeof dataURL_v1 == 'undefined') {
-//        dataURL_v1 = "";
-//    }
-//    var zetr = document.getElementById("comment_image_id_"+cip);
-//    var comment_text = document.getElementById('comment_text_' + cip);
-//    if (comment_text.innerText == "") {
-//        return false;
-//    }
-//    document.getElementsByClassName('compose_'+cip)[0].style.display = "none";
-//    document.getElementById('results_'+cip).appendChild(t_el);
-//    var data = JSON.stringify({ comment_text : comment_text.innerText,
-//                                comment_image: dataURL_v1 });
-//    try {
-//        if (ws_dict[cip].url.split('/')[4] != cip) {
-//        } else {
-//            if (ws_dict[cip].readyState != WebSocket.OPEN) {
-//                return false;
-//            }
-//            ws_dict[cip].send(data);
-//            comment_text.innerText = "";
-//            if (typeof context !== 'undefined') {
-//                context.clearRect(0, 0, canvas.width, canvas.height);
-//                dataURL_v1 = "";
-//                canvas.width = 0;
-//                canvas.height = 0;
-//            }
-
-//        }
-//    } catch(e) {
-////        console.log(cip, e);
-//        zetr.setAttribute("indicator-ws", "open");
-//        ws_dict[cip] = activate_com(cip);
-//        ws_dict[cip].send(data);
-//        comment_text.innerText = "";
-//    }
-//    console.log(zetr, _page, ws_dict, cip);
-//}
-
-
-//function activate_com(post_id) {
-//    function start_com_ws() {
-//        var ws_com = new WebSocket("ws://"+ IP_ADDR + ":"+PORT+"/comment/" + post_id + "/");
-//        ws_com.onmessage = function(event) {
-//            var tev = document.getElementById('field-comment_'+post_id);
-//            var fc = document.createElement('div');
-//            fc.className = 'f-c';
-//            var message_data = JSON.parse(event.data);
-//            if (message_data.image_user != "oneProf.png") {
-//                var img_com_user = `"/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"`;
-//            } else {
-//                var img_com_user = `"/media/images/oneProf.png"`;
-//            }
-//            if (message_data.comment_image != "") {
-//                fc.innerHTML = `<img id="image-user" 
-//                                     src=${img_com_user} 
-//                                     class="imgUs" 
-//                                     onclick="userPROFILE(${message_data.user_id})" s
-//                                     tyle="cursor:pointer;" loading="lazy">
-//                                <a onclick="userPROFILE(${message_data.user_id})" 
-//                                   id="user-comment">${message_data.comment_user}</a>
-//                                <p id="comment-text">${message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}</p>
-//                                <img id="comment-image" 
-//                                     src="/media/data_image/${message_data.comment_image}" 
-//                                     onclick="showImg(this)">`
-//            } else {
-//                fc.innerHTML = `<img id="image-user" 
-//                                     src=${img_com_user} 
-//                                     class="imgUs" 
-//                                     onclick="userPROFILE(${message_data.user_id})" 
-//                                     style="cursor:pointer;" 
-//                                     loading="lazy">
-//                                <a onclick="userPROFILE(${message_data.user_id})" 
-//                                   id="user-comment">${message_data.comment_user}</a>
-//                                <p id="comment-text">${message_data.comment_text}</p>`
-//            }
-//            fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
-//            tev.insertBefore(fc, tev.lastChild);
-//            document.getElementsByClassName('compose_'+post_id)[0].style.display = "block";
-//            try {
-//                document.getElementById('results_'+post_id).removeChild(t_el);
-//            } catch (e) {}
-//            try {
-//                document.getElementById("block-post").scrollTo(0, document.getElementById("node").getBoundingClientRect()['height']);
-//            } catch (e) {}
-//        };
-//        return ws_com
-//    }
-
-//    if ("WebSocket" in window) {
-//        return start_com_ws();
-//    } else {
-//        var formMS = document.getElementById('message_form');
-//        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
-//        return false;
-//    }
-//}
-
-
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
