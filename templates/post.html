@@ -26,9 +26,9 @@
         {% if username != post.user_post.username %}    
             <div id="_post_like_block_{{post.id}}" style="width: 100%">
                 {% if request.user in post.likes.all %}
-                    <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">
+                    <img class="icon-like" id="post_image_{{post.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">
                 {% else %}
-                    <img class="icon-like" id="post_image_{{message.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">     
+                    <img class="icon-like" id="post_image_{{post.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">     
                 {% endif %}
                 
                 {% if request.user in post.relike.all %}

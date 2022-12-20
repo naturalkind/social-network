@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'myapp',
     'wall',
     'privatemessages',
-    'comment',
     'channels',
 ]
 

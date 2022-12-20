@@ -1,4 +1,4 @@
-var IP_ADDR = "xn--90aci8aadpej1e.com";
+var IP_ADDR = window.location.hostname;
 var PORT = "80";
 
 var innode;
@@ -415,15 +415,15 @@ function editPROFF(self){
                     color_picker,
                     function(hex, hsv, rgb) {
                       //console.log(hsv.h, hsv.s, hsv.v);         // [0-359], [0-1], [0-1]
-                      console.log(rgb.r, rgb.g, rgb.b);         // [0-255], [0-255], [0-255]
+//                      console.log(rgb.r, rgb.g, rgb.b);         // [0-255], [0-255], [0-255]
                       //document.body.style.backgroundColor = hex;        // #HEX
                       //us_name_class.style.backgroundColor = hex;
                       user_page_name.style.color = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-                      console.log(user_page_name.style.color);
+//                      console.log(user_page_name.style.color);
                 });  
                 self.src = "/media/images/close3.png"  
                 self.style.background = " #ffffff";    
-                console.log(self)  
+//                console.log(self)  
 //                self.className = "icon-like"  
             }
         };
@@ -739,7 +739,7 @@ var linkfull = '/add_like/?post_id='+link;
 function LIKEOVER(link, page_num, loadmore) {
     if(isLoading) return false;
     page_num = typeof page_num !== 'undefined' ?  page_num : 1;
-    console.log(link, page_num, loadmore)
+//    console.log(link, page_num, loadmore)
     if (loadmore == "loadmore") {
         var div_iop3 = document.getElementById("IOP3");
         var block_post = document.getElementById('friends_list');
@@ -763,7 +763,7 @@ function LIKEOVER(link, page_num, loadmore) {
         http.onreadystatechange = function () {
         if (http.readyState == 4) {
             var data = JSON.parse(http.responseText);
-            console.log(data.op1)
+//            console.log(data.op1)
             div_iop3.innerText = data.op1;
             data = JSON.parse(data.data);
             for (var z in data) {
@@ -981,7 +981,7 @@ function getCookie(name) {
 
 function reSend(user_id, post_id) {
     var crsv = getCookie('csrftoken'); // токен
-    console.log(user_id, post_id, crsv);
+//    console.log(user_id, post_id, crsv);
     var http = createRequestObject();
     var linkfull = '/friends/';
     if (http) {
@@ -1091,7 +1091,7 @@ function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
 function FRIENDS(link, page_num, loadmore) {
     if(isLoading) return false;
     page_num = typeof page_num !== 'undefined' ?  page_num : 1;
-    console.log(link, page_num, loadmore)
+//    console.log(link, page_num, loadmore)
     if (loadmore == "loadmore") {
         var div_iop3 = document.getElementById("IOP3");
         var block_post = document.getElementById('friends_list');
@@ -1115,7 +1115,7 @@ function FRIENDS(link, page_num, loadmore) {
         http.onreadystatechange = function () {
         if (http.readyState == 4) {
             var data = JSON.parse(http.responseText);
-            console.log(data.op1)
+//            console.log(data.op1)
             div_iop3.innerText = data.op1;
             data = JSON.parse(data.data);
             for (var z in data) {
@@ -1166,7 +1166,7 @@ function FRIENDS(link, page_num, loadmore) {
 
 // меню 
 function menuset(self, link, username, del_indicator, like_count, total_friends) {
-    console.log(link, username, del_indicator, like_count)
+//    console.log(link, username, del_indicator, like_count)
     if (self.getAttribute("open-atr")=="close") {
         self.style.transform = "rotate(90deg)"; 
         self.setAttribute("open-atr", "open")
@@ -1802,17 +1802,12 @@ function showContent(link, _type) {
         if (comv == "open") {
             comView(document.getElementById("comment_image_id_"+link));
         } else {
-            if (link in ws_dict){
-                console.log("showContent", link in ws_dict); //ws_dict
-            } else {
-                ws_dict[link] = activate_com(link);
-            }
             document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws", "open")  
         }
     } catch (e) {} 
-    if (_page=="chat") {
-        ws_dict[link] = activate_com(link);
-    }
+//    if (_page=="chat") {
+//        ws_dict[link] = activate_com(link);
+//    }
     //------------------------------->
     function getScrollPercent() {
         var h = document.getElementById("block-post"), 
@@ -1904,12 +1899,11 @@ function showContent(link, _type) {
                     function test_scroll() {
                         processed_page = getScrollPercent();
                         var cord_y = document.getElementById("_post_like_block_"+link).getBoundingClientRect()["y"];
-//                        console.log(processed_page, (cord_y/document.getElementById("block-post")['scrollHeight'])*100)
                     }
                     block_post.onscroll = test_scroll;
                     try { 
                         document.getElementById("see_more_button_"+link).onclick = function() {
-                            console.log("see_more_button", document.getElementById("IOPcom_"+link).innerText);
+//                            console.log("see_more_button", document.getElementById("IOPcom_"+link).innerText);
                             load_more_comment(link, document.getElementById("IOPcom_"+link).innerText)
                         }
                     } catch (e) {}
@@ -2071,7 +2065,57 @@ function activate_wall(user_name) {
                     ImGen.src = `/media/data_image/${message_data["path_data"]}/${message_data["data"]}`;
                 } catch(e) {};
 
+            } else if (message_data["status"]=="send_comment") {
+            
+                var message_data = JSON.parse(event.data);
+                
+                var tev = document.getElementById('field-comment_'+message_data["post_id"]);
+                var fc = document.createElement('div');
+                fc.className = 'f-c';                
+                if (message_data.image_user != "oneProf.png") {
+                    var img_com_user = `"/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"`;
+                } else {
+                    var img_com_user = `"/media/images/oneProf.png"`;
+                }
+                if (message_data.comment_image != "") {
+                    fc.innerHTML = `<img id="image-user" 
+                                         src=${img_com_user} 
+                                         class="imgUs" 
+                                         onclick="userPROFILE(${message_data.user_id})" s
+                                         tyle="cursor:pointer;" loading="lazy">
+                                    <a onclick="userPROFILE(${message_data.user_id})" 
+                                       id="user-comment">${message_data.comment_user}</a>
+                                    <p id="comment-text">${message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}</p>
+                                    <img id="comment-image" 
+                                         src="/media/data_image/${message_data.comment_image}" 
+                                         onclick="showImg(this)">`
+                } else {
+                    fc.innerHTML = `<img id="image-user" 
+                                         src=${img_com_user} 
+                                         class="imgUs" 
+                                         onclick="userPROFILE(${message_data.user_id})" 
+                                         style="cursor:pointer;" 
+                                         loading="lazy">
+                                    <a onclick="userPROFILE(${message_data.user_id})" 
+                                       id="user-comment">${message_data.comment_user}</a>
+                                    <p id="comment-text">${message_data.comment_text}</p>`
+                }
+                fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
+                tev.insertBefore(fc, tev.lastChild);
+                document.getElementsByClassName('compose_'+message_data["post_id"])[0].style.display = "block";
+                try {
+                    document.getElementById('results_'+message_data["post_id"]).removeChild(t_el);
+                } catch (e) {}
+                try {
+                    document.getElementById("block-post").scrollTo(0, document.getElementById("node").getBoundingClientRect()['height']);
+                } catch (e) {}            
+            
+            
+            
+            
             }
+            
+            
         };
         ws_wall.onclose = function(){
             // Try to reconnect in 5 seconds
@@ -2375,7 +2419,6 @@ function send_message() {
 ///  комментарии /////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
-var ws_dict = {}
 function comView(z){
     var comv = z.getAttribute('open-atr');
     var link = z.getAttribute('id-comment');
@@ -2397,7 +2440,7 @@ function comView(z){
                     conr.style.display = 'block';
                     if (type_div == "icon" && z.getAttribute("indicator-ws") == "close") {
                         z.setAttribute("indicator-ws", "open")
-                        ws_dict[link] = activate_com(link);
+                        //ws_dict[link] = activate_com(link);
                     }
                     try { 
                         document.getElementById("see_more_button_"+link).onclick = function() {
@@ -2435,7 +2478,7 @@ function load_more_comment(link, page) {
     //                    document.getElementById("field-comment_"+link).insertBefore()
                         var f = JSON.parse(http.responseText);
                         var data = JSON.parse(f["data"]);
-                        console.log("load_more_comment................", data)
+//                        console.log("load_more_comment................", data)
                         for (var z in data) {
                             var f_c = document.createElement('div');
                             f_c.className = 'f-c';
@@ -2450,10 +2493,6 @@ function load_more_comment(link, page) {
                             } else {
                                 var comment_image = "";
                             }
-    //            {% if cm.comment_image %}
-    //                
-    //<!--                display:block;margin:0 auto;max-width:400px;width: auto;height:auto;max-height: 240px;-->
-    //            {% endif %}                        
                             var comment_date = new Date(data[z].fields.timecomment);
                             var comment_month = comment_date.toLocaleString('en-US', { month: 'short' });
                             f_c.innerHTML = `${div_image_user}<a onclick="userPROFILE('${data[z].fields.comment_user[2]}', 'javascript')" id="user-comment">${data[z].fields.comment_user[3]}</a>
@@ -2485,7 +2524,6 @@ function send_com(self, cip) {
     if (typeof dataURL_v1 == 'undefined') {
         dataURL_v1 = "";
     }
-    var zetr = document.getElementById("comment_image_id_"+cip);
     var comment_text = document.getElementById('comment_text_' + cip);
     if (comment_text.innerText == "") {
         return false;
@@ -2493,90 +2531,120 @@ function send_com(self, cip) {
     document.getElementsByClassName('compose_'+cip)[0].style.display = "none";
     document.getElementById('results_'+cip).appendChild(t_el);
     var data = JSON.stringify({ comment_text : comment_text.innerText,
-                                comment_image: dataURL_v1 });
-    try {
-        if (ws_dict[cip].url.split('/')[4] != cip) {
-        } else {
-            if (ws_dict[cip].readyState != WebSocket.OPEN) {
-                return false;
-            }
-            ws_dict[cip].send(data);
-            comment_text.innerText = "";
-            if (typeof context !== 'undefined') {
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                dataURL_v1 = "";
-                canvas.width = 0;
-                canvas.height = 0;
-            }
-
-        }
-    } catch(e) {
-//        console.log(cip, e);
-        zetr.setAttribute("indicator-ws", "open");
-        ws_dict[cip] = activate_com(cip);
-        ws_dict[cip].send(data);
-        comment_text.innerText = "";
-    }
-    console.log(zetr, _page, ws_dict, cip);
+                                comment_image: dataURL_v1,
+                                event: "comment_post",
+                                post_id: cip });
+    
+    ws_wall.send(data)
+    comment_text.innerText = "";
+    if (typeof context !== 'undefined') {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        dataURL_v1 = "";
+        canvas.width = 0;
+        canvas.height = 0;
+    } 
 }
 
-function activate_com(post_id) {
-    function start_com_ws() {
-        var ws_com = new WebSocket("ws://"+ IP_ADDR + ":"+PORT+"/comment/" + post_id + "/");
-        ws_com.onmessage = function(event) {
-            var tev = document.getElementById('field-comment_'+post_id);
-            var fc = document.createElement('div');
-            fc.className = 'f-c';
-            var message_data = JSON.parse(event.data);
-            if (message_data.image_user != "oneProf.png") {
-                var img_com_user = `"/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"`;
-            } else {
-                var img_com_user = `"/media/images/oneProf.png"`;
-            }
-            if (message_data.comment_image != "") {
-                fc.innerHTML = `<img id="image-user" 
-                                     src=${img_com_user} 
-                                     class="imgUs" 
-                                     onclick="userPROFILE(${message_data.user_id})" s
-                                     tyle="cursor:pointer;" loading="lazy">
-                                <a onclick="userPROFILE(${message_data.user_id})" 
-                                   id="user-comment">${message_data.comment_user}</a>
-                                <p id="comment-text">${message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}</p>
-                                <img id="comment-image" 
-                                     src="/media/data_image/${message_data.comment_image}" 
-                                     onclick="showImg(this)">`
-            } else {
-                fc.innerHTML = `<img id="image-user" 
-                                     src=${img_com_user} 
-                                     class="imgUs" 
-                                     onclick="userPROFILE(${message_data.user_id})" 
-                                     style="cursor:pointer;" 
-                                     loading="lazy">
-                                <a onclick="userPROFILE(${message_data.user_id})" 
-                                   id="user-comment">${message_data.comment_user}</a>
-                                <p id="comment-text">${message_data.comment_text}</p>`
-            }
-            fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
-            tev.insertBefore(fc, tev.lastChild);
-            document.getElementsByClassName('compose_'+post_id)[0].style.display = "block";
-            try {
-                document.getElementById('results_'+post_id).removeChild(t_el);
-            } catch (e) {}
-            try {
-                document.getElementById("block-post").scrollTo(0, document.getElementById("node").getBoundingClientRect()['height']);
-            } catch (e) {}
-        };
-        return ws_com
-    }
 
-    if ("WebSocket" in window) {
-        return start_com_ws();
-    } else {
-        var formMS = document.getElementById('message_form');
-        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
-        return false;
-    }
-}
+
+//function send_com(self, cip) {
+//    if (typeof dataURL_v1 == 'undefined') {
+//        dataURL_v1 = "";
+//    }
+//    var zetr = document.getElementById("comment_image_id_"+cip);
+//    var comment_text = document.getElementById('comment_text_' + cip);
+//    if (comment_text.innerText == "") {
+//        return false;
+//    }
+//    document.getElementsByClassName('compose_'+cip)[0].style.display = "none";
+//    document.getElementById('results_'+cip).appendChild(t_el);
+//    var data = JSON.stringify({ comment_text : comment_text.innerText,
+//                                comment_image: dataURL_v1 });
+//    try {
+//        if (ws_dict[cip].url.split('/')[4] != cip) {
+//        } else {
+//            if (ws_dict[cip].readyState != WebSocket.OPEN) {
+//                return false;
+//            }
+//            ws_dict[cip].send(data);
+//            comment_text.innerText = "";
+//            if (typeof context !== 'undefined') {
+//                context.clearRect(0, 0, canvas.width, canvas.height);
+//                dataURL_v1 = "";
+//                canvas.width = 0;
+//                canvas.height = 0;
+//            }
+
+//        }
+//    } catch(e) {
+////        console.log(cip, e);
+//        zetr.setAttribute("indicator-ws", "open");
+//        ws_dict[cip] = activate_com(cip);
+//        ws_dict[cip].send(data);
+//        comment_text.innerText = "";
+//    }
+//    console.log(zetr, _page, ws_dict, cip);
+//}
+
+
+//function activate_com(post_id) {
+//    function start_com_ws() {
+//        var ws_com = new WebSocket("ws://"+ IP_ADDR + ":"+PORT+"/comment/" + post_id + "/");
+//        ws_com.onmessage = function(event) {
+//            var tev = document.getElementById('field-comment_'+post_id);
+//            var fc = document.createElement('div');
+//            fc.className = 'f-c';
+//            var message_data = JSON.parse(event.data);
+//            if (message_data.image_user != "oneProf.png") {
+//                var img_com_user = `"/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"`;
+//            } else {
+//                var img_com_user = `"/media/images/oneProf.png"`;
+//            }
+//            if (message_data.comment_image != "") {
+//                fc.innerHTML = `<img id="image-user" 
+//                                     src=${img_com_user} 
+//                                     class="imgUs" 
+//                                     onclick="userPROFILE(${message_data.user_id})" s
+//                                     tyle="cursor:pointer;" loading="lazy">
+//                                <a onclick="userPROFILE(${message_data.user_id})" 
+//                                   id="user-comment">${message_data.comment_user}</a>
+//                                <p id="comment-text">${message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}</p>
+//                                <img id="comment-image" 
+//                                     src="/media/data_image/${message_data.comment_image}" 
+//                                     onclick="showImg(this)">`
+//            } else {
+//                fc.innerHTML = `<img id="image-user" 
+//                                     src=${img_com_user} 
+//                                     class="imgUs" 
+//                                     onclick="userPROFILE(${message_data.user_id})" 
+//                                     style="cursor:pointer;" 
+//                                     loading="lazy">
+//                                <a onclick="userPROFILE(${message_data.user_id})" 
+//                                   id="user-comment">${message_data.comment_user}</a>
+//                                <p id="comment-text">${message_data.comment_text}</p>`
+//            }
+//            fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
+//            tev.insertBefore(fc, tev.lastChild);
+//            document.getElementsByClassName('compose_'+post_id)[0].style.display = "block";
+//            try {
+//                document.getElementById('results_'+post_id).removeChild(t_el);
+//            } catch (e) {}
+//            try {
+//                document.getElementById("block-post").scrollTo(0, document.getElementById("node").getBoundingClientRect()['height']);
+//            } catch (e) {}
+//        };
+//        return ws_com
+//    }
+
+//    if ("WebSocket" in window) {
+//        return start_com_ws();
+//    } else {
+//        var formMS = document.getElementById('message_form');
+//        formMS.innerHTML = '<div class="outdated_browser_message"><p><em>Ой!</em> Вы используете устаревший браузер. Пожалуйста, установите любой из современных:</p><ul><li>Для <em>Android</em>: <a href="http://www.mozilla.org/ru/mobile/">Firefox</a>, <a href="http://www.google.com/intl/en/chrome/browser/mobile/android.html">Google Chrome</a>, <a href="https://play.google.com/store/apps/details?id=com.opera.browser">Opera Mobile</a></li><li>Для <em>Linux</em>, <em>Mac OS X</em> и <em>Windows</em>: <a href="http://www.mozilla.org/ru/firefox/fx/">Firefox</a>, <a href="https://www.google.com/intl/ru/chrome/browser/">Google Chrome</a>, <a href="http://ru.opera.com/browser/download/">Opera</a></li></ul></div>';
+//        return false;
+//    }
+//}
+
 
 
 ////////////////////////////////////////////////////////////
