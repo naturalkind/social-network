@@ -2325,7 +2325,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                 } else {
                     received++;
                 }
-                var tev1 = document.getElementById('messages');
+                var tev1 = document.getElementById('messages_'+thread_id);
                 if (tev1){
                 tev1.innerHTML = '<span id="total">' + number_of_messages + '</span> ' + getNumEnding(number_of_messages, ["сообщение", "сообщения", "сообщений"]) + ' (<span id="received">' + received + '</span> получено, <span id="sent">' + sent + '</span> отправлено)';
                 }

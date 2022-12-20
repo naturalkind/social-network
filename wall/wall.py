@@ -204,15 +204,17 @@ class WallHandler(AsyncJsonWebsocketConsumer):
 
                     # WORK
 #                    await self.send_and_get(self.temp_dict, model='queue')
-                    if self.namefile == "":
-                        _temp_dict = {}
-                        _temp_dict["title"] = response["title"]
-                        _temp_dict["path_data"] = self.path_data
-                        _temp_dict["post"] = post
-                        t = threading.Thread(target=self.send_and_get, 
-                                             args=[_temp_dict], 
-                                             kwargs={"model":"Kandinsky-2.0"})
-                        t.start()
+                    #-----------------------------------------> 
+#                    if self.namefile == "":
+#                        _temp_dict = {}
+#                        _temp_dict["title"] = response["title"]
+#                        _temp_dict["path_data"] = self.path_data
+#                        _temp_dict["post"] = post
+#                        t = threading.Thread(target=self.send_and_get, 
+#                                             args=[_temp_dict], 
+#                                             kwargs={"model":"Kandinsky-2.0"})
+#                        t.start()
+                    #-----------------------------------------> 
 #                    t.join() 
                     # CELERY
                     #Adata = func_celery.delay({"start":"ok", "room":self.room_group_name})                             
