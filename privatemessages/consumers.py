@@ -96,6 +96,7 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                        "image_user" : self.image_user, 
                        "path_data" : self.path_data,
                        "text": str(message_res),
+                       "thread_id" : self.room_name,
                        "event": "privatemessages"
                     }
             for key in ("total_messages", "".join(["from_", str(self.sender_id )])):

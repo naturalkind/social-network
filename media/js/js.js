@@ -70,7 +70,10 @@ function scroll(){
                     topbt_indicator = "scroll_down_chat";
                     temp_position = window.innerHeight;
                     document.getElementById("dot-loader").style.display = "block";
-                    ws_chat.send(JSON.stringify({"event":"loadmore", "message":document.getElementById('IOP').innerText}));
+                    ws_dict[document.getElementById("chat_id").innerText].send(
+                                JSON.stringify({"event":"loadmore", 
+                                                "message":document.getElementById('IOP').innerText})
+                            );
                 } 
             } else {
                 if(processed_page >= 80){
@@ -1805,9 +1808,6 @@ function showContent(link, _type) {
             document.getElementById("comment_image_id_"+link).setAttribute("indicator-ws", "open")  
         }
     } catch (e) {} 
-//    if (_page=="chat") {
-//        ws_dict[link] = activate_com(link);
-//    }
     //------------------------------->
     function getScrollPercent() {
         var h = document.getElementById("block-post"), 
@@ -2271,7 +2271,12 @@ function mesID(thread_id, user_name, number_of_messages, _type){
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
 //                console.log(activate_chat(thread_id, user_name, number_of_messages))
-                activate_chat(thread_id, user_name, number_of_messages);
+                if (thread_id in ws_dict){
+                        console.log("MESID", ws_dict);
+                } else {
+                    activate_chat(thread_id, user_name, number_of_messages);
+                }
+                
                 window.scrollBy(0, document.getElementById("conver").scrollHeight);
                 _page = "chat";
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
@@ -2286,6 +2291,7 @@ function mesID(thread_id, user_name, number_of_messages, _type){
 
 
 var ws_dict = {}
+//var ws_chat; 
 function activate_chat(thread_id, user_name, number_of_messages) {
     console.log("activate_chat", thread_id);
     function start_chat_ws() {
@@ -2294,9 +2300,12 @@ function activate_chat(thread_id, user_name, number_of_messages) {
             var received = document.getElementById('received').innerText;
             var sent = document.getElementById('sent').innerText;
             var tev = document.getElementById('conver');
-            
-            
             var message_data = JSON.parse(event.data);
+//            console.log(document.getElementById("chat_id").innerText, message_data["thread_id"])
+            if (document.getElementById("chat_id").innerText != message_data["thread_id"]) {
+                return false;
+            }
+            
             if (message_data["event"] == "privatemessages") {
                 var date = new Date(message_data.timestamp*1000);
                 if (message_data.image_user != "oneProf.png") {
@@ -2381,10 +2390,10 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                 
             //----------------------------------->                
             }
-        };
-        ws_chat.onclose = function(){
-            // переподключение через 5 секунд
-            setTimeout(function() {start_chat_ws()}, 5000);
+            ws_chat.onclose = function(){
+                // переподключение через 5 секунд
+                setTimeout(function() {start_chat_ws()}, 5000);
+            };
         };
         ws_dict[thread_id] = ws_chat;
     }
@@ -2405,12 +2414,18 @@ function send_message(self, link) {
     if (textarea.innerText == "") {
         return false;
     }
+//    if (ws_chat.readyState != WebSocket.OPEN) {
+//        return false;
+//    }    
+//    ws_chat.send(JSON.stringify({"event":"privatemessages", "message":textarea.innerText}));
+
+    
     console.log(ws_dict);
     if (ws_dict[link].readyState != WebSocket.OPEN) {
         return false;
     }
     ws_dict[link].send(JSON.stringify({"event":"privatemessages", "message":textarea.innerText}));
-//    ws_chat.send(JSON.stringify({"event":"privatemessages", "message":textarea.innerText}));
+
     textarea.innerText = "";
 }
 
@@ -2440,7 +2455,6 @@ function comView(z){
                     conr.style.display = 'block';
                     if (type_div == "icon" && z.getAttribute("indicator-ws") == "close") {
                         z.setAttribute("indicator-ws", "open")
-                        //ws_dict[link] = activate_com(link);
                     }
                     try { 
                         document.getElementById("see_more_button_"+link).onclick = function() {
