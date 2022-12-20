@@ -742,20 +742,21 @@ var linkfull = '/add_like/?post_id='+link;
 function LIKEOVER(link, page_num, loadmore) {
     if(isLoading) return false;
     page_num = typeof page_num !== 'undefined' ?  page_num : 1;
-//    console.log(link, page_num, loadmore)
+    console.log(link, page_num, loadmore)
+    var div_iop3 = document.getElementById("IOP3");
     if (loadmore == "loadmore") {
-        var div_iop3 = document.getElementById("IOP3");
+//        var div_iop3 = document.getElementById("IOP3");
         var block_post = document.getElementById('friends_list');
         var tooltipElem = document.getElementById('tooltip_'+link);
     } else { 
         try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
         var tooltipElem = document.createElement('div');
         tooltipElem.id = 'tooltip_'+link;
-        tooltipElem.setAttribute("style", `max-height: ${window.innerHeight*0.7};overflow-y: scroll;float: left;position: relative;`);
+        tooltipElem.setAttribute("style", `max-height: ${window.innerHeight*0.7};overflow-y: auto;float: left;position: relative;width: 100%;`);
         document.getElementById("block-post").style.overflowY = 'hidden';
         var over = document.getElementById("tooltip");
-        var div_iop3 = document.createElement("div");
-        div_iop3.id = "IOP3";
+//        var div_iop3 = document.createElement("div");
+//        div_iop3.id = "IOP3";
     }    
     var http = createRequestObject();
     var linkfull = '/likeover/?post_id=' + link + "&page="+page_num;
@@ -993,6 +994,7 @@ function reSend(user_id, post_id) {
         http.setRequestHeader('X-CSRFToken', crsv);
         http.onreadystatechange = function () {
             if (http.readyState == 4) {
+                alert("отправлено");
 //                console.log(http.responseText);
             }
         }
@@ -1095,19 +1097,20 @@ function FRIENDS(link, page_num, loadmore) {
     if(isLoading) return false;
     page_num = typeof page_num !== 'undefined' ?  page_num : 1;
 //    console.log(link, page_num, loadmore)
+    var div_iop3 = document.getElementById("IOP3");
     if (loadmore == "loadmore") {
-        var div_iop3 = document.getElementById("IOP3");
+//        var div_iop3 = document.getElementById("IOP3");
         var block_post = document.getElementById('friends_list');
         var tooltipElem = document.getElementById('tooltip_'+link);
     } else { 
         try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
         var tooltipElem = document.createElement('div');
         tooltipElem.id = 'tooltip_'+link;
-        tooltipElem.setAttribute("style", `max-height: ${window.innerHeight*0.7};overflow-y: scroll;float: left;position: relative;`);
+        tooltipElem.setAttribute("style", `max-height: ${window.innerHeight*0.7};overflow-y: auto;float: left;position: relative;width: 100%;`);
         document.getElementById("block-post").style.overflowY = 'hidden';
         var over = document.getElementById("tooltip");
-        var div_iop3 = document.createElement("div");
-        div_iop3.id = "IOP3";
+//        var div_iop3 = document.createElement("div");
+//        div_iop3.id = "IOP3";
     }    
     var http = createRequestObject();
     var linkfull = '/friends/'+ link + "/?page="+page_num;
@@ -1195,6 +1198,9 @@ function menuset(self, link, username, del_indicator, like_count, total_friends)
             self.setAttribute("open-atr", "close");
             document.getElementById("block-post").style.overflowY = 'scroll';
         }
+        var div_iop3 = document.createElement("div");
+        div_iop3.id = "IOP3";
+        tooltipElem.insertBefore(div_iop3, tooltipElem.firstChild);
         tooltipElem.insertBefore(textElemv1, tooltipElem.firstChild);
         document.getElementById("breadcrumb").appendChild(tooltipElem);
         var coords = self.getBoundingClientRect();
@@ -2100,10 +2106,11 @@ function activate_wall(user_name) {
                                        id="user-comment">${message_data.comment_user}</a>
                                     <p id="comment-text">${message_data.comment_text}</p>`
                 }
-                fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>"
-                tev.insertBefore(fc, tev.lastChild);
-                document.getElementsByClassName('compose_'+message_data["post_id"])[0].style.display = "block";
+                fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>";
+                
                 try {
+                    tev.insertBefore(fc, tev.lastChild);
+                    document.getElementsByClassName('compose_'+message_data["post_id"])[0].style.display = "block";
                     document.getElementById('results_'+message_data["post_id"]).removeChild(t_el);
                 } catch (e) {}
                 try {
