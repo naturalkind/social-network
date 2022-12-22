@@ -35,7 +35,8 @@
              aria-required="true" 
              placeholder="Напишите комментарий..." 
              contentEditable=true
-             style="background: white;"></div>
+             style="background: white;"
+             post_id="{{ id }}"></div>
         <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
         <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
         <div id="cn"><canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>

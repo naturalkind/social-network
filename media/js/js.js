@@ -333,7 +333,6 @@ function load_image_profile(self, id) {
 
 function editPROFF(self){
     if (self.getAttribute("open-atr")=="close") {
-//        document.body.style.overflow = 'hidden';
         var block_post = document.getElementById('block-post'); 
         var http = createRequestObject();
         if (http) {
@@ -346,7 +345,7 @@ function editPROFF(self){
                 color_picker.id = 'color-picker';
                 color_picker.className = "cp-default";
 //                block_post.appendChild(color_picker);
-                  // получить координаты картинки
+                // получить координаты картинки
                 var image_user_profile = document.getElementById("image-user-profile");
                 var _coord = image_user_profile.getBoundingClientRect();
                 
@@ -369,7 +368,7 @@ function editPROFF(self){
                 var uspgimg = document.getElementsByClassName('uspgimg')[0];
 //                z.appendChild(color_picker);
 //                uspgimg.appendChild(z);
-//                // выпадающее сообщение
+                // выпадающее сообщение
                 var tooltipElem = document.createElement('div');
                 tooltipElem.id = 'YO2'//+user_id;
 //                tooltipElem.innerHTML = "<a>цвет имени</a>"
@@ -385,7 +384,6 @@ function editPROFF(self){
                                                    position: fixed;
                                                     `)
                                                     
-                //                                    
 //                var textElemv1 = document.createElement('img');
 //                textElemv1.id = 'close';//id = 'close'; //
 //                textElemv1.className = "icon-like";
@@ -532,7 +530,7 @@ function getNumEnding(iNumber, aEndings) {
 }
 
 
-///
+/// фильтр лучшее
 function filterBEST(){
     var http = createRequestObject();
     if( http )   {
@@ -561,8 +559,8 @@ function jsons(link, atr){
     }
     else if (atr == 'users'){
         contv = document.getElementById('DODO');
-        wd = 180;//300;
-        hd = 160;//230;
+        wd = 180;
+        hd = 160;
         linkfull = '/users/?page=' + link;
     }
     else if (atr == 'wall'){
@@ -647,9 +645,9 @@ function jsons(link, atr){
                             len += g.length;
                             for (var R in g) {
                                 if (g[R].fields.image != "") {
-                                    var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
+                                    var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;
                                 } else {
-                                    var img = "/media/images/no_image.png";// + '.png';
+                                    var img = "/media/images/no_image.png";
                                 }
                                 
                                 html += `<li class='views-row' onmouseover='getIndex(this);'>
@@ -1681,24 +1679,25 @@ function getlkpost(link, page_num, loadmore) {
 
 function geturlimg(){setTimeout(draw, 5000)}
 function draw() {
-        var textarea = document.getElementById('id_body');
-        try{
-            var url = textarea.value;
-            start_imgurl(url);} catch (err){}
-    }
+    var textarea = document.getElementById('id_body');
+    try{
+        var url = textarea.value;
+        start_imgurl(url);
+    } catch (e){}
+}
 function start_imgurl(url){
-        var img = document.createElement("img");
-        img.crossOrigin = 'Anonymous';
-        img.src = url;
-        img.onload = function() {
-                canvas = document.getElementById('canvas');
-                canvas.style.display = "block";
-                canvas.width = img.width;
-                canvas.height = img.height;
-                var ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0);
-                dataURL_wall = canvas.toDataURL("image/png");
-        }
+    var img = document.createElement("img");
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+    img.onload = function() {
+            canvas = document.getElementById('canvas');
+            canvas.style.display = "block";
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            dataURL_wall = canvas.toDataURL("image/png");
+    }
 }
 
 
@@ -1926,6 +1925,7 @@ function showContent(link, _type) {
 var ws_wall;
 function activate_wall(user_name) {
     function start_wall() {
+    
         ws_wall = new WebSocket("ws://"+ IP_ADDR +":"+PORT+"/");
         ws_wall.onmessage = function(event) {
             var fc = document.createElement('div');
@@ -2124,10 +2124,26 @@ function activate_wall(user_name) {
             
             
         };
-        ws_wall.onclose = function(){
+        var indicator_ws;
+        ws_wall.onclose = function(e){
+            console.log(e.code)
             // Try to reconnect in 5 seconds
-            setTimeout(function() {start_wall()}, 5000);
+            if (indicator_ws != "close") {
+                setTimeout(function() {start_wall()}, 5000);
+            }
+            
         };
+        
+        ws_wall.onerror = function(e){
+            if (ws_wall.readyState==3) {
+                indicator_ws = "close";
+                alert("ОШИБКА ПОДКЛЮЧЕНИЯ! Установите последнюю версию браузера или отключите VPN")
+            }
+            console.log("Error", e, ws_wall.readyState);
+        }
+        
+        
+        
     }
 
     if ("WebSocket" in window) {
@@ -2139,29 +2155,31 @@ function activate_wall(user_name) {
         return false;
     }
 }
+
 activate_wall();
 
+
 function send_wall() {
-        var title =  document.getElementById('id_body');
-        var body = document.getElementById('id_body');
-        if (title.value == "") {
-            return false;
-        }
-        if (ws_wall.readyState != WebSocket.OPEN) {
-            return false;
-        }
-        document.getElementById('block-post').appendChild(t_el);
-        document.getElementById('message_form').style.display = "none";
-        //StartUpload();
-        var bx = body.value;
-        var tx = title.value;
-        var event = { title : tx,
-                      body: bx,
-                      image: dataURL_wall,
-                      event: "wallpost",
-        };
-        var data = JSON.stringify(event);
-        ws_wall.send(data);
+    var title =  document.getElementById('id_body');
+    var body = document.getElementById('id_body');
+    if (title.value == "") {
+        return false;
+    }
+    if (ws_wall.readyState != WebSocket.OPEN) {
+        return false;
+    }
+    document.getElementById('block-post').appendChild(t_el);
+    document.getElementById('message_form').style.display = "none";
+    //StartUpload();
+    var bx = body.value;
+    var tx = title.value;
+    var event = { title : tx,
+                  body: bx,
+                  image: dataURL_wall,
+                  event: "wallpost",
+    };
+    var data = JSON.stringify(event);
+    ws_wall.send(data);
 }
 // удалить
 function deletepost(self, id){
@@ -2179,31 +2197,31 @@ function deletepost(self, id){
 /////////////////////////// ТЕСТ
 
 function nodeScriptReplace(node) {
-        if ( nodeScriptIs(node) === true ) {
-                node.parentNode.replaceChild( nodeScriptClone(node) , node );
-        }
-        else {
-                var i = -1, children = node.childNodes;
-                while ( ++i < children.length ) {
-                      nodeScriptReplace( children[i] );
-                }
-        }
+    if ( nodeScriptIs(node) === true ) {
+            node.parentNode.replaceChild( nodeScriptClone(node) , node );
+    }
+    else {
+            var i = -1, children = node.childNodes;
+            while ( ++i < children.length ) {
+                  nodeScriptReplace( children[i] );
+            }
+    }
 
-        return node;
+    return node;
 }
 function nodeScriptClone(node){
-        var script  = document.createElement("script");
-        script.text = node.innerHTML;
+    var script  = document.createElement("script");
+    script.text = node.innerHTML;
 
-        var i = -1, attrs = node.attributes, attr;
-        while ( ++i < attrs.length ) {                                    
-              script.setAttribute( (attr = attrs[i]).name, attr.value );
-        }
-        return script;
+    var i = -1, attrs = node.attributes, attr;
+    while ( ++i < attrs.length ) {                                    
+          script.setAttribute( (attr = attrs[i]).name, attr.value );
+    }
+    return script;
 }
 
 function nodeScriptIs(node) {
-        return node.tagName === 'SCRIPT';
+    return node.tagName === 'SCRIPT';
 }
 
 
@@ -2571,10 +2589,19 @@ function send_com(self, cip) {
 
 
 document.addEventListener('keypress', function (e) {
+    console.log("WALL KEYPRESS", _page, e.srcElement.getAttribute("post_id"))
     if (_page == "chat") {
         if (e.keyCode == 13 && !event.shiftKey) {
             e.preventDefault();
-            send_message();
+            document.getElementById("btn").onclick()
+//            send_message();
+            return false;
+        } 
+    } else if (_page == "wallpost") {
+        if (e.keyCode == 13 && !event.shiftKey) {
+            e.preventDefault();
+            document.getElementById("add_"+e.srcElement.getAttribute("post_id")).onclick()
+//            send_message();
             return false;
         } 
     }
