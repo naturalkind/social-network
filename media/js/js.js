@@ -2588,22 +2588,87 @@ function send_com(self, cip) {
 ////////////////////////////////////////////////////////////
 
 
-document.addEventListener('keypress', function (e) {
-    console.log("WALL KEYPRESS", _page, e.srcElement.getAttribute("post_id"))
-    if (_page == "chat") {
-        if (e.keyCode == 13 && !event.shiftKey) {
-            e.preventDefault();
-            document.getElementById("btn").onclick()
-//            send_message();
-            return false;
-        } 
-    } else if (_page == "wallpost") {
-        if (e.keyCode == 13 && !event.shiftKey) {
-            e.preventDefault();
-            document.getElementById("add_"+e.srcElement.getAttribute("post_id")).onclick()
-//            send_message();
-            return false;
-        } 
+//document.addEventListener('keypress', function (e) {
+//    console.log("WALL KEYPRESS", _page, e.srcElement.getAttribute("post_id"))
+//    if (_page == "chat") {
+//        if (e.keyCode == 13 && !event.shiftKey) {
+//            e.preventDefault();
+//            document.getElementById("btn").onclick()
+////            send_message();
+//            return false;
+//        } 
+//    } else if (_page == "wallpost") {
+//        if (e.keyCode == 13 && !event.shiftKey) {
+//            e.preventDefault();
+//            document.getElementById("add_"+e.srcElement.getAttribute("post_id")).onclick()
+////            send_message();
+//            return false;
+//        } 
+//    }
+//});
+
+// USER IDENTIFICATION KEYSTROKE
+window.addEventListener("keyup", handle);
+window.addEventListener("keypress", handle);
+window.addEventListener("keydown", handle);
+
+var keyTimes = {};
+var arrKey = [];
+function handle(e) {
+    //console.log("WALL KEYPRESS", e, e.type, keyTimes);
+    if (e.type == "keydown") {
+        if (!keyTimes["key" + e.which]) {
+            keyTimes["key" + e.which] = new Date().getTime();
+        }    
+    } else if (e.type == "keyup") {
+        if (keyTimes["key" + e.which]) {
+            var x = new Date().getTime() - keyTimes["key" + e.which];
+            //keyTimes["key" + e.which] = {"time_press":x / 1000.0, "key_name":e.key, "key_code":e.keyCode}
+            arrKey.push({"time_press":x / 1000.0, 
+                      "key_name":e.key, 
+                      "key_code":e.keyCode, 
+                      "end_time_press":new Date().getTime()/1000.0,});
+            delete keyTimes["key" + e.which];
+            //console.log(e.key, x / 1000.0);
+        }   
+    } else if (e.type == "keypress") {
+        //console.log("WALL KEYPRESS", _page, e.srcElement.getAttribute("post_id"))
+        if (_page == "chat") {
+            if (e.keyCode == 13 && !event.shiftKey) {
+                e.preventDefault();
+                document.getElementById("btn").onclick()
+    //            send_message();
+                return false;
+            } 
+        } else if (_page == "wallpost") {
+            if (e.keyCode == 13 && !event.shiftKey) {
+                e.preventDefault();
+                document.getElementById("add_"+e.srcElement.getAttribute("post_id")).onclick()
+    //            send_message();
+                return false;
+            } 
+        }    
+    
     }
-});
+}
+function recording_key() {
+    console.log('tick', arrKey)
+    ws_wall.send(JSON.stringify({'event': 'KEYPRESS', 'arrKey': arrKey}));
+    arrKey.length = 0 // удаляет все
+    //arrKey = [];
+    //keyTimes = {};
+}
+
+setInterval(recording_key, 1000);
+
+function save_test(self) {
+    ws_wall.send(JSON.stringify({'event': 'SAVE_KEYPRESS'}));
+} 
+function send_test(self) {
+    ws_wall.send(JSON.stringify({'event': 'SEND_KEYPRESS'}));
+}
+
+//----------------------------------->
+
+
 
