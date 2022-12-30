@@ -68,14 +68,18 @@ python3 simple_api_client.py
 ```
 
 дополнительно   
+очистить redis   
 ```
 redis-cli flushall
 ```
-
+удалить если используем   
 ```
 sudo rm -R db.sqlite3
 ```
-
+создания копии базы данных в json   
+```
+./manage.py dumpdata > data_dump.json
+```
 
 ### Пример работы:
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr1.png)
