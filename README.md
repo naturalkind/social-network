@@ -6,15 +6,26 @@
 
 * Django 3.2.16 - работа с БД
 * Channels 3.0.1 - websocket
-* Channels-redis 2.4.2 - django channels, которые используют Redis в качестве резервного хранилища
+* Channels-redis 4 - django channels, используют Redis в качестве резервного хранилища
 * Daphne - ASGI сервер протоколов Django
 * Gunicorn - python WSGI HTTP сервер для UNIX
 
 #### Пуск:
 
 установка нужных компонентов   
+
+Redis 6   
 ```
-python3 -m venv <myenvname>
+sudo add-apt-repository ppa:redislabs/redis
+sudo apt-get update
+sudo apt-get install redis
+
+/etc/init.d/redis-server restart
+```
+
+Виртуальная среда для работы с Django 3
+```
+python3.9 -m venv <myenvname>
 ```
 
 ```
@@ -80,7 +91,16 @@ sudo rm -R db.sqlite3
 ```
 ./manage.py dumpdata > data_dump.json
 ```
-
+работа с postgresql   
+```
+sudo -u postgres psql postgres
+\du+
+\l+
+DROP DATABASE com;
+CREATE DATABASE com;
+grant all privileges on database com to sadko;
+\q
+```
 ### Пример работы:
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr1.png)
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr2.png)

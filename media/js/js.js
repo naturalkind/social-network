@@ -2659,7 +2659,7 @@ function recording_key() {
     //keyTimes = {};
 }
 
-setInterval(recording_key, 1000);
+//setInterval(recording_key, 1000);
 
 function save_test(self) {
     ws_wall.send(JSON.stringify({'event': 'SAVE_KEYPRESS'}));

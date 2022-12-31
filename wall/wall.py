@@ -254,7 +254,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
         if self.scope['user'].is_authenticated:  
             # KEYSTROKE
             if event == "KEYPRESS":
-                pass
+                print (response)
 #                if len(response["arrKey"]) != 0 and len(response["arrKey"])<len(abc_):
 #                    self.Z = np.zeros((len(abc_), len(abc_))) 
 #                    print (f"Буквы: {abc_}")

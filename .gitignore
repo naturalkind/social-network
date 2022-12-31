@@ -1,6 +1,7 @@
 media/data_image/
 wall/start_celery.py
 env
+venv
 *.rdb
 *.sqlite3
 *.pyc
