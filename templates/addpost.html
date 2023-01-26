@@ -1,0 +1,23 @@
+{% block addpost %}
+<div id="node">
+    <form class="message_form" id="message_form" style="display: block;" id="formsend">
+        <div class="field-image" style="width: auto;border: none;margin: 0 auto;">
+            <div id="UploadBox">
+                <span id="UploadArea"></span>
+            </div>
+            <input type="file" 
+                   id="image_file" 
+                   onchange="OnOnW()" 
+                   style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
+            <label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label>
+            <div id="cn">
+                <canvas id="canvas" width="0" height="0"></canvas>
+            </div>
+        </div>
+        <div class="field-text">
+            <textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea>
+        </div>
+        <button onclick="send_wall()" type="button">ОТПРАВИТЬ</button>
+    </form>
+</div>
+{% endblock %}

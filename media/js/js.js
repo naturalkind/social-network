@@ -1,13 +1,12 @@
 var IP_ADDR = window.location.hostname;
 var PORT = "80";
-
+var _page;
 var innode;
 var len;
 var topbt;
 var topbt_indicator;
 var topbt_position;
 var main_wrapper;
-var _page = "wallpost";
 var yOffset;
 var temp_position;
 var isLoading = false;
@@ -29,10 +28,12 @@ window.addEventListener('load', (event) => {
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("load......")
-    history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+    // история навигации
+    history.pushState({"view": "wallpost", "link": "/" }, null, "/");
+    _page = "wallpost";      
     try {    
         topbt = document.getElementById('topbt');
-        topbt.style.display = "none"
+        topbt.style.display = "none";
     } catch (e) {};
     main_wrapper = document.getElementById("main-wrapper");
 }, false);
@@ -135,12 +136,12 @@ function event_topbt(e){
     } else if (topbt_indicator == "handler") {
         handler(e)
         if (_page == "wallpost") {
-            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+            history.pushState({"view": "wallpost", "link": "/" }, null, "/");
         } else if (_page == "user") {
-            history.pushState({"view": "user", 'lk': `/user/${document.getElementById("user_id").innerText}` }, 
+            history.pushState({"view": "user", "link": `/user/${document.getElementById("user_id").innerText}` }, 
                                 null, `/user/${document.getElementById("user_id").innerText}`);
         } else if (_page == "chat") {
-            history.pushState({"view": "user", 'lk': `/messages/chat/${document.getElementById("chat_id").innerText}` }, 
+            history.pushState({"view": "user", "link": `/messages/chat/${document.getElementById("chat_id").innerText}` }, 
                                 null, `/messages/chat/${document.getElementById("chat_id").innerText}`);            
         }
         
@@ -169,40 +170,105 @@ function handler(e) {
     }
 }
 
-
-
+//function recording_key() {
+//    console.log(history, "HISTORY:", history.state, "PAGE:", _page);
+//}
+//setInterval(recording_key, 1000);
 window.addEventListener("popstate", function(e) {
     var state = e.state;
-    state = typeof state !== 'null' ?  state : "wallpost";
-    console.log("popstate............", state, _page, state.lk);
-    if (state.view == "post" || state.view == "wallpost") {
-        handler("o");
-        if (_page == "wallpost") {
-            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
-        } else {
-            history.pushState({"view": "user", 
-                               'lk': `/user/${document.getElementById("user_id").innerText}` }, 
-                                null, `/user/${document.getElementById("user_id").innerText}`);
-        }
-    } else if (state.view == "privatmes") {
-        privatMES();
-    } else if (state.view == "user") {
-        if (_page=="user") {
+    
+    state = typeof state !== 'null' ?  state : {"view":"wallpost"};
+//    console.log(e);
+    console.log("popstate............", state, _page);
+    if (state) {
+        if (state.view == "wallpost") {
+            if (state.view==_page) {
+                handler("o");
+            } else {
+                main_page();
+            }
+        } else if (state.view == "post") {
+            console.log("popstate showContent............");
+            showContent(state.id);
+        } else if (state.view == "user") {
+            userPROFILE(state.id);
+        } else if (state.view == "users") {
+            users();
+        } else if (state.view == "privatmes") {
+            privatMES();
             handler("o");
-            history.pushState({"view": "user", 
-                               'lk': `/user/${document.getElementById("user_id").innerText}` }, 
-                                null, `/user/${document.getElementById("user_id").innerText}`);
-        } else {
-            userPROFILE(state.lk.split('/')[2]);
+        } else if (state.view == "mesID") {
+            mesID(state.id, state.user_name, state.number_of_messages);
+            handler("o");
+        } else if (state.view == "addpost") {
+            addPost();
         }
-    } else if (state.view == "users") {
-        users()
-    } else if (state.view == "mesID") {
-        handler("o");
     }
 });
 
+function main_page() {
+    var linkfull = '/?_type=javascript';
+    var http = new XMLHttpRequest();
+    if (http) {
+        http.open('get', linkfull, true);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+                main_wrapper.innerHTML = http.responseText;
+                _page = "wallpost";
+            }
+        };
+        http.send(null);
+    }
+}
 
+// https://stackoverflow.com/questions/4570093/how-to-get-notified-about-changes-of-the-history-via-history-pushstate
+//window.addEventListener("popstate", function(e) {
+//    var state = e.state;
+//    state = typeof state !== 'null' ?  state : "wallpost";
+//    console.log("popstate............", state, _page, state.lk);
+//    if (state.view == "post") {
+//        
+//        if (_page == "users") {
+////            handler("o");
+//            showContent(state.id);
+//        } else {
+//            
+//        }
+//        
+////    if (state.view == "post" || state.view == "wallpost") {
+////        handler("o");
+////        if (_page == "wallpost") {
+////            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+////        } else {
+////            history.pushState({"view": "user", 
+////                               'lk': `/user/${document.getElementById("user_id").innerText}` }, 
+////                                null, `/user/${document.getElementById("user_id").innerText}`);
+////        }
+//    } else if (state.view == "wallpost") {
+//        handler("o");
+//        if (_page == "wallpost") {
+//            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+//        } else {
+//            window.location.replace("/");
+//        }
+//    } else if (state.view == "privatmes") {
+//        privatMES();
+//    } else if (state.view == "user") {
+//        if (_page=="user") {
+//            handler("o");
+//            history.pushState({"view": "user", 
+//                               'lk': `/user/${document.getElementById("user_id").innerText}` }, 
+//                                null, `/user/${document.getElementById("user_id").innerText}`);
+//        } else {
+//            userPROFILE(state.lk.split('/')[2]);
+//        }
+//    } else if (state.view == "users") {
+//        users()
+//    } else if (state.view == "mesID") {
+//        handler("o");
+//    }
+//});
 
 
 function createRequestObject() {
@@ -244,12 +310,15 @@ function users(_type){
                 document.body.style.overflow = 'auto';
                 block_post.style.display = 'none';
                 isLoading = false;
-                _page = "users"
                 topbt = document.getElementById('topbt');
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
-                history.pushState({"view": "users", 'lk': '/users/' }, null, '/users/');
                 document.getElementsByClassName("enter")[0].style.display = "none";
+                // история навигации
+                if (history.state.view != "users") {
+                    history.pushState({"view": "users", "link": "/users/" }, null, "/users/");
+                    _page = "users";                
+                }
             }
         };
         http.send(null);
@@ -304,7 +373,7 @@ function addREG(){
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
-                history.pushState({"view": "register", 'lk': `/register` }, null, `/register`);
+                history.pushState({"view": "register", "link": "/register" }, null, "/register");
             }
         };
         http.send(null);
@@ -492,8 +561,18 @@ function userPROFILE(link, _type){
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
                 isLoading = false;
-                history.pushState({"view": "user", 'lk': '/user/'+link }, null, '/user/'+link);
-                _page = "user";
+                // история навигации
+//                console.log(history.state.view, _page, history.state.id, link);
+                if (history.state.view != "user") {
+                    history.pushState({"view": "user", "link": "/user/"+link, "id":link }, null, "/user/"+link);
+                    _page = "user";                
+                } else {
+                    if (history.state.id != link) {
+                        history.pushState({"view": "user", "link": "/user/"+link, "id":link }, null, "/user/"+link);
+                    } else {
+                        history.replaceState({"view": "user", "link": "/user/"+link, "id":link }, null, "/user/"+link);
+                    }
+                }
                 try {
                     document.getElementById('atr-user').getAttribute('atr-user');
                     document.getElementsByClassName("enter")[0].style.display = "block";
@@ -718,20 +797,20 @@ function showImg(path_data, _type){
 
 // лайк   
 function LIKENODE(link){  
-var cont = document.getElementById('like_count');
-var linkfull = '/add_like/?post_id='+link;
+    var cont = document.getElementById('like_count');
+    var linkfull = '/add_like/?post_id='+link;
     var http = createRequestObject();
-    if( http )   {
-            http.open('get', linkfull);
-            http.onreadystatechange = function () {
-                if(http.readyState == 4) {
-                    cont.innerHTML = http.responseText;
-                }
-            };
-            http.send(null);
-        } else {
-            document.location = link;
+    if (http) {
+        http.open('get', linkfull);
+        http.onreadystatechange = function () {
+            if(http.readyState == 4) {
+                cont.innerHTML = http.responseText;
+            }
         }
+        http.send(null);
+    } else {
+        document.location = link;
+    }
 }
 
 
@@ -899,44 +978,77 @@ function OnOnreg() {
 
 
 /// добвать пост
+//function addPost(){
+//    try{document.getElementById('tooltip').remove();}catch(err) {}
+//    try{
+//        html = `<div id="node">
+//                    <form class="message_form" id="message_form" style="display: block;" id="formsend">
+//                        <div class="field-image" style="width: auto;border: none;margin: 0 auto;">
+//                            <div id="UploadBox">
+//                                <span id="UploadArea"></span>
+//                            </div>
+//                            <input type="file" 
+//                                   id="image_file" 
+//                                   onchange="OnOnW()" 
+//                                   style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
+//                            <label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label>
+//                            <div id="cn">
+//                                <canvas id="canvas" width="0" height="0"></canvas>
+//                            </div>
+//                        </div>
+//                        <div class="field-text">
+//                            <textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea>
+//                        </div>
+//                        <button onclick="send_wall()" type="button">ОТПРАВИТЬ</button>
+//                    </form>
+//                </div>`; 
+//        document.body.style.overflow = 'hidden';
+//        var block_post = document.getElementById('block-post');
+//        block_post.style.display = 'block';
+//        block_post.innerHTML = html;
+//        topbt.style.transform = 'rotate(90deg)';
+//        topbt_indicator = "addPost";
+//        topbt.style.display = "block";
+//        
+////        history.pushState({"view": "addpost", "link": "/" }, null, "/");
+//        function test_scroll() {
+//        }
+//        block_post.onscroll = test_scroll;   
+//        
+//    } catch (err){}
+//}
+
 function addPost(){
     try{document.getElementById('tooltip').remove();}catch(err) {}
-    try{
-        html = `<div id="node">
-                    <form class="message_form" id="message_form" style="display: block;" id="formsend">
-                        <div class="field-image" style="width: auto;border: none;margin: 0 auto;">
-                            <div id="UploadBox">
-                                <span id="UploadArea"></span>
-                            </div>
-                            <input type="file" 
-                                   id="image_file" 
-                                   onchange="OnOnW()" 
-                                   style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
-                            <label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label>
-                            <div id="cn">
-                                <canvas id="canvas" width="0" height="0"></canvas>
-                            </div>
-                        </div>
-                        <div class="field-text">
-                            <textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea>
-                        </div>
-                        <button onclick="send_wall()" type="button">ОТПРАВИТЬ</button>
-                    </form>
-                </div>`; 
-        document.body.style.overflow = 'hidden';
-        var block_post = document.getElementById('block-post');
-        block_post.style.display = 'block';
-        block_post.innerHTML = html;
-        topbt.style.transform = 'rotate(90deg)';
-        topbt_indicator = "addPost";
-        topbt.style.display = "block";
-        
-        function test_scroll() {
+    var linkfull = '/addpost/?_type=javascript';
+    var http = createRequestObject();
+    if (http) {
+        http.open('get', linkfull);
+        http.onreadystatechange = function () {
+            if(http.readyState == 4) {
+                document.body.style.overflow = 'hidden';
+                var block_post = document.getElementById('block-post');
+                block_post.style.display = 'block';
+                block_post.innerHTML = http.responseText;
+                topbt.style.transform = 'rotate(90deg)';
+                topbt_indicator = "addPost";
+                topbt.style.display = "block";
+                
+                if (history.state.view != "addpost") {
+                    history.pushState({"view": "addpost", "link": "/addpost" }, null, "/addpost");
+//                    _page = "addpost";                
+                }
+                function test_scroll() {
+                }
+                block_post.onscroll = test_scroll;                  
+            }
         }
-        block_post.onscroll = test_scroll;   
-        
-    } catch (err){}
+        http.send(null);
+    } else {
+        document.location = link;
+    }
 }
+
 
 
 // простая версия репоста
@@ -1828,7 +1940,6 @@ function showContent(link, _type) {
         document.getElementById("block-post").onscroll = test_scroll;  
     } catch (e) {}
     isLoading = false;
-    //_page = "showContent";
     document.body.style.overflow = 'hidden';
     var http = createRequestObject();
     if(link != null) {
@@ -1890,10 +2001,22 @@ function showContent(link, _type) {
                     block_post.style.background = 'rgba(0,0,0,.75)';
                     block_post.style.overflow = 'auto';
                     block_post.setAttribute('atr', 'con');
-                    history.pushState({"view": "post", 'lk': `/data/${link}` }, null, `/data/${link}`);
                     block_post.scrollTo(0,0);
                     
-                    
+                    // история навигации
+                    console.log(history.state, _page);
+                    if (history.state.view != "post") {
+                        history.pushState({"view": "post", "link": `/data/${link}`, "id": link}, null, `/data/${link}`);
+//                        _page = "showContent";
+                    } else {
+                        //history.replaceState({"view": "post",  "link": `/data/${link}`, "id": link}, null, `/data/${link}`);
+                        if (history.state.id != link) {
+                            history.pushState({"view": "post", "link": `/data/${link}`, "id": link}, null, `/data/${link}`);
+                        } else {
+                            history.replaceState({"view": "post", "link": `/data/${link}`, "id": link}, null, `/data/${link}`);
+                        }
+                    }
+
                     function getScrollPercent() {
                         var h = document.getElementById("block-post"), 
                             b = document.body,
@@ -2031,13 +2154,13 @@ function activate_wall(user_name) {
                     handler(0);
                 }
                 
-                if (_page=="user") {
-                        history.pushState({"view": "user", 
-                                           'lk': `/user/${document.getElementById("user_id").innerText}` }, 
-                                            null, `/user/${document.getElementById("user_id").innerText}`);
-                } else if(_page=="wallpost") {
-                    history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
-                }
+//                if (_page=="user") {
+//                    history.pushState({"view": "user", 
+//                                       "lk": `/user/${document.getElementById("user_id").innerText}` }, 
+//                                       null, `/user/${document.getElementById("user_id").innerText}`);
+//                } else if(_page=="wallpost") {
+//                    history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
+//                }
                 
             } else if (message_data["status"]=="MoreData") {
                 console.log("More Data", currentChunk <= totalChunks);
@@ -2245,10 +2368,14 @@ function privatMES(_type){
                 topbt = document.getElementById('topbt');
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
-                _page = "privatmes";
-                history.pushState({"view": "privatmes", 'lk': linkfull }, null, linkfull);
                 document.getElementsByClassName("enter")[0].style.display = "none";
                 document.body.style.overflow = 'auto';
+                // итория/навигация
+                if (history.state.view != "privatmes") {
+                    history.pushState({"view": "privatmes", "link": linkfull }, null, linkfull);                   
+                    _page = "privatmes";
+                }
+             
             }
         };
         http.send(null);
@@ -2303,9 +2430,16 @@ function mesID(thread_id, user_name, number_of_messages, _type){
                 }
                 
                 window.scrollBy(0, document.getElementById("conver").scrollHeight);
-                _page = "chat";
                 document.getElementById('topbt').style.transform = 'rotate(0deg)';
-                history.pushState({"view": "mesID", 'lk': linkfull }, null, linkfull);
+                // история навигации
+                if (history.state.view != "mesID") {
+                    history.pushState({"view": "mesID", 
+                                       "link": linkfull,
+                                       "id":thread_id, 
+                                       "user_name":user_name,
+                                       "number_of_messages":number_of_messages }, null, linkfull);
+                    _page = "chat";                
+                }
             }
         };
         http.send(null);
@@ -2552,7 +2686,7 @@ function load_more_comment(link, page) {
                 http.send(null); 
             }
         } else {
-                document.location = link;
+            document.location = link;
         }  
     }          
 }

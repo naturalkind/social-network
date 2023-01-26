@@ -27,15 +27,17 @@ from myapp import views as myapp
 from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', myapp.chat_view),
+    path('', myapp.main_page),
 
     # пользовательский материал
     re_path(r'^data/(?P<post>\d+)/$', myapp.post), # страница материала
-    
+
     # вход выход для пользователя
     path(r'login', myapp.login), 
     path(r'logout/', myapp.logout),
+    # регистрация
     path(r'register/', myapp.register),  
+    # страница пользователей
     path(r'profile/', myapp.user),
     path(r'users/', myapp.users_all),
     re_path(r'user/(?P<user>\d+)/', myapp.user_page), 
@@ -57,11 +59,10 @@ urlpatterns = [
     re_path(r'^rppos/(?P<id>.*)$', myapp.rppos),
     
     # комментарии
-#    re_path(r'^comment/(?P<post_id>.*)$', myapp.viewcom),
     re_path(r'^comment/(?P<post_id>.*)/', myapp.viewcom),
     
-    # тест выбора цвета
-    re_path(r'^test_js/', myapp.test_js), 
+    # добавить материал
+    path(r'addpost/', myapp.addpost), 
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

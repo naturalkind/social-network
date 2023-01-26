@@ -23,7 +23,10 @@ from PIL import Image
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import UserCreationForm 
+
 from django.template.loader import render_to_string
+from django.template import loader
+from django.template import Template, Context
 
 
 @login_required
@@ -337,8 +340,20 @@ def login(request):
             auth.login(request, user)
             return redirect('/')
         else:
-            args['login_error']= 'Пользователь не найден'
-            return render(request, 'login.html',args)
+            try:
+                U = User.objects.get(username=username)
+                if U.password != password:
+                    args['login_error']= 'Не правильный пароль'
+            except User.DoesNotExist:
+                args['login_error']= 'Пользователь не найден'
+
+            t = loader.get_template('login.html')
+            template = Template('{%extends "' + "base.html" + '"%} ...'+t.template.source)
+            context = Context(args)
+            result = template.render(context)
+            return HttpResponse(result)
+#            return render(request, 'login.html',args)            
+
     else:
         return render(request, 'login.html', args)
 
@@ -382,7 +397,13 @@ def register(request):
             return redirect('/')
         else:
             args['form'] = newuser_form
-    return render(request, 'register.html', args)
+            t = loader.get_template('register.html')
+            template = Template('{%extends "' + "base.html" + '"%} ...'+t.template.source)
+            context = Context(args)
+            result = template.render(context)
+            return HttpResponse(result)            
+    else:
+        return render(request, 'register.html', args)
 
 
 def user(request):
@@ -472,7 +493,7 @@ def follows(request, id):
     data['data'] = serializers.serialize('json', users, fields=('username', 'image_user', 'path_data', 'date_joined'))
     return HttpResponse(json.dumps(data), content_type = "application/json")
 
-
+from django.template import RequestContext
 # страница пользователя
 def user_page(request, user):
     user_info = User.objects.get(pk=user)
@@ -504,15 +525,31 @@ def user_page(request, user):
             
         _type = request.GET.get('_type')    
         if _type == "javascript":    
-            return render(request, 'user.html', {'user_info':user_info, 'post':posts,
+            return render(request, 'user.html', {'user_info':user_info, 
+                                                 'post':posts,
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})
         else:
-            return render(request, '_user.html', {'user_info':user_info, 'post':posts,
+        
+#            args = {'user_info':user_info, 
+#                    'post':posts,
+#                    'username':auth.get_user(request),
+#                    'foll_blank':foll_blank,
+#                    'userid':auth.get_user(request).pk}
+#            t = loader.get_template('user.html')
+#            template = Template('{%extends "' + "base.html" + '"%} ...'+t.template.source)
+##            context = Context(args)
+#            context = RequestContext(request, args)
+#            result = template.render(context)
+#            return HttpResponse(result)
+            
+            return render(request, '_user.html', {'user_info':user_info, 
+                                                 'post':posts,
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})
+
     if request.method == 'POST':
         username = request.GET.get('username')
         userid = request.GET.get('userid')
@@ -634,6 +671,13 @@ def users_all(request):
         return render(request, 'users.html', {'users':posts,
                                               'username':auth.get_user(request)})
     else:
+#        args = {'users':posts, 'username':auth.get_user(request)}
+#        t = loader.get_template('users.html')
+#        template = Template('{%extends "' + "base.html" + '"%} ...'+t.template.source)
+#        context = RequestContext(request, args)
+#        result = template.render(context)
+#        return HttpResponse(result)
+    
         return render(request, '_users.html', {'users':posts,
                                               'username':auth.get_user(request)})
 
@@ -699,12 +743,13 @@ def getlkpost(request, id):
     return HttpResponse(json.dumps(data), content_type = "application/json")   
 
 
-def chat_view(request):
+def main_page(request):
     if not request.user.is_authenticated:
         return index(request)
     thread = Post.objects.all().order_by("-date_post")
     paginator = Paginator(thread, 6)
     page = request.GET.get('page')
+    _type = request.GET.get('_type')
     data = {}
     data['us'] = auth.get_user(request).username
     data['all_pages'] = paginator.num_pages   
@@ -727,9 +772,29 @@ def chat_view(request):
         data['data'] = render_to_string("walload.html", { "thread_messages": posts, "username": auth.get_user(request)}, request=request)
         return HttpResponse(json.dumps(data), content_type = "application/json")
 
-    return render(request, 'postwall.html', { "thread_messages": posts,
-                                              "username": auth.get_user(request) })
-                              
+    if _type == "javascript":    
+        return render(request, 'postwall.html', { "thread_messages": posts,
+                                                  "username": auth.get_user(request) })
+    else:
+        args = { "thread_messages": posts, "username": auth.get_user(request) }
+        t = loader.get_template('postwall.html')
+        template = Template('{%extends "' + "base.html" + '"%} ...'+t.template.source)
+        context = RequestContext(request, args)
+        result = template.render(context)
+        return HttpResponse(result)
+    
+def addpost(request):
+    _type = request.GET.get('_type')
+    if _type == "javascript": 
+        return render(request, 'addpost.html')
+    else:
+        args = { "username": auth.get_user(request) }
+#        t = loader.get_template('addpost.html')
+#        template = Template('{%extends "' + "base.html" + '"%} ...'+t.template.source)
 
-def test_js(request):
-    return render(request, 'test_js.html')                              
+        t = Template('{% block addpost %}<script>addPost()</script>{% endblock %}')
+        template = Template('{%extends "' + "base.html" + '"%} ...'+t.source)
+        context = RequestContext(request, args)
+        result = template.render(context)
+        return HttpResponse(result)
+        
