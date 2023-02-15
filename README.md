@@ -63,7 +63,8 @@ python3 manage.py migrate --run-syncdb
 
 пуск   
 ```
-gunicorn app.wsgi:application --bind 192.168.1.50:8888 & daphne app.asgi:application --bind 0.0.0.0 --port 8889
+gunicorn app.wsgi:application --bind 192.168.1.50:8888 & daphne app.asgi:application --bind 0.0.0.0 --port 8889   
+python manage.py runworker nnapp   
 ```
 
 ### Генирация пользователей и контента  
