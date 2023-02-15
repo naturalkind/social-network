@@ -148,7 +148,16 @@ function event_topbt(e){
         //history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
     } else if (topbt_indicator == "addPost") {
         handler(e);
-        isLoading = false;                            
+        isLoading = false; 
+        if (_page == "wallpost") {
+            history.pushState({"view": "wallpost", "link": "/" }, null, "/");
+        } else if (_page == "user") {
+            history.pushState({"view": "user", "link": `/user/${document.getElementById("user_id").innerText}` }, 
+                                null, `/user/${document.getElementById("user_id").innerText}`);
+        } else if (_page == "chat") {
+            history.pushState({"view": "user", "link": `/messages/chat/${document.getElementById("chat_id").innerText}` }, 
+                                null, `/messages/chat/${document.getElementById("chat_id").innerText}`);            
+        }                                   
     } else if (topbt_indicator == "foll") {
         handler(e);
     } 
@@ -2153,7 +2162,10 @@ function activate_wall(user_name) {
                     conversation.children[innode].remove();
                     handler(0);
                 }
-                
+                if (_page=="wallpost") {
+                    history.pushState({"view": "wallpost", "link": "/" }, null, "/");
+                }
+                console.log("DELETE----------->", history.state, _page)
 //                if (_page=="user") {
 //                    history.pushState({"view": "user", 
 //                                       "lk": `/user/${document.getElementById("user_id").innerText}` }, 
@@ -2186,13 +2198,14 @@ function activate_wall(user_name) {
                 console.log("DONE");
                     
             } else if (message_data["status"]=="Kandinsky-2.0") {
+                console.log("Kandinsky-2.0.............", message_data);
 //                var ImGen = document.querySelector("[atribut='"+message_data["post"]+"']");
 //                console.log("Kandinsky-2.0", message_data, ImGen, ImGen.getElementsByTagName('img')[0]);
 //                ImGen.getElementsByTagName('img')[0].src = `/media/data_image/${message_data["path_data"]}/${message_data["data"]}`;
                 try {
                     var ImGen = document.getElementById(`image-post-${message_data["post"]}`)
                     ImGen.src = `/media/data_image/${message_data["path_data"]}/${message_data["data"]}`;
-                } catch(e) {};
+                } catch(e) {console.log(e);};
 
             } else if (message_data["status"]=="send_comment") {
             

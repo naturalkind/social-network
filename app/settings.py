@@ -78,14 +78,24 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 ASGI_APPLICATION = "app.asgi.application"
 
+#https://github.com/django/channels_redis/issues/332
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer",
         "CONFIG": {
-            "hosts": [("localhost", 6379)],
+            "hosts": ["redis://localhost:6379/4"],
         },
     },
 }
+
+#CHANNEL_LAYERS = {
+#    "default": {
+#        "BACKEND": "channels_redis.core.RedisChannelLayer",
+#        "CONFIG": {
+#            "hosts": [("localhost", 6379)],
+#        },
+#    },
+#}
 
 #CHANNEL_LAYERS = {
 #    'default': {
@@ -120,6 +130,10 @@ CACHES = {
 }
 
 
+# Celery
+CELERY_BROKER_URL = "redis://localhost:6379/4"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/4"
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -142,13 +156,23 @@ DATABASES = {
     }
 }
 
+# Comands
+
+#django
 #./manage.py makemigrations
 #./manage.py migrate auth
 #./manage.py migrate --run-syncdb
+
+#postgresql
 #sudo -u postgres psql
 #\l+
 #\du+
 
+#celery
+
+#python -m celery -A app worker
+#celery flower
+#celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6379/0
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

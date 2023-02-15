@@ -22,8 +22,9 @@ django.setup()
 
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
-from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.routing import ProtocolTypeRouter, URLRouter, ChannelNameRouter
 import app.routing
+from wall import nnapp
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
 
@@ -34,4 +35,7 @@ application = ProtocolTypeRouter({
             app.routing.websocket_urlpatterns,
         )
     ),
+    "channel": ChannelNameRouter({
+        "nnapp": nnapp.NNHandler.as_asgi(),
+    }),
 })
