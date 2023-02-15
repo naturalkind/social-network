@@ -156,24 +156,6 @@ DATABASES = {
     }
 }
 
-# Comands
-
-#django
-#./manage.py makemigrations
-#./manage.py migrate auth
-#./manage.py migrate --run-syncdb
-
-#postgresql
-#sudo -u postgres psql
-#\l+
-#\du+
-
-#celery
-
-#python -m celery -A app worker
-#celery flower
-#celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6379/0
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -216,7 +198,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 #STATIC_URL = '/static/'
-#-------------------------->
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
     'media/data_image',
@@ -230,7 +211,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 31457280
-#-------------------------->
 DJANGO_ALLOW_ASYNC_UNSAFE = "true"
 
 

@@ -87,7 +87,7 @@ redis-cli flushall
 ```
 sudo rm -R db.sqlite3
 ```
-создания копии базы данных в json   
+создания копии базы данных json   
 ```
 ./manage.py dumpdata > data_dump.json
 ```
@@ -101,6 +101,13 @@ CREATE DATABASE com;
 grant all privileges on database com to sadko;
 \q
 ```
+простые команды celery
+```
+python -m celery -A app worker
+celery flower
+celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6379/0
+```
+
 ### Пример работы:
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr1.png)
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr2.png)
@@ -109,7 +116,7 @@ grant all privileges on database com to sadko;
 
 ### Нужно сделать
 - [ ] использовать aioredis 2   
-- [ ] выполнения ресурсоемких задач в очереди   
+- [x] выполнения ресурсоемких задач в очереди   
 - [ ] улучшить страницу пользователя   
 - [ ] создать инструменты для обучения ChatGPT   
 - [ ] подключить natural-motion   

@@ -23,22 +23,6 @@ session_engine = import_module(settings.SESSION_ENGINE)
 from . import tasks
 
 class WallHandler(AsyncJsonWebsocketConsumer):
-    #async def send_and_get(self, *args, model=None):
-    def send_and_get(self, args, model=None):
-        id = send(args, model=model)
-        print ("SEND.....", id, args, args['path_data'], model)
-        res = get(id)
-        namefile = f'{id}.jpg'
-        res['prediction'][0].save(f'media/data_image/{args["path_data"]}/{namefile}', format="JPEG") 
-        print ("SAVE FILE NAME", f'media/data_image/{args["path_data"]}/{namefile}')
-        args["post"].image = namefile
-        args["post"].save()        
-        
-        _data = {"type": "wallpost", "status":"Kandinsky-2.0", "path_data": args["path_data"],
-                 "data": f'{namefile}', "post":args["post"].id}
-        async_to_sync(self.channel_layer.group_send)(self.room_group_name, _data)
-        
-        #self.channel_layer.group_send(self.room_group_name, _data)
 
     async def connect(self):
         self.room_name = "wall"
@@ -133,21 +117,6 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                              "path_data" : self.path_data,
                              "status" : "wallpost"
                             }
-                    #----------------------------------------->       
-                    ## WORK
-#                    await self.send_and_get(self.temp_dict, model='queue')
-                    #-----------------------------------------> 
-                    ## WORK текст в картинку                    
-#                    if self.namefile == "":
-#                        _temp_dict = {}
-#                        _temp_dict["title"] = response["title"]
-#                        _temp_dict["path_data"] = self.path_data
-#                        _temp_dict["post"] = post
-#                        t = threading.Thread(target=self.send_and_get, 
-#                                             args=[_temp_dict], 
-#                                             kwargs={"model":"Kandinsky-2.0"})
-#                        t.start()
-#                    t.join() 
                     #-----------------------------------------> 
                     # CELERY
                     if self.namefile == "":
@@ -157,9 +126,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                         _temp_dict["status"] = "Kandinsky-2.0"
 #                        getattr(tasks, "add").delay(self.room_group_name, _temp_dict)  
                         K = tasks.add.delay(self.room_group_name, _temp_dict) 
-#                        K = tasks.add.delay(self.channel_name, _temp_dict)
                         print ("..............", K, _temp_dict)
-                    #print (".................", response["title"])
                     #----------------------------------------->   
                          
                     await self.channel_layer.group_send(self.room_group_name, _data)

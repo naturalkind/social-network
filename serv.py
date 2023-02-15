@@ -48,14 +48,11 @@ def send_prediction(message, result_publisher, topic=TOPIC):
     id = message['id']
     # Выполнение дифузии
     #result = {"result": None}
-    for g in range(1):
-        images = model.generate_text2img(str(body), 
-                                    batch_size=1, h=512, w=512, num_steps=75, 
-                                    denoised_type='dynamic_threshold', dynamic_threshold_v=99.5, 
-                                    sampler='ddim_sampler', ddim_eta=0.05, guidance_scale=10)
-        result = {"result": images}
-
-  #---------------------->
+    images = model.generate_text2img(str(body), 
+                                batch_size=1, h=512, w=512, num_steps=75, 
+                                denoised_type='dynamic_threshold', dynamic_threshold_v=99.5, 
+                                sampler='ddim_sampler', ddim_eta=0.05, guidance_scale=10)
+    result = {"result": images}
 
     if result.get('result') is None:
         time.sleep(1)
@@ -105,10 +102,3 @@ def start():
 
 if __name__ == '__main__':
   start()
-
-
-#----------------------------->
-
-
-
-
