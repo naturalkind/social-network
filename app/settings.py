@@ -32,6 +32,8 @@ ALLOWED_HOSTS = ['178.158.131.41', '192.168.1.50', 'сообщество.com', '
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +43,6 @@ INSTALLED_APPS = [
     'myapp',
     'wall',
     'privatemessages',
-    'channels',
 ]
 
 AUTH_USER_MODEL = 'myapp.User'

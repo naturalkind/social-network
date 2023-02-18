@@ -1,4 +1,5 @@
 media/data_image/
+static/*
 wall/start_celery.py
 env
 venv

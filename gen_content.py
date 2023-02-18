@@ -22,7 +22,7 @@ class DATA(object):
 
 
 images = DATA()
-images.parseIMG("/media/sadko/1b32d2c7-3fcf-4c94-ad20-4fb130a7a7d4/IMAGE")
+images.parseIMG("/media/sadko/1b32d2c7-3fcf-4c94-ad20-4fb130a7a7d4/FILE_APP/IMAGE")
 print (len(images.file))
 
 

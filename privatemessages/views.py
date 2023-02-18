@@ -103,17 +103,17 @@ def chat_view(request, thread_id):
     user_id = str(request.user.id)
 
     r = redis.StrictRedis()
-
+    
     messages_total = r.hget(
          "".join(["private_", str(thread.id), "_messages"]),
          "total_messages"
     )
-
+    
     messages_sent = r.hget(
         "".join(["private_", str(thread.id), "_messages"]),
         "".join(["from_", user_id])
     )
-
+    print ("->>>>>>>>", messages_total, messages_sent)
     if messages_total:
         messages_total = int(messages_total)
     else:
