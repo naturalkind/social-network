@@ -6,16 +6,17 @@
 
 * Django 4.1.7 - работа с БД
 * Channels 4.0.0 - websocket
-* Channels-redis 4 - django channels, используют Redis в качестве резервного хранилища
-* Daphne - ASGI сервер протоколов Django
+* Channels-redis 4.0.0 - django channels, используют Redis в качестве резервного хранилища
+* Daphne 4.0.0 - ASGI сервер протоколов Django
 * Gunicorn - python WSGI HTTP сервер для UNIX
-* PostgreSQL 15 - основное хранилище
+* PostgreSQL 15.2 - основное хранилище
+* Redis 7.0.8 - дополнительное хранилище
 
 #### Пуск:
 
 установка нужных компонентов   
 
-Redis 6   
+Redis   
 ```
 sudo add-apt-repository ppa:redislabs/redis
 sudo apt-get update
