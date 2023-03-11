@@ -798,3 +798,30 @@ def addpost(request):
         result = template.render(context)
         return HttpResponse(result)
         
+# Поиск Redis Search
+from django.utils.functional import cached_property
+from redis_search_django.mixins import RediSearchListViewMixin
+from myapp.ormsearch import PostDocument
+from django.views.generic import ListView
+
+class SearchView(RediSearchListViewMixin, ListView):
+    paginate_by = 20
+    model = User
+    template_name = "walload.html"
+    document_class = PostDocument
+    @cached_property
+    def search_query_expression(self):
+        query = "beaR"#self.request.GET.get("query")
+        query_expression = None
+
+        if query:
+            query_expression = (
+                self.document_class.username % query
+            )
+#        print (self.document_class.body)
+#        print (dir(query_expression), query_expression)
+        result = self.document_class.find(query_expression)
+        print ("END..............", list(result))
+        #return query_expression
+
+        

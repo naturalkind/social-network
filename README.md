@@ -10,7 +10,7 @@
 * Daphne 4.0.0 - ASGI сервер протоколов Django
 * Gunicorn - python WSGI HTTP сервер для UNIX
 * PostgreSQL 15.2 - основное хранилище
-* Redis 7.0.8 - дополнительное хранилище
+* Redis 6 - дополнительное хранилище
 
 #### Пуск:
 

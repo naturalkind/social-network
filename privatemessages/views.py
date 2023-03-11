@@ -70,10 +70,25 @@ def messages_view(request):
     
     for thread in threads:
         thread.partner = thread.participants.exclude(id=request.user.id)[0]
-        thread.total_messages = r.hget(
-             "".join(["private_", str(thread.id), "_messages"]),
-             "total_messages"
-        ).decode("utf-8")
+        try:
+            thread.total_messages = r.hget(
+                 "".join(["private_", str(thread.id), "_messages"]),
+                 "total_messages"
+            ).decode("utf-8")
+        except AttributeError:
+            mes_thr = Message.objects.filter(thread__id=thread.id)
+            if mes_thr.count() > 0:
+                for msg in mes_thr:
+                    for key in ("total_messages", "".join(["from_", str(msg.sender.id)])):
+                        r.hincrby(
+                            "".join(["private_", str(thread.id), "_messages"]),
+                            key,
+                            1
+                        )
+                thread.total_messages = r.hget(
+                     "".join(["private_", str(thread.id), "_messages"]),
+                     "total_messages"
+                ).decode("utf-8")                
     print (_type)
     if _type == "javascript":    
         return render(request, 'private_messages.html',

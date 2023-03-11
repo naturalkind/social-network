@@ -656,11 +656,6 @@ input#myPROFILE {
     width: 900px;
 }
 
-#conversation {
-    width: 700px;
-    margin: 0 auto;
-}
-
 .chat input#image_file {
     margin: 0 auto;
     position: relative;
@@ -1010,8 +1005,39 @@ img#QR {
 
 /* javascript color picker end */
 
-
 @media only screen and (min-width : 200px){
+    /* Search from */
+    .search-bar {
+        margin: 0px 20px;
+        padding: 0;
+        justify-content: center;
+    }
+    .search-bar input {
+        background: #fff;
+        border-radius: 0.375em;
+        box-shadow: 0 0 0 0.1em #d9d9d9 inset;
+        transform: scale(1);
+
+        padding: 0.75em;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        font-size: 45px;
+        width: 17.4em;
+    }
+
+    .search{
+        appearance: none;
+        border: 0;
+        font-size: 45px;
+        width: auto;
+        padding: 38px 10px;
+        margin: 15px 0px 0px 0px;
+        position: relative;
+        top: 0px;
+    }
+
+    /* Search end */
     a.see_more_button {
         font-size: 40px;
     }
@@ -1676,6 +1702,45 @@ img#QR {
 }
 
 @media screen and (min-width: 1200px)  {
+    /* Search from */
+    .search-bar {
+        margin: 0 auto;
+        padding: 0;
+        justify-content: center;
+        max-width: 460;
+        min-width: 460;
+    }
+    .search-bar input {
+        background: #fff;
+        border-radius: 0.375em;
+        box-shadow: 0 0 0 0.1em #d9d9d9 inset;
+        transform: scale(1);
+        padding: 8px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        font-size: 20px;
+        width: 18.9em;
+    }
+
+    .search{
+        /*отключаем стандартное оформление*/
+        appearance: none;
+        border: 0;
+        /*размер шрифта и кнопки*/
+        font-size: 20px;
+        width: auto;
+        /*  height: 44px;*/
+        /*настраиваем отступы*/
+        padding: 8px 10px;
+        /*сдвигаем текст вплотную к кнопке*/
+        margin: 15px 0px 0px 0px;
+        position: relative;
+        top: 0px;
+    }
+
+    /* Search end */
+
     a.see_more_button {
         font-size: 18px;
     }

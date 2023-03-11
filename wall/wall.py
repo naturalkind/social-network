@@ -10,7 +10,7 @@ from channels.db import database_sync_to_async
 
 import datetime
 import uuid
-import base64, io, os
+import base64, io, os, re
 session_engine = import_module(settings.SESSION_ENGINE)
 
 class WallHandler(AsyncJsonWebsocketConsumer):

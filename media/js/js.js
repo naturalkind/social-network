@@ -323,6 +323,7 @@ function users(_type){
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
                 document.getElementsByClassName("enter")[0].style.display = "none";
+                document.getElementById("search-box").style.display = "block";
                 // история навигации
                 if (history.state.view != "users") {
                     history.pushState({"view": "users", "link": "/users/" }, null, "/users/");
@@ -570,6 +571,7 @@ function userPROFILE(link, _type){
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
                 isLoading = false;
+                document.getElementById("search-box").style.display = "none";
                 // история навигации
 //                console.log(history.state.view, _page, history.state.id, link);
                 if (history.state.view != "user") {
@@ -2383,6 +2385,7 @@ function privatMES(_type){
                 topbt.style.display = "none";
                 document.getElementsByClassName("enter")[0].style.display = "none";
                 document.body.style.overflow = 'auto';
+                document.getElementById("search-box").style.display = "none";
                 // итория/навигация
                 if (history.state.view != "privatmes") {
                     history.pushState({"view": "privatmes", "link": linkfull }, null, linkfull);                   

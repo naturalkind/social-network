@@ -58,11 +58,7 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
-        
-        # redis
-#        self.connection = await aioredis.create_redis_pool('redis://localhost')
-#        self.pubsub = await self.connection.psubscribe("".join(["private_", str(self.room_name), "_messages"]))
-        # redis 2.0
+        # aioredis 2.0
         self.connection = aioredis.from_url("redis://localhost")
         self.pubsub = self.connection.pubsub()
         await self.pubsub.subscribe("".join(["private_", str(self.room_name), "_messages"]))
