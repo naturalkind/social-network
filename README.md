@@ -25,7 +25,7 @@ sudo apt-get install redis
 /etc/init.d/redis-server restart
 ```
 
-Виртуальная среда для работы с Django 3
+Виртуальная среда для работы с Django   
 ```
 python3.9 -m venv <myenvname>
 source <myenvname>/bin/activate
@@ -39,7 +39,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-синхронизация с postgresql
+синхронизация с postgresql   
 ```
 ./manage.py makemigrations   
 ./manage.py migrate auth   
@@ -118,4 +118,5 @@ celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6
 - [ ] загрузка файлов   
 - [ ] CKEditor 5   
 - [ ] полнотекстовый поиск   
+- [x] уведомление личных сообщений   
 

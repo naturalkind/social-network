@@ -30,6 +30,9 @@ class User(AbstractUser):
     color = models.TextField(max_length=200, default="#507299", verbose_name='Цвет шрифта', blank=False)
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
+
+    def __str__(self) -> str:
+        return self.username
         
     def add_relationship(self, person, status):
         relationship, created = Relationship.objects.get_or_create(

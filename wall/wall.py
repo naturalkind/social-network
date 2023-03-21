@@ -13,16 +13,37 @@ import uuid
 import base64, io, os, re
 session_engine = import_module(settings.SESSION_ENGINE)
 
+
+from redis_om import HashModel, JsonModel
+from redis_om.model.model import (
+    EmbeddedJsonModel,
+    Expression,
+    NotFoundError,
+    RedisModel,
+)
+
+class UserChannels(JsonModel):#, ABC): HashModel
+    channels: str
+    class Meta:
+        global_key_prefix = "redis_channels"  
+        model_key_prefix = "user"
+
+
 class WallHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        self.room_name = "wall"
+        self.room_group_name = "wall"
         self.sender_id = self.scope['user'].id
-        self.room_group_name = self.room_name
         self.sender_name = self.scope['user']
         if str(self.scope['user']) != 'AnonymousUser':
             self.image_user = self.scope['user'].image_user
             self.path_data = self.scope['user'].path_data
             self.namefile = str()
+            
+        P = UserChannels(channels=self.channel_name)
+        P.pk = self.sender_id
+        #P.save()
+        P_async = sync_to_async(P.save)
+        await P_async()  
         print ("CHANNEL_LAYERS", self.channel_name, self.room_group_name, self.scope['user'])
         await self.channel_layer.group_add(
             self.room_group_name,

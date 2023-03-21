@@ -8,6 +8,7 @@ from privatemessages.utils import send_message
 from django.conf import settings
 from django.utils import dateformat
 from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
 from django.shortcuts import render, get_object_or_404
 from django.core import serializers
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -22,6 +23,21 @@ import time
 session_engine = import_module(settings.SESSION_ENGINE)
 
 
+from redis_om import HashModel, JsonModel
+from redis_om.model.model import (
+    EmbeddedJsonModel,
+    Expression,
+    NotFoundError,
+    RedisModel,
+)
+
+class UserChannels(JsonModel):
+    channels: str
+    class Meta:
+        global_key_prefix = "redis_channels"  
+        model_key_prefix = "user"
+
+
 @sync_to_async
 def get_pages(room_name, sender_id, message_res):
     thread = get_object_or_404(Thread, id=room_name, participants__id=sender_id)
@@ -32,6 +48,7 @@ def get_pages(room_name, sender_id, message_res):
     data['request_user_id'] = sender_id
     data['event'] = "loadmore"
     data['all_pages'] = paginator.num_pages
+    data['thread_id'] = room_name
     user_id = str(sender_id)
     partner = thread.participants.exclude(id=sender_id)[0]
     try:
@@ -45,6 +62,12 @@ def get_pages(room_name, sender_id, message_res):
     data['data'] = serializers.serialize('json', posts, use_natural_foreign_keys=True, use_natural_primary_keys=True)
     return data
 
+@sync_to_async
+def get_partner(room_name, sender_id):
+    thread = get_object_or_404(Thread, id=room_name, participants__id=sender_id)
+    partner = thread.participants.exclude(id=sender_id)[0]
+    return partner
+    
 class MessagesHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_code']
@@ -99,15 +122,23 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                        "thread_id" : self.room_name,
                        "event": "privatemessages"
                     }
-            for key in ("total_messages", "".join(["from_", str(self.sender_id )])):
+            for key in ("total_messages", "".join(["from_", str(self.sender_id)])):
                 await self.connection.hincrby(
                             "".join(["private_", str(self.room_name), "_messages"]),
                             key,
                             1
                         ) 
-            
             await self.channel_layer.group_send(self.room_group_name, _data)
-                    
+            try:
+                pp = await get_partner(self.room_name, self.sender_id)
+                await self.channel_layer.send(UserChannels.get(pp.id).dict()["channels"],
+                                                {
+                                                    "type":"wallpost",
+                                                    "status" : "notification"
+                                                }
+                                             )      
+            except Exception as e: 
+                print (e)
         if event == "loadmore":
             _data = await get_pages(self.room_name, self.sender_id, message_res)
             print ("LOAD MORE PAGES PRIVATEMESSAGES",  response)   
@@ -116,6 +147,7 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
     async def send_message(self, res):
         """ Receive message from room group """
         # Send message to WebSocket
+        #print (res)
         await self.send(text_data=json.dumps(res))
         
         

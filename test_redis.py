@@ -13,12 +13,18 @@ from redis_om.model.model import (
 
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)#, decode_responses=True)#redis.Redis()#
-args = ['ft.search', 'redis_search:myapp.ormsearch.PostDocument:index', '@body_fts:Ro*']
+args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:Be*']
 print (RedisModel.db().execute_command(*args))
 
+class UserChannels(JsonModel):#, ABC): HashModel
+    channels: str
+    class Meta:
+        global_key_prefix = "redis_channels"  
+        model_key_prefix = "user"
 
-args = ['ft.search', 'redis_search:myapp.ormsearch.PostDocument:index', '@body_fts:Белка']
-print (RedisModel.db().execute_command(*args))
+print (UserChannels.get(1))
+#args = ['ft.search', 'redis_search:myapp.ormsearch.PostDocument:index', '@body_fts:Белка']
+#print (RedisModel.db().execute_command(*args))
 
 
 #for i in r.keys():
@@ -49,28 +55,31 @@ print (RedisModel.db().execute_command(*args))
 #    
 #print ("OK")
 
-#prefix = "В"
-#results = []
-#rangelen = 50 
-#count=5
-#start = r.zrank('compl',prefix)    
-#if not start:
-#    results = []
-#while (len(results) != count):         
-#     range = r.zrange('compl', start, start+rangelen-1)         
-#     start += rangelen
-#     if not range or len(range) == 0:
-#         break
-#     for entry in range:
-#         entry = entry.decode('utf-8')
-#         minlen = min(len(entry),len(prefix))   
-#         if entry[0:minlen] != prefix[0:minlen]:    
-#            count = len(results)
-#            break              
-#         if entry[-1] == "*" and len(results) != count:                 
-#            results.append(entry[0:-1])
-# 
-#print (results)
+prefix = "sa"
+results = []
+rangelen = 50 
+count=5
+start = r.zrank('compl',prefix)    
+if not start:
+    results = []
+while (len(results) != count):
+    try:         
+        range = r.zrange('compl', start, start+rangelen-1)         
+        start += rangelen
+        if not range or len(range) == 0:
+            break
+        for entry in range:
+            entry = entry.decode('utf-8')
+            minlen = min(len(entry),len(prefix))   
+            if entry[0:minlen] != prefix[0:minlen]:    
+                count = len(results)
+                break              
+            if entry[-1] == "*" and len(results) != count:                 
+                results.append(entry[0:-1])
+    except TypeError:
+        break
+ 
+print (results)
 
 #
 # Создание с помощью OM
