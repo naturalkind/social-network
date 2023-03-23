@@ -1,4 +1,5 @@
 {% block users_all %}
+{% load onlinedetect %}
     {% if users.has_next %}
         <span id="IOP" style="display: none">{{ users.next_page_number }}</span>
     {% else %}
@@ -18,6 +19,7 @@
             <div class="user-name">
                 <a atribut="{{x.id}}" id="user-link">{{ x.username|truncatechars:10 }}</a>
             </div>
+            {{ x.id|onlinedetect }}
         </div>
     {% endfor %}
     </div>

@@ -14,19 +14,43 @@ import base64, io, os, re
 session_engine = import_module(settings.SESSION_ENGINE)
 
 
-from redis_om import HashModel, JsonModel
-from redis_om.model.model import (
-    EmbeddedJsonModel,
-    Expression,
-    NotFoundError,
-    RedisModel,
-)
+from redis_om import HashModel, JsonModel, get_redis_connection
+redis = get_redis_connection()
 
-class UserChannels(JsonModel):#, ABC): HashModel
+class UserChannels(JsonModel):
     channels: str
+    online: bool
     class Meta:
         global_key_prefix = "redis_channels"  
         model_key_prefix = "user"
+
+@sync_to_async
+def search_query_redis(prefix):
+    results = []
+    rangelen = 50 
+    count=5
+    start = redis.zrank('compl', prefix)    
+    if not start:
+        results = []
+    while (len(results) != count):
+        try:         
+            range = redis.zrange('compl', start, start+rangelen-1)         
+            start += rangelen
+            if not range or len(range) == 0:
+                break
+            for entry in range:
+                #print (entry)
+                #entry = entry.decode('utf-8')
+                minlen = min(len(entry),len(prefix))   
+                if entry[0:minlen] != prefix[0:minlen]:    
+                    count = len(results)
+                    break              
+                if entry[-1] == "*" and len(results) != count:                 
+                    results.append(entry[0:-1])
+        except TypeError:
+            break
+    return results
+
 
 
 class WallHandler(AsyncJsonWebsocketConsumer):
@@ -39,9 +63,8 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             self.path_data = self.scope['user'].path_data
             self.namefile = str()
             
-        P = UserChannels(channels=self.channel_name)
+        P = UserChannels(channels=self.channel_name, online=True)
         P.pk = self.sender_id
-        #P.save()
         P_async = sync_to_async(P.save)
         await P_async()  
         print ("CHANNEL_LAYERS", self.channel_name, self.room_group_name, self.scope['user'])
@@ -58,6 +81,11 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        
+        P = UserChannels(channels=self.channel_name, online=False)
+        P.pk = self.sender_id
+        P_async = sync_to_async(P.save)
+        await P_async()
     
     async def receive(self, text_data):
         """
@@ -148,7 +176,8 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                 self.namefile = f'{str(uuid.uuid4())[:12]}_{response["Name"]}'
                 self.myfile = open(f'media/data_image/{self.path_data}/{self.namefile}', "wb")
                 _data = {"type": "wallpost", "status":"MoreData"}
-                await self.channel_layer.group_send(self.room_group_name, _data)
+                #await self.channel_layer.group_send(self.room_group_name, _data)
+                await self.channel_layer.send(self.channel_name, _data)   
 
             if event == "Upload":
                 da = response["Data"]
@@ -156,11 +185,13 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                 file_bytes = io.BytesIO(base64.b64decode(da)).read()
                 self.myfile.write(file_bytes)
                 _data = {"type": "wallpost", "status":"MoreData"}
-                await self.channel_layer.group_send(self.room_group_name, _data)
+                #await self.channel_layer.group_send(self.room_group_name, _data)
+                await self.channel_layer.send(self.channel_name, _data) 
                 
             if event == "Done":
                 _data = {"type": "wallpost", "status":"Done"}
-                await self.channel_layer.group_send(self.room_group_name, _data)
+                #await self.channel_layer.group_send(self.room_group_name, _data)
+                await self.channel_layer.send(self.channel_name, _data) 
 
             
             if event == "deletepost":
@@ -168,6 +199,18 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                 await sync_to_async(post.delete)()
                 _data = {"type": "wallpost", "status":"deletepost"}
                 await self.channel_layer.group_send(self.room_group_name, _data)
+                
+            if event == "keypress_search":
+                answer_search = await search_query_redis(response["data"])
+                print (answer_search)
+                await self.channel_layer.send(self.channel_name,
+                                                {
+                                                    "type":"wallpost",
+                                                    "status" : "keypress_search",
+                                                    "answer_search":answer_search
+                                                }
+                                             )   
+            
         else:
             await self.channel_layer.group_send(self.room_group_name, {"type": "wallpost"})           
 

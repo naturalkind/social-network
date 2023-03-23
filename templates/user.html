@@ -32,6 +32,12 @@
                 {% else %}
                     <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true"><img src="/media/images/dusr.png" class="addusr"><span id="follow-text">ОТПИСАТЬСЯ</span></a>
                 {% endif %}
+                
+                {% if online %}
+                    <a>онлайн</a>
+                {% else %}
+                    <a>не онлайнг</a>
+                {% endif %}
                 <div class="pm-mes">
                     {% csrf_token %}
                     <input id="recipient_name" placeholder="Имя получателя" value="{{ user_info.username }}" style="display: none">

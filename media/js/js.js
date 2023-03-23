@@ -2748,7 +2748,7 @@ function send_com(self, cip) {
 ////////////////////////////////////////////////////////////
 
 document.addEventListener('keypress', function (e) {
-    console.log("WALL KEYPRESS", _page, e.srcElement.getAttribute("post_id"))
+//    console.log("WALL KEYPRESS", _page, e.srcElement.getAttribute("post_id"))
     if (_page == "chat") {
         if (e.keyCode == 13 && !event.shiftKey) {
             e.preventDefault();
@@ -2763,8 +2763,15 @@ document.addEventListener('keypress', function (e) {
 //            send_message();
             return false;
         } 
+    } else if (_page == "users") {
+        console.log("WALL KEYPRESS", _page, e.key)
+        if (document.getElementById("search-input").value.length != 0) {
+            ws_wall.send(JSON.stringify({"event":"keypress_search", "data":document.getElementById("search-input").value}));
+        }
     }
 });
+
+
 
 //----------------------------------->
 

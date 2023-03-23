@@ -28,6 +28,15 @@ from django.template.loader import render_to_string
 from django.template import loader
 from django.template import Template, Context
 
+from redis_om import HashModel, JsonModel
+
+class UserChannels(JsonModel):
+    channels: str
+    online: bool
+    class Meta:
+        global_key_prefix = "redis_channels"  
+        model_key_prefix = "user"
+
 
 @login_required
 def create_comment(request):
@@ -522,11 +531,17 @@ def user_page(request, user):
         if page:
             data['data'] = serializers.serialize('json', posts)
             return HttpResponse(json.dumps(data), content_type = "application/json")
-            
+        
+        try:
+            online = UserChannels.get(user).dict()["online"]
+        except Exception as e: 
+            print (e)  
+            online = False
         _type = request.GET.get('_type')    
         if _type == "javascript":    
             return render(request, 'user.html', {'user_info':user_info, 
                                                  'post':posts,
+                                                 'online': online,
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})
@@ -546,6 +561,7 @@ def user_page(request, user):
             
             return render(request, '_user.html', {'user_info':user_info, 
                                                  'post':posts,
+                                                 'online': online,
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})

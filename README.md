@@ -119,4 +119,5 @@ celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6
 - [ ] CKEditor 5   
 - [ ] полнотекстовый поиск   
 - [x] уведомление личных сообщений   
+- [] следить за активностью пользователя   
 

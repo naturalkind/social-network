@@ -1037,6 +1037,19 @@ img#QR {
         top: 0px;
     }
 
+    .search-bar input::-webkit-search-cancel-button{
+        /* Remove default */
+        -webkit-appearance: none;
+        /* Now your own custom styles */
+        height: 40px;
+        width: 40px;
+        display: block;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+        /* setup all the background tweaks for our custom icon */
+        background-repeat: no-repeat;
+        /* icon size */
+        background-size: 40px;
+    }
     /* Search end */
     a.see_more_button {
         font-size: 40px;
@@ -1720,7 +1733,7 @@ img#QR {
         -moz-appearance: none;
         appearance: none;
         font-size: 20px;
-        width: 18.9em;
+        width: 18.8em;
     }
 
     .search{
@@ -1737,6 +1750,19 @@ img#QR {
         margin: 15px 0px 0px 0px;
         position: relative;
         top: 0px;
+    }
+    .search-bar input::-webkit-search-cancel-button{
+        /* Remove default */
+        -webkit-appearance: none;
+        /* Now your own custom styles */
+        height: 20px;
+        width: 20px;
+        display: block;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+        /* setup all the background tweaks for our custom icon */
+        background-repeat: no-repeat;
+        /* icon size */
+        background-size: 20px;
     }
 
     /* Search end */

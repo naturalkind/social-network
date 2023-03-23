@@ -13,16 +13,18 @@ from redis_om.model.model import (
 
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)#, decode_responses=True)#redis.Redis()#
-args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:Be*']
+args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%bear%']
+args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%bear%']
 print (RedisModel.db().execute_command(*args))
 
-class UserChannels(JsonModel):#, ABC): HashModel
-    channels: str
-    class Meta:
-        global_key_prefix = "redis_channels"  
-        model_key_prefix = "user"
+#class UserChannels(JsonModel):#, ABC): HashModel
+#    channels: str
+#    class Meta:
+#        global_key_prefix = "redis_channels"  
+#        model_key_prefix = "user"
 
-print (UserChannels.get(1))
+#print (UserChannels.get(1))
+
 #args = ['ft.search', 'redis_search:myapp.ormsearch.PostDocument:index', '@body_fts:Белка']
 #print (RedisModel.db().execute_command(*args))
 
@@ -55,7 +57,8 @@ print (UserChannels.get(1))
 #    
 #print ("OK")
 
-prefix = "sa"
+# WORK
+prefix = "e"
 results = []
 rangelen = 50 
 count=5
@@ -83,15 +86,16 @@ print (results)
 
 #
 # Создание с помощью OM
-from abc import ABC
-class Post(JsonModel):#, ABC): HashModel
-    body: str
-    class Meta:
-        global_key_prefix = "redis_search"  
-        model_key_prefix = "myapp.ormsearch.PostDocument"
-        
-P = Post(body="Питон")
-P.pk = 43
+#from abc import ABC
+#class Post(JsonModel):#, ABC): HashModel
+#    body: str
+#    class Meta:
+#        global_key_prefix = "redis_search"  
+#        model_key_prefix = "myapp.ormsearch.PostDocument"
+#        
+#P = Post(body="Питон")
+#P.pk = 43
+
 #P.save()
 #print (P.key())
 #print (Post.get(P.pk))
