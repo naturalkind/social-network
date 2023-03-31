@@ -6,15 +6,18 @@
     <h1>СОБЕСЕДНИКИ</h1>
     <div class="partners">
     {% for thread in threads %}
-            {% if thread.partner.image_user != "oneProf.png" %}
-                <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/data_image/{{ thread.partner.path_data }}/tm_{{ thread.partner.image_user }}" class="usPr" style="float:none;border: 2px solid #a9a9a9;">
-            {% else %}
-                <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/images/oneProf.png" class="usPr" style="float:none;border: 2px solid #a9a9a9;">
-            {% endif %}
-            
-            <div class="pmu">{{ thread.partner.username }} ({{ thread.total_messages|default_if_none:"0" }} {{ thread.total_messages|rupluralize:"сообщение,сообщения,сообщений" }})
+            <div class="pm-block" id="pm-block-{{ thread.id }}">
+                {% if thread.partner.image_user != "oneProf.png" %}
+                    <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/data_image/{{ thread.partner.path_data }}/tm_{{ thread.partner.image_user }}" class="usPr" style="float:none;border: 2px solid #a9a9a9;">
+                {% else %}
+                    <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/images/oneProf.png" class="usPr" style="float:none;border: 2px solid #a9a9a9;">
+                {% endif %}
+                
+                    <div class="pmu">{{ thread.partner.username }} ({{ thread.total_messages|default_if_none:"0" }} {{ thread.total_messages|rupluralize:"сообщение,сообщения,сообщений" }})
+                    </div>
+                </div>
+                <div class="delete-pm" onclick="delete_pm('{{ thread.id }}','{{ request.user }}')"></div>
             </div>
-        </div>
     {% empty %}
         <p>Пока что собеседников нет.</p>
     {% endfor %}

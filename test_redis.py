@@ -3,7 +3,7 @@ import aioredis
 import async_timeout
 
 import redis
-from redis_om import HashModel, JsonModel
+from redis_om import HashModel, JsonModel, get_redis_connection
 from redis_om.model.model import (
     EmbeddedJsonModel,
     Expression,
@@ -13,9 +13,13 @@ from redis_om.model.model import (
 
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)#, decode_responses=True)#redis.Redis()#
-args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%bear%']
-args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%bear%']
-print (RedisModel.db().execute_command(*args))
+#args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%bea%']
+#args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:be*']
+#args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%sad%']
+
+
+#args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%sa%']
+args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%sadko_10%']
 
 #class UserChannels(JsonModel):#, ABC): HashModel
 #    channels: str
@@ -27,7 +31,6 @@ print (RedisModel.db().execute_command(*args))
 
 #args = ['ft.search', 'redis_search:myapp.ormsearch.PostDocument:index', '@body_fts:Белка']
 #print (RedisModel.db().execute_command(*args))
-
 
 #for i in r.keys():
 #    try:
@@ -58,16 +61,18 @@ print (RedisModel.db().execute_command(*args))
 #print ("OK")
 
 # WORK
-prefix = "e"
+prefix = "Be"
 results = []
 rangelen = 50 
 count=5
-start = r.zrank('compl',prefix)    
+start = r.zrank('compl',prefix)  
 if not start:
     results = []
+   
 while (len(results) != count):
     try:         
-        range = r.zrange('compl', start, start+rangelen-1)         
+        range = r.zrange('compl', start, start+rangelen-1)  
+        #print (range)       
         start += rangelen
         if not range or len(range) == 0:
             break
@@ -83,6 +88,15 @@ while (len(results) != count):
         break
  
 print (results)
+#args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+results[0]+'%', 'LIMIT', '0', '5']
+##args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:be*']
+#print (RedisModel.db().execute_command(*args))
+import pickle
+
+redis = get_redis_connection()
+rstr = redis.execute_command(*args)
+print (dir(JsonModel))
+print ("-", JsonModel.from_redis(rstr))
 
 #
 # Создание с помощью OM
@@ -105,3 +119,4 @@ print (results)
 #print (dir(P._meta))
 #print (P._meta.index_name)
 #print (P._meta.model_key_prefix)
+

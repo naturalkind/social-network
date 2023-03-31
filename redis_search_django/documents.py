@@ -110,7 +110,7 @@ class Document(RedisModel, ABC):
             is_embedded = issubclass(field_type, EmbeddedJsonDocument)
             # Get Target Field Value
             target = getattr(instance, field_name, None)
-            if field_name != "pk":
+            if field_name == "username":
                 cls.autocompliter(target)
             # If the target field is a ManyToManyField,
             # get the related objects and build data using the objects
@@ -167,8 +167,9 @@ class Document(RedisModel, ABC):
         for l in range(1,len(n)):
             prefix = n[0:l]             
             r.zadd('compl',{prefix:0})
+            r.zadd('compl',{prefix.lower():0})
         r.zadd('compl',{n+"*":0})
-
+        r.zadd('compl',{n.lower()+"*":0})
 
     @classmethod
     def from_model_instance(
@@ -183,15 +184,6 @@ class Document(RedisModel, ABC):
         obj = cls.from_data(
             cls.data_from_model_instance(instance, exclude_obj=exclude_obj)
         )
-#        print ("1---", cls, instance, )
-#        name = instance
-#        n = name.strip()         
-#        for l in range(1,len(n)):
-#            prefix = n[0:l]             
-#            r.zadd('compl',{prefix:0})
-#        r.zadd('compl',{n+"*":0})
-#        #print ("ERROR")
-        
         if save:
             obj.save()
 
@@ -269,7 +261,6 @@ class Document(RedisModel, ABC):
     def get_queryset(cls) -> models.QuerySet:
         """Get Django model queryset, can be overridden to filter queryset"""
         queryset = cls._django.model._default_manager.all()
-
         if cls._django.select_related_fields:
             queryset = queryset.select_related(*cls._django.select_related_fields)
 

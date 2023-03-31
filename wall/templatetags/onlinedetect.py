@@ -16,7 +16,7 @@ def onlinedetect(user):
     try:
         online = UserChannels.get(user).dict()["online"]
     except Exception as e: 
-        print (e)  
+        #print (e)  
         online = False
     return online
 

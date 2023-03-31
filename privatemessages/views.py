@@ -176,4 +176,4 @@ def chat_view(request, thread_id):
                                       "partner": partner,
                                       "username":request.user
                                   })
-
+                                  

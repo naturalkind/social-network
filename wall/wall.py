@@ -1,6 +1,7 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from myapp.models import User, Post, Comment
+from privatemessages.models import Thread, Message
 from importlib import import_module
 
 from django.conf import settings
@@ -14,7 +15,7 @@ import base64, io, os, re
 session_engine = import_module(settings.SESSION_ENGINE)
 
 
-from redis_om import HashModel, JsonModel, get_redis_connection
+from redis_om import RedisModel, HashModel, JsonModel, get_redis_connection
 redis = get_redis_connection()
 
 class UserChannels(JsonModel):
@@ -25,7 +26,7 @@ class UserChannels(JsonModel):
         model_key_prefix = "user"
 
 @sync_to_async
-def search_query_redis(prefix):
+def autocomplete_query_redis(prefix):
     results = []
     rangelen = 50 
     count=5
@@ -51,7 +52,25 @@ def search_query_redis(prefix):
             break
     return results
 
-
+@sync_to_async
+def search_query_redis(prefix):
+    #args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+results[0]+'%', 'LIMIT', '0', '5']
+    
+    args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+prefix+'%', 'LIMIT', '0', '5']
+    raw_results = redis.execute_command(*args)
+    results = JsonModel.from_redis(raw_results)
+    results = [i.json() for i in results]
+    
+    return results
+    
+@sync_to_async
+def delete_pm(pk):
+    t = Thread.objects.get(id=pk)
+    pm = Message.objects.filter(thread=pk).all().delete()
+#    t.entry_set.clear()
+    t.delete()
+#    print (t, pm)
+    #return
 
 class WallHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -200,16 +219,37 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                 _data = {"type": "wallpost", "status":"deletepost"}
                 await self.channel_layer.group_send(self.room_group_name, _data)
                 
-            if event == "keypress_search":
-                answer_search = await search_query_redis(response["data"])
-                print (answer_search)
+            if event == "autocomplete":
+                answer_search = await autocomplete_query_redis(response["data"])
+                #print (answer_search)
                 await self.channel_layer.send(self.channel_name,
                                                 {
                                                     "type":"wallpost",
-                                                    "status" : "keypress_search",
+                                                    "status" : "autocomplete",
+                                                    "answer_autocomplete":answer_search
+                                                }
+                                             ) 
+            if event == "search":
+                answer_search = await search_query_redis(response["data"])
+                #print (answer_search)
+                await self.channel_layer.send(self.channel_name,
+                                                {
+                                                    "type":"wallpost",
+                                                    "status" : "search",
                                                     "answer_search":answer_search
                                                 }
-                                             )   
+                                             ) 
+            if event == "delete_pm":
+                print (response)
+                if response["data"]["request_user"] == str(self.sender_name):
+                    answer_delete = await delete_pm(response["data"]["thread_id"])
+                    await self.channel_layer.send(self.channel_name,
+                                                    {
+                                                        "type":"wallpost",
+                                                        "status" : "delete_pm",
+                                                        "thread_id": response["data"]["thread_id"]
+                                                    }
+                                                 )                 
             
         else:
             await self.channel_layer.group_send(self.room_group_name, {"type": "wallpost"})           

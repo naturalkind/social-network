@@ -36,10 +36,25 @@
     
     
 <div id="search-box">
-    <form action="" class="search-bar" autocomplete="off">
-        <input id="search-input" type="search" name="search" pattern=".*\S.*" required>
-        <button class="search">Найти</button>
+    <form class="search-bar" autocomplete="off" action="javascript:void(0);">
+        <div class="autocomplete">
+            <input id="search-input" type="search" name="search" placeholder="Поиск" pattern=".*\S.*" required>
+            <button class="search" onclick="search_func()">Найти</button>
+        </div>
+        
     </form>
+
+<!--    <form autocomplete="off" action="">-->
+<!--      <div class="autocomplete" style="width:300px;">-->
+<!--        <input id="myInput" type="text" name="myCountry" placeholder="Country">-->
+<!--      </div>-->
+<!--      <input type="submit">-->
+<!--    </form>-->
+<!--<script>-->
+<!--autocomplete(document.getElementById("myInput"), countries);-->
+<!--</script>-->
+
+
 </div>    
 
 {% else %}

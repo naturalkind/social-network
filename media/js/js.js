@@ -21,7 +21,8 @@ window.onload = function(){
 window.addEventListener('load', (event) => {
     try {    
         topbt = document.getElementById('topbt');
-        topbt.style.display = "none"
+        topbt.style.display = "none";
+        document.getElementById("search-box").style.display = "none";
     } catch (e) {};
     main_wrapper = document.getElementById("main-wrapper");
 })
@@ -329,6 +330,8 @@ function users(_type){
                     history.pushState({"view": "users", "link": "/users/" }, null, "/users/");
                     _page = "users";                
                 }
+                
+                autocomplete(document.getElementById("search-input"));
             }
         };
         http.send(null);
@@ -2267,6 +2270,57 @@ function activate_wall(user_name) {
                 }
                 document.getElementById("mespr").src = "/media/images/mesv4_active.png";
                 
+            } else if (message_data["status"]=="autocomplete") {
+                countries = message_data["answer_autocomplete"];
+                
+            } else if (message_data["status"]=="search") {
+                var message_data = message_data["answer_search"]//;
+//                console.log(JSON.parse(message_data[0])["pk"]);
+                var us_block = document.getElementsByClassName('us-block')[0];
+                us_block.innerHTML = "";
+                for (let i = 0; i < message_data.length; i++) {
+                    let search_data = JSON.parse(message_data[i]); 
+                    console.log(search_data);
+                    if (search_data.image_user == "oneProf.png") {
+                        var img_prof = `<img src="/media/images/oneProf.png" loading="lazy">`
+                    } else {
+                        var img_prof = `<img src="/media/data_image/${ search_data.path_data }/tm_${ search_data.image_user }" loading="lazy"> `
+                    }
+                    var username = search_data.username;
+                    if (username.length > 10) {
+                        username = username.slice(0,10);
+                    } 
+                    us_block.innerHTML += `<div class="views-row" onclick="userPROFILE('${search_data.pk}', 'javascript')">
+                                               <div class="user-image">
+                                                    ${img_prof}
+                                               </div>
+                                               <div class="user-name">
+                                                   <a atribut="${search_data.pk}" id="user-link">${username}</a>
+                                               </div>
+                                           `
+                }
+                
+                //us-block
+//                 <div class="views-row" onclick="userPROFILE('{{x.id}}', 'javascript')">
+//            <div class="user-image">
+//                {% if x.image_user != "oneProf.png" %}
+//                    <img src="/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}" loading="lazy"> 
+//                {% else %}
+//                    <img src="/media/images/oneProf.png" loading="lazy"> 
+//                {% endif %}
+//            </div>
+//            <div class="user-name">
+//                <a atribut="{{x.id}}" id="user-link">{{ x.username|truncatechars:10 }}</a>
+//            </div>
+//            {{ x.id|onlinedetect }}
+                
+                
+            } else if (message_data["status"] == "delete_pm") {
+                console.log("delete_pm", _page);
+                if (_page == "privatmes") {
+                    var elem = document.getElementById('pm-block-'+message_data["thread_id"]);
+                    elem.parentNode.removeChild(elem);
+                }
             }
             
             
@@ -2305,7 +2359,7 @@ function activate_wall(user_name) {
 
 activate_wall();
 
-
+// отправить пост
 function send_wall() {
     var title =  document.getElementById('id_body');
     var body = document.getElementById('id_body');
@@ -2764,13 +2818,121 @@ document.addEventListener('keypress', function (e) {
             return false;
         } 
     } else if (_page == "users") {
-        console.log("WALL KEYPRESS", _page, e.key)
-        if (document.getElementById("search-input").value.length != 0) {
-            ws_wall.send(JSON.stringify({"event":"keypress_search", "data":document.getElementById("search-input").value}));
-        }
+//        console.log("WALL KEYPRESS", _page, e.key)
+//       
+//        if (document.getElementById("search-input").value.length != 0) {
+//            ws_wall.send(JSON.stringify({"event":"autocomplete", "data":document.getElementById("search-input").value}));
+//        }
     }
 });
 
+
+function autocomplete(inp) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      if (val.length != 0) {
+          ws_wall.send(JSON.stringify({"event":"autocomplete", "data":val}));
+      };
+      
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < countries.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (countries[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + countries[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += countries[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + countries[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+      x[i].parentNode.removeChild(x[i]);
+    }
+  }
+}
+/*execute a function when someone clicks in the document:*/
+document.addEventListener("click", function (e) {
+    closeAllLists(e.target);
+});
+}
+
+var countries = [];
+function search_func() {
+    let val = document.getElementById("search-input").value;
+    ws_wall.send(JSON.stringify({"event":"search", "data":val}));
+}
 
 
 //----------------------------------->
@@ -2807,5 +2969,12 @@ function beep(freq = 660, duration = 90, vol = 50) {
     oscillator.stop(context.currentTime + duration * .001);
     oscillator.onended = () => context.close();
 }
+
+function delete_pm(thread_id, user_name) {
+    console.log("DELETE_PM")
+    ws_wall.send(JSON.stringify({"event":"delete_pm", "data":{"thread_id":thread_id, "request_user":user_name}}));
+//    delete_pm/(?P<thread_id>\d+)
+}
+    
 
 

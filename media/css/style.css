@@ -376,6 +376,7 @@ html.js input.throbbing {
     margin: 0 auto;
     margin-bottom: 10px;
     cursor: pointer;
+    position: relative;
 }
 
 #loader {
@@ -929,9 +930,10 @@ img#QR {
 /*    height: auto;*/
     width: 80px;
     height: 80px;
-    float: right;
+/*    float: right;*/
     position: absolute;
     right: 40px;
+    top: 30px;
 }
 .canvas-user {
     max-width: 600px;
@@ -1006,7 +1008,50 @@ img#QR {
 /* javascript color picker end */
 
 @media only screen and (min-width : 200px){
+    .delete-pm{
+        /* Remove default */
+        -webkit-appearance: none;
+        /* Now your own custom styles */
+        height: 40px;
+        width: 40px;
+        display: block;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+        /* setup all the background tweaks for our custom icon */
+        background-repeat: no-repeat;
+        /* icon size */
+        background-size: 40px;
+        position: absolute;
+        top: 0;
+        right: 0px;
+    }
+    .numberCircle_users {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        padding: 8px;
+        position: absolute;
+        right: 10px;
+        bottom: 55px;
+    }
+    .numberCircle {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        padding: 8px;
+/*        background: #c3c3c3;*/
+        /* border: 2px solid #666; */
+        /* color: #666; */
+        text-align: center;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+    }
+
     /* Search from */
+    .autocomplete-items {
+      font-size: 40px;
+    }    
+    
     .search-bar {
         margin: 0px 20px;
         padding: 0;
@@ -1064,6 +1109,7 @@ img#QR {
     }
     div#filter-users-page {
         font-size: 40px;
+        text-align: center;
     }
     div#error_msg {
         font-size:45px;
@@ -1714,8 +1760,106 @@ img#QR {
     }    
 }
 
+.img-user-block,
+.pm-block {
+    position: relative;
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+}
+
 @media screen and (min-width: 1200px)  {
+    .delete-pm{
+        /* Remove default */
+        -webkit-appearance: none;
+        /* Now your own custom styles */
+        height: 20px;
+        width: 20px;
+        display: block;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+        /* setup all the background tweaks for our custom icon */
+        background-repeat: no-repeat;
+        /* icon size */
+        background-size: 20px;
+        position: absolute;
+        top: 0;
+        right: 0px;
+        cursor: pointer;
+    }
+
+    .numberCircle_users {
+        border-radius: 50%;
+        width: 5px;
+        height: 5px;
+        padding: 8px;
+        text-align: center;
+        position: absolute;
+        right: 10px;
+        bottom: 40px;
+    }
+
+    .numberCircle {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        padding: 8px;
+    /*    background: #c3c3c3;*/
+        /* border: 2px solid #666; */
+        /* color: #666; */
+        text-align: center;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+    }
+
     /* Search from */
+    .autocomplete {
+        /*the container must be positioned relative:*/
+        position: relative;
+        display: inline-block;
+    }
+    input {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        padding: 10px;
+    }
+    input[type=text] {
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+    input[type=submit] {
+        background-color: DodgerBlue;
+        color: #fff;
+    }
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+        font-size: 20px;
+    }
+    .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+    }
+    .autocomplete-items div:hover {
+        /*when hovering an item:*/
+        background-color: #e9e9e9;
+    }
+    .autocomplete-active {
+        /*when navigating through the items using the arrow keys:*/
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+    }    
+    
+    
     .search-bar {
         margin: 0 auto;
         padding: 0;
@@ -1778,6 +1922,7 @@ img#QR {
     }
     div#filter-users-page {
         font-size: 20px;
+        text-align: center;
     }
     #tooltip img {
         margin: 5px;

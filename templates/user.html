@@ -13,12 +13,21 @@
             <h3>{{ user_info.username }}</h3>
         </div>
         <div class="uspgimg">
-            {% if user_info.image_user != "oneProf.png" %}
-                <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.image_user }}" loading="lazy" id="image-user-profile" onclick="showImg(this, 'qr')">
-            {% else %}
-                <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy" id="image-user-profile">
-            {% endif %}
+            <div class="img-user-block">
+                {% if user_info.image_user != "oneProf.png" %}
+                    <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.image_user }}" loading="lazy" id="image-user-profile" onclick="showImg(this, 'qr')">
+                {% else %}
+                    <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy" id="image-user-profile">
+                {% endif %}
+                {% if online %}
+                    <div class="numberCircle" style="background:#37b73c;"></div>
+                {% else %}
+                    <div class="numberCircle"  style="background:#c3c3c3;"></div>
+                {% endif %}
+            </div>
             <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.username }}_qr.svg" height="auto" width="auto" loading="lazy" id="QR" onclick="showImg(this, 'qr')">
+            
+            
             
         </div>
         <div class="soc">
@@ -33,11 +42,7 @@
                     <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true"><img src="/media/images/dusr.png" class="addusr"><span id="follow-text">ОТПИСАТЬСЯ</span></a>
                 {% endif %}
                 
-                {% if online %}
-                    <a>онлайн</a>
-                {% else %}
-                    <a>не онлайнг</a>
-                {% endif %}
+
                 <div class="pm-mes">
                     {% csrf_token %}
                     <input id="recipient_name" placeholder="Имя получателя" value="{{ user_info.username }}" style="display: none">
