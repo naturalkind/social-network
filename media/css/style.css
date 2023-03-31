@@ -1816,7 +1816,7 @@ img#QR {
     .autocomplete {
         /*the container must be positioned relative:*/
         position: relative;
-        display: inline-block;
+/*        display: inline-block;*/
     }
     input {
         border: 1px solid transparent;

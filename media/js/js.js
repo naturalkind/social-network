@@ -2454,7 +2454,7 @@ function privatMES(_type){
                     history.pushState({"view": "privatmes", "link": linkfull }, null, linkfull);                   
                     _page = "privatmes";
                 }
-             
+                autocomplete(document.getElementById("recipient_name"));
             }
         };
         http.send(null);
