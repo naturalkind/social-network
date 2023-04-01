@@ -2369,7 +2369,7 @@ activate_wall();
 function send_wall() {
     var title =  document.getElementById('id_body');
     var body = document.getElementById('id_body');
-    if (title.value == "") {
+    if (title.value == "" && typeof dataURL_wall == 'undefined') {
         return false;
     }
     if (ws_wall.readyState != WebSocket.OPEN) {
