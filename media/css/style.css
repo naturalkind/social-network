@@ -1343,6 +1343,7 @@ img#QR {
         border-radius: 7px;
         color: #6f6f6f;
         font-size: 33px !important;
+        position: relative;
     }
     
    .video_file,
@@ -2171,6 +2172,7 @@ img#QR {
         border-radius: 7px;
         color: #6f6f6f;
         font-size: 16px !important;
+        position: relative;
     }
     .video_file,
     .image_file{

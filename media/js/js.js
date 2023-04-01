@@ -2321,6 +2321,12 @@ function activate_wall(user_name) {
                     var elem = document.getElementById('pm-block-'+message_data["thread_id"]);
                     elem.parentNode.removeChild(elem);
                 }
+            } else if (message_data["status"] == "delete_com") {
+                console.log("delete_com", _page);
+                if (_page == "wallpost") {
+                    var elem = document.getElementById('com-block-'+message_data["comment_id"]);
+                    elem.parentNode.removeChild(elem);
+                }
             }
             
             
@@ -2973,7 +2979,11 @@ function beep(freq = 660, duration = 90, vol = 50) {
 function delete_pm(thread_id, user_name) {
     console.log("DELETE_PM")
     ws_wall.send(JSON.stringify({"event":"delete_pm", "data":{"thread_id":thread_id, "request_user":user_name}}));
-//    delete_pm/(?P<thread_id>\d+)
+}
+
+function delete_com(comment_id, user_name) {
+    console.log("DELETE_COM")
+    ws_wall.send(JSON.stringify({"event":"delete_com", "data":{"comment_id":comment_id, "request_user":user_name}}));
 }
     
 

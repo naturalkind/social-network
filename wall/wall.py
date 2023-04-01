@@ -72,6 +72,12 @@ def delete_pm(pk):
 #    print (t, pm)
     #return
 
+@sync_to_async
+def delete_com(pk):
+    t = Comment.objects.get(id=pk)
+    t.delete()
+
+
 class WallHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.room_group_name = "wall"
@@ -240,7 +246,6 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                                                 }
                                              ) 
             if event == "delete_pm":
-                print (response)
                 if response["data"]["request_user"] == str(self.sender_name):
                     answer_delete = await delete_pm(response["data"]["thread_id"])
                     await self.channel_layer.send(self.channel_name,
@@ -250,6 +255,18 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                                                         "thread_id": response["data"]["thread_id"]
                                                     }
                                                  )                 
+            if event == "delete_com":
+                print (response)
+                if response["data"]["request_user"] == str(self.sender_name):
+                    answer_delete = await delete_com(response["data"]["comment_id"])
+                    await self.channel_layer.send(self.channel_name,
+                                                    {
+                                                        "type":"wallpost",
+                                                        "status" : "delete_com",
+                                                        "comment_id": response["data"]["comment_id"]
+                                                    }
+                                                 )  
+
             
         else:
             await self.channel_layer.group_send(self.room_group_name, {"type": "wallpost"})           

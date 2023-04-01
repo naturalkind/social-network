@@ -23,7 +23,7 @@
     {% endfor %}
     </div>
 
-    <form action="messages" method="post" class="new_message">
+    <form action="messages" method="post" class="new_message" autocomplete="off">
         {% csrf_token %}
         <div class="autocomplete">
             <div class="name"><input id="recipient_name" placeholder="ИМЯ ПОЛУЧАТЕЛЯ"></div>
