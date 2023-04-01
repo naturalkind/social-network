@@ -2985,6 +2985,16 @@ function delete_com(comment_id, user_name) {
     console.log("DELETE_COM")
     ws_wall.send(JSON.stringify({"event":"delete_com", "data":{"comment_id":comment_id, "request_user":user_name}}));
 }
+
+//function delete_(id, user_name, type) {
+//    console.log("DELETE_")
+//    if (type=="delete_com") {
+//        ws_wall.send(JSON.stringify({"event":"delete_com", "data":{"comment_id":comment_id, "request_user":user_name}}));
+//    } else if (type=="delete_pm") {
+//        ws_wall.send(JSON.stringify({"event":"delete_pm", "data":{"thread_id":thread_id, "request_user":user_name}}));
+//    }
+//}
+
     
 
 
