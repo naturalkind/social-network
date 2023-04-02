@@ -146,6 +146,8 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                         "comment_text": response["comment_text"],
                         "comment_image": comment_image,
                         "comment_user": self.scope['user'].username,
+                        "comment_user_id": str(self.scope['user'].id),
+                        "comment_id":str(comment.id),
                         "path_data": self.path_data,
                         "image_user": self.image_user,
                         "post_id": response["post_id"],

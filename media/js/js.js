@@ -2228,7 +2228,8 @@ function activate_wall(user_name) {
                 
                 var tev = document.getElementById('field-comment_'+message_data["post_id"]);
                 var fc = document.createElement('div');
-                fc.className = 'f-c';                
+                fc.className = 'f-c';   
+                fc.id = "com-block-"+message_data.comment_id;             
                 if (message_data.image_user != "oneProf.png") {
                     var img_com_user = `"/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"`;
                 } else {
@@ -2258,6 +2259,9 @@ function activate_wall(user_name) {
                                     <p id="comment-text">${message_data.comment_text}</p>`
                 }
                 fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>";
+                if (message_data.comment_user_id==message_data.user_id) {
+                    fc.innerHTML += `<div class='delete-pm' onclick='delete_com("${message_data.comment_id}", "${message_data.comment_user}")'></div>`;                
+                }                
                 
                 try {
                     tev.insertBefore(fc, tev.lastChild);
