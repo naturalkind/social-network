@@ -5,9 +5,9 @@
         {% if request.user.is_authenticated %}
             {% if request.user == post.user_post %}
 <!--                <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>-->
-                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, {{post.id}}, '{{username}}', 'true', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
+                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, '{{post.id}}', '{{username}}', 'true', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
             {% else %}
-                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, {{post.id}}, '{{username}}', 'false', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
+                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, '{{post.id}}', '{{username}}', 'false', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
             {% endif %}
         {% endif %}
         <div class="user"> Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> 

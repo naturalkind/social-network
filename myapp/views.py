@@ -45,7 +45,7 @@ def create_comment(request):
         ps_id = request.GET['post_id']
         text = request.GET['comment_text']
     if ps_id:
-        ans = Post.objects.get(id=(int(ps_id)))
+        ans = Post.objects.get(id=ps_id)
         if ans:
               Comment.objects.create(comment_text=text, comment_user=request.user, post_id=ans)
               x = 'тебе не нравиться'
@@ -57,7 +57,7 @@ def rppos(request, id):
     if request.method == 'GET':
     # if request.method == 'POST':
         username = request.GET.get('username')
-        psse = Post.objects.get(id=int(id))
+        psse = Post.objects.get(id=id)
         usse = User.objects.get(username=username)
         if psse.relike.filter(id=request.user.id).exists():
             psse.remove_rela(usse, RELATIONSHIP_FOLLOWING)
@@ -75,7 +75,7 @@ def add_like(request):
     if request.method == 'GET':
         ps_id = request.GET['post_id']
     if ps_id:
-        ans = Post.objects.get(id=(int(ps_id)))
+        ans = Post.objects.get(id=ps_id)
         #votes = ans.votes
         if ans:
             if ans.likes.filter(id=request.user.id).exists():
@@ -251,7 +251,7 @@ def post(request, post):
     page = 1 #request.GET.get('page')
     _type = request.GET.get('_type')
     data['us'] = auth.get_user(request).username
-    comment  = Comment.objects.filter(post_id=post_id)#.order_by('-timecomment')
+    comment  = Comment.objects.filter(post_id=post_id).order_by('-timecomment')
     comment_paginator = Paginator(comment, 10)
     comment_data = comment_paginator.get_page(page)
     try:
@@ -281,7 +281,7 @@ def post(request, post):
 def viewcom(request, post_id):
 #    comment  = Comment.objects.filter(post_id=post_id)
 #    return render(request, 'comv.html',{'comment':comment,'id':post_id})
-    comment = Comment.objects.filter(post_id=post_id)#.order_by('timecomment')#.reverse() # .order_by('-timecomment')
+    comment = Comment.objects.filter(post_id=post_id).order_by('-timecomment')#.order_by('timecomment')#.reverse() # .order_by('-timecomment')
     paginator = Paginator(comment, 10)
     page = request.GET.get('page')
     data = {}
@@ -412,7 +412,15 @@ def register(request):
             result = template.render(context)
             return HttpResponse(result)            
     else:
-        return render(request, 'register.html', args)
+        _type = request.GET.get('_type')    
+        if _type == "javascript":  
+            return render(request, 'register.html', args)
+        else:
+            t = loader.get_template('register.html')
+            template = Template('{%extends "' + "base.html" + '"%} ...'+t.template.source)
+            context = Context(args)
+            result = template.render(context)
+            return HttpResponse(result)             
 
 
 def user(request):
@@ -702,7 +710,7 @@ def users_all(request):
 def likeover(request):
     page = request.GET.get('page', None)
     ps_id = request.GET.get('post_id', None)
-    posts = Post.objects.get(id=int(ps_id)).likes.all()
+    posts = Post.objects.get(id=ps_id).likes.all()
     print (posts)
     paginator = Paginator(posts, 100)
     

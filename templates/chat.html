@@ -29,7 +29,7 @@
                     {% endif %}
                     <p class="txtmessage we">
                         {% if message.resend != "False" %}
-                            <a onclick="showContent({{message.text}})">СМОТРЕТЬ→</a>
+                            <a onclick="showContent('{{message.text}}')">СМОТРЕТЬ→</a>
                         {% else %}
                             {{ message.text|linebreaksbr }}
                         {% endif %}
@@ -48,7 +48,7 @@
 
                     <p class="txtmessage partner">
                         {% if message.resend != "False" %}
-                            <a onclick="showContent({{message.text}})"> </a>
+                            <a onclick="showContent('{{message.text}}')">СМОТРЕТЬ→</a>
                         {% else %}
                             {{ message.text|linebreaksbr }}
                         {% endif %}

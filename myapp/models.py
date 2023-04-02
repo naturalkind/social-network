@@ -24,6 +24,7 @@ RELATIONSHIP_STATUSES = (
     (RELATIONSHIP_BLOCKED, 'Blocked'),
 )
 class User(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     relationship = models.ManyToManyField('self', through='Relationship',symmetrical=False, related_name='related_to')
     image_user = models.TextField(max_length=200, default="oneProf.png", verbose_name='Название картинки', blank=True)
     path_data = models.TextField(max_length=200, default="", verbose_name='Название каталога', blank=True)
@@ -76,7 +77,7 @@ class User(AbstractUser):
     
     def save(self, *args, **kwargs):
         if self.path_data == "":
-            self.path_data = str(uuid.uuid4())[:12]
+            self.path_data = str(self.id)[:12]
             if not os.path.exists(f"media/data_image/{self.path_data}"):
                 os.makedirs(f"media/data_image/{self.path_data}")
         return super(User, self).save(*args, **kwargs)
@@ -109,6 +110,7 @@ class Relationship(models.Model):
 
 
 class Post(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=999999, default="", verbose_name='Загаловок', blank=True)
     video = models.TextField(max_length=200, default="", verbose_name='Название видео', blank=True)
     image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
@@ -164,6 +166,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     post_id = models.ForeignKey(Post, default="", on_delete=models.CASCADE)
     comment_user = models.ForeignKey(settings.AUTH_USER_MODEL, default="", on_delete=models.CASCADE,)
     comment_text = models.TextField()
@@ -172,6 +175,7 @@ class Comment(models.Model):
     
 # новый модуль
 class Media(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     about = models.CharField(max_length=1000, default="", verbose_name='О файле', blank=True)
     media = models.TextField(max_length=1000, default="", verbose_name='Название файла', blank=True)
     path_data = models.TextField(max_length=1000, default="", verbose_name='Расположение', blank=True)

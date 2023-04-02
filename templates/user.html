@@ -81,7 +81,7 @@
         {% for l in post %}
             {% if user_info in l.user_post %}
                 <li class="views-row"  onmouseover="getIndex(this);">
-                    <div class="views-title"><a onclick="showContent({{l.id}})" atribut="{{l.id}}">{{ l.title }}</a></div>
+                    <div class="views-title"><a onclick="showContent('{{l.id}}')" atribut="{{l.id}}">{{ l.title }}</a></div>
                     <div class="field-image">
                         <img src="/media/data_image/{{ user_info.path_data }}/{{ l.title }}_tm.png" width="220" height="150" alt="" loading="lazy">
                     </div>
@@ -90,9 +90,9 @@
                 <li class="views-row"  onmouseover="getIndex(this);">
                     <div class="field-image" atribut="{{l.id}}">
                         {% if l.image != "" %}
-                            <img style="background: url('/media/data_image/{{ l.path_data }}/{{ l.image }}');background-size: cover;width:300px;height:230px;" onclick="showContent({{l.id}})" loading="lazy">
+                            <img style="background: url('/media/data_image/{{ l.path_data }}/{{ l.image }}');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')" loading="lazy">
                         {% else %}
-                            <img style="background: url('/media/images/no_image.png');background-size: cover;width:300px;height:230px;" onclick="showContent({{l.id}})" loading="lazy">                        
+                            <img style="background: url('/media/images/no_image.png');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')" loading="lazy">                        
                         {% endif %}
                         
                     </div>

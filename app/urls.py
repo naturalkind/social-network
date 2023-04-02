@@ -30,8 +30,9 @@ urlpatterns = [
     path('', myapp.main_page),
 
     # пользовательский материал
-    re_path(r'^data/(?P<post>\d+)/$', myapp.post), # страница материала
-
+    #re_path(r'^data/(?P<post>\d+)/$', myapp.post), # страница материала
+    path(r'data/<str:post>/', myapp.post), 
+    
     # вход выход для пользователя
     path(r'login', myapp.login), 
     path(r'logout/', myapp.logout),
@@ -40,7 +41,8 @@ urlpatterns = [
     # страница пользователей
     path(r'profile/', myapp.user),
     path(r'users/', myapp.users_all),
-    re_path(r'user/(?P<user>\d+)/', myapp.user_page), 
+#    re_path(r'user/(?P<user>\d+)/', myapp.user_page), 
+    path(r'user/<str:user>/', myapp.user_page), 
     
     # сообщения
     path(r'messages/', include('privatemessages.urls')), 

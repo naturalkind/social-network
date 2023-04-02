@@ -71,7 +71,7 @@ def get_partner(room_name, sender_id):
 class MessagesHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_code']
-        self.sender_id = self.scope['user'].id
+        self.sender_id = str(self.scope['user'].id)
         self.room_group_name = f"thread_{str(self.room_name)}_messages"
         self.sender_name = self.scope['user']
         self.image_user = self.scope['user'].image_user

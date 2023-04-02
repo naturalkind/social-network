@@ -4,13 +4,13 @@
 
 #### Для запуска нужно:
 
-* Django 4.1.7 - работа с БД
-* Channels 4.0.0 - websocket
-* Channels-redis 4.0.0 - django channels, используют Redis в качестве резервного хранилища
-* Daphne 4.0.0 - ASGI сервер протоколов Django
+* Django 4.x - работа с БД
+* Channels 4.x - websocket
+* Channels-redis 4.x - django channels, используют Redis в качестве резервного хранилища
+* Daphne 4.x - ASGI сервер протоколов Django
 * Gunicorn - python WSGI HTTP сервер для UNIX
-* PostgreSQL 15.2 - основное хранилище
-* Redis 6 - дополнительное хранилище
+* PostgreSQL - основное хранилище
+* Redis - дополнительное хранилище
 
 #### Пуск:
 
@@ -120,4 +120,5 @@ celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6
 - [ ] полнотекстовый поиск   
 - [x] уведомление личных сообщений   
 - [x] следить за активностью пользователя   
+- [ ] ссылка на страницу пользователя по псевдониму с проверкой   
 

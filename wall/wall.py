@@ -29,7 +29,7 @@ class UserChannels(JsonModel):
 def autocomplete_query_redis(prefix):
     results = []
     rangelen = 50 
-    count=5
+    count=10
     start = redis.zrank('compl', prefix)    
     if not start:
         results = []
@@ -56,7 +56,7 @@ def autocomplete_query_redis(prefix):
 def search_query_redis(prefix):
     #args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+results[0]+'%', 'LIMIT', '0', '5']
     
-    args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+prefix+'%', 'LIMIT', '0', '5']
+    args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+prefix+'%', 'LIMIT', '0', '20']
     raw_results = redis.execute_command(*args)
     results = JsonModel.from_redis(raw_results)
     results = [i.json() for i in results]
@@ -89,7 +89,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             self.namefile = str()
             
         P = UserChannels(channels=self.channel_name, online=True)
-        P.pk = self.sender_id
+        P.pk = str(self.sender_id)
         P_async = sync_to_async(P.save)
         await P_async()  
         print ("CHANNEL_LAYERS", self.channel_name, self.room_group_name, self.scope['user'])
@@ -108,7 +108,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
         )
         
         P = UserChannels(channels=self.channel_name, online=False)
-        P.pk = self.sender_id
+        P.pk = str(self.sender_id)
         P_async = sync_to_async(P.save)
         await P_async()
     
@@ -122,7 +122,6 @@ class WallHandler(AsyncJsonWebsocketConsumer):
         event = response.get("event", None)
         if self.scope['user'].is_authenticated:  
             if event == "comment_post":
-                print ("COMMENT_POST", response)
                 if response['comment_image'] != "":
                     nameFile = str(uuid.uuid4())[:12]
                     imgstr = re.search(r'base64,(.*)', response['comment_image']).group(1)
@@ -150,52 +149,54 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                         "path_data": self.path_data,
                         "image_user": self.image_user,
                         "post_id": response["post_id"],
-                        "user_id": self.sender_id,
+                        "user_id": str(self.sender_id),
                         "timecomment":now,
                         "status" : "send_comment"
                     }
                 await self.channel_layer.group_send(self.room_group_name, _data)
                 
             if event == "wallpost":
-                    user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)
-                    post = Post()
-                    post.title = response["title"]
-                    post.body = response["body"]
-                    post.image = self.namefile
-                    post.path_data = self.path_data
-                    post.user_post = user_postv
-                    post_async = sync_to_async(post.save)
-                    await post_async()
+                if response["image"] == False:
+                    self.namefile = ""
+                user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)
+                post = Post()
+                post.title = response["title"]
+                post.body = response["body"]
+                post.image = self.namefile
+                post.path_data = self.path_data
+                post.user_post = user_postv
+                post_async = sync_to_async(post.save)
+                await post_async()
 
-                    _data = {"type": "wallpost",
-                             "timestamp": dateformat.format(post.date_post, 'U'),
-                             "image": self.namefile,
-                             "text":response["body"],
-                             "user_post": str(self.sender_name),
-                             "user_id": self.sender_id,
-                             "id": post.id,
-                             "image_user" : self.image_user, 
-                             "path_data" : self.path_data,
-                             "status" : "wallpost"
-                            }
-                    if self.namefile == "":
-                        _temp_dict = {}
-                        _temp_dict["title"] = response["title"]
-                        _temp_dict["path_data"] = self.path_data
-                        _temp_dict["post"] = post.id
-                        _temp_dict["type"] = "triggerWorker"
-                        _temp_dict["room_group_name"] = self.room_group_name
-                        await self.channel_layer.send('nnapp', _temp_dict)
-                        
-                        # Старая версия работы
+                _data = {"type": "wallpost",
+                         "timestamp": dateformat.format(post.date_post, 'U'),
+                         "image": self.namefile,
+                         "text":response["body"],
+                         "user_post": str(self.sender_name),
+                         "user_id": str(self.sender_id),
+                         "id": str(post.id),
+                         "image_user" : self.image_user, 
+                         "path_data" : self.path_data,
+                         "status" : "wallpost"
+                        }
+                if self.namefile == "":
+                    _temp_dict = {}
+                    _temp_dict["title"] = response["title"]
+                    _temp_dict["path_data"] = self.path_data
+                    _temp_dict["post"] = str(post.id)
+                    _temp_dict["type"] = "triggerWorker"
+                    _temp_dict["room_group_name"] = self.room_group_name
+                    await self.channel_layer.send('nnapp', _temp_dict)
+                    
+                    # Старая версия работы
 #                        await self.send_and_get(_temp_dict, model='Kandinsky-2.0')
 #                        t = threading.Thread(target=self.send_and_get, 
 #                                             args=[_temp_dict], 
 #                                             kwargs={"model":"Kandinsky-2.0"})
 #                        t.start()
 #                        t.join() 
-                    #----------------------------------------->   
-                    await self.channel_layer.group_send(self.room_group_name, _data)
+                #----------------------------------------->   
+                await self.channel_layer.group_send(self.room_group_name, _data)
                 
             if event == "Start":
                 self.namefile = f'{str(uuid.uuid4())[:12]}_{response["Name"]}'

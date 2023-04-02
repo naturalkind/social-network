@@ -379,10 +379,11 @@ function enter(){
 
 
 /// регистрация форма заполнения
-function addREG(){
+function addREG(_type){
+    _type = typeof _type !== 'undefined' ?  _type : "javascript";
     var http = createRequestObject();
     if (http) {
-        http.open('get', '/register');
+        http.open('get', '/register/?_type='+_type);
         http.onreadystatechange = function () {
             if(http.readyState == 4) {
                 main_wrapper.innerHTML = http.responseText;
@@ -701,7 +702,7 @@ function jsons(link, atr){
                                                       loading='lazy'>`;
                         }                        
                             
-                       html += `<div class='views-row' onclick='userPROFILE(${g[R].pk})'>
+                       html += `<div class='views-row' onclick='userPROFILE("${g[R].pk}")'>
                                     ${div_image_user}
                                     <div class='user-name'><a atribut='${g[R].pk}' id="user-link">${tuser}</a></div>
                                 </div>`
@@ -726,7 +727,7 @@ function jsons(link, atr){
                                 html += `<li class='views-row' onmouseover='getIndex(this);'>
                                             <div class='field-image' atribut='${g[R].pk}'>
                                                 <img style='background: url("${img}");width:300px;height:230px;background-size: cover;'  
-                                                     onclick='showContent(${g[R].pk})' 
+                                                     onclick='showContent("${g[R].pk}")' 
                                                      loading='lazy'>
                                             </div>
                                             <div id='${g[R].pk}' data-tooltip='${g[R].pk}'></div>
@@ -746,7 +747,7 @@ function jsons(link, atr){
                                 html += `<li class='views-row' onmouseover='getIndex(this);'>
                                             <div class='field-image' atribut='${g[R].pk}'>
                                                 <img style='background:url("${img}");width:300px;height:230px;background-size: cover;'  
-                                                     onclick='showContent(${g[R].pk})' 
+                                                     onclick='showContent("${g[R].pk}")' 
                                                      loading='lazy'>
                                             </div>
                                             <div id='${g[R].pk}'
@@ -812,7 +813,7 @@ function showImg(path_data, _type){
 // лайк   
 function LIKENODE(link){  
     var cont = document.getElementById('like_count');
-    var linkfull = '/add_like/?post_id='+link;
+    var linkfull = '/add_like/?post_id='+ link;
     var http = createRequestObject();
     if (http) {
         http.open('get', linkfull);
@@ -863,9 +864,9 @@ function LIKEOVER(link, page_num, loadmore) {
             data = JSON.parse(data.data);
             for (var z in data) {
                 if (data[z].fields.image_user != "oneProf.png") {
-                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" class="imgUs" onclick="userPROFILE(${data[z].pk})" style="cursor:pointer;" loading="lazy">`;
+                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" class="imgUs" onclick="userPROFILE('${data[z].pk}')" style="cursor:pointer;" loading="lazy">`;
                 } else {
-                    var div_image_user = `<img src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE(${data[z].pk})" style="cursor:pointer;" loading="lazy">`;
+                    var div_image_user = `<img src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE('${data[z].pk}')" style="cursor:pointer;" loading="lazy">`;
                 }
                 html += div_image_user
             }
@@ -1250,9 +1251,9 @@ function FRIENDS(link, page_num, loadmore) {
             data = JSON.parse(data.data);
             for (var z in data) {
                 if (data[z].fields.image_user != "oneProf.png") {
-                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="reSend(${data[z].pk}, ${link})">`;
+                    var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="reSend('${data[z].pk}', '${link}')">`;
                 } else {
-                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="reSend(${data[z].pk}, ${link})">`;
+                    var div_image_user = `<img src="/media/images/oneProf.png" loading="lazy" class="imgUs" onclick="reSend('${data[z].pk}', '${link}')">`;
                 }
                 html += div_image_user
             }
@@ -1303,14 +1304,14 @@ function menuset(self, link, username, del_indicator, like_count, total_friends)
         var tooltipElem = document.createElement('div');
         tooltipElem.id = 'tooltip';
         if (del_indicator == 'true') {
-            var t = `<a id="deletepost" onclick="deletepost(this, ${link})" del-atr="false">УДАЛИТЬ</a>`;
+            var t = `<a id="deletepost" onclick="deletepost(this, '${link}')" del-atr="false">УДАЛИТЬ</a>`;
         } else {
             var t = "";
         }
         tooltipElem.innerHTML = `<div id="post_like_block_${link}" style="width: 100%">
                                  ${t}
-                                 <a onclick="LIKEOVER(${link})">понравилось ${like_count}</a>
-                                 <a onclick="FRIENDS(${link})">отправить ${total_friends}</a>
+                                 <a onclick="LIKEOVER('${link}')">понравилось ${like_count}</a>
+                                 <a onclick="FRIENDS('${link}')">отправить ${total_friends}</a>
                                  </div>
                                 `; //<a>статистика</a>
         
@@ -1457,7 +1458,7 @@ function foll(link, page_num, loadmore){
                         var tuser = g[R].fields.username;
                     }            
                     html += `<div class="fr-cell">
-                              <a onclick='userPROFILE(${g[R].pk})' style="color:#ffffff">
+                              <a onclick='userPROFILE("${g[R].pk}")' style="color:#ffffff">
                               ${div_image_user}${tuser}</a></div>`   
                 }
                 if (loadmore == "loadmore") {
@@ -1546,7 +1547,7 @@ function folls(link, page_num, loadmore){
                         var tuser = g[R].fields.username;
                     }            
                     html += `<div class="fr-cell">
-                              <a onclick='userPROFILE(${g[R].pk})' style="color:#ffffff">
+                              <a onclick='userPROFILE("${g[R].pk}")' style="color:#ffffff">
                               ${div_image_user}${tuser}</a></div>`   
                 }
                 if (loadmore == "loadmore") {
@@ -1855,10 +1856,19 @@ function OnOnW() {
             };
             im.src = readerwall.result;
             StartUpload()
+            document.getElementById("clearCanvas").style.display = "block";
+            document.getElementById("clearCanvas").style.backgroundColor = "white";
         }
     }
 }
 
+function clearCanvas() {
+    contextwall.clearRect(0, 0, canvaswall.width, canvaswall.height);
+    canvaswall.width = 0;
+    canvaswall.height = 0;
+    document.getElementById("clearCanvas").style.display = "none";
+    dataURL_wall = false;
+}
 
 var SelectedFile;
 var Name;
@@ -2109,10 +2119,10 @@ function activate_wall(user_name) {
                 
                 fc.innerHTML = `<div class="views-title" style="width: 100%;float: left;">
                                     <div class="user-cord" atribut="1165">
-                                        <a onclick="userPROFILE(${message_data.user_id})">
+                                        <a onclick="userPROFILE('${message_data.user_id}')">
                                             ${div_image_user}
                                         </a>
-                                        <a class="postview" onclick="showContent(${message_data.id})">
+                                        <a class="postview" onclick="showContent('${message_data.id}')">
                                             <span style="font-weight: bolder;">${tuser}</span>${ttext}</a>
                                     </div>
                                     <span class="datetime">${date.getHours()}:${date.getMinutes()}</span>
@@ -2228,9 +2238,9 @@ function activate_wall(user_name) {
                     fc.innerHTML = `<img id="image-user" 
                                          src=${img_com_user} 
                                          class="imgUs" 
-                                         onclick="userPROFILE(${message_data.user_id})" s
+                                         onclick="userPROFILE('${message_data.user_id}')" s
                                          tyle="cursor:pointer;" loading="lazy">
-                                    <a onclick="userPROFILE(${message_data.user_id})" 
+                                    <a onclick="userPROFILE('${message_data.user_id}')" 
                                        id="user-comment">${message_data.comment_user}</a>
                                     <p id="comment-text">${message_data.comment_text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}</p>
                                     <img id="comment-image" 
@@ -2240,10 +2250,10 @@ function activate_wall(user_name) {
                     fc.innerHTML = `<img id="image-user" 
                                          src=${img_com_user} 
                                          class="imgUs" 
-                                         onclick="userPROFILE(${message_data.user_id})" 
+                                         onclick="userPROFILE('${message_data.user_id}')" 
                                          style="cursor:pointer;" 
                                          loading="lazy">
-                                    <a onclick="userPROFILE(${message_data.user_id})" 
+                                    <a onclick="userPROFILE('${message_data.user_id}')" 
                                        id="user-comment">${message_data.comment_user}</a>
                                     <p id="comment-text">${message_data.comment_text}</p>`
                 }
@@ -2372,6 +2382,9 @@ function send_wall() {
     if (title.value == "" && typeof dataURL_wall == 'undefined') {
         return false;
     }
+    if (typeof dataURL_wall == 'undefined') {
+        dataURL_wall = false;
+    }
     if (ws_wall.readyState != WebSocket.OPEN) {
         return false;
     }
@@ -2385,6 +2398,7 @@ function send_wall() {
                   image: dataURL_wall,
                   event: "wallpost",
     };
+    console.log("................", event)
     var data = JSON.stringify(event);
     ws_wall.send(data);
 }
@@ -2556,11 +2570,11 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                 if (message_data.image_user != "oneProf.png") {
                     var div_image_user = `<img src="/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"
                                              class="usPr" 
-                                             onclick="userPROFILE(${message_data.sender_id})">`;
+                                             onclick="userPROFILE('${message_data.sender_id}')">`;
                 } else {
                     var div_image_user = `<img src="/media/images/oneProf.png"
                                              class="usPr" 
-                                             onclick="userPROFILE(${message_data.sender_id})">`;
+                                             onclick="userPROFILE('${message_data.sender_id}')">`;
                 }
                 tev.innerHTML += `<div class="message">
                                     <p class="author ${((message_data.sender == user_name) ? 'we' : 'partner')}">
@@ -2603,12 +2617,12 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                     if (image_file != "oneProf.png") {
                         var div_image_user = `<img src="/media/data_image/${data_path}/tm_${image_file}"
                                                  class="usPr" 
-                                                 onclick="userPROFILE(${sender_id})"
+                                                 onclick="userPROFILE('${sender_id}')"
                                                  style="float:none;">`;
                     } else {
                         var div_image_user = `<img src="/media/images/oneProf.png"
                                                  class="usPr" 
-                                                 onclick="userPROFILE(${sender_id})"
+                                                 onclick="userPROFILE('${sender_id}')"
                                                  style="float:none;">`;
                     }
 //                        {% if message.resend != "False" %}
@@ -2618,7 +2632,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
 //                        {% endif %}                    
   
                     if (g[R].fields.resend != "False") {
-                        var field_text = `<a onclick="showContent(${g[R].fields.text})">СМОТРЕТЬ→</a>`;
+                        var field_text = `<a onclick="showContent('${g[R].fields.text}')">СМОТРЕТЬ→</a>`;
                     } else {
                         var field_text = g[R].fields.text;
                     }
@@ -2752,13 +2766,26 @@ function load_more_comment(link, page) {
                             } else {
                                 var comment_image = "";
                             }
+                            console.log(data[z].fields.timecomment)
                             var comment_date = new Date(data[z].fields.timecomment);
                             var comment_month = comment_date.toLocaleString('en-US', { month: 'short' });
+                            var time = comment_date.toLocaleTimeString('en', { timeStyle: 'short', hour12: false, timeZone: 'UTC' });
                             f_c.innerHTML = `${div_image_user}<a onclick="userPROFILE('${data[z].fields.comment_user[2]}', 'javascript')" id="user-comment">${data[z].fields.comment_user[3]}</a>
                 <p id="comment-text">${data[z].fields.comment_text}</p>
                 ${comment_image}
-                <div id="time-comment">${comment_date.getDate()} ${comment_month.toLowerCase()} ${comment_date.getFullYear()} в ${comment_date.getHours()}:${comment_date.getMinutes()}</div>
+                <div id="time-comment">${comment_date.getUTCDate()} ${comment_month.toLowerCase()} ${comment_date.getUTCFullYear()} в ${time}</div>
             </div>`
+            
+//                            var comment_date = comment_date.toLocaleTimeString([], {year:"numeric", month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', day:"2-digit"})
+//                            f_c.innerHTML = `${div_image_user}<a onclick="userPROFILE('${data[z].fields.comment_user[2]}', 'javascript')" id="user-comment">${data[z].fields.comment_user[3]}</a>
+//                                <p id="comment-text">${data[z].fields.comment_text}</p>
+//                                ${comment_image}
+//                                <div id="time-comment">${comment_date}</div>
+//                            </div>`
+                            
+            
+            
+            
                             document.getElementById("field-comment_"+link).insertBefore(f_c ,document.getElementById("field-comment_"+link).firstChild);
                             
                         }
