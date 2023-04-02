@@ -29,7 +29,7 @@ class UserChannels(JsonModel):
 def autocomplete_query_redis(prefix):
     results = []
     rangelen = 50 
-    count=10
+    count=6
     start = redis.zrank('compl', prefix)    
     if not start:
         results = []
@@ -55,14 +55,26 @@ def autocomplete_query_redis(prefix):
 @sync_to_async
 def search_query_redis(prefix):
     #args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+results[0]+'%', 'LIMIT', '0', '5']
-    
-    args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+prefix+'%', 'LIMIT', '0', '20']
+    args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', f'@username_fts:{prefix}', 'LIMIT', '0', '5']
     raw_results = redis.execute_command(*args)
     results = JsonModel.from_redis(raw_results)
-    results = [i.json() for i in results]
-    
-    return results
-    
+    if len(results) > 0:
+        results = [i.json() for i in results]
+        return results
+    else:
+        args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%'+prefix+'%', 'LIMIT', '0', '50']
+        raw_results = redis.execute_command(*args)
+        results = JsonModel.from_redis(raw_results)
+        if len(results) > 0:
+            results = [i.json() for i in results]
+            return results
+        else:
+            args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:'+prefix+'*', 'LIMIT', '0', '50']
+            raw_results = redis.execute_command(*args)
+            results = JsonModel.from_redis(raw_results)            
+            results = [i.json() for i in results]
+            return results    
+            
 @sync_to_async
 def delete_pm(pk):
     t = Thread.objects.get(id=pk)
