@@ -70,6 +70,7 @@ body.overlay {
 
 a {
     color: #507299;
+/*    color: #b05691;*/
     cursor: pointer;
 }
 .sidebar .block {
@@ -626,7 +627,8 @@ input#myPROFILE {
 }
 
 .field-text {
-    margin: 13px 0px;
+/*    margin: 13px 0px;*/
+    margin: 13px 0px 0px 0px;
     padding: 2px;
 }
 
@@ -1595,7 +1597,8 @@ img#QR {
         font-size: 36px;
         padding: 15px;
         color: #FFFFFF;
-        background: #507299;
+/*        background: #507299;*/
+        background: #b05691;
         border-radius: 7px;
         width: 100%;
         border: none;
@@ -2191,6 +2194,7 @@ img#QR {
     }
     img.addusr {
         background: #507299;
+/*        background: #b05691;*/
         border-radius: 7px;
         width: 28px;
         height: 20px;
@@ -2407,7 +2411,8 @@ img#QR {
     button {
         color: #ffffff;
         font-size: 25px;
-        background: #507299;
+/*        background: #507299;*/
+        background: #b05691;
         border: none;
         padding: 5px;
         border-radius: 7px;
