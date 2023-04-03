@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from myapp.models import User
+from myapp.models import User, UserChannels
 from privatemessages.models import Thread, Message
 from importlib import import_module
 from privatemessages.utils import send_message
@@ -21,21 +21,6 @@ import redis
 import time
 
 session_engine = import_module(settings.SESSION_ENGINE)
-
-
-from redis_om import HashModel, JsonModel
-from redis_om.model.model import (
-    EmbeddedJsonModel,
-    Expression,
-    NotFoundError,
-    RedisModel,
-)
-
-class UserChannels(JsonModel):
-    channels: str
-    class Meta:
-        global_key_prefix = "redis_channels"  
-        model_key_prefix = "user"
 
 
 @sync_to_async

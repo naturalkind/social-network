@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from myapp.models import User, Post, Comment
+from myapp.models import User, Post, Comment, UserChannels
 from privatemessages.models import Thread, Message
 from importlib import import_module
 
@@ -14,16 +14,9 @@ import uuid
 import base64, io, os, re
 session_engine = import_module(settings.SESSION_ENGINE)
 
-
-from redis_om import RedisModel, HashModel, JsonModel, get_redis_connection
+from redis_om import get_redis_connection
 redis = get_redis_connection()
 
-class UserChannels(JsonModel):
-    channels: str
-    online: bool
-    class Meta:
-        global_key_prefix = "redis_channels"  
-        model_key_prefix = "user"
 
 @sync_to_async
 def autocomplete_query_redis(prefix):

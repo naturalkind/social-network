@@ -28,14 +28,6 @@ from django.template.loader import render_to_string
 from django.template import loader
 from django.template import Template, Context
 
-#from redis_om import HashModel, JsonModel
-
-#class UserChannels(JsonModel):
-#    channels: str
-#    online: bool
-#    class Meta:
-#        global_key_prefix = "redis_channels"  
-#        model_key_prefix = "user"
 
 
 class ExtBaseSerializer(serializers.base.Serializer):
@@ -61,8 +53,6 @@ class ExtPythonSerializer(ExtBaseSerializer, serializers.python.Serializer):
 
 class ExtJsonSerializer(ExtPythonSerializer, serializers.json.Serializer):
     pass
-
-
 
 
 @login_required

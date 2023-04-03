@@ -43,7 +43,11 @@ class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
     
-    @property#@staticmethod    
+#    @staticmethod
+#    def add_online_value():
+        
+    
+    @property    
     def online(self): #
         try:
             online = UserChannels.get(self.id).dict()["online"]
