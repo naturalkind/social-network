@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from myapp.models import User, Post, Comment, UserChannels
+from myapp.models import User, Post, Comment, UserChannels, JsonModel
 from privatemessages.models import Thread, Message
 from importlib import import_module
 
