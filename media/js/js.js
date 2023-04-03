@@ -702,9 +702,34 @@ function jsons(link, atr){
                                                       loading='lazy'>`;
                         }                        
                             
+//            <div class="img-user-block">
+//                <div class="user-image">
+//                    {% if x.image_user != "oneProf.png" %}
+//                        <img src="/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}" loading="lazy"> 
+//                    {% else %}
+//                        <img src="/media/images/oneProf.png" loading="lazy"> 
+//                    {% endif %}
+//                </div>
+//                <div class="user-name">
+//                    <a atribut="{{x.id}}" id="user-link">{{ x.username|truncatechars:10 }}</a>
+//                </div>
+//                {% if x.id|onlinedetect %}
+//                    <div class="numberCircle_users" style="background:#37b73c;"></div>
+//                {% else %}
+//                    <div class="numberCircle_users"  style="background:#c3c3c3;"></div>
+//                {% endif %}
+//            </div>      
+                       if (g[R].fields.online) {
+                           var _online = '<div class="numberCircle_users" style="background:#37b73c;"></div>'
+                       } else {
+                           var _online = '<div class="numberCircle_users" style="background:#c3c3c3;"></div>'
+                       }               
                        html += `<div class='views-row' onclick='userPROFILE("${g[R].pk}")'>
-                                    ${div_image_user}
-                                    <div class='user-name'><a atribut='${g[R].pk}' id="user-link">${tuser}</a></div>
+                                    <div class="img-user-block">
+                                        ${div_image_user}
+                                        <div class='user-name'><a atribut='${g[R].pk}' id="user-link">${tuser}</a></div>
+                                        ${_online}
+                                    </div>
                                 </div>`
                     }
                     contv.innerHTML += html;

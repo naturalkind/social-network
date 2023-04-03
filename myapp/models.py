@@ -12,6 +12,16 @@ import base64
 import re
 import uuid, os
 
+from redis_om import HashModel, JsonModel
+
+class UserChannels(JsonModel):
+    channels: str
+    online: bool
+    class Meta:
+        global_key_prefix = "redis_channels"  
+        model_key_prefix = "user"
+
+
 # qr code
 import qrcode
 import qrcode.image.svg
@@ -29,9 +39,18 @@ class User(AbstractUser):
     image_user = models.TextField(max_length=200, default="oneProf.png", verbose_name='Название картинки', blank=True)
     path_data = models.TextField(max_length=200, default="", verbose_name='Название каталога', blank=True)
     color = models.TextField(max_length=200, default="#507299", verbose_name='Цвет шрифта', blank=False)
+    
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
-
+    
+    @property#@staticmethod    
+    def online(self): #
+        try:
+            online = UserChannels.get(self.id).dict()["online"]
+        except Exception as e: 
+            online = False
+        return online
+        
     def __str__(self) -> str:
         return self.username
         

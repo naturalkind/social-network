@@ -28,14 +28,41 @@ from django.template.loader import render_to_string
 from django.template import loader
 from django.template import Template, Context
 
-from redis_om import HashModel, JsonModel
+#from redis_om import HashModel, JsonModel
 
-class UserChannels(JsonModel):
-    channels: str
-    online: bool
-    class Meta:
-        global_key_prefix = "redis_channels"  
-        model_key_prefix = "user"
+#class UserChannels(JsonModel):
+#    channels: str
+#    online: bool
+#    class Meta:
+#        global_key_prefix = "redis_channels"  
+#        model_key_prefix = "user"
+
+
+class ExtBaseSerializer(serializers.base.Serializer):
+    def serialize(self, queryset, **options):
+        self.selected_props = options.pop('props')
+        return super(ExtBaseSerializer, self).serialize(queryset, **options)
+
+    def serialize_property(self, obj):
+        model = type(obj)
+        for field in self.selected_props:
+            if hasattr(model, field) and type(getattr(model, field)) == property:
+                self.handle_prop(obj, field)
+
+    def handle_prop(self, obj, field):
+        self._current[field] = getattr(obj, field)
+
+    def end_object(self, obj):
+        self.serialize_property(obj)
+        super(ExtBaseSerializer, self).end_object(obj)
+
+class ExtPythonSerializer(ExtBaseSerializer, serializers.python.Serializer):
+    pass
+
+class ExtJsonSerializer(ExtPythonSerializer, serializers.json.Serializer):
+    pass
+
+
 
 
 @login_required
@@ -540,16 +567,11 @@ def user_page(request, user):
             data['data'] = serializers.serialize('json', posts)
             return HttpResponse(json.dumps(data), content_type = "application/json")
         
-        try:
-            online = UserChannels.get(user).dict()["online"]
-        except Exception as e: 
-            print (e)  
-            online = False
         _type = request.GET.get('_type')    
         if _type == "javascript":    
             return render(request, 'user.html', {'user_info':user_info, 
                                                  'post':posts,
-                                                 'online': online,
+                                                 'online': user_info.online,
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})
@@ -569,7 +591,7 @@ def user_page(request, user):
             
             return render(request, '_user.html', {'user_info':user_info, 
                                                  'post':posts,
-                                                 'online': online,
+                                                 'online': user_info.online,
                                                  'username':auth.get_user(request),
                                                  'foll_blank':foll_blank,
                                                  'userid':auth.get_user(request).pk})
@@ -666,14 +688,13 @@ def friends(request):
 
 # страница пользователей
 def users_all(request):
-    users = User.objects.all()
-    paginator = Paginator(users, 40)
+    paginator = Paginator(User.objects.all(), 40)
     page = request.GET.get('page', None)
     _type = request.GET.get('_type')
     data = {}
     data['us'] = auth.get_user(request).username
     data['all_pages'] = paginator.num_pages    
-    posts = paginator.get_page(page) 
+    users = paginator.get_page(page) 
     try:
         data['op1'] = paginator.page(page).next_page_number()
     except EmptyPage:
@@ -689,10 +710,23 @@ def users_all(request):
         data['op2'] = "STOP"
 
     if page:
-        data['data'] = serializers.serialize('json', posts, fields=('username', 'image_user', 'path_data'))
+        # сложная реализация
+        data['data'] = ExtJsonSerializer().serialize(users, fields=('username', 'image_user', 'path_data'), props=['online'])
         return HttpResponse(json.dumps(data), content_type = "application/json")
+        
+#        # простая реализация
+#        _data = json.loads(serializers.serialize('json', users, fields=('username', 'image_user', 'path_data')))
+#        for ix, i in enumerate(_data):
+#            try:
+#                online = UserChannels.get(i["pk"]).dict()["online"]
+#            except Exception as e: 
+#                online = False
+#            _data[ix]["online"] = online
+#        data['data'] = json.dumps(_data)
+#        return HttpResponse(json.dumps(data), content_type = "application/json")
+
     if _type == "javascript":    
-        return render(request, 'users.html', {'users':posts,
+        return render(request, 'users.html', {'users':users,
                                               'username':auth.get_user(request)})
     else:
 #        args = {'users':posts, 'username':auth.get_user(request)}
@@ -702,7 +736,7 @@ def users_all(request):
 #        result = template.render(context)
 #        return HttpResponse(result)
     
-        return render(request, '_users.html', {'users':posts,
+        return render(request, '_users.html', {'users':users,
                                               'username':auth.get_user(request)})
 
 
