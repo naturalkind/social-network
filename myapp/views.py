@@ -528,6 +528,9 @@ def follows(request, id):
     return HttpResponse(json.dumps(data), content_type = "application/json")
 
 from django.template import RequestContext
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+channel_layer = get_channel_layer()
 # страница пользователя
 def user_page(request, user):
     user_info = User.objects.get(pk=user)
@@ -556,6 +559,14 @@ def user_page(request, user):
         if page:
             data['data'] = serializers.serialize('json', posts)
             return HttpResponse(json.dumps(data), content_type = "application/json")
+        
+#        try:
+#            async_to_sync(channel_layer.group_add)("wall", UserChannels.get(user).dict()["channels"])
+#        except:
+#            P = UserChannels(channels=UserChannels.get(user).dict()["channels"], online=False)
+#            P.pk = user
+#            P.save()
+#        async_to_sync(channel_layer.send)(UserChannels.get(user).dict()["channels"], {"type": "wallpost"})
         
         _type = request.GET.get('_type')    
         if _type == "javascript":    
