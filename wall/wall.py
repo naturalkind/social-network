@@ -60,13 +60,19 @@ def search_query_redis(prefix):
         results = JsonModel.from_redis(raw_results)
         if len(results) > 0:
             results = [i.json() for i in results]
+            print (results)
             return results
         else:
             args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:'+prefix+'*', 'LIMIT', '0', '50']
             raw_results = redis.execute_command(*args)
-            results = JsonModel.from_redis(raw_results)            
-            results = [i.json() for i in results]
-            return results    
+            results = JsonModel.from_redis(raw_results) 
+            if len(results) > 0:          
+                results = [i.json() for i in results]
+                return results    
+            else:
+                results = User.objects.filter(username=prefix)
+                results = [json.dumps({"pk": str(i.pk), "path_data": i.path_data, "username": i.username, "image_user": i.image_user}) for i in results]
+                return results  
             
 @sync_to_async
 def delete_pm(pk):

@@ -19,7 +19,7 @@ r = redis.StrictRedis(host='localhost', port=6379, db=0)#, decode_responses=True
 
 
 #args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%sa%']
-args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:%sadko_10%']
+args = ['ft.search', 'redis_search:myapp.ormsearch.UserDocument:index', '@username_fts:Be*']
 
 #class UserChannels(JsonModel):#, ABC): HashModel
 #    channels: str
@@ -95,7 +95,6 @@ import pickle
 
 redis = get_redis_connection()
 rstr = redis.execute_command(*args)
-print (dir(JsonModel))
 print ("-", JsonModel.from_redis(rstr))
 
 #
