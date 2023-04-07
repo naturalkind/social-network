@@ -157,7 +157,6 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                         "comment_text": response["comment_text"],
                         "comment_image": comment_image,
                         "comment_user": self.scope['user'].username,
-                        "comment_user_id": str(self.scope['user'].id),
                         "comment_id":str(comment.id),
                         "path_data": self.path_data,
                         "image_user": self.image_user,
@@ -274,7 +273,8 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                 print (response)
                 if response["data"]["request_user"] == str(self.sender_name):
                     answer_delete = await delete_com(response["data"]["comment_id"])
-                    await self.channel_layer.send(self.channel_name,
+                    #await self.channel_layer.send(self.channel_name,
+                    await self.channel_layer.group_send(self.room_group_name,
                                                     {
                                                         "type":"wallpost",
                                                         "status" : "delete_com",

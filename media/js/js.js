@@ -2305,7 +2305,7 @@ function activate_wall(user_name) {
                                     <p id="comment-text">${message_data.comment_text}</p>`
                 }
                 fc.innerHTML += "<div id='time-comment'>"+ message_data.timecomment +"</div>";
-                if (message_data.comment_user_id==message_data.user_id) {
+                if (document.getElementsByClassName("usPr")[0].getAttribute("client-id-user")==message_data.user_id) {
                     fc.innerHTML += `<div class='delete-pm' onclick='delete_com("${message_data.comment_id}", "${message_data.comment_user}")'></div>`;                
                 }                
                 
