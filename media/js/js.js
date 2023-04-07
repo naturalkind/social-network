@@ -180,6 +180,24 @@ function handler(e) {
     }
 }
 
+
+function handler_delete(e) {
+    var block_post = document.getElementsByClassName('block-post-'+e)[0];
+    if (typeof block_post !== 'undefined') {
+        block_post.innerHTML = "";
+        block_post.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        topbt.style.transform = 'rotate(0deg)';
+        main_wrapper.style.opacity = 1
+        var contentHeight = main_wrapper.offsetHeight;
+        if (topbt_position > contentHeight) {
+            topbt_indicator = "scroll_down";
+        } else {
+            topbt_indicator = "scroll_up";
+        } 
+    }
+}
+
 //function recording_key() {
 //    console.log(history, "HISTORY:", history.state, "PAGE:", _page);
 //}
@@ -1997,6 +2015,7 @@ function showContent(link, _type) {
             http.onreadystatechange = function () {
                 if(http.readyState == 4) {
                     var block_post = document.getElementById('block-post'); // ищем элемент с id
+                    block_post.setAttribute("class", "block-post-"+link);
                     block_post.innerHTML = http.responseText;
                     topbt = document.getElementById('topbt');
                     topbt.style.transform = 'rotate(90deg)';
@@ -2196,11 +2215,13 @@ function activate_wall(user_name) {
                 try { 
                     var conversation = document.getElementById("conversation");
                     conversation.children[innode].remove();
-                    handler(0);
+                    //handler(0);
+                    handler_delete(message_data["post_id"]);
                 } catch(e) {
                     var conversation = document.getElementById("DODO");
                     conversation.children[innode].remove();
-                    handler(0);
+                    //handler(0);
+                    handler_delete(message_data["post_id"]);
                 }
                 if (_page=="wallpost") {
                     history.pushState({"view": "wallpost", "link": "/" }, null, "/");

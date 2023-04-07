@@ -236,7 +236,8 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             if event == "deletepost":
                 post = await database_sync_to_async(Post.objects.get)(id=response["id"])
                 await sync_to_async(post.delete)()
-                _data = {"type": "wallpost", "status":"deletepost"}
+                _data = {"type": "wallpost", "status":"deletepost", "post_id":response["id"]}
+#                await self.channel_layer.send(self.channel_name, _data) 
                 await self.channel_layer.group_send(self.room_group_name, _data)
                 
             if event == "autocomplete":
