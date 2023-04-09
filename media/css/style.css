@@ -1770,8 +1770,11 @@ img#QR {
     display: block;
     width: fit-content;
     margin: 0 auto;
+    
 }
-
+.pm-block {
+    min-width: 600px;
+}
 @media screen and (min-width: 1200px)  {
     .delete-pm{
         /* Remove default */

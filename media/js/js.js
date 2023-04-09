@@ -593,7 +593,10 @@ function userPROFILE(link, _type){
                 topbt.style.transform = 'rotate(0deg)';
                 topbt.style.display = "none";
                 isLoading = false;
-                document.getElementById("search-box").style.display = "none";
+                let search_box = document.getElementById("search-box");
+                if (search_box !== null) {
+                    search_box.style.display = "none";
+                }
                 // история навигации
 //                console.log(history.state.view, _page, history.state.id, link);
                 if (history.state.view != "user") {
