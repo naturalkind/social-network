@@ -51,6 +51,7 @@ pip install -r requirements.txt
 ```
 python manage.py runserver 192.168.1.50:8888   
 python manage.py runworker nnapp   
+python manage.py index   
 ```
 
 gunicorn & daphne, исправить порт в javascript client
@@ -73,7 +74,8 @@ python3 simple_api_client.py
  
 очистить redis   
 ```
-redis-cli flushall
+docker exec -it redis-stack-server redis-cli
+flushall
 ```
 из базы данных в json   
 ```

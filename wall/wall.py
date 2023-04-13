@@ -87,7 +87,14 @@ def delete_pm(pk):
 def delete_com(pk):
     t = Comment.objects.get(id=pk)
     t.delete()
-
+    
+@sync_to_async
+def delete_post(pk):
+    post = Post.objects.get(id=pk)
+    os.system(f"rm -rf media/data_image/{post.path_data}/{post.image}")
+    post.delete()
+    _data = {"type": "wallpost", "status":"deletepost", "post_id":pk}
+    return _data
 
 class WallHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -233,9 +240,9 @@ class WallHandler(AsyncJsonWebsocketConsumer):
 
             
             if event == "deletepost":
-                post = await database_sync_to_async(Post.objects.get)(id=response["id"])
-                await sync_to_async(post.delete)()
-                _data = {"type": "wallpost", "status":"deletepost", "post_id":response["id"]}
+                _data = await delete_post(response["id"])
+#                await sync_to_async(post.delete)()
+#                _data = {"type": "wallpost", "status":"deletepost", "post_id":response["id"]}
 #                await self.channel_layer.send(self.channel_name, _data) 
                 await self.channel_layer.group_send(self.room_group_name, _data)
                 
