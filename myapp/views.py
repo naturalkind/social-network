@@ -801,7 +801,7 @@ def getlkpost(request, id):
 #                                                         'user_post', 'title', 'point_likes')) # Вариант 1
     return HttpResponse(json.dumps(data), content_type = "application/json")   
 
-@cache_page(60)
+#@cache_page(60)
 def main_page(request):
     if not request.user.is_authenticated:
         return index(request)

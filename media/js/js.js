@@ -202,11 +202,10 @@ function handler_delete(e) {
 //    console.log(history, "HISTORY:", history.state, "PAGE:", _page);
 //}
 //setInterval(recording_key, 1000);
+// https://stackoverflow.com/questions/4570093/how-to-get-notified-about-changes-of-the-history-via-history-pushstate
 window.addEventListener("popstate", function(e) {
     var state = e.state;
-    
     state = typeof state !== 'null' ?  state : {"view":"wallpost"};
-//    console.log(e);
     console.log("popstate............", state, _page);
     if (state) {
         if (state.view == "wallpost") {
@@ -234,6 +233,7 @@ window.addEventListener("popstate", function(e) {
     }
 });
 
+
 function main_page() {
     var linkfull = '/?_type=javascript';
     var http = new XMLHttpRequest();
@@ -249,54 +249,6 @@ function main_page() {
         http.send(null);
     }
 }
-
-// https://stackoverflow.com/questions/4570093/how-to-get-notified-about-changes-of-the-history-via-history-pushstate
-//window.addEventListener("popstate", function(e) {
-//    var state = e.state;
-//    state = typeof state !== 'null' ?  state : "wallpost";
-//    console.log("popstate............", state, _page, state.lk);
-//    if (state.view == "post") {
-//        
-//        if (_page == "users") {
-////            handler("o");
-//            showContent(state.id);
-//        } else {
-//            
-//        }
-//        
-////    if (state.view == "post" || state.view == "wallpost") {
-////        handler("o");
-////        if (_page == "wallpost") {
-////            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
-////        } else {
-////            history.pushState({"view": "user", 
-////                               'lk': `/user/${document.getElementById("user_id").innerText}` }, 
-////                                null, `/user/${document.getElementById("user_id").innerText}`);
-////        }
-//    } else if (state.view == "wallpost") {
-//        handler("o");
-//        if (_page == "wallpost") {
-//            history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
-//        } else {
-//            window.location.replace("/");
-//        }
-//    } else if (state.view == "privatmes") {
-//        privatMES();
-//    } else if (state.view == "user") {
-//        if (_page=="user") {
-//            handler("o");
-//            history.pushState({"view": "user", 
-//                               'lk': `/user/${document.getElementById("user_id").innerText}` }, 
-//                                null, `/user/${document.getElementById("user_id").innerText}`);
-//        } else {
-//            userPROFILE(state.lk.split('/')[2]);
-//        }
-//    } else if (state.view == "users") {
-//        users()
-//    } else if (state.view == "mesID") {
-//        handler("o");
-//    }
-//});
 
 
 function createRequestObject() {
@@ -824,7 +776,7 @@ function jsons(link, atr){
     }
 }
 
-
+// показать картинку крупнее
 function showImg(path_data, _type){
     _type = typeof _type !== 'undefined' ?  _type : "javascript";
     try{document.getElementById('tooltip').remove();}catch(err) {}
@@ -856,6 +808,7 @@ function showImg(path_data, _type){
     topbt_indicator = "handler";
 }
 
+
 // лайк   
 function LIKENODE(link){  
     var cont = document.getElementById('like_count');
@@ -876,7 +829,6 @@ function LIKENODE(link){
 
 
 // лайки при наведении
-
 function LIKEOVER(link, page_num, loadmore) {
     if(isLoading) return false;
     page_num = typeof page_num !== 'undefined' ?  page_num : 1;
@@ -953,47 +905,6 @@ function LIKEOVER(link, page_num, loadmore) {
 }
 
 
-//function LIKEOVER(link) {
-//    var html= '';
-//    try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
-//    var tooltipElem = document.createElement('div');
-//    tooltipElem.id = 'tooltip_'+link;
-//    var over = document.getElementById("tooltip");
-//    var http = createRequestObject();
-//    var linkfull = '/likeover/?post_id=' + link;
-//    if (http) {
-//        http.open('get', linkfull);
-//        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-//        http.onreadystatechange = function () {
-//            if (http.readyState == 4) {
-//                var f = JSON.parse(http.responseText);
-//                for (var r in f) {
-//                    if (f[r].fields.image_user != "oneProf.png"){
-//                        var div_image_user = `<img src="/media/data_image/${f[r].fields.path_data}/tm_${f[r].fields.image_user}" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">`;
-//                    } else {
-//                        var div_image_user = `<img src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE(${f[r].pk})" style="cursor:pointer;" loading="lazy">`;
-//                    }                
-//                    html += `<div class="user-cord">
-//                                ${div_image_user}  
-//                             </div>`
-//                }
-//                tooltipElem.innerHTML = html;
-//                over.appendChild(tooltipElem);
-//                var coords = over.getBoundingClientRect();
-//                var left = coords.left + (over.offsetWidth - tooltipElem.offsetWidth) / 2;
-//                if (left < 0) left = 0;
-//                var top = coords.top - tooltipElem.offsetHeight - 5;
-//                if (top < 0) {top = coords.top + over.offsetHeight + 5;}
-//                tooltipElem.style.left = left + 'px';
-//                tooltipElem.style.top = top + 'px';
-//            }
-//        };
-//        http.send(null);
-//    } else {
-//        document.location = link;
-//    }
-//}
-
 // отследить убрать наведение с обьекта при лайке
 function LIKEDONE(self, link){
     try{document.getElementById('tooltip_'+link).remove();}catch(err) {}
@@ -1038,47 +949,7 @@ function OnOnreg() {
 }
 
 
-/// добвать пост
-//function addPost(){
-//    try{document.getElementById('tooltip').remove();}catch(err) {}
-//    try{
-//        html = `<div id="node">
-//                    <form class="message_form" id="message_form" style="display: block;" id="formsend">
-//                        <div class="field-image" style="width: auto;border: none;margin: 0 auto;">
-//                            <div id="UploadBox">
-//                                <span id="UploadArea"></span>
-//                            </div>
-//                            <input type="file" 
-//                                   id="image_file" 
-//                                   onchange="OnOnW()" 
-//                                   style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
-//                            <label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label>
-//                            <div id="cn">
-//                                <canvas id="canvas" width="0" height="0"></canvas>
-//                            </div>
-//                        </div>
-//                        <div class="field-text">
-//                            <textarea id="id_body" placeholder="Введите Ваше сообщение..." ></textarea>
-//                        </div>
-//                        <button onclick="send_wall()" type="button">ОТПРАВИТЬ</button>
-//                    </form>
-//                </div>`; 
-//        document.body.style.overflow = 'hidden';
-//        var block_post = document.getElementById('block-post');
-//        block_post.style.display = 'block';
-//        block_post.innerHTML = html;
-//        topbt.style.transform = 'rotate(90deg)';
-//        topbt_indicator = "addPost";
-//        topbt.style.display = "block";
-//        
-////        history.pushState({"view": "addpost", "link": "/" }, null, "/");
-//        function test_scroll() {
-//        }
-//        block_post.onscroll = test_scroll;   
-//        
-//    } catch (err){}
-//}
-
+// добвать пост
 function addPost(){
     try{document.getElementById('tooltip').remove();}catch(err) {}
     var linkfull = '/addpost/?_type=javascript';
@@ -1109,7 +980,6 @@ function addPost(){
         document.location = link;
     }
 }
-
 
 
 // простая версия репоста
@@ -1154,6 +1024,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
 function reSend(user_id, post_id) {
     var crsv = getCookie('csrftoken'); // токен
 //    console.log(user_id, post_id, crsv);
@@ -1172,6 +1043,7 @@ function reSend(user_id, post_id) {
         http.send(JSON.stringify({"user_id":user_id, "post_id":post_id}));   
     } 
 }
+
 
 // Друзья
 function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
@@ -1262,6 +1134,7 @@ function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
         document.location = link;
     }
 }
+
 
 // друзья переслать
 function FRIENDS(link, page_num, loadmore) {
@@ -2215,28 +2088,27 @@ function activate_wall(user_name) {
                     document.getElementById('message_form').style.display = "block";
                 } catch (e) {};
             } else if (message_data["status"]=="deletepost") {
-                try { 
-                    var conversation = document.getElementById("conversation");
-                    conversation.children[innode].remove();
-                    //handler(0);
-                    handler_delete(message_data["post_id"]);
-                } catch(e) {
-                    var conversation = document.getElementById("DODO");
-                    conversation.children[innode].remove();
-                    //handler(0);
-                    handler_delete(message_data["post_id"]);
-                }
+                console.log("DELETE ----------->", history.state, _page)
                 if (_page=="wallpost") {
+                    try { 
+                        var conversation = document.getElementById("conversation");
+                        conversation.children[innode].remove();
+                        //handler(0);
+                        handler_delete(message_data["post_id"]);
+                    } catch(e) {}                
                     history.pushState({"view": "wallpost", "link": "/" }, null, "/");
+                } else if (_page=="user") {
+                    try { 
+                        var conversation = document.getElementById("DODO");
+                        conversation.children[innode].remove();
+                        //handler(0);
+                        handler_delete(message_data["post_id"]);
+                    } catch(e) {
+                    }
+                    history.pushState({"view": "user", 
+                                       "lk": `/user/${document.getElementById("user_id").innerText}` }, 
+                                       null, `/user/${document.getElementById("user_id").innerText}`);
                 }
-                console.log("DELETE----------->", history.state, _page)
-//                if (_page=="user") {
-//                    history.pushState({"view": "user", 
-//                                       "lk": `/user/${document.getElementById("user_id").innerText}` }, 
-//                                       null, `/user/${document.getElementById("user_id").innerText}`);
-//                } else if(_page=="wallpost") {
-//                    history.pushState({"view": "wallpost", 'lk': `/` }, null, `/`);
-//                }
                 
             } else if (message_data["status"]=="MoreData") {
                 console.log("More Data", currentChunk <= totalChunks);

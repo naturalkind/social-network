@@ -3,10 +3,11 @@
         <div onclick="showContent('{{message.id}}')" class="views-title" style="width: 100%;float: left;">
             <div class="user-cord" >
                 {% if message.user_post.image_user != "oneProf.png" %}
-                    <img src="/media/data_image/{{message.user_post.path_data}}/tm_{{message.user_post.image_user}}" class="imgUs" onclick="userPROFILE('{{message.user_post.id }}')" style="cursor:pointer;" loading="lazy">
+                    <img src="/media/data_image/{{message.user_post.path_data}}/tm_{{message.user_post.image_user}}" class="imgUs" style="cursor:pointer;" loading="lazy">
                 {% else %}
-                    <img src="/media/images/oneProf.png" height="400" width="auto" onclick="userPROFILE('{{message.user_post.id }}')" loading="lazy">
+                    <img src="/media/images/oneProf.png" height="400" width="auto" loading="lazy">
                 {% endif %}
+<!--                    onclick="userPROFILE('{{message.user_post.id }}')"-->
                     <a atribut="{{message.id}}" class="postview">
                         <span style="font-weight: bolder;" >{{message.user_post.username|truncatechars:15 }}</span>
                         {% if message.body != "" %}
