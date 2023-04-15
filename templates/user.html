@@ -77,7 +77,7 @@
         </div>
     </div>
 {#    <div onclick="userViewPost('{{ user_info.username }}')" class="userview"></div>#}
-    <ul class="day-block" id="DODO" atr="user">
+    <ul class="day-block" id="user-content-block" atr="user">
         {% for l in post %}
             {% if user_info in l.user_post %}
                 <li class="views-row"  onmouseover="getIndex(this);">

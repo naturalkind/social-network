@@ -83,7 +83,7 @@ function scroll(){
                     topbt_position = y;
                     topbt_indicator = "scroll_up";
                     topbt.style.display = "block";
-                    jsons(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
+                    jsons(document.getElementById('IOP').innerText, document.getElementById("user-content-block").getAttribute('atr'))
                 }
             }
         } else {
@@ -618,14 +618,14 @@ function jsons(link, atr){
     var linkfull;
     var wd, hd, us, contv;
     if (atr == 'user'){
-        contv = document.getElementById('DODO');
+        contv = document.getElementById('user-content-block');
         wd = 300;
         hd = 230;
         us = document.getElementById('user_id').innerText;
         linkfull = '/user/'+us+'/?page=' + link;
     }
     else if (atr == 'users'){
-        contv = document.getElementById('DODO');
+        contv = document.getElementById('user-content-block');
         wd = 180;
         hd = 160;
         linkfull = '/users/?page=' + link;
@@ -637,7 +637,7 @@ function jsons(link, atr){
         linkfull = '/?page=' + link;
     }
     else if (atr== "wall-nonregister"){
-        contv = document.getElementById('DODO');
+        contv = document.getElementById('user-content-block');
         wd = "auto";
         hd = "auto";
         linkfull = '/?page=' + link;
@@ -1920,7 +1920,7 @@ function showContent(link, _type) {
                     }
                     
                     if ((len-2)==innode && document.getElementById("IOP").innerText != "STOP") {
-                        jsons(document.getElementById('IOP').innerText, document.getElementById("DODO").getAttribute('atr'))
+                        jsons(document.getElementById('IOP').innerText, document.getElementById("user-content-block").getAttribute('atr'))
                     }
                     textElemv2.onclick = function LISTING(){
                         if ((len-1)>=innode){
@@ -2099,7 +2099,7 @@ function activate_wall(user_name) {
                     history.pushState({"view": "wallpost", "link": "/" }, null, "/");
                 } else if (_page=="user") {
                     try { 
-                        var conversation = document.getElementById("DODO");
+                        var conversation = document.getElementById("user-content-block");
                         conversation.children[innode].remove();
                         //handler(0);
                         handler_delete(message_data["post_id"]);

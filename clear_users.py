@@ -1,7 +1,7 @@
 import os
 import time
 import random
-from myapp.models import User, Post, Comment, UserChannels
+from myapp.models import User, Post, Comment, UserChannels, Relationship, Relike
 from privatemessages.models import Thread, Message
 from redis_om import get_redis_connection
 from simple_api_client import DATA
@@ -39,5 +39,19 @@ def remove_images():
             os.system(f"rm -rf {images.file[F][0]}")
         #images.file[file_path][0] 
 
-remove_images()            
-
+def remove_follow_self():
+    user = User.objects.get(username="a")
+    friends = Relationship.objects.filter(from_person=user)
+    for i in friends:
+        if i.to_person == user:
+            i.delete()
+    
+def remove_follow_all():
+    friends = Relationship.objects.all()
+    for i in friends:
+        i.delete()  
+        
+def remove_like_all():
+    friends = Relike.objects.all()
+    for i in friends:
+        i.delete()          
