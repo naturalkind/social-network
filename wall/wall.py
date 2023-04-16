@@ -91,7 +91,9 @@ def delete_com(pk):
 @sync_to_async
 def delete_post(pk):
     post = Post.objects.get(id=pk)
-    os.system(f"rm -rf media/data_image/{post.path_data}/{post.image}")
+    # ERROR
+    if post.image != "":
+        os.system(f"rm -rf media/data_image/{post.path_data}/{post.image}")
     post.delete()
     _data = {"type": "wallpost", "status":"deletepost", "post_id":pk}
     return _data

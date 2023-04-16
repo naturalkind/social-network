@@ -13,7 +13,7 @@ def delete_user():
     for i in users_all:
         p = Post.objects.filter(user_post=i)
     #    if i.username.split("_")[0] == "sadko":
-        if i.username == "sadko_0":
+        if i.username == "a":
             #if len(p) == 0:
                 redis.delete("redis_channels:user:"+str(i.id))
                 redis.delete("redis_search:myapp.ormsearch.UserDocument:"+str(i.id))
@@ -21,7 +21,8 @@ def delete_user():
                 Comment.objects.filter(comment_user=i).all().delete()
                 Thread.objects.filter(participants=i).all().delete()
                 Message.objects.filter(sender=i).all().delete()
-                i.all().delete()
+                i.delete()
+#delete_user()
             
 def remove_images():
     users_all = User.objects.all()
