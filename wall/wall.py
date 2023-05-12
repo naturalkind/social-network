@@ -177,6 +177,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                 await self.channel_layer.group_send(self.room_group_name, _data)
                 
             if event == "wallpost":
+                print (response["all_time_sec"])
                 if response["image"] == False:
                     self.namefile = ""
                 user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)

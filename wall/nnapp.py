@@ -67,13 +67,17 @@ def send_and_get(args, model=None):
     id = send(args, model=model)
     res = get(id)
     namefile = f'{id}.jpg'
-    res['prediction'][0].save(f'media/data_image/{args["path_data"]}/{namefile}', format="JPEG")
-    post = Post.objects.get(id=args["post"]) 
-    post.image = namefile
-    post.save()
-    _data = {"type": "wallpost", "status":"Kandinsky-2.0", "path_data": args["path_data"],
-             "data": f'{namefile}', "post":args["post"]}
-    async_to_sync(channel_layer.group_send)(args["room_group_name"], _data)
+    try:
+        post = Post.objects.get(id=args["post"]) 
+        post.image = namefile
+        post.save()
+        res['prediction'][0].save(f'media/data_image/{args["path_data"]}/{namefile}', format="JPEG")
+        _data = {"type": "wallpost", "status":"Kandinsky-2.0", "path_data": args["path_data"],
+                 "data": f'{namefile}', "post":args["post"]}
+        async_to_sync(channel_layer.group_send)(args["room_group_name"], _data)
+    except Post.DoesNotExist:
+        pass
+
 
 class NNHandler(SyncConsumer):
     start()

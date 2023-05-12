@@ -2062,12 +2062,12 @@ function activate_wall(user_name) {
                                             <img class="icon-like" 
                                                  id="post_image_${message_data.id}" 
                                                  src="/media/images/frv1.png" 
-                                                 onclick="LIKE(this, ${message_data.id})" 
+                                                 onclick="LIKE(this, '${message_data.id}')" 
                                                  open-atr="close" 
                                                  type="wall">
                                             <img class="icon-like" 
                                                  src="/media/images/rpvF.png" 
-                                                 onclick="rpPost(this, ${message_data.id},'${message_data.user_post}')" 
+                                                 onclick="rpPost(this, '${message_data.id}','${message_data.user_post}')" 
                                                  open-atr="close" 
                                                  type="wall">
                                             <div class="box-indicator" 
@@ -2321,8 +2321,12 @@ function send_wall() {
     var event = { title : tx,
                   body: bx,
                   image: dataURL_wall,
+                  arr_keypress: arr_keystroke,
+                  all_time_sec: all_time_sec,
                   event: "wallpost",
     };
+        
+
     console.log("................", event)
     var data = JSON.stringify(event);
     ws_wall.send(data);
