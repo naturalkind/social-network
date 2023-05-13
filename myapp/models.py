@@ -120,8 +120,11 @@ class User(AbstractUser):
 def generate_qr(sender, instance, created, **kwargs):
     print (instance.id, instance.username, instance.path_data)
     img = qrcode.make(f'http://xn--90aci8aadpej1e.com/user/{instance.id}', image_factory=qrcode.image.svg.SvgImage)
-    with open(f'media/data_image/{instance.path_data}/{instance.username}_qr.svg', 'wb') as qr:
-        img.save(qr)
+    try:
+        with open(f'media/data_image/{instance.path_data}/{instance.username}_qr.svg', 'wb') as qr:
+            img.save(qr)
+    except:
+        pass
 
 post_save.connect(generate_qr, sender=User)
 

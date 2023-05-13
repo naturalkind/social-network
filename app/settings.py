@@ -244,17 +244,18 @@ USE_TZ = True
 #    'media/data_image',
 #)
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "media/images"),
-    'media/data_image',
+    os.path.join(BASE_DIR, "static"),
 )
 
 
-STATIC_ROOT = os.path.join('media/static/')
-STATIC_URL = '/media/static/'
+#STATIC_ROOT = os.path.join('/static/')
+STATIC_URL = '/static/'
 # Media
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = 'media'
+#MEDIA_ROOT = 'media'
+
+MEDIA_ROOT = '/media/sadko/1b32d2c7-3fcf-4c94-ad20-4fb130a7a7d4/social-network/media'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 31457280
 DJANGO_ALLOW_ASYNC_UNSAFE = "true"

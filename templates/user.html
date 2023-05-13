@@ -17,7 +17,7 @@
                 {% if user_info.image_user != "oneProf.png" %}
                     <img src="/media/data_image/{{ user_info.path_data }}/{{ user_info.image_user }}" loading="lazy" id="image-user-profile" onclick="showImg(this, 'qr')">
                 {% else %}
-                    <img src="/media/images/oneProf.png" height="300" width="auto" loading="lazy" id="image-user-profile">
+                    <img src="/static/images/oneProf.png" height="300" width="auto" loading="lazy" id="image-user-profile">
                 {% endif %}
                 {% if online %}
                     <div class="numberCircle" style="background:#37b73c;"></div>
@@ -33,13 +33,13 @@
         <div class="soc">
             {% if request.user.is_authenticated %}
                 {% if user_info.username == username.username %}
-                    <img src="/media/images/edprof.png" class="edprof" onclick="editPROFF(this)" open-atr="close">
+                    <img src="/static/images/edprof.png" class="edprof" onclick="editPROFF(this)" open-atr="close">
                     <div id="atr-user" atr-user="self"></div>
                 {% else %}
                 {% if foll_blank == 0 %}
-                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="false"><img src="/media/images/addusr.png" class="addusr"><span id="follow-text">ПОДПИСАТЬСЯ</span></a>
+                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="false"><img src="/static/images/addusr.png" class="addusr"><span id="follow-text">ПОДПИСАТЬСЯ</span></a>
                 {% else %}
-                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true"><img src="/media/images/dusr.png" class="addusr"><span id="follow-text">ОТПИСАТЬСЯ</span></a>
+                    <a id="follw_{{ user_info.id }}" onclick="addfollow(this, '{{ userid }}', '{{ user_info.username }}', '{{ user_info.id }}')" atr-follow="true"><img src="/static/images/dusr.png" class="addusr"><span id="follow-text">ОТПИСАТЬСЯ</span></a>
                 {% endif %}
                 
 
@@ -92,12 +92,12 @@
                         {% if l.image != "" %}
                             <img style="background: url('/media/data_image/{{ l.path_data }}/{{ l.image }}');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')" loading="lazy">
                         {% else %}
-                            <img style="background: url('/media/images/no_image.png');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')" loading="lazy">                        
+                            <img style="background: url('/static/images/no_image.png');background-size: cover;width:300px;height:230px;" onclick="showContent('{{l.id}}')" loading="lazy">                        
                         {% endif %}
                         
                     </div>
             {% endif %}
-            <img class="icon-like" src="/media/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{l.id}}" id="comment_image_id_{{l.id}}" type-div="icon" indicator-ws="close" style="display:none;">
+            <img class="icon-like" src="/static/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{l.id}}" id="comment_image_id_{{l.id}}" type-div="icon" indicator-ws="close" style="display:none;">
         {% endfor %}
     </ul>
 {% endblock %}
