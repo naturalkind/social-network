@@ -186,7 +186,7 @@ function handle(e) {
                 
                   
             } if (e.type == "keyup") { 
-                console.log(prev_char, e.target.value, idx_arr_keystroke)
+//                console.log(prev_char, e.target.value, idx_arr_keystroke)
                 if (prev_char.length < e.target.value.length) {
                     if (arr_keystroke.length>0) {
                         //console.log("KEYUP", tKey[prev_idx]);
@@ -209,10 +209,10 @@ function handle(e) {
                     prev_char = e.target.value;
                 } else { 
                     //prev_char--; 
-                    //console.log("---------@", prev_char, prev_idx, e.target.value.length, idx_arr_keystroke, arr_keystroke.length)
+                    console.log("---------@", prev_char, e.target.value, prev_idx, idx_arr_keystroke)
                     if (arr_keystroke.length!=0) {
                         //idx_arr_keystroke--;
-                        arr_keystroke.splice(prev_char, 1);
+                        arr_keystroke.splice(prev_idx, 1);
                         arr_keystroke.splice(idx_arr_keystroke, 1);
                         
 
@@ -260,7 +260,7 @@ function handle(e) {
                     }
                 }
                 //console.log("KEYDOWN", e.key, arr.length, text_input.innerText.length, idx_arr);
-                document.getElementById("log").innerHTML = e.target.value
+//                document.getElementById("log").innerHTML = e.target.value
     //            console.log("KEYDOWN", e.target.value, e);
             }
             if (e.type == "keyup") {
@@ -282,7 +282,7 @@ function handle(e) {
                 arr_bad_keystroke.push([e.key, idx_arr_keystroke]);
             }
         }    
-    
+        //console.log(arr_keystroke); 
     }
 
 }
