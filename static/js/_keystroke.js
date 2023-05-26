@@ -14,16 +14,34 @@ var blurHandler = function() {
     timer.reset();
 }
 
+//document.addEventListener('touchstart', () => { console.log('touchstart') }); // el.ontouchstart = () => { console.log('start') };
+//el.addEventListener('touchend', () => { console.log('end') }); // el.ontouchstart = () => { console.log('start') };
+//el.addEventListener('touchmove', () => { console.log('move') }); // el.ontouchstart = () => { console.log('start') };
+//el.addEventListener('touchcancel', () => { console.log('cancel') }); // el.ontouchstart = () => { console.log('start') };
+
 
 document.addEventListener('click', function (e) {
     if (e.target.id=="id_body") {
-//        console.log(e.target.id);
+        //console.log(e.target.id);
         //timer.start();
         //e.target.onblur = blurHandler;
         e.target.onkeydown = e.target.onkeyup = e.target.onkeypress = e.target.onclick = handle;
         
     }
 });
+var charS;
+document.addEventListener('compositionupdate', function (e) {
+    charS = e.data.substr((e.target.selectionStart - 1) || 0, 1);
+    //console.log("EVENT'S UPDATE", e, char)
+});
+
+//document.addEventListener('compositionstart', function (e) {
+//    console.log("EVENT'S START", e)
+//});
+
+//document.addEventListener('compositionend', function (e) {
+//    console.log("EVENT'S END", e)
+//});
 
 // таймер https://stackoverflow.com/questions/29971898/how-to-create-an-accurate-timer-in-javascript
 class Timer {
@@ -151,140 +169,88 @@ function getCaret(node) {
 //      TypingDNA.prevKeyCode = keyCode;
 //      if (TypingDNA.diagramRecording === true) {
 //        var arrD = [keyCode, seekTime, pressTime, charCode, TypingDNA.ut1, e.target.id, kpGet[1].join(','), kpGet[2].join(','), kpGet[3].join(','), kpGet[4].join(',')];
-//        TypingDNA.history.addDiagram(arrD);x
+//        TypingDNA.history.addDiagram(arrD);
 //      }
 //    }
 
 
-
-var prev_idx;
-var prev_char = "";
 function handle(e) {
     
+//    document.getElementById("show_value").innerHTML = text_input.innerHTML;
+//    document.getElementById("count_text").innerHTML = arr_keystroke.length;
+//    document.getElementById("count_text_our").innerText = textOriginal.length;
     idx_arr_keystroke = getCaret(e.target);
     //idx_arr_keystroke = getCaretCharOffset(e.target)+idx_line;
-    //console.log(e);
     var charCode = e.which || e.keyCode;
-    var temp_promis_value;
     if (charCode == 229) {
-//        console.log("0", String.fromCharCode(e.target.value.charAt(e.target.selectionStart - 1).charCodeAt()));
+        //var char = e.target.value.substr((e.target.selectionStart - 1) || 0, 1);
+        //console.log("0", idx_arr_keystroke, String.fromCharCode(e.target.value.charAt(e.target.selectionStart - 1).charCodeAt()));
+        
 //        console.log("1", e.target.value.charAt(e.target.selectionStart - 1).charCodeAt());
 //        console.log("2", e.target.value.substr((e.target.selectionStart - 1) || 0, 1));
-            var keyTimes = {};
-            let K;
-            if (e.type == "keydown") {
-                prev_idx = idx_arr_keystroke;
-                keyTimes["key_name"] = idx_arr_keystroke;
+    }
+    //console.log(arr_keystroke, idx_arr_keystroke, charCode, e);
+//    keyCode = char.toUpperCase().charCodeAt(0);
+//    charCode = char.charCodeAt(0);
+    //document.getElementById("log").innerHTML = `one -> ${charCode} xxx ${idx_arr_keystroke} ${char}`
+    if (list_exept.indexOf(e.key) == -1) {
+        if (e.type == "keydown") {
+            console.log(charS);
+            //document.getElementById("log").innerHTML = `keydown -> ${charCode} xxx ${idx_arr_keystroke} ${char} ${e.target.value.charAt(e.target.selectionStart - 1).charCodeAt()}`
+            if (e.key=="Backspace") {
+                if (arr_keystroke.length!=0 && idx_arr_keystroke!=0) {
+                    idx_arr_keystroke--;
+                    arr_keystroke.splice(idx_arr_keystroke, 1);
+
+                }
+            } else if (e.key == "ArrowRight") {   
+            } else if (e.key == "ArrowLeft") {  
+            } else if (e.key == "ArrowUp") {  
+            } else if (e.key == "ArrowDown") {   
+            } else {
+                //-------------------------------->
+                var keyTimes = {};
+                //keyTimes["key_code"] = e.keyCode;
+                let K;
+                if (e.key =="Enter") { 
+                    //K = "\n"; 
+//                    var charCode = e.which || e.keyCode;
+                    K = String.fromCharCode(charCode); //String.fromCodePoint
+                    console.log(".....", K);
+                } else { K = e.key };
+                keyTimes["key_name"] = K;
                 keyTimes["time_keydown"] = new Date().getTime()/1000.0;
                 keyTimes["time_keyup"] = new Date().getTime()/1000.0;
                 arr_keystroke.splice(idx_arr_keystroke, 0, keyTimes);
-                if (!tKey[idx_arr_keystroke]) {
-                    tKey[idx_arr_keystroke] = [idx_arr_keystroke];
+//                arr.push(keyTimes);
+                if (!tKey[e.key]) {
+                    tKey[e.key] = [idx_arr_keystroke];
                 } else {
-                    tKey[idx_arr_keystroke].push(idx_arr_keystroke);
-                }                
-                
-                  
-            } if (e.type == "keyup") { 
-                console.log(prev_char, e.target.value, idx_arr_keystroke)
-                if (prev_char.length < e.target.value.length) {
-                    if (arr_keystroke.length>0) {
-                        //console.log("KEYUP", tKey[prev_idx]);
-                        let time_up = new Date().getTime()/1000.0;
-                        if (tKey[prev_idx]) {
-                            for (var i = 0; i < tKey[prev_idx].length; i++) {
-                                
-                                let rev_idx = (tKey[prev_idx].length-1)-i;
-                                arr_keystroke[tKey[prev_idx][i]]["key_name"] = e.target.value.substr((e.target.selectionStart - 1) || 0, 1)
-                                arr_keystroke[tKey[prev_idx][i]]["time_keyup"] = time_up;
-                                arr_keystroke[tKey[prev_idx][i]]["time_press"] = time_up - arr_keystroke[tKey[prev_idx][rev_idx]]["time_keydown"];
-                                
-                            }
-                            delete tKey[prev_idx];
-                        }
-                        
-//                        
-                    }     
-                    //prev_char++;
-                    prev_char = e.target.value;
-                } else { 
-                    //prev_char--; 
-                    //console.log("---------@", prev_char, prev_idx, e.target.value.length, idx_arr_keystroke, arr_keystroke.length)
-                    if (arr_keystroke.length!=0) {
-                        //idx_arr_keystroke--;
-                        arr_keystroke.splice(prev_char, 1);
-                        arr_keystroke.splice(idx_arr_keystroke, 1);
-                        
-
-                    }
-                    prev_char = e.target.value;
-                    
+                    tKey[e.key].push(idx_arr_keystroke);
                 }
-      
-                console.log(arr_keystroke);                  
-            }       
-        
-    
+            }
+//            console.log("KEYDOWN", e.key, arr.length, text_input.innerText.length, idx_arr);
+        }
+        if (e.type == "keyup") {
+            if (arr_keystroke.length>0) {
+                console.log("....", charS);
+                let time_up = new Date().getTime()/1000.0;
+                if (tKey[e.key]) {
+                    for (var i = 0; i < tKey[e.key].length; i++) {
+                        let rev_idx = (tKey[e.key].length-1)-i;
+                        arr_keystroke[tKey[e.key][i]]["time_keyup"] = time_up;
+                        arr_keystroke[tKey[e.key][i]]["time_press"] = time_up - arr_keystroke[tKey[e.key][rev_idx]]["time_keydown"];
+                    }
+                    delete tKey[e.key];
+                }
+                //document.getElementById("log").innerHTML = `keyup -> ${charCode} - ${idx_arr_keystroke} - ${time_up}`
+            }
+        }
     } else {
-        if (list_exept.indexOf(e.key) == -1) {
-            if (e.type == "keydown") {
-                if (e.key=="Backspace") {
-                    if (arr_keystroke.length!=0 && idx_arr_keystroke!=0) {
-                        idx_arr_keystroke--;
-                        arr_keystroke.splice(idx_arr_keystroke, 1);
-
-                    }
-                } else if (e.key == "ArrowRight") {   
-                } else if (e.key == "ArrowLeft") {  
-                } else if (e.key == "ArrowUp") {  
-                } else if (e.key == "ArrowDown") {   
-                } else {
-                    //-------------------------------->
-                    var keyTimes = {};
-                    let K;
-                    if (e.key =="Enter") { 
-                        //K = "\n"; 
-    //                    var charCode = e.which || e.keyCode;
-                        K = String.fromCharCode(charCode); //String.fromCodePoint
-                        console.log(".....", K);
-                    } else { K = e.key };
-                    keyTimes["key_name"] = K;
-                    keyTimes["time_keydown"] = new Date().getTime()/1000.0;
-                    keyTimes["time_keyup"] = new Date().getTime()/1000.0;
-                    arr_keystroke.splice(idx_arr_keystroke, 0, keyTimes);
-    //                arr.push(keyTimes);
-                    if (!tKey[e.key]) {
-                        tKey[e.key] = [idx_arr_keystroke];
-                    } else {
-                        tKey[e.key].push(idx_arr_keystroke);
-                    }
-                }
-                //console.log("KEYDOWN", e.key, arr.length, text_input.innerText.length, idx_arr);
-                document.getElementById("log").innerHTML = e.target.value
-    //            console.log("KEYDOWN", e.target.value, e);
-            }
-            if (e.type == "keyup") {
-                if (arr_keystroke.length>0) {
-    //                console.log("KEYUP", charS);
-                    let time_up = new Date().getTime()/1000.0;
-                    if (tKey[e.key]) {
-                        for (var i = 0; i < tKey[e.key].length; i++) {
-                            let rev_idx = (tKey[e.key].length-1)-i;
-                            arr_keystroke[tKey[e.key][i]]["time_keyup"] = time_up;
-                            arr_keystroke[tKey[e.key][i]]["time_press"] = time_up - arr_keystroke[tKey[e.key][rev_idx]]["time_keydown"];
-                        }
-                        delete tKey[e.key];
-                    }
-                }
-            }
-        } else {
-            if (e.type == "keydown") {
-                arr_bad_keystroke.push([e.key, idx_arr_keystroke]);
-            }
-        }    
-    
+        if (e.type == "keydown") {
+            arr_bad_keystroke.push([e.key, idx_arr_keystroke]);
+        }
     }
-
 }
 
 //var count_click = 0;
