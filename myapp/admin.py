@@ -31,6 +31,12 @@ class RelationshipAdmin(admin.ModelAdmin):
 class RelikeAdmin(admin.ModelAdmin):
     list_display = ('from_post', 'to_pers', 'status')
     fields = ('from_post', 'to_pers', 'status')      
+
+class KeystrokeAdmin(admin.ModelAdmin):
+    list_display = ('text', 'id', 'user_post_key')
+    search_fields = ('text', 'id', 'user_post_key')
+    fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test')
+
        
 admin.site.register(User)
 admin.site.register(Post, PostAdmin)   
@@ -40,3 +46,4 @@ admin.site.register(Message, MessageAdmin)
 admin.site.register(Media, MediaAdmin)
 admin.site.register(Relationship, RelationshipAdmin)
 admin.site.register(Relike, RelikeAdmin)
+admin.site.register(Keystroke, KeystrokeAdmin) 

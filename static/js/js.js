@@ -1,5 +1,5 @@
 var IP_ADDR = window.location.hostname;
-var PORT = "7777";
+var PORT = "8888";
 var _page;
 var innode;
 var len;
@@ -2766,15 +2766,16 @@ function send_com(self, cip) {
 document.addEventListener('keypress', function (e) {
 //    console.log("WALL KEYPRESS", _page, e.srcElement.getAttribute("post_id"))
     if (_page == "chat") {
-        if (e.keyCode == 13 && !event.shiftKey) {
+        if (e.keyCode == 13 && !e.shiftKey) {
             e.preventDefault();
             document.getElementById("btn").onclick()
 //            send_message();
             return false;
         } 
     } else if (_page == "wallpost") {
-        if (e.keyCode == 13 && !event.shiftKey) {
+        if (e.keyCode == 13 && !e.shiftKey) {
             e.preventDefault();
+            console.log(e);
             document.getElementById("add_"+e.srcElement.getAttribute("post_id")).onclick()
 //            send_message();
             return false;

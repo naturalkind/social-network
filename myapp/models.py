@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-
+from django.db.models import JSONField
 from datetime import datetime
 import base64
 import re
@@ -221,4 +221,35 @@ class Relike(models.Model):
     status = models.IntegerField(choices=RELATIONSHIP_STATUSES)
 #    def natural_key(self):
 #        return (self.to_pers, self.from_post, self.id, self.status)
+
+
+class Keystroke(models.Model):
+    text = models.TextField(max_length=999999, default="", verbose_name='Текст', blank=True)
+    pure_data = JSONField()
+    date_post = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    user_post_key = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_post_key', default="", on_delete=models.CASCADE)
+    
+    _STATUS = (
+        ('y', 'yes'),
+        ('n', 'no'),
+    )
+
+    status = models.CharField(
+        max_length=1,
+        choices=_STATUS,
+        blank=True,
+        default='n',
+        help_text='Проверка',
+    )
+    
+    text_to_test = models.CharField(
+        max_length=1,
+        choices=_STATUS,
+        blank=True,
+        default='n',
+        help_text='Текст для отображения',
+    )
+    def __unicode__(self):
+            return u'name: %s , id: %s' % (self.text, self.id)
+
 
