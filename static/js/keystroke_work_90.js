@@ -185,13 +185,16 @@ function handle(e) {
                 
                   
             } if (e.type == "keyup") { 
+//                console.log(prev_char, e.target.value, idx_arr_keystroke)
                 if (prev_char.length+1 == e.target.value.length) {
                     if (arr_keystroke.length>0) {
+                        //console.log("KEYUP", tKey[prev_idx]);
                         let time_up = new Date().getTime()/1000.0;
                         if (tKey[prev_idx]) {
                             for (var i = 0; i < tKey[prev_idx].length; i++) {
                                 
                                 let rev_idx = (tKey[prev_idx].length-1)-i;
+                                console.log(prev_idx, idx_arr_keystroke, arr_keystroke)
                                 arr_keystroke[tKey[prev_idx][i]]["key_name"] = e.target.value.substr((e.target.selectionStart - 1) || 0, 1)
                                 arr_keystroke[tKey[prev_idx][i]]["time_keyup"] = time_up;
                                 arr_keystroke[tKey[prev_idx][i]]["time_press"] = time_up - arr_keystroke[tKey[prev_idx][rev_idx]]["time_keydown"];
@@ -199,13 +202,14 @@ function handle(e) {
                             }
                             delete tKey[prev_idx];
                         }
-                        console.log("KEYUP", prev_idx, e.target.value, idx_arr_keystroke, arr_keystroke)
+                        
 //                        
                     }     
                     //prev_char++;
                     prev_char = e.target.value;
                 } else if (prev_char.length+1 > e.target.value.length) { 
                     //prev_char--; 
+                    console.log("---------@", prev_char, e.target.value, prev_idx, idx_arr_keystroke)
                     if (arr_keystroke.length!=0) {
                         //idx_arr_keystroke--;
                         arr_keystroke.splice(prev_idx, 1);
@@ -214,25 +218,9 @@ function handle(e) {
 
                     }
                     prev_char = e.target.value;
-                    console.log("DEL", prev_char, e.target.value, prev_idx, idx_arr_keystroke, arr_keystroke)
-                } else {
-                    console.log("ELSE", prev_char, e.target.value, prev_idx, idx_arr_keystroke, arr_keystroke)
-                    let time_up = new Date().getTime()/1000.0;
-                    arr_keystroke[prev_idx]["key_name"] = e.target.value[prev_idx]
-                    arr_keystroke[prev_idx]["time_keyup"] = time_up;
-                    arr_keystroke[prev_idx]["time_press"] = time_up - arr_keystroke[prev_idx]["time_keydown"];
-                    for (var i=prev_idx+1; i<idx_arr_keystroke; i++) {
-                        var keyTimes = {}
-                        keyTimes["key_name"] = e.target.value[i]
-                        keyTimes["time_keydown"] = arr_keystroke[prev_idx]["time_keydown"];
-                        keyTimes["time_keyup"] = arr_keystroke[prev_idx]["time_keyup"];
-                        keyTimes["time_press"] = arr_keystroke[prev_idx]["time_press"];
-                        arr_keystroke.splice(i, 0, keyTimes);
-                    }
-                    prev_char = e.target.value;
-                    prev_idx = idx_arr_keystroke;
+                    console.log("DEL", arr_keystroke); 
                 }
-                console.log(arr_keystroke);
+      
             }       
         
     
