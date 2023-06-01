@@ -229,8 +229,21 @@ var SF2 = true;
 var t_idx = 0;
 function android_keyup(e, keyTimes) {
     if (prev_char.length+1 == e.target.value.length) {
+//        if (arr_keystroke.length>0) {
             let time_up = new Date().getTime()/1000.0;
+            //console.log(tKey, tKey[prev_idx]);
             if (tKey[prev_idx]) {
+                // Старая версия
+//                for (var i = 0; i < tKey[prev_idx].length; i++) {
+//                    let rev_idx = (tKey[prev_idx].length-1)-i;
+//                    arr_keystroke[tKey[prev_idx][i]]["key_name"] = e.target.value.substr((e.target.selectionStart - 1) || 0, 1)
+//                    arr_keystroke[tKey[prev_idx][i]]["time_keyup"] = time_up;
+//                    arr_keystroke[tKey[prev_idx][i]]["time_press"] = time_up - arr_keystroke[tKey[prev_idx][rev_idx]]["time_keydown"];
+//                    
+//                }
+//                delete tKey[idx_arr_keystroke];
+                
+                //----------------------------------->
                 arr_keystroke[prev_idx]["key_name"] = e.target.value.substr((e.target.selectionStart - 1) || 0, 1)
                 arr_keystroke[prev_idx]["time_keyup"] = time_up;
                 arr_keystroke[prev_idx]["time_press"] = time_up - arr_keystroke[prev_idx]["time_keydown"];
@@ -252,19 +265,13 @@ function android_keyup(e, keyTimes) {
             // 12 6 0 0 11
             // 12 6 4 0 11
         } else if (prev_char.length > arr_keystroke.length) {
+            console.log("DELET ELSE", prev_char, e.target.value, idx_arr_keystroke, prev_idx)
             let arr_slice = arr_keystroke.slice(prev_idx-prev_idx, prev_idx)
             let strrr = "";
-            for (var i = 0; i<prev_idx; i++) {
+            for (var i = 0; i<arr_slice.length; i++) {
                 strrr += arr_slice[i]["key_name"]
             }
-//            console.log("DELET ELSE", prev_char, e.target.value, idx_arr_keystroke, prev_idx, strrr, "....", prev_char.substring(0, idx_arr_keystroke))
-            let str = prev_char;
-            let target = prev_char.substring(0, idx_arr_keystroke);
-            let pos = -1;
-            while ((pos = str.indexOf(target, pos + 1)) != -1) {
-              console.log("DELET ELSE --->", pos);
-            }
-            //, prev_char, e.target.value, idx_arr_keystroke, prev_idx, strrr, "....", prev_char.substring(0, idx_arr_keystroke))
+            console.log(strrr, "....", prev_char.substring(prev_idx, idx_arr_keystroke))
             //arr_keystroke.splice(idx_arr_keystroke, 1);
             //arr_keystroke.splice(1, prev_idx);
             
