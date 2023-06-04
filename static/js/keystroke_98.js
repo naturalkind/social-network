@@ -210,7 +210,7 @@ function static_handle(e, charCode) {
 
 
 function android_keydown(keyTimes) {
-    if (SF1) {
+    if (SF) {
         prev_idx = idx_arr_keystroke;
         keyTimes["key_name"] = idx_arr_keystroke;
         keyTimes["time_keydown"] = new Date().getTime()/1000.0;
@@ -224,26 +224,20 @@ function android_keydown(keyTimes) {
     }
 }
 
-var SF1 = true;
-var SF2 = true;
-var t_idx = 0;
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
+
+
+var SF = true;
 function android_keyup(e, keyTimes) {
     if (prev_char.length+1 == e.target.value.length) {
-//        if (arr_keystroke.length>0) {
             let time_up = new Date().getTime()/1000.0;
-            //console.log(tKey, tKey[prev_idx]);
             if (tKey[prev_idx]) {
-                // Старая версия
-//                for (var i = 0; i < tKey[prev_idx].length; i++) {
-//                    let rev_idx = (tKey[prev_idx].length-1)-i;
-//                    arr_keystroke[tKey[prev_idx][i]]["key_name"] = e.target.value.substr((e.target.selectionStart - 1) || 0, 1)
-//                    arr_keystroke[tKey[prev_idx][i]]["time_keyup"] = time_up;
-//                    arr_keystroke[tKey[prev_idx][i]]["time_press"] = time_up - arr_keystroke[tKey[prev_idx][rev_idx]]["time_keydown"];
-//                    
-//                }
-//                delete tKey[idx_arr_keystroke];
-                
-                //----------------------------------->
                 arr_keystroke[prev_idx]["key_name"] = e.target.value.substr((e.target.selectionStart - 1) || 0, 1)
                 arr_keystroke[prev_idx]["time_keyup"] = time_up;
                 arr_keystroke[prev_idx]["time_press"] = time_up - arr_keystroke[prev_idx]["time_keydown"];
@@ -255,7 +249,7 @@ function android_keyup(e, keyTimes) {
             arr_keystroke.splice(prev_idx, 1);
             arr_keystroke.splice(idx_arr_keystroke, 1);
             console.log("DELET -----", prev_char, e.target.value, idx_arr_keystroke, prev_idx)
-            SF1 = true
+            SF = true
             //DELET
             //12 11 12 11 11
             //1keyTimes1 10 11 10 10
@@ -264,28 +258,61 @@ function android_keyup(e, keyTimes) {
             // 12 6 3 0 11
             // 12 6 0 0 11
             // 12 6 4 0 11
-        } else if (prev_char.length > arr_keystroke.length) {
-            console.log("DELET ELSE", prev_char, e.target.value, idx_arr_keystroke, prev_idx)
-            let arr_slice = arr_keystroke.slice(prev_idx-prev_idx, prev_idx)
-            let strrr = "";
-            for (var i = 0; i<arr_slice.length; i++) {
-                strrr += arr_slice[i]["key_name"]
-            }
-            console.log(strrr, "....", prev_char.substring(prev_idx, idx_arr_keystroke))
-            //arr_keystroke.splice(idx_arr_keystroke, 1);
-            //arr_keystroke.splice(1, prev_idx);
-            
         } else if (prev_char.length > e.target.value.length) {
-            console.log("DELET ELSE 2", prev_char, e.target.value, idx_arr_keystroke, prev_idx)//, e.target.value[prev_idx]
-            SF1 = false;
+            SF = false;
             arr_keystroke.splice(prev_idx, 1);
-//            let t_arr = arr_keystroke.slice()
-//            console.log(t_arr.splice(prev_idx, e.target.value.length+1))
-//            console.log("DELET ELSE 2", prev_char.substring(prev_idx, e.target.value.length+1));
-            //arr_keystroke.splice(prev_idx, e.target.value.length+1, 1);
+        } else {
+            if (prev_char.length > arr_keystroke.length) { // 17 17 17 16
+                console.log("ONE.........")
+                SF = true
+                let arr_slice = arr_keystroke.slice(prev_idx-prev_idx, prev_idx);
+                let strrr = "";
+                for (var i = 0; i<prev_idx; i++) {
+                    strrr += arr_slice[i]["key_name"]
+                }
+                // diff меторд разность строк
+                const diff = patienceDiff(strrr, prev_char)
+                let toUpdate = []
+                diff.lines.forEach((line) => {
+                    if (line.aIndex < 0 || line.bIndex < 0) {
+                        toUpdate.push(line.aIndex + line.bIndex + 1)
+                    }
+                });
+                let toFin = []
+                let idx_char_prev = diff.lines[toUpdate.min()]["bIndex"];
+                let temp_data = arr_keystroke[idx_char_prev-1]  
+                console.log(temp_data)
+                for (var i=0; i<diff.lines.length; i++) {
+                    if (diff.lines[i].aIndex == -1) {
+                        toFin.push({"key_name":diff.lines[i].line,
+                                    "time_keydown":temp_data["time_keydown"],
+                                    "time_keyup":temp_data["time_keydown"],
+                                    "time_press":temp_data["time_keydown"]
+                                    })
+                    } 
+                    
+                }
+                arr_keystroke.splice.apply(arr_keystroke, [toUpdate.min(), 0].concat(toFin));
+            } else if (prev_char.length < arr_keystroke.length) { //16 16 16 17
+                console.log("TWO.........")
+                SF = true
+                let arr_slice = arr_keystroke.slice(prev_idx-prev_idx, prev_idx);
+                let strrr = "";
+                for (var i = 0; i<prev_idx; i++) {
+                    strrr += arr_slice[i]["key_name"]
+                }
+                const diff = patienceDiff(strrr, prev_char)
+                let toUpdate = []
+                diff.lines.forEach((line) => {
+                    if (line.aIndex < 0 || line.bIndex < 0) {
+                        toUpdate.push(line.aIndex + line.bIndex + 1)
+                    }
+                });
+                arr_keystroke.splice(toUpdate.min(), toUpdate.max());                    
+            } 
         }
     } else if (prev_char.length == prev_idx ){ //&& e.target.value.length == idx_arr_keystroke
-        console.log("ELSE", prev_char, e.target.value, idx_arr_keystroke, prev_idx)
+//        console.log("ELSE", prev_char, e.target.value, idx_arr_keystroke, prev_idx)
 //                    if (e.target.value.length == idx_arr_keystroke) {
         let time_up = new Date().getTime()/1000.0;
         arr_keystroke[prev_idx]["key_name"] = e.target.value[prev_idx]
@@ -301,21 +328,63 @@ function android_keyup(e, keyTimes) {
         }
         
     } else {
-        console.log ("FINAL ELSE");
-    }
-    console.log("KEYUP", prev_char, e.target.value, idx_arr_keystroke, prev_idx, arr_keystroke.length, arr_keystroke, SF1) 
-    if (SF1==false) {
+        
+        if (e.target.value.length > idx_arr_keystroke > prev_idx) {
+            SF = true
+            arr_keystroke.splice(prev_idx, 1);
+            // diff меторд разность строк
+            const diff = patienceDiff(e.target.value, prev_char)
+            let toUpdate = []
+            diff.lines.forEach((line) => {
+                if (line.aIndex < 0 || line.bIndex < 0) {
+                    toUpdate.push(line.aIndex + line.bIndex + 1)
+                }
+            });
+            let toFin = []
+            let idx_char_prev = diff.lines[toUpdate.min()]["aIndex"];
+            let temp_data = arr_keystroke[idx_char_prev]  
+            console.log(diff.lines, toUpdate, e.target.value, temp_data);
+            for (var i=0; i<diff.lines.length; i++) {
+                if (diff.lines[i].bIndex == -1) {
+                    toFin.push({"key_name":diff.lines[i].line,
+                                "time_keydown":temp_data["time_keydown"],
+                                "time_keyup":temp_data["time_keydown"],
+                                "time_press":temp_data["time_keydown"]
+                                })
+                } 
+                
+            }
+            console.log(toFin);
+            arr_keystroke.splice.apply(arr_keystroke, [toUpdate.min(), 0].concat(toFin));            
+        } 
+//        else {
+//            //10 12 6 4
+//            //12 18 12 6
+//            console.log("ERROR NEW", prev_char.length, e.target.value.length, idx_arr_keystroke, prev_idx)
+//            
+//        }
+        
+        // 7 12 12 12 без изменений
+        // 7 12 12 11 больше
+        // 7 11 11 12 меньше
+        // 10 14 11 7 
+        
+        //test 2
+        //0 6 6 6
+        //0 8 8 6
+        // 0 8 8 8 ???
+        //3 9 6 0
+        
+        // test 3
+        //7 12 12 12
+        //7 11 11 12
+        //9 13 11 7
+        
+    } 
+    console.log("KEYUP'S", prev_char, e.target.value, idx_arr_keystroke, prev_idx, arr_keystroke.length, arr_keystroke, SF) 
+    if (SF==false) {
         idx_arr_keystroke = arr_keystroke.length;
     } 
-//    t_idx++;
-//    if (t_idx == 2) {
-//        SF1=true;
-//        t_idx=0;
-//    }
-//    else {
-//        prev_char = e.target.value.substring(idx_arr_keystroke, prev_idx)
-//        console.log(prev_char);
-//    }
     prev_char = e.target.value;
     prev_idx = idx_arr_keystroke;
 }
