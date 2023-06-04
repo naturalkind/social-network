@@ -587,7 +587,6 @@ function android_keyup(e, keyTimes) {
     let strrr = "";
     for (var i = 0; i<e.target.value.length; i++) {
         let T = arr_keystroke[i];
-        console.log(T)
         if (typeof T != "undefined") {
             let G = {"key_name":e.target.value[i],
              "time_keydown":T["time_keydown"],
@@ -614,19 +613,30 @@ function android_keyup(e, keyTimes) {
     });
     console.log(diff.lines, toUpdate)    
     let toFin = [];
-    let temp_data = arr_keystroke[prev_idx];  
-    for (var i=0; i<diff.lines.length; i++) {
-        if (diff.lines[i].bIndex == -1) {
+    if (toUpdate.length != 0) {
+        let temp_data = arr_keystroke[prev_idx];  
+        for (var i=0; i<diff.lines.length; i++) {
+            if (diff.lines[i].bIndex == -1) {
+                toFin.push({"key_name":diff.lines[i].line,
+                            "time_keydown":temp_data["time_keydown"],
+                            "time_keyup":temp_data["time_keyup"],
+                            "time_press":temp_data["time_keyup"]-temp_data["time_keydown"]
+                            })
+            }
+        }
+//    arr_keystroke.splice(prev_idx, 1)
+        arr_keystroke.splice.apply(arr_keystroke, [toUpdate.min(), toUpdate.max()].concat(toFin));         
+    } else {
+        for (var i=0; i<diff.lines.length; i++) {
+            let temp_data = arr_keystroke[i];
             toFin.push({"key_name":diff.lines[i].line,
                         "time_keydown":temp_data["time_keydown"],
                         "time_keyup":temp_data["time_keyup"],
                         "time_press":temp_data["time_keyup"]-temp_data["time_keydown"]
                         })
         }
+        arr_keystroke = toFin;
     }
-//    arr_keystroke.splice(prev_idx, 1)
-    arr_keystroke.splice.apply(arr_keystroke, [toUpdate.min(), 0].concat(toFin));         
-    
       
     console.log(`символы в строке: ${e.target.value.length}, размер массива: ${arr_keystroke.length}, позиции каретки: ${idx_arr_keystroke}, предыдущий индекс: ${prev_idx}, слово из массива: "${strrr}", слово из строки: "${e.target.value}"`, arr_keystroke) 
 }
