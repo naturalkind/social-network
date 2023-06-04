@@ -585,6 +585,10 @@ Array.prototype.min = function() {
 
 function android_keyup(e, keyTimes) {
     let strrr = "";
+    let time_up = new Date().getTime()/1000.0;
+    if (tKey[prev_idx] && typeof e.target.value[prev_idx] != "undefined") {
+        arr_keystroke[prev_idx]["time_keyup"] = time_up;
+    }
     for (var i = 0; i<e.target.value.length; i++) {
         let T = arr_keystroke[i];
         if (typeof T != "undefined") {
