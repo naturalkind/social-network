@@ -1,6 +1,7 @@
 from django.contrib import admin
 from myapp.models import *
 from privatemessages.models import *
+from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
 class PostAdmin(admin.ModelAdmin):
@@ -37,8 +38,10 @@ class KeystrokeAdmin(admin.ModelAdmin):
     search_fields = ('text', 'id', 'user_post_key')
     fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test')
 
+class CustomUserAdmin(UserAdmin):
+    list_display = [field.name for field in User._meta.fields if field.name != "id"]
        
-admin.site.register(User)
+admin.site.register(User, CustomUserAdmin)
 admin.site.register(Post, PostAdmin)   
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Thread, ThreadAdmin)
