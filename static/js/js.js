@@ -860,7 +860,7 @@ function LIKEOVER(link, page_num, loadmore) {
 //            console.log(data.op1)
             div_iop3.innerText = data.op1;
             data = JSON.parse(data.data);
-            for (var z in data) {
+            for (var z = 0; z < data.length; ++z) {
                 if (data[z].fields.image_user != "oneProf.png") {
                     var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" class="imgUs" onclick="userPROFILE('${data[z].pk}')" style="cursor:pointer;" loading="lazy">`;
                 } else {
@@ -1077,7 +1077,7 @@ function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
                 all_pages = data_0.all_pages; 
                 data = JSON.parse(data_0.data);
                                
-                for (var z in data) {
+                for (var z = 0; z < data.length; ++z) {
                     if (data[z].fields.image_user != "oneProf.png") {
                         var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
                     } else {
@@ -1168,7 +1168,7 @@ function FRIENDS(link, page_num, loadmore) {
 //            console.log(data.op1)
             div_iop3.innerText = data.op1;
             data = JSON.parse(data.data);
-            for (var z in data) {
+            for (var z = 0; z < data.length; ++z) {
                 if (data[z].fields.image_user != "oneProf.png") {
                     var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="reSend('${data[z].pk}', '${link}')">`;
                 } else {
@@ -2682,7 +2682,7 @@ function load_more_comment(link, page) {
                         var f = JSON.parse(http.responseText);
                         var data = JSON.parse(f["data"]);
 //                        console.log("load_more_comment................", data)
-                        for (var z in data) {
+                        for (var z = 0; z < data.length; ++z) {
                             var f_c = document.createElement('div');
                             f_c.className = 'f-c';
                             if (data[z].fields.comment_user[0] != "oneProf.png") {
