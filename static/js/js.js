@@ -656,7 +656,7 @@ function jsons(link, atr){
                     len += g.length;
                     all_pages = f.all_pages;
                     document.getElementById('IOP').innerText = f.op1;
-                    for (var R in g) {
+                    for (var R = 0; R < g.length; ++R) {
                        if (g[R].fields.username.length>15) {
                            var tuser =  g[R].fields.username.slice(0,12) + "...";
                         } else {
@@ -720,7 +720,7 @@ function jsons(link, atr){
                         } else if (atr=='wall-nonregister') {
                             var g = JSON.parse(f.data);
                             len += g.length;
-                            for (var R in g) {
+                            for (var R = 0; R < g.length; ++R) {
                                 var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
                                 html += `<li class='views-row' onmouseover='getIndex(this);'>
                                             <div class='field-image' atribut='${g[R].pk}'>
@@ -735,7 +735,7 @@ function jsons(link, atr){
                         } else if (atr=='user') {
                             var g = JSON.parse(f.data);
                             len += g.length;
-                            for (var R in g) {
+                            for (var R = 0; R < g.length; ++R) {
                                 if (g[R].fields.image != "") {
                                     var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;
                                 } else {
@@ -1359,7 +1359,7 @@ function foll(link, page_num, loadmore){
                 len += g.length;
                 all_pages = f.all_pages;
                 var html = "";
-                for (var R in g) {
+                for (var R = 0; R < g.length; ++R) {
                     if (g[R].fields.image_user!="oneProf.png") {
                            var div_image_user = `<img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
                                                       width='180' 
@@ -1448,7 +1448,8 @@ function folls(link, page_num, loadmore){
                 len += g.length;
                 all_pages = f.all_pages;
                 var html = "";
-                for (var R in g) {
+                for (var R = 0; R < g.length; ++R) {
+                    console.log(R, g[R].fields)
                     if (g[R].fields.image_user!="oneProf.png") {
                            var div_image_user = `<img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
                                                       width='180' 
@@ -1460,7 +1461,7 @@ function folls(link, page_num, loadmore){
                                                       height='180' 
                                                       loading='lazy'>`;
                     }       
-                   if (g[R].fields.username.length>15) {
+                    if (g[R].fields.username.length>15) {
                        var tuser =  g[R].fields.username.slice(0,10) + "...";
                     } else {
                         var tuser = g[R].fields.username;
@@ -2536,7 +2537,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                 all_pages = message_data.all_pages;
                 document.getElementById('IOP').innerText = message_data.op1;
                 var final_string = "";
-                for (var R in g) {
+                for (var R = 0; R < g.length; ++R) {
                     var data_path = g[R].fields.sender[1];
                     var image_file = g[R].fields.sender[0];
                     var sender_id = g[R].fields.sender[2];

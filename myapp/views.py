@@ -523,8 +523,8 @@ def follows(request, id):
     except PageNotAnInteger:
         data['op2'] = "STOP"
             
-    print (len(users), data) #/paginator.page(page).previous_page_number()
     data['data'] = serializers.serialize('json', users, fields=('username', 'image_user', 'path_data', 'date_joined'))
+    print (".......", len(users), data) #/paginator.page(page).previous_page_number()
     return HttpResponse(json.dumps(data), content_type = "application/json")
 
 from django.template import RequestContext

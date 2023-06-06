@@ -39,8 +39,10 @@ class KeystrokeAdmin(admin.ModelAdmin):
     fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test')
 
 class CustomUserAdmin(UserAdmin):
-    list_display = [field.name for field in User._meta.fields if field.name != "id"]
-       
+#    list_display = [field.name for field in User._meta.fields if field.name != "password"]
+    list_display = ['username', 'is_superuser', 'id', 'last_login', 'image_user', 'path_data']
+    fieldsets = UserAdmin.fieldsets + ((None, {'fields': ('image_user', 'path_data', 'color')}),)
+    
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Post, PostAdmin)   
 admin.site.register(Comment, CommentAdmin)
