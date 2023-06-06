@@ -10,7 +10,7 @@
             {% if cm.comment_user.image_user != "oneProf.png" %}
                 <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
             {% else %}
-                <img id="image-user" src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+                <img id="image-user" src="/static/images/oneProf.png" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
             {% endif %}
             
             <a onclick="userPROFILE('{{ cm.comment_user.id }}')" id="user-comment">{{ cm.comment_user }}</a>
@@ -43,14 +43,14 @@
         <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
         <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
         <div id="cn"><canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>
-<!--        <img id="add_{{ id }}" src="/media/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
+<!--        <img id="add_{{ id }}" src="/static/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
             <button id="add_{{ id }}" onclick="send_com(this, '{{ id }}')" indicator-ws="false">ОТПРАВИТЬ</button>
     </div> 
     
 <!--    <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">-->
 <!--    <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>-->
 <!--    <div id="cn"><canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>-->
-<!--    <img id="add_{{ id }}" src="/media/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
+<!--    <img id="add_{{ id }}" src="/static/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
 </div>
-<!--<img id="add_{{ id }}" src="/media/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
+<!--<img id="add_{{ id }}" src="/static/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
 {#<button id="add_{{ id }}">ОТПРАВИТЬ</button>#}

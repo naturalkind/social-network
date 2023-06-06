@@ -25,7 +25,7 @@
                     {% if message.sender.image_user != "oneProf.png" %}
                         <img src="/media/data_image/{{ user.path_data }}/tm_{{ user.image_user }}" class="usPr" onclick="userPROFILE('{{ message.sender.id }}')" style="float:none;">
                     {% else %}
-                        <img src="/media/images/oneProf.png" class="usPr" onclick="userPROFILE('{{ message.sender.id }}')" style="float:none;">
+                        <img src="/static/images/oneProf.png" class="usPr" onclick="userPROFILE('{{ message.sender.id }}')" style="float:none;">
                     {% endif %}
                     <p class="txtmessage we">
                         {% if message.resend != "False" %}
@@ -41,7 +41,7 @@
                     {% if message.sender.image_user != "oneProf.png" %}
                         <img src="/media/data_image/{{ partner.path_data }}/tm_{{ partner.image_user }}" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;">
                     {% else %}
-                        <img src="/media/images/oneProf.png" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;">
+                        <img src="/static/images/oneProf.png" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;">
                     {% endif %}                
 <!--                    <img src="/media/data_image/{{ partner.path_data }}/tm_{{ partner.image_user }}" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;">-->
 

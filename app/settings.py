@@ -205,13 +205,12 @@ USE_TZ = True
 #    'media/data_image',
 #)
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "media/images"),
-    'media/data_image',
+    os.path.join(BASE_DIR, "static"),
 )
 
 
-STATIC_ROOT = os.path.join('media/static/')
-STATIC_URL = '/media/static/'
+#STATIC_ROOT = os.path.join('/static/')
+STATIC_URL = '/static/'
 # Media
 
 MEDIA_URL = '/media/'

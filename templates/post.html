@@ -5,9 +5,9 @@
         {% if request.user.is_authenticated %}
             {% if request.user == post.user_post %}
 <!--                <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>-->
-                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, '{{post.id}}', '{{username}}', 'true', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
+                <img id="like_count" src="/static/images/menu2.png" onclick="menuset(this, '{{post.id}}', '{{username}}', 'true', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
             {% else %}
-                <img id="like_count" src="/media/images/menu2.png" onclick="menuset(this, '{{post.id}}', '{{username}}', 'false', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
+                <img id="like_count" src="/static/images/menu2.png" onclick="menuset(this, '{{post.id}}', '{{username}}', 'false', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
             {% endif %}
         {% endif %}
         <div class="user"> Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> 
@@ -19,22 +19,22 @@
             <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.body}}" title="{{post.body}}">
         <!--    onclick="youps('{{ post.video }}')"-->
         {% else %}
-            <img src="/media/images/no_image.png" width="auto" loading="lazy">
+            <img src="/static/images/no_image.png" width="auto" loading="lazy">
         {% endif %}
     </div>
     {% if request.user.is_authenticated %}
         {% if username != post.user_post.username %}    
             <div id="_post_like_block_{{post.id}}" style="width: 100%">
                 {% if request.user in post.likes.all %}
-                    <img class="icon-like" id="post_image_{{post.id}}" src="/media/images/frv1.gif" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">
+                    <img class="icon-like" id="post_image_{{post.id}}" src="/static/images/frv1.gif" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">
                 {% else %}
-                    <img class="icon-like" id="post_image_{{post.id}}" src="/media/images/frv1.png" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">     
+                    <img class="icon-like" id="post_image_{{post.id}}" src="/static/images/frv1.png" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">     
                 {% endif %}
                 
                 {% if request.user in post.relike.all %}
-                    <img class="icon-like" src="/media/images/close3.png" onclick="rpPost(this, '{{ post.id }}','{{ username }}')" open-atr="close" type="post"> 
+                    <img class="icon-like" src="/static/images/close3.png" onclick="rpPost(this, '{{ post.id }}','{{ username }}')" open-atr="close" type="post"> 
                 {% else %}
-                    <img class="icon-like" src="/media/images/rpvF.png" onclick="rpPost(this, '{{ post.id }}','{{ username }}')" open-atr="close" type="post">
+                    <img class="icon-like" src="/static/images/rpvF.png" onclick="rpPost(this, '{{ post.id }}','{{ username }}')" open-atr="close" type="post">
                 {% endif %}
             </div>    
         {% endif %}
@@ -56,7 +56,7 @@
                             {% if cm.comment_user.image_user != "oneProf.png" %}
                                 <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
                             {% else %}
-                                <img id="image-user" src="/media/images/oneProf.png" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+                                <img id="image-user" src="/static/images/oneProf.png" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
                             {% endif %}
                             <a onclick="userPROFILE('{{ cm.comment_user.id }}')" id="user-comment">{{ cm.comment_user }}</a>
                             <p id="comment-text">{{ cm.comment_text|linebreaksbr }}</p>
