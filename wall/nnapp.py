@@ -78,7 +78,6 @@ def send_and_get(args, model=None):
     except Post.DoesNotExist:
         pass
 
-
 class NNHandler(SyncConsumer):
     start()
     def triggerWorker(self, message):
