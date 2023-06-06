@@ -24,7 +24,7 @@ from myapp import views as myapp
 #from django.views.static import serve 
 #path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
 
-from django.conf.urls.static import static
+from django.conf.urls.static import static, serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', myapp.main_page),
@@ -65,6 +65,10 @@ urlpatterns = [
     
     # добавить материал
     path(r'addpost/', myapp.addpost), 
+    
+#    re_path(r'^media/(?P<path>.*)$', serve, {
+#                'document_root': settings.MEDIA_ROOT,
+#            }),  
         
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from myapp.models import User, Post, Comment, UserChannels, JsonModel
+from myapp.models import User, Post, Comment, UserChannels, JsonModel, Keystroke
 from privatemessages.models import Thread, Message
 from importlib import import_module
 
@@ -98,6 +98,20 @@ def delete_post(pk):
     _data = {"type": "wallpost", "status":"deletepost", "post_id":pk}
     return _data
 
+
+
+@sync_to_async
+def add_keystroke(user, json_data):
+    T = json_data["body"].replace('\xa0', ' ').replace("\n\n", " ").replace("\n", " ").lower()
+    post = Keystroke()
+    post.pure_data = json_data["arr_keypress"]
+    post.status = "y"
+    post.text = T
+    post.user_post_key = user
+    post.save()
+    
+
+
 class WallHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.room_group_name = "wall"
@@ -177,7 +191,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                 await self.channel_layer.group_send(self.room_group_name, _data)
                 
             if event == "wallpost":
-                print (response["all_time_sec"])
+                #print (response["all_time_sec"])
                 if response["image"] == False:
                     self.namefile = ""
                 user_postv = await database_sync_to_async(User.objects.get)(id=self.sender_id)
@@ -189,7 +203,9 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                 post.user_post = user_postv
                 post_async = sync_to_async(post.save)
                 await post_async()
-
+                
+                await add_keystroke(user_postv, response)
+                
                 _data = {"type": "wallpost",
                          "timestamp": dateformat.format(post.date_post, 'U'),
                          "image": self.namefile,

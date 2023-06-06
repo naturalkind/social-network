@@ -71,7 +71,7 @@ def send_and_get(args, model=None):
         post = Post.objects.get(id=args["post"]) 
         post.image = namefile
         post.save()
-        res['prediction'][0].save(f'media/data_image/{args["path_data"]}/{namefile}', format="JPEG")
+        res['prediction'][0].save(f'/media/sadko/1b32d2c7-3fcf-4c94-ad20-4fb130a7a7d4/social-network/media/data_image/{args["path_data"]}/{namefile}', format="JPEG")
         _data = {"type": "wallpost", "status":"Kandinsky-2.0", "path_data": args["path_data"],
                  "data": f'{namefile}', "post":args["post"]}
         async_to_sync(channel_layer.group_send)(args["room_group_name"], _data)
