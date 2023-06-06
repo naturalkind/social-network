@@ -77,6 +77,10 @@ def send_and_get(args, model=None):
         async_to_sync(channel_layer.group_send)(args["room_group_name"], _data)
     except Post.DoesNotExist:
         pass
+<<<<<<< HEAD
+=======
+
+>>>>>>> v1.2_keypress
 
 class NNHandler(SyncConsumer):
     start()
