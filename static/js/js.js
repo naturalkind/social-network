@@ -1,5 +1,5 @@
 var IP_ADDR = window.location.hostname;
-var PORT = "80";
+var PORT = "8888";
 var _page;
 var innode;
 var len;
@@ -445,8 +445,8 @@ function editPROFF(self){
 //                    document.getElementById('tooltip').remove();
 //                    self.setAttribute("open-atr", "close");
 //                } 
-//                textElemv1.src = "/media/images/close3.png";   
-//                textElemv1.setAttribute("style", "width:100px;height:100px;background-image:url(/media/images/controlsv4.png)") 
+//                textElemv1.src = "/static/images/close3.png";   
+//                textElemv1.setAttribute("style", "width:100px;height:100px;background-image:url(/static/images/controlsv4.png)") 
 
 
 //                var over = document.getElementById("user-page"); 
@@ -680,7 +680,7 @@ function jsons(link, atr){
 //                    {% if x.image_user != "oneProf.png" %}
 //                        <img src="/media/data_image/{{ x.path_data }}/tm_{{ x.image_user }}" loading="lazy"> 
 //                    {% else %}
-//                        <img src="/media/images/oneProf.png" loading="lazy"> 
+//                        <img src="/static/images/oneProf.png" loading="lazy"> 
 //                    {% endif %}
 //                </div>
 //                <div class="user-name">
@@ -1638,7 +1638,7 @@ function getlkpost(link, page_num, loadmore) {
 //                    if (data[ix].fields.user_post[0] != "oneProf.png"){
 //                        var div_image_user = `<img src="/media/data_image/${data[ix].fields.user_post[1]}/${data[ix].fields.user_post[0]}" width="30" height="30">`
 //                    } else {
-//                        var div_image_user = `<img src="/media/images/oneProf.png" width="30" height="30">`
+//                        var div_image_user = `<img src="/static/images/oneProf.png" width="30" height="30">`
 //                    }
 
 //                    if (data[ix].fields.image != ""){
@@ -1649,7 +1649,7 @@ function getlkpost(link, page_num, loadmore) {
 //                                                     class="wallpost">`;
 //                                                     
 //                    } else {
-//                        var div_image_post = `<img src="/media/images/no_image.png"
+//                        var div_image_post = `<img src="/static/images/no_image.png"
 //                                                     height="auto" 
 //                                                     width="auto" 
 //                                                     onclick="showImg(this)" 
@@ -1671,7 +1671,7 @@ function getlkpost(link, page_num, loadmore) {
 //                                        <div id="body-post-wall">
 //                                            <div id="post_like_block_${data[ix].pk}" style="width: 100%">
 //                                                <img class="icon-like" 
-//                                                     src="/media/images/mesvF.png" 
+//                                                     src="/static/images/mesvF.png" 
 //                                                     onclick="comView(this)" 
 //                                                     open-atr="close" 
 //                                                     id-comment=${data[ix].pk} 
@@ -1680,12 +1680,12 @@ function getlkpost(link, page_num, loadmore) {
 //                                                     indicator-ws="close">
 //                                                <img class="icon-like" 
 //                                                     id="post_image_${data[ix].pk}" 
-//                                                     src="/media/images/frv1.png" 
+//                                                     src="/static/images/frv1.png" 
 //                                                     onclick="LIKE(this, ${data[ix].pk})" 
 //                                                     open-atr="close" 
 //                                                     type="wall">
 //                                                <img class="icon-like" 
-//                                                     src="/media/images/rpvF.png" 
+//                                                     src="/static/images/rpvF.png" 
 //                                                     onclick="rpPost(this, ${data[ix].pk},'${data[ix].fields.user_post[3]}')" 
 //                                                     open-atr="close" 
 //                                                     type="wall">
@@ -2061,23 +2061,13 @@ function activate_wall(user_name) {
                                                  indicator-ws="close">
                                             <img class="icon-like" 
                                                  id="post_image_${message_data.id}" 
-<<<<<<< HEAD:static/js/js.js
                                                  src="/static/images/frv1.png" 
-                                                 onclick="LIKE(this, ${message_data.id})" 
-                                                 open-atr="close" 
-                                                 type="wall">
-                                            <img class="icon-like" 
-                                                 src="/static/images/rpvF.png" 
-                                                 onclick="rpPost(this, ${message_data.id},'${message_data.user_post}')" 
-=======
-                                                 src="/media/images/frv1.png" 
                                                  onclick="LIKE(this, '${message_data.id}')" 
                                                  open-atr="close" 
                                                  type="wall">
                                             <img class="icon-like" 
-                                                 src="/media/images/rpvF.png" 
+                                                 src="/static/images/rpvF.png" 
                                                  onclick="rpPost(this, '${message_data.id}','${message_data.user_post}')" 
->>>>>>> v1.2_keypress:media/js/js.js
                                                  open-atr="close" 
                                                  type="wall">
                                             <div class="box-indicator" 
@@ -2776,15 +2766,16 @@ function send_com(self, cip) {
 document.addEventListener('keypress', function (e) {
 //    console.log("WALL KEYPRESS", _page, e.srcElement.getAttribute("post_id"))
     if (_page == "chat") {
-        if (e.keyCode == 13 && !event.shiftKey) {
+        if (e.keyCode == 13 && !e.shiftKey) {
             e.preventDefault();
             document.getElementById("btn").onclick()
 //            send_message();
             return false;
         } 
     } else if (_page == "wallpost") {
-        if (e.keyCode == 13 && !event.shiftKey) {
+        if (e.keyCode == 13 && !e.shiftKey) {
             e.preventDefault();
+            console.log(e);
             document.getElementById("add_"+e.srcElement.getAttribute("post_id")).onclick()
 //            send_message();
             return false;

@@ -1,5 +1,5 @@
-media/data_image/
-wall/start_celery.py
+media/data_image/*
+log/*
 env
 venv
 *.rdb
