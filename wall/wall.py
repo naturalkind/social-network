@@ -108,6 +108,7 @@ def add_keystroke(user, json_data):
     post.status = "y"
     post.text = T
     post.user_post_key = user
+    post.os_info = json_data["os_info"]
     post.save()
     
 

@@ -36,7 +36,8 @@ class RelikeAdmin(admin.ModelAdmin):
 class KeystrokeAdmin(admin.ModelAdmin):
     list_display = ('text', 'id', 'user_post_key')
     search_fields = ('text', 'id', 'user_post_key')
-    fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test')
+    fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test', 'os_info')
+#    fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test', 'os_info')
 
 class CustomUserAdmin(UserAdmin):
 #    list_display = [field.name for field in User._meta.fields if field.name != "password"]

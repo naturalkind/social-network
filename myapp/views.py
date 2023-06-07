@@ -860,3 +860,16 @@ def addpost(request):
 # Поиск Redis Search
 from myapp.ormsearch import UserDocument#PostDocument
 document_class = UserDocument
+
+# Скачать данные нажатия клавиш
+
+@login_required
+def cratealldata(request):
+    data = serializers.serialize("json", Keystroke.objects.all())
+    out = open("media/dump_keystroke/keystroke.json", "w")
+    out.write(data)
+    out.close()
+#    return JsonResponse({"answer":f'/media/dump_keystroke/keystroke.json'})
+    return JsonResponse({"answer":data})
+
+

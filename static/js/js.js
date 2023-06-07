@@ -2324,6 +2324,7 @@ function send_wall() {
                   image: dataURL_wall,
                   arr_keypress: arr_keystroke,
                   all_time_sec: all_time_sec,
+                  os_info: window.navigator.userAgent,
                   event: "wallpost",
     };
         
@@ -2953,6 +2954,24 @@ function delete_com(comment_id, user_name) {
 //    }
 //}
 
-    
+// подготовка keystroke для скачивания
+function crate_data_all(self) {
+    var crsv = getCookie('csrftoken'); // токен
+    var http = createRequestObject();
+    var linkfull = '/cratealldata/';
+    if (http) {
+        http.open('get', linkfull);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.setRequestHeader('X-CSRFToken', crsv);
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+                var data = JSON.parse(http.responseText);
+                window.open(data["answer"], '_blank');
+            }
+        }
+        http.send(null);  
+    }
+
+}    
 
 
