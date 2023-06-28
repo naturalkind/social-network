@@ -55,6 +55,7 @@ python manage.py runworker nnapp
 python manage.py index   
 ```
 
+<<<<<<< HEAD
 ### Пример работы:
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.5/static/presentation.png)
 
@@ -75,3 +76,7 @@ python manage.py index
 - [x] следить за активностью пользователя   
 - [ ] ссылка на страницу пользователя по псевдониму с проверкой   
 
+=======
+### Пример работы
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.5/static/presentation.png)
+>>>>>>> 3bd838d0425999d2babd8803228442e521317683
