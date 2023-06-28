@@ -1,6 +1,9 @@
+<!--<script type="text/javascript" defer src="/static/js/js.js" ></script>-->
+<!--<link rel="stylesheet" type="text/css" media="all" href="/static/css/style.css" />-->
+<span id="IOP" style="display: none">STOP</span>
 {% block login %}
     <div class="large-offset" >
-    {#            <img src="/media/images/FORMATICAv5.png" alt="логотип" width="auto" height="200">#}
+    {#            <img src="/static/images/FORMATICAv5.png" alt="логотип" width="auto" height="200">#}
         <form action="/login" method="post">
             {% csrf_token %}
         {#                <label for="username">Имя</label>#}
@@ -11,7 +14,7 @@
             <label class="error">{{ login_error }}</label>
                 {% endif %}
             <input class="button" type="submit" value="Войти">
-            <div class="label"><a onclick="addREG()">Регистрация</a> </div>
+            <div class="label"><a onclick="addREG('javascript')">Регистрация</a> </div>
         </form>
-    {#            <img src="/media/images/FORMATICAv3.png" alt="логотип" width="auto" height="200">#}
+    {#            <img src="/static/images/FORMATICAv3.png" alt="логотип" width="auto" height="200">#}
 {% endblock %}

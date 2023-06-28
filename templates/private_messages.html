@@ -1,37 +1,33 @@
 {% block content %}
 {% load pluralize %}
 <div class="private_messages">
+    <span id="IOP" style="display: none">STOP</span>
+     <div id="user-content-block"  atr="opps"></div>
     <h1>СОБЕСЕДНИКИ</h1>
     <div class="partners">
     {% for thread in threads %}
-        <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/data_image/{{ thread.partner.path_data }}/tm_{{ thread.partner.image_user }}" class="usPr" style="float:none;border: 2px solid #a9a9a9;"><div class="pmu">{{ thread.partner.username }} ({{ thread.total_messages|default_if_none:"0" }} {{ thread.total_messages|rupluralize:"сообщение,сообщения,сообщений" }})</div>
-        </div>
+            <div class="pm-block" id="pm-block-{{ thread.id }}">
+                {% if thread.partner.image_user != "oneProf.png" %}
+                    <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/media/data_image/{{ thread.partner.path_data }}/tm_{{ thread.partner.image_user }}" class="usPr" style="float:none;border: 2px solid #a9a9a9;">
+                {% else %}
+                    <div class="pm" onclick="mesID('{{ thread.id }}','{{ request.user }}','{{ thread.total_messages }}')"><img src="/static/images/oneProf.png" class="usPr" style="float:none;border: 2px solid #a9a9a9;">
+                {% endif %}
+                
+                    <div class="pmu">{{ thread.partner.username }} ({{ thread.total_messages|default_if_none:"0" }} {{ thread.total_messages|rupluralize:"сообщение,сообщения,сообщений" }})
+                    </div>
+                </div>
+                <div class="delete-pm" onclick="delete_pm('{{ thread.id }}','{{ request.user }}')"></div>
+            </div>
     {% empty %}
         <p>Пока что собеседников нет.</p>
     {% endfor %}
     </div>
 
-{#      <div class="fr" style="margin: 0 33px;height: 205px;background: #f2f2f2;border-radius: 5px;">#}
-{#           <h1>ДРУЗЬЯ {{ user_info.get_friends.count }}</h1>#}
-{##}
-{#           {% for fr in user_info.get_friends %}#}
-{#               <div class="fr-cell" style="width: 90px;height: 105px;float: left;margin: 2px 5px;padding: 2px;background: #ffffff;border-radius: 4px;">#}
-{#           <div class="pm-mes">#}
-{#<form action="messages" method="post" class="new_message">#}
-{#<input id="recipient_name" placeholder="Имя получателя" value="{{ fr.username }}" style="display: none">#}
-{# <p><input id="message" placeholder="Сообщение"></p>#}
-{#</form>#}
-{#<p>#}
-{#    <a onclick="createMES()">Отправить</a>#}
-{#</p>#}
-{#           </div>#}
-{#                   <a onclick="userPROFILE('{{ fr.id }}')"><img src="/media/data_image/tm_{{ fr.username }}.png" width="85px" style="border-radius: 5px;">{{ fr.username|truncatechars:10 }}</a></div>#}
-{#           {% endfor %}#}
-{#</div>#}
-
-    <form action="messages" method="post" class="new_message">
+    <form action="messages" method="post" class="new_message" autocomplete="off">
         {% csrf_token %}
-        <div class="name"><input id="recipient_name" placeholder="ИМЯ ПОЛУЧАТЕЛЯ"></div>
+        <div class="autocomplete">
+            <div class="name"><input id="recipient_name" placeholder="ИМЯ ПОЛУЧАТЕЛЯ"></div>
+        </div>
             <div class="compose">
                 <div id="message_textarea" 
                      role="textbox" 
@@ -40,15 +36,9 @@
                      aria-required="true" 
                      placeholder="Введите ваше сообщение..." 
                      contentEditable=true></div>
+                     <button onclick="createMES()" type="button">ОТПРАВИТЬ</button>
             </div>  
-
-{#            <input id="message" placeholder="Сообщение"> Имя получателя#}
-
-
     </form>
-
-    <a onclick="createMES()">Отправить</a>
-{#    <input type="submit" value="Отправить" onclick="createMES()">#}
-
+<!--    <a onclick="createMES()">Отправить</a>-->
 </div>
 {% endblock content %}

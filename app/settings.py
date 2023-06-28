@@ -15,6 +15,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -24,13 +25,55 @@ SECRET_KEY = 'django-insecure'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#LOGGING = {
+#    'version': 1,
+#    'formatters': {
+#        'verbose': {
+#            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+#        },
+#        'simple': {
+#            'format': '%(levelname)s %(message)s'
+#        },
+#    },
+#    'handlers': {
+#        'console': {
+#            'level': 'DEBUG',
+#            'class': 'logging.StreamHandler',
+#            'formatter': 'simple'
+#        },
+#        'file': {
+#            'level': 'DEBUG',
+#            'class': 'logging.FileHandler',
+#            'filename': 'log/file.log',
+#            'formatter': 'simple'
+#        },
+#    },
+#    'loggers': {
+#        'django': {
+#            'handlers': ['file'],
+#            'level': 'DEBUG',
+#            'propagate': True,
+#        },
+#    }
+#}
 
-ALLOWED_HOSTS = ['178.158.131.41', '192.168.1.50', 'сообщество.com', 'xn--90aci8aadpej1e.com']
+#if DEBUG:
+#    # make all loggers use the console.
+#    for logger in LOGGING['loggers']:
+#        LOGGING['loggers'][logger]['handlers'] = ['console']
 
+
+
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '178.158.131.41', '192.168.1.50', 'сообщество.com', 'xn--90aci8aadpej1e.com', 'www.xn--90aci8aadpej1e.com']
+
+#SESSION_COOKIE_HTTPONLY=False
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,8 +83,7 @@ INSTALLED_APPS = [
     'myapp',
     'wall',
     'privatemessages',
-    'comment',
-    'channels',
+    'redis_search_django',
 ]
 
 AUTH_USER_MODEL = 'myapp.User'
@@ -75,17 +117,26 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'app.wsgi.application'
-
 ASGI_APPLICATION = "app.asgi.application"
 
+#https://github.com/django/channels_redis/issues/332
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer",
         "CONFIG": {
-            "hosts": [("localhost", 6379)],
+            "hosts": ["redis://localhost:6379/4"],
         },
     },
 }
+
+#CHANNEL_LAYERS = {
+#    "default": {
+#        "BACKEND": "channels_redis.core.RedisChannelLayer",
+#        "CONFIG": {
+#            "hosts": [("localhost", 6379)],
+#        },
+#    },
+#}
 
 #CHANNEL_LAYERS = {
 #    'default': {
@@ -112,27 +163,39 @@ CHANNEL_LAYERS = {
 # Redis
 SESSION_ENGINE = 'redis_sessions.session'
 
-#CACHES = {
-#    'default': {
-#        'BACKEND': 'django_redis.cache.RedisCache',
-#        'LOCATION': 'redis://127.0.0.1:6379/',
-#        'OPTIONS': {
-#            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#        }
-#    }
-#}
+CACHES = {
+    'default': {
+        "BACKEND": "django_redis.cache.RedisCache",
+        'LOCATION': 'redis://127.0.0.1:6379/7',
+    }
+}
 
+
+# Celery
+CELERY_BROKER_URL = "redis://localhost:6379/4"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/4"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'com',                      
+        'USER': 'sadko',
+        'PASSWORD': '1qaz',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -144,7 +207,7 @@ AUTH_PASSWORD_VALIDATORS = [
 #    {
 #        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
 #        'OPTIONS': {
-#            'min_length': 1,
+#            'min_length': 5,
 #        },
 #    },
 #    {
@@ -176,21 +239,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 #STATIC_URL = '/static/'
-#-------------------------->
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, "media/static"),
+#    'media/data_image',
+#)
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
-    'media/data_image',
 )
 
-STATIC_ROOT = os.path.join('media/static/')
-STATIC_URL = '/media/static/'
+
+#STATIC_ROOT = os.path.join('/static/')
+STATIC_URL = '/static/'
 # Media
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = 'media'
+#MEDIA_ROOT = 'media'
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
-#-------------------------->
+MEDIA_ROOT = '/media/sadko/1b32d2c7-3fcf-4c94-ad20-4fb130a7a7d4/social-network/media'
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 31457280
 DJANGO_ALLOW_ASYNC_UNSAFE = "true"
 
 
@@ -198,3 +265,8 @@ DJANGO_ALLOW_ASYNC_UNSAFE = "true"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# redis-search-django settings
+
+REDIS_SEARCH_AUTO_INDEX = True

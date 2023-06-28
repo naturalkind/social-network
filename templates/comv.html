@@ -1,8 +1,19 @@
+{% if comment.has_next %}
+    <a id="see_more_button_{{ id }}" class="see_more_button">Показать следующие комментарии</a>
+    <span id="IOPcom_{{ id }}" style="display: none">{{ comment.next_page_number }}</span>
+{% else %}
+    <span id="IOPcom_{{ id }}" style="display: none">STOP</span>
+{% endif %}
 <div id="field-comment_{{ id }}" style="background: #f2f2f2;">
-    {% for cm in comment %}
-        <div class="f-c">
-            <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
-            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">{{ cm.comment_user }}</a>
+    {% for cm in comment reversed %} 
+        <div class="f-c" id="com-block-{{ cm.id }}">
+            {% if cm.comment_user.image_user != "oneProf.png" %}
+                <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+            {% else %}
+                <img id="image-user" src="/static/images/oneProf.png" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+            {% endif %}
+            
+            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" id="user-comment">{{ cm.comment_user }}</a>
             <p id="comment-text">{{ cm.comment_text|linebreaksbr }}</p>
 <!--             style="padding:4px;"-->
             {% if cm.comment_image %}
@@ -10,12 +21,15 @@
 <!--                display:block;margin:0 auto;max-width:400px;width: auto;height:auto;max-height: 240px;-->
             {% endif %}
             <div id="time-comment">{{ cm.timecomment|date:'d b o в H:i' }}</div>
+            {% if request.user == cm.comment_user %}
+                <div class="delete-pm" onclick="delete_com('{{ cm.id }}','{{ request.user }}')"></div>
+            {% endif %}
         </div>
     {% endfor %}
 {#    <button id="add" onclick="create_comment('{{post.id}}')">ОТПРАВИТЬ</button>#}
 </div>
-<div id="results" style="margin:10px 20px;">
-    <div class="compose">
+<div id="results_{{ id }}" style="margin:10px 20px;">
+    <div class="compose_{{ id }}">
         <div id="comment_text_{{ id }}"
              class="message_textarea" 
              role="textbox" 
@@ -24,12 +38,19 @@
              aria-required="true" 
              placeholder="Напишите комментарий..." 
              contentEditable=true
-             style="background: white;"></div>
+             style="background: white;"
+             post_id="{{ id }}"></div>
+        <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
+        <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
+        <div id="cn"><canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>
+<!--        <img id="add_{{ id }}" src="/static/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
+            <button id="add_{{ id }}" onclick="send_com(this, '{{ id }}')" indicator-ws="false">ОТПРАВИТЬ</button>
     </div> 
     
-    <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
-    <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
-    <div id="cn"><canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>
+<!--    <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">-->
+<!--    <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>-->
+<!--    <div id="cn"><canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>-->
+<!--    <img id="add_{{ id }}" src="/static/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
 </div>
-<img id="add_{{ id }}" src="/media/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">
+<!--<img id="add_{{ id }}" src="/static/images/cloud.png" class="send-img" onclick="send_com(this, '{{ id }}')" indicator-ws="false">-->
 {#<button id="add_{{ id }}">ОТПРАВИТЬ</button>#}

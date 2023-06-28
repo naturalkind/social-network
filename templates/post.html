@@ -2,79 +2,96 @@
 <div id="node">
     <div id="breadcrumb" style="background: #507299;">
 <!--        <div class="title">{{post.title}}</div>-->
-        {% if username == post.user_post.username %}
-            <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>
+        {% if request.user.is_authenticated %}
+            {% if request.user == post.user_post %}
+<!--                <a id="deletepost" onclick="deletepost('{{post.id}}')">УДАЛИТЬ</a>-->
+                <img id="like_count" src="/static/images/menu2.png" onclick="menuset(this, '{{post.id}}', '{{username}}', 'true', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
+            {% else %}
+                <img id="like_count" src="/static/images/menu2.png" onclick="menuset(this, '{{post.id}}', '{{username}}', 'false', {{ post.total_likes }}, {{request.user.total_friends}})" open-atr="close">
+            {% endif %}
         {% endif %}
         <div class="user"> Опубликовал <a onclick="userPROFILE('{{post.user_post.id}}')" atribut="{{post.user_post.id}}" title="Увидеть профиль пользователя" class="username">{{ post.user_post }}</a> 
         {{post.date_post|date:'d b o в H:i' }}
         </div>
     </div>
-    <div class="auto-images">
-        {% if post.video == '' %}
-            <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.title}}" title="{{post.title}}">
+    <div class="auto-images" id="auto-images">
+        {% if post.image != "" %}
+            <img src="/media/data_image/{{ post.user_post.path_data }}/{{ post.image }}" width="auto" alt="{{post.body}}" title="{{post.body}}">
         <!--    onclick="youps('{{ post.video }}')"-->
         {% else %}
-            <div id="video-placeholder" idv="{{ post.video }}"></div>
+            <img src="/static/images/no_image.png" width="auto" loading="lazy">
         {% endif %}
     </div>
-
+    {% if request.user.is_authenticated %}
+        {% if username != post.user_post.username %}    
+            <div id="_post_like_block_{{post.id}}" style="width: 100%">
+                {% if request.user in post.likes.all %}
+                    <img class="icon-like" id="post_image_{{post.id}}" src="/static/images/frv1.gif" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">
+                {% else %}
+                    <img class="icon-like" id="post_image_{{post.id}}" src="/static/images/frv1.png" onclick="LIKE(this, '{{post.id}}')" open-atr="close" type="post">     
+                {% endif %}
+                
+                {% if request.user in post.relike.all %}
+                    <img class="icon-like" src="/static/images/close3.png" onclick="rpPost(this, '{{ post.id }}','{{ username }}')" open-atr="close" type="post"> 
+                {% else %}
+                    <img class="icon-like" src="/static/images/rpvF.png" onclick="rpPost(this, '{{ post.id }}','{{ username }}')" open-atr="close" type="post">
+                {% endif %}
+            </div>    
+        {% endif %}
+    {% endif %}
     <div class="about">
         <p id="post-text">{{post.body|linebreaksbr}}</p>
 <!--    safe|    -->
-        {% if username %}
-            <img id="like_count" src="/media/images/frv2.png" onclick="LIKE('{{message.id}}')">
+        {% if request.user.is_authenticated %}
             <div class="box-com" style="margin: 0 auto;">
+                {% if comment.has_next %}
+                    <a id="see_more_button_{{post.id}}" class="see_more_button">Показать следующие комментарии</a>
+                    <span id="IOPcom_{{post.id}}" style="display: none">{{ comment.next_page_number }}</span>
+                {% else %}
+                    <span id="IOPcom_{{post.id}}" style="display: none">STOP</span>
+                {% endif %}
                 <div id="field-comment_{{post.id}}" style="padding-bottom: 15px;padding-top: 15px;">
-                    {% for cm in comment %}
-<!--                        <div class="f-c" style="background:#f1f1f1;border-radius: 7px;">-->
-                        <div class="f-c">
-                            <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
-                            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" style="display: block;padding: 4px;margin: 9px 0px 9px 50px;">{{ cm.comment_user }}</a>
+                    {% for cm in comment reversed %}
+                        <div class="f-c" id="com-block-{{ cm.id }}">
+                            {% if cm.comment_user.image_user != "oneProf.png" %}
+                                <img id="image-user" src="/media/data_image/{{ cm.comment_user.path_data}}/tm_{{ cm.comment_user.image_user}}" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+                            {% else %}
+                                <img id="image-user" src="/static/images/oneProf.png" class="imgUs" onclick="userPROFILE('{{ cm.comment_user.id }}')" style="cursor:pointer;" loading="lazy">
+                            {% endif %}
+                            <a onclick="userPROFILE('{{ cm.comment_user.id }}')" id="user-comment">{{ cm.comment_user }}</a>
                             <p id="comment-text">{{ cm.comment_text|linebreaksbr }}</p>
-<!--                            style="padding:4px;"-->
                             {% if cm.comment_image %}
                                 <img id="comment-image" src="/media/data_image/{{cm.comment_user.path_data}}/{{ cm.comment_image }}.png" >
-<!--                                style="max-width:400px;width: auto;height:auto;max-height: 240px;display: block;margin: 0 auto;"-->
                             {% endif %}                            
                             <div id="time-comment">{{ cm.timecomment|date:'d b o в H:i' }}</div>
+                            {% if request.user == cm.comment_user %}
+                                <div class="delete-pm" onclick="delete_com('{{ cm.id }}','{{ request.user }}')"></div>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
-    <!--  <input id="comment_text_{{post.id}}" class="comment_text" maxlength="400" placeholder="Введите Ваше сообщение...">-->
-                <div id="SIMPLE"></div>
+                <div id="SIMPLE" style="display:none;"></div>
                 <div id="message_form_comment">
-                    <div class="compose">
-                        <div id="comment_text_{{post.id}}"
-                             class="message_textarea" 
-                             role="textbox" 
-                             contenteditable="true" 
-                             aria-multiline="true" 
-                             aria-required="true" 
-                             placeholder="Напишите комментарий..." 
-                             contentEditable=true
-                             style="text-align:left;"
-                             ></div>
-                    </div> 
-                    <div id="results"></div>
-                    <button id="add_{{ post.id }}" onclick="send_com(this, '{{ post.id }}')" indicator-ws="false">ОТПРАВИТЬ</button>
-    <!--                <button id="add_{{ post.id }}" onclick="send_com('{{ post.id }}')">ОТПРАВИТЬ</button>-->
+                    <div id="results_{{post.id}}">
+                        <div class="compose_{{post.id}}">
+                            <div id="comment_text_{{post.id}}"
+                                 class="message_textarea" 
+                                 role="textbox" 
+                                 contenteditable="true" 
+                                 aria-multiline="true" 
+                                 aria-required="true" 
+                                 placeholder="Напишите комментарий..." 
+                                 contentEditable=true
+                                 style="text-align:left;"
+                                 post_id="{{post.id}}"
+                                 ></div>
+                             <button id="add_{{ post.id }}" onclick="send_com(this, '{{ post.id }}')" indicator-ws="false">ОТПРАВИТЬ</button>
+                        </div>                     
+                    </div>
                 </div>
             </div>
         {% else %}
         <div class="user-post">
-            <h3 style="color: #ffffff">- ПОДБОРКА АВТОРА -</h3>
-            <div id="pages" align="center" style="display: none;">
-                {% if post_user.has_next %}
-                    <span id="IOPv" style="display: none">{{ post_user.next_page_number }}</span>
-                {% endif %}
-            </div>
-            <ul class="day-block" id="DOD" icon="{{ post.id }}">
-                {% for f in post_user %}
-                    <li class="views-row"  onmouseover="getIndex(this);">
-                        <h3><img onclick="showContent('{{f.id}}')" style="background: url('/media/data_image/{{ f.path_data }}/{{ f.image }}');background-size: cover;width: 220px;height: 150px" atribut="{{f.id}}"></h3>
-                    </li>
-                {% endfor %}
-            </ul>
         </div>
         {% endif %}
     </div>

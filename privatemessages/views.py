@@ -13,31 +13,30 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def send_message_view(request):
-    print ("send_message_view")
     if not request.method == "POST":
-        return HttpResponse("Please use POST.")
+        return HttpResponse("<div id='error_msg'><p>только POST запросы</p></div>")
 
     if not request.user.is_authenticated:
-        return HttpResponse("Please sign in.")
+        return HttpResponse("<div id='error_msg'><p>войдите</p></div>")
 
     data = json.loads(request.body)
     message_text = data['message']
 
     if not message_text:
-        return HttpResponse("No message found.")
+        return HttpResponse("<div id='error_msg'><p>не найдены сообщения</p></div>")
 
     if len(message_text) > 10000:
-        return HttpResponse("The message is too long.")
+        return HttpResponse("<div id='error_msg'><p>сообщение очень длинное</p></div>")
 
     recipient_name = data['recipient_name']
 
     try:
         recipient = User.objects.get(username=recipient_name)
     except User.DoesNotExist:
-        return HttpResponse("No such user.")
+        return HttpResponse("<div id='error_msg'><p>пользователь не найден</p></div>")
 
     if recipient == request.user:
-        return HttpResponse("You cannot send messages to yourself.")
+        return HttpResponse("<div id='error_msg'><p>вы не можете посылать сообщения себе</p></div>")
 
     thread_queryset = Thread.objects.filter(participants=recipient).filter(participants=request.user)
 
@@ -64,26 +63,46 @@ def messages_view(request):
     threads = Thread.objects.filter(
         participants=request.user
     ).order_by("-last_message")
-
-    if not threads:
-        return render(request, 'private_messages.html', {})
-
+    _type = request.GET.get('_type')
     r = redis.StrictRedis()
 
     user_id = str(request.user.id)
     
     for thread in threads:
         thread.partner = thread.participants.exclude(id=request.user.id)[0]
-        thread.total_messages = r.hget(
-             "".join(["private_", str(thread.id), "_messages"]),
-             "total_messages"
-        ).decode("utf-8")
-    print ("messages_view")
-    return render(request, 'private_messages.html',
-                              {
-                                  "threads": threads,
-                                  "user_info":request.user
-                              })
+        try:
+            thread.total_messages = r.hget(
+                 "".join(["private_", str(thread.id), "_messages"]),
+                 "total_messages"
+            ).decode("utf-8")
+        except AttributeError:
+            mes_thr = Message.objects.filter(thread__id=thread.id)
+            if mes_thr.count() > 0:
+                for msg in mes_thr:
+                    for key in ("total_messages", "".join(["from_", str(msg.sender.id)])):
+                        r.hincrby(
+                            "".join(["private_", str(thread.id), "_messages"]),
+                            key,
+                            1
+                        )
+                thread.total_messages = r.hget(
+                     "".join(["private_", str(thread.id), "_messages"]),
+                     "total_messages"
+                ).decode("utf-8")                
+    print (_type)
+    if _type == "javascript":    
+        return render(request, 'private_messages.html',
+                                  {
+                                      "threads": threads,
+                                      "username":request.user
+                                  })
+    else:
+        return render(request, '_private_messages.html',
+                                  {
+                                      "threads": threads,
+                                      "username":request.user
+                                  })
+
 
 
 def chat_view(request, thread_id):
@@ -99,17 +118,17 @@ def chat_view(request, thread_id):
     user_id = str(request.user.id)
 
     r = redis.StrictRedis()
-
+    
     messages_total = r.hget(
          "".join(["private_", str(thread.id), "_messages"]),
          "total_messages"
     )
-
+    
     messages_sent = r.hget(
         "".join(["private_", str(thread.id), "_messages"]),
         "".join(["from_", user_id])
     )
-
+    print ("->>>>>>>>", messages_total, messages_sent)
     if messages_total:
         messages_total = int(messages_total)
     else:
@@ -128,71 +147,33 @@ def chat_view(request, thread_id):
     try:
         posts = paginator.page(page)
         data['op1'] = paginator.page(page).next_page_number()
-        data['all_pages'] = paginator.num_pages
-        print ("TRY OK")
     except PageNotAnInteger:
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-    print ("chat_view", messages_total, messages_sent, posts.has_next, data)
-    return render(request, 'chat.html',
-                              {
-                                  "thread_id": thread_id,
-                                  "thread_messages": posts,
-                                  "messages_total": messages_total,
-                                  "messages_sent": messages_sent,
-                                  "messages_received": messages_received,
-                                  "partner": partner,
-                              })
+        data['op1'] = "STOP"
+    _type = request.GET.get('_type')
+    if _type == "javascript":    
+        return render(request, 'chat.html',
+                                  {
+                                      "thread_id": thread_id,
+                                      "thread_messages": posts,
+                                      "messages_total": messages_total,
+                                      "messages_sent": messages_sent,
+                                      "messages_received": messages_received,
+                                      "partner": partner,
+                                      "username":request.user
+                                  })
 
-
-
-#def chat_view(request, thread_id):
-#    if not request.user.is_authenticated:
-#        return HttpResponse("Please sign in.")
-
-#    thread = get_object_or_404(Thread, id=thread_id, participants__id=request.user.id)
-
-#    messages = thread.message_set.order_by("-datetime")[:100]
-
-#    user_id = str(request.user.id)
-
-#    r = redis.StrictRedis()
-
-#    messages_total = r.hget(
-#         "".join(["private_", str(thread.id), "_messages"]),
-#         "total_messages"
-#    )
-
-#    messages_sent = r.hget(
-#        "".join(["private_", str(thread.id), "_messages"]),
-#        "".join(["from_", user_id])
-#    )
-
-#    if messages_total:
-#        messages_total = int(messages_total)
-#    else:
-#        messages_total = 0
-
-#    if messages_sent:
-#        messages_sent = int(messages_sent)
-#    else:
-#        messages_sent = 0
-
-#    messages_received = messages_total-messages_sent
-
-#    partner = thread.participants.exclude(id=request.user.id)[0]
-
-#    # tz = request.COOKIES.get("timezone")
-#    # if tz:
-#    #     timezone.activate(tz)
-#    print ("chat_view", messages_total, messages_sent)
-#    return render(request, 'chat.html',
-#                              {
-#                                  "thread_id": thread_id,
-#                                  "thread_messages": messages,
-#                                  "messages_total": messages_total,
-#                                  "messages_sent": messages_sent,
-#                                  "messages_received": messages_received,
-#                                  "partner": partner,
-#                              })
+    else:
+        return render(request, '_chat.html',
+                                  {
+                                      "thread_id": thread_id,
+                                      "thread_messages": posts,
+                                      "messages_total": messages_total,
+                                      "messages_sent": messages_sent,
+                                      "messages_received": messages_received,
+                                      "partner": partner,
+                                      "username":request.user
+                                  })
+                                  

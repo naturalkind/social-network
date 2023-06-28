@@ -1,0 +1,46 @@
+{% for message in thread_messages %}
+    <div class="message" onmouseover="getIndex(this);">
+        <div onclick="showContent('{{message.id}}')" class="views-title" style="width: 100%;float: left;">
+            <div class="user-cord" >
+                {% if message.user_post.image_user != "oneProf.png" %}
+                    <img src="/media/data_image/{{message.user_post.path_data}}/tm_{{message.user_post.image_user}}" class="imgUs" style="cursor:pointer;" loading="lazy">
+                {% else %}
+                    <img src="/static/images/oneProf.png" height="400" width="auto" loading="lazy">
+                {% endif %}
+<!--                    onclick="userPROFILE('{{message.user_post.id }}')"-->
+                    <a atribut="{{message.id}}" class="postview">
+                        <span style="font-weight: bolder;" >{{message.user_post.username|truncatechars:15 }}</span>
+                        {% if message.body != "" %}
+                            <span class="arrow"> → </span>
+                            <span class="message-title">{{ message.body|truncatechars:20 }}</span>
+                        {% endif %}
+                    </a>
+            </div>
+            <span class="datetime">{{ message.date_post|date:'H:i' }}</span> <!--{# {{ message.date_post|date:'d b o в H:i' }}#}-->
+        </div>
+        <div class="field-image" atribut="{{message.id}}">
+            {% if message.image != "" %}
+                <img src="/media/data_image/{{message.path_data}}/{{ message.image }}" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy" id="image-post-{{message.id}}">
+            {% else %}
+                <img src="/static/images/no_image.png" height="auto" width="auto" class="wallpost" onclick="showImg(this)" imgb="{{message.image}}" loading="lazy" id="image-post-{{message.id}}">
+            {% endif %}
+        </div>
+        <div id="body-post-wall">
+            <div id="post_like_block_{{message.id}}" style="width: 100%">
+                <img class="icon-like" src="/static/images/mesvF.png" onclick="comView(this)" open-atr="close" id-comment="{{ message.id }}" id="comment_image_id_{{ message.id }}" type-div="icon" indicator-ws="close">
+                {% if request.user in message.likes.all %}
+                    <img class="icon-like" id="post_image_{{message.id}}" src="/static/images/frv1.gif" onclick="LIKE(this, '{{message.id}}')" open-atr="close" type="wall">
+                {% else %}
+                    <img class="icon-like" id="post_image_{{message.id}}" src="/static/images/frv1.png" onclick="LIKE(this, '{{message.id}}')" open-atr="close" type="wall">
+                {% endif %}
+                
+                {% if request.user in message.relike.all %}
+                    <img class="icon-like" src="/static/images/close3.png" onclick="rpPost(this, '{{ message.id }}','{{ username }}')" open-atr="close" type="wall"> 
+                {% else %}
+                    <img class="icon-like" src="/static/images/rpvF.png" onclick="rpPost(this, '{{ message.id }}','{{ username }}')" open-atr="close" type="wall">
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+{% endfor %}

@@ -3,19 +3,31 @@
 При создании, учитывал возможность использовать в проектах с высокой нагрузкой
 
 #### Для запуска нужно:
-* Django 3.2.16 - работа с БД
-* Channels 3.0.1 - websocket
-* Channels-redis 2.4.2 - django channels, которые используют Redis в качестве резервного хранилища
-* Daphne - ASGI сервер протоколов Django
+
+* Django 4.x - работа с БД
+* Channels 4.x - websocket
+* Channels-redis 4.x - django channels, используют Redis в качестве резервного хранилища
+* Daphne 4.x - ASGI сервер протоколов Django
 * Gunicorn - python WSGI HTTP сервер для UNIX
+* PostgreSQL - основное хранилище
+* Redis - дополнительное хранилище
+
 #### Пуск:
 
 установка нужных компонентов   
+
+Redis   
 ```
-python3 -m venv <myenvname>
+sudo add-apt-repository ppa:redislabs/redis
+sudo apt-get update
+sudo apt-get install redis
+
+/etc/init.d/redis-server restart
 ```
 
+Виртуальная среда для работы с Django   
 ```
+python3.9 -m venv <myenvname>
 source <myenvname>/bin/activate
 ```
 
@@ -27,45 +39,23 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+синхронизация с postgresql   
 ```
-pip uninstall channels
-```
-
-```
-pip install channels==3.0.1
-```
-
-запуск
-```
-python3 manage.py migrate --run-syncdb
+./manage.py makemigrations   
+./manage.py migrate auth   
+./manage.py migrate --run-syncdb   
+./manage.py createsuperuser   
 ```
 
+быстрый пуск   
 ```
-gunicorn app.wsgi:application --bind 192.168.1.50:8888 & daphne app.asgi:application --bind 0.0.0.0 --port 8889
-```
-
-генирация пользователей и контента   
-```
-python3 gen_user.py
+python manage.py runserver 192.168.1.50:8888   
+python manage.py runworker nnapp   
+python manage.py index   
 ```
 
-```
-./manage.py shell < gen_content.py
-```
-
-дополнительно   
-```
-redis-cli flushall
-```
-
-```
-sudo rm -R db.sqlite3
-```
-
-
-### Пример работы:
+### Пример работы
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr1.png)
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr2.png)
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr3.png)
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr4.png)
-

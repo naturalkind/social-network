@@ -1,5 +1,8 @@
-media/data_image/
+media/data_image/*
+media/dump_keystroke/*
+log/*
 env
+venv
 *.rdb
 *.sqlite3
 *.pyc
