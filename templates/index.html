@@ -1,21 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div id="pages" align="center" style="display: none;">
-    {% if posts.has_next %}
-        <span id="IOP" style="display: none">{{ posts.next_page_number }}</span>
-    {% endif %}
-    </div>
-{#       <div id="filt"><a id="Oio" style="border: none;float:left;margin:5px;" onclick="filterBEST()"></a></div>#}
-    <ul class="day-block" id="user-content-block" atr="wall-nonregister">
-    {% for post in posts %}
-        <li class="views-row"  onmouseover="getIndex(this);">
-        <div class="field-image" atribut="{{post.id}}">
-        {% if post.image != "" %}
-            <img style="background: url('/media/data_image/{{ post.path_data }}/{{ post.image }}');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')" loading="lazy">
-        {% else %}
-            <img style="background: url('/static/images/no_image.png');width:300;height:230px;background-size: cover;" onclick="showContent('{{post.id}}')" loading="lazy">
-        {% endif %}        
-        </div>
-    {% endfor %}
-    </ul>
+<div class="info"> 
+    <p id="post-text">Социальная сеть с открытым исходным кодом в <a href="https://github.com/naturalkind/social-network/" target="blank">github</a>. Цель проекта - создать открытую платформу, объединив простых пользователей и разработчиков. Статья о проекте в <a href="https://habr.com/ru/articles/728178/" target="blank">хабрахабр</a>. Генерация изображения по описанию.
+    </p>
+    <img src="/static/images/demo_img.png" style="max-height: 662px; max-width: 1200px;display: block;position: relative;margin: 0px auto;" onclick="showImg(this)">
+    <p id="post-text">Для <a onclick="addREG('javascript')">регистрации</a> нужно придумать логин пароль и загрузить изображение для аватара. Простая навигация, возможность генерировать изображение по описанию.</p>
+    <img src="/static/images/demo_10.png" style="height: 7%; max-width: 600px;display: block;position: relative;margin: 0px auto;border-radius: 15px;">
+</div>
 {% endblock %}

@@ -54,63 +54,8 @@ python manage.py runworker nnapp
 python manage.py index   
 ```
 
-gunicorn & daphne, исправить порт в javascript client
-```
-gunicorn app.wsgi:application --bind 192.168.1.50:8888 & daphne app.asgi:application --bind 0.0.0.0 --port 8889   
-```
-### Генирация пользователей и контента  
- 
-простой пример взаимодействия web   
-```
-python3 simple_api_client.py
-```
-
-простой пример генирации данных локально
-```
-./manage.py shell < gen_content.py
-```
-
-### Дополнительно  
- 
-очистить redis   
-```
-docker exec -it redis-stack-server redis-cli
-flushall
-```
-из базы данных в json   
-```
-./manage.py dumpdata > data_dump.json
-```
-работа с postgresql   
-```
-sudo -u postgres psql postgres
-\du+
-\l+
-DROP DATABASE com;
-DROP USER sadko;
-CREATE USER sadko WITH PASSWORD '1qaz';
-ALTER ROLE sadko WITH CREATEDB CREATEROLE SUPERUSER;
-CREATE DATABASE com;
-grant all privileges on database com to sadko;
-\q
-
-\c com - вход в бд   
-\dt -отобразить структуру   
-\d+ myapp_keystroke - структура таблици   
-ALTER TABLE myapp_keystroke ADD COLUMN os_info character varying(1000); добавить таблицу   
-```
-простые команды celery
-```
-python -m celery -A app worker
-celery flower
-celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6379/0
-```
-
 ### Пример работы:
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v1.3/static/skr1.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v1.3/static/skr2.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v1.3/static/skr3.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v1.3/static/skr4.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v1.3/static/presentation.png)
 
 ### Нужно сделать
 - [x] aioredis 2   
@@ -119,7 +64,7 @@ celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6
 - [ ] инструменты для обучения ChatGPT   
 - [ ] подключить natural-motion   
 - [ ] инструменты генирации изображения   
-- [ ] стартовая страница для незарегестрированных пользователей   
+- [x] стартовая страница для незарегестрированных пользователей   
 - [x] исправить работу history state клиентской части   
 - [ ] оптимизация для поисковых ботов   
 - [x] загрузка файлов   
