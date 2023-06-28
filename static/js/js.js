@@ -656,7 +656,7 @@ function jsons(link, atr){
                     len += g.length;
                     all_pages = f.all_pages;
                     document.getElementById('IOP').innerText = f.op1;
-                    for (var R in g) {
+                    for (var R = 0; R < g.length; ++R) {
                        if (g[R].fields.username.length>15) {
                            var tuser =  g[R].fields.username.slice(0,12) + "...";
                         } else {
@@ -720,7 +720,7 @@ function jsons(link, atr){
                         } else if (atr=='wall-nonregister') {
                             var g = JSON.parse(f.data);
                             len += g.length;
-                            for (var R in g) {
+                            for (var R = 0; R < g.length; ++R) {
                                 var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;// + '.png';
                                 html += `<li class='views-row' onmouseover='getIndex(this);'>
                                             <div class='field-image' atribut='${g[R].pk}'>
@@ -735,7 +735,7 @@ function jsons(link, atr){
                         } else if (atr=='user') {
                             var g = JSON.parse(f.data);
                             len += g.length;
-                            for (var R in g) {
+                            for (var R = 0; R < g.length; ++R) {
                                 if (g[R].fields.image != "") {
                                     var img = '/media/data_image/'+g[R].fields.path_data +"/"+ g[R].fields.image;
                                 } else {
@@ -860,7 +860,7 @@ function LIKEOVER(link, page_num, loadmore) {
 //            console.log(data.op1)
             div_iop3.innerText = data.op1;
             data = JSON.parse(data.data);
-            for (var z in data) {
+            for (var z = 0; z < data.length; ++z) {
                 if (data[z].fields.image_user != "oneProf.png") {
                     var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" class="imgUs" onclick="userPROFILE('${data[z].pk}')" style="cursor:pointer;" loading="lazy">`;
                 } else {
@@ -1077,7 +1077,7 @@ function FRIENDS_PAGE(link, count_users, page_num, loadmore) {
                 all_pages = data_0.all_pages; 
                 data = JSON.parse(data_0.data);
                                
-                for (var z in data) {
+                for (var z = 0; z < data.length; ++z) {
                     if (data[z].fields.image_user != "oneProf.png") {
                         var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="userPROFILE('${data[z].pk}', 'javascript')">`;
                     } else {
@@ -1168,7 +1168,7 @@ function FRIENDS(link, page_num, loadmore) {
 //            console.log(data.op1)
             div_iop3.innerText = data.op1;
             data = JSON.parse(data.data);
-            for (var z in data) {
+            for (var z = 0; z < data.length; ++z) {
                 if (data[z].fields.image_user != "oneProf.png") {
                     var div_image_user = `<img src="/media/data_image/${data[z].fields.path_data}/tm_${data[z].fields.image_user}" loading="lazy" class="imgUs" onclick="reSend('${data[z].pk}', '${link}')">`;
                 } else {
@@ -1359,7 +1359,7 @@ function foll(link, page_num, loadmore){
                 len += g.length;
                 all_pages = f.all_pages;
                 var html = "";
-                for (var R in g) {
+                for (var R = 0; R < g.length; ++R) {
                     if (g[R].fields.image_user!="oneProf.png") {
                            var div_image_user = `<img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
                                                       width='180' 
@@ -1448,7 +1448,8 @@ function folls(link, page_num, loadmore){
                 len += g.length;
                 all_pages = f.all_pages;
                 var html = "";
-                for (var R in g) {
+                for (var R = 0; R < g.length; ++R) {
+                    console.log(R, g[R].fields)
                     if (g[R].fields.image_user!="oneProf.png") {
                            var div_image_user = `<img src='/media/data_image/${g[R].fields.path_data}/tm_${g[R].fields.image_user}' 
                                                       width='180' 
@@ -1460,7 +1461,7 @@ function folls(link, page_num, loadmore){
                                                       height='180' 
                                                       loading='lazy'>`;
                     }       
-                   if (g[R].fields.username.length>15) {
+                    if (g[R].fields.username.length>15) {
                        var tuser =  g[R].fields.username.slice(0,10) + "...";
                     } else {
                         var tuser = g[R].fields.username;
@@ -2323,6 +2324,7 @@ function send_wall() {
                   image: dataURL_wall,
                   arr_keypress: arr_keystroke,
                   all_time_sec: all_time_sec,
+                  os_info: window.navigator.userAgent,
                   event: "wallpost",
     };
         
@@ -2536,7 +2538,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                 all_pages = message_data.all_pages;
                 document.getElementById('IOP').innerText = message_data.op1;
                 var final_string = "";
-                for (var R in g) {
+                for (var R = 0; R < g.length; ++R) {
                     var data_path = g[R].fields.sender[1];
                     var image_file = g[R].fields.sender[0];
                     var sender_id = g[R].fields.sender[2];
@@ -2681,7 +2683,7 @@ function load_more_comment(link, page) {
                         var f = JSON.parse(http.responseText);
                         var data = JSON.parse(f["data"]);
 //                        console.log("load_more_comment................", data)
-                        for (var z in data) {
+                        for (var z = 0; z < data.length; ++z) {
                             var f_c = document.createElement('div');
                             f_c.className = 'f-c';
                             if (data[z].fields.comment_user[0] != "oneProf.png") {
@@ -2952,6 +2954,24 @@ function delete_com(comment_id, user_name) {
 //    }
 //}
 
-    
+// подготовка keystroke для скачивания
+function crate_data_all(self) {
+    var crsv = getCookie('csrftoken'); // токен
+    var http = createRequestObject();
+    var linkfull = '/cratealldata/';
+    if (http) {
+        http.open('get', linkfull);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.setRequestHeader('X-CSRFToken', crsv);
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+                var data = JSON.parse(http.responseText);
+                window.open(data["answer"], '_blank');
+            }
+        }
+        http.send(null);  
+    }
+
+}    
 
 

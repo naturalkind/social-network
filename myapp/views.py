@@ -523,8 +523,8 @@ def follows(request, id):
     except PageNotAnInteger:
         data['op2'] = "STOP"
             
-    print (len(users), data) #/paginator.page(page).previous_page_number()
     data['data'] = serializers.serialize('json', users, fields=('username', 'image_user', 'path_data', 'date_joined'))
+    print (".......", len(users), data) #/paginator.page(page).previous_page_number()
     return HttpResponse(json.dumps(data), content_type = "application/json")
 
 from django.template import RequestContext
@@ -860,3 +860,16 @@ def addpost(request):
 # Поиск Redis Search
 from myapp.ormsearch import UserDocument#PostDocument
 document_class = UserDocument
+
+# Скачать данные нажатия клавиш
+
+@login_required
+def cratealldata(request):
+    data = serializers.serialize("json", Keystroke.objects.all())
+    out = open("media/dump_keystroke/keystroke.json", "w")
+    out.write(data)
+    out.close()
+#    return JsonResponse({"answer":f'/media/dump_keystroke/keystroke.json'})
+    return JsonResponse({"answer":data})
+
+

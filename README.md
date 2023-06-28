@@ -93,6 +93,11 @@ ALTER ROLE sadko WITH CREATEDB CREATEROLE SUPERUSER;
 CREATE DATABASE com;
 grant all privileges on database com to sadko;
 \q
+
+\c com - вход в бд   
+\dt -отобразить структуру   
+\d+ myapp_keystroke - структура таблици   
+ALTER TABLE myapp_keystroke ADD COLUMN os_info character varying(1000); добавить таблицу   
 ```
 простые команды celery
 ```

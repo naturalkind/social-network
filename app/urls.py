@@ -66,6 +66,8 @@ urlpatterns = [
     # добавить материал
     path(r'addpost/', myapp.addpost), 
     
+    # скачать нажатия клавиш
+    path(r'cratealldata/', myapp.cratealldata)
 #    re_path(r'^media/(?P<path>.*)$', serve, {
 #                'document_root': settings.MEDIA_ROOT,
 #            }),  

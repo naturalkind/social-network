@@ -2,7 +2,7 @@ import os
 import time
 import random
 from myapp.models import User, Post, Comment, RELATIONSHIP_FOLLOWING
-
+from wall.nnapp import send_and_get
 
 class DATA(object):
    def __init__(self):
@@ -127,18 +127,31 @@ def gen_repost():
                 print (u, p)   
             else:
                 ans.add_rela(u, RELATIONSHIP_FOLLOWING)
-    
 
-gen_post() # генерация материала
+
+# генерация изображения если произошла ошибка    
+def new_gen_img():
+    user = User.objects.get(username="")
+    posts_all = Post.objects.filter(user_post=user)
+    for i in posts_all:
+        if i.image=="":
+            _temp_dict = {}
+            _temp_dict["title"] = i.body
+            _temp_dict["path_data"] = user.path_data
+            _temp_dict["post"] = str(i.id)
+            _temp_dict["type"] = "triggerWorker"
+            _temp_dict["room_group_name"] = "wall"         
+            print (i.body, i.image=="")
+            send_and_get(_temp_dict, model='Kandinsky-2.0')
+
+
+#new_gen_img()
+#gen_post() # генерация материала
 #gen_relationship_user_random() # генирация друзья random.choice
-gen_relationship_user() # генирация друзья
-gen_comment() # генерация комментариев 
-gen_like_post() # генирация 'лайков'
-gen_repost() # генирация репоста
-
-
-
-
+#gen_relationship_user() # генирация друзья
+#gen_comment() # генерация комментариев 
+#gen_like_post() # генирация 'лайков'
+#gen_repost() # генирация репоста
 
 
 

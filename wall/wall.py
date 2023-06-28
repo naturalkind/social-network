@@ -89,13 +89,16 @@ def delete_com(pk):
     t.delete()
     
 @sync_to_async
-def delete_post(pk):
+def delete_post(pk, sender_id):
     post = Post.objects.get(id=pk)
-    # ERROR
-    if post.image != "":
-        os.system(f"rm -rf media/data_image/{post.path_data}/{post.image}")
-    post.delete()
-    _data = {"type": "wallpost", "status":"deletepost", "post_id":pk}
+    if sender_id == post.user_post.id:
+#         ERROR
+        if post.image != "":
+            os.system(f"rm -rf media/data_image/{post.path_data}/{post.image}")
+        post.delete()
+        _data = {"type": "wallpost", "status":"deletepost", "post_id":pk}
+    else:
+        _data = {"type": "wallpost", "status":"deletepost_error", "post_id":pk}
     return _data
 
 
@@ -108,6 +111,7 @@ def add_keystroke(user, json_data):
     post.status = "y"
     post.text = T
     post.user_post_key = user
+    post.os_info = json_data["os_info"]
     post.save()
     
 
@@ -259,7 +263,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
 
             
             if event == "deletepost":
-                _data = await delete_post(response["id"])
+                _data = await delete_post(response["id"], self.sender_id)
 #                await sync_to_async(post.delete)()
 #                _data = {"type": "wallpost", "status":"deletepost", "post_id":response["id"]}
 #                await self.channel_layer.send(self.channel_name, _data) 

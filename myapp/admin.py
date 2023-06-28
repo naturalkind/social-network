@@ -36,11 +36,14 @@ class RelikeAdmin(admin.ModelAdmin):
 class KeystrokeAdmin(admin.ModelAdmin):
     list_display = ('text', 'id', 'user_post_key')
     search_fields = ('text', 'id', 'user_post_key')
-    fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test')
+    fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test', 'os_info')
+#    fields = ('text', 'user_post_key', 'pure_data', 'status', 'text_to_test', 'os_info')
 
 class CustomUserAdmin(UserAdmin):
-    list_display = [field.name for field in User._meta.fields if field.name != "id"]
-       
+#    list_display = [field.name for field in User._meta.fields if field.name != "password"]
+    list_display = ['username', 'is_superuser', 'id', 'last_login', 'image_user', 'path_data']
+    fieldsets = UserAdmin.fieldsets + ((None, {'fields': ('image_user', 'path_data', 'color')}),)
+    
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Post, PostAdmin)   
 admin.site.register(Comment, CommentAdmin)

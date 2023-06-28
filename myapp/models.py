@@ -228,6 +228,7 @@ class Keystroke(models.Model):
     pure_data = JSONField()
     date_post = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     user_post_key = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_post_key', default="", on_delete=models.CASCADE)
+    os_info = models.CharField(max_length=1000, default="", verbose_name='Операционная система')
     
     _STATUS = (
         ('y', 'yes'),
