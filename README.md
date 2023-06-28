@@ -75,5 +75,3 @@ python manage.py index
 - [x] следить за активностью пользователя   
 - [ ] ссылка на страницу пользователя по псевдониму с проверкой   
 
-### Пример работы
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.5/static/presentation.png)
