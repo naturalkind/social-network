@@ -102,10 +102,7 @@ celery flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6
 ```
 
 ### Пример работы:
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr1.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr2.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr3.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr4.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v1.3/static/presentation.png)
 
 ### Нужно сделать
 - [x] aioredis 2   
