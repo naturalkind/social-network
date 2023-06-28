@@ -54,23 +54,8 @@ python manage.py runworker nnapp
 python manage.py index   
 ```
 
-### Пример работы:
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.5/static/presentation.png)
-
-### Нужно сделать
-- [x] aioredis 2   
-- [x] выполнения ресурсоемких задач в очереди   
-- [ ] улучшить страницу пользователя   
-- [ ] инструменты для обучения ChatGPT   
-- [ ] подключить natural-motion   
-- [ ] инструменты генирации изображения   
-- [x] стартовая страница для незарегестрированных пользователей   
-- [x] исправить работу history state клиентской части   
-- [ ] оптимизация для поисковых ботов   
-- [x] загрузка файлов   
-- [ ] CKEditor 5   
-- [ ] полнотекстовый поиск   
-- [x] уведомление личных сообщений   
-- [x] следить за активностью пользователя   
-- [ ] ссылка на страницу пользователя по псевдониму с проверкой   
-
+### Пример работы
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr1.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr2.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr3.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr4.png)
