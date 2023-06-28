@@ -64,8 +64,8 @@ sudo rm -R db.sqlite3
 
 
 ### Пример работы:
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr1.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr2.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr3.png)
-![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.2/media/skr4.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr1.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr2.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr3.png)
+![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.1/media/skr4.png)
 
