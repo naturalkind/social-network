@@ -45,11 +45,13 @@ def send_message_view(request):
     else:
         thread = Thread.objects.create()
         thread.participants.add(request.user, recipient)
-
+        
+    partner = thread.participants.exclude(id=request.user.id)[0]
     send_message(
                     thread.id,
                     request.user.id,
                     message_text,
+                    partner.id,
                     request.user.username
                 )
     return HttpResponseRedirect(
