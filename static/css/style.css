@@ -1011,6 +1011,21 @@ img#QR {
 /* javascript color picker end */
 
 @media only screen and (min-width : 200px){
+    div#notification {
+        display: block;
+        position: absolute;
+        top: 215px;
+        left: 100px;
+        width: auto;
+        color: #ffffff;
+        font-size: 48px;
+        padding: 0px 28px;
+        border-radius: 200px;
+        text-align: center;
+        background: #a85790;
+        cursor: pointer;
+        font-weight: bold;
+    }
     .delete-pm{
         /* Remove default */
         -webkit-appearance: none;
@@ -1801,6 +1816,22 @@ img#QR {
     min-width: 600px;
 }
 @media screen and (min-width: 1200px)  {
+    div#notification {
+        display: block;
+        position: absolute;
+        top: 76px;
+        /* right: -36px; */
+        left: 34px;
+        width: auto;
+        color: #ffffff;
+        font-size: 18px;
+        padding: 0px 10px;
+        border-radius: 112px;
+        text-align: center;
+        background: #a85790;
+        cursor: pointer;
+        font-weight: bold;
+    }
     .delete-pm{
         /* Remove default */
         -webkit-appearance: none;

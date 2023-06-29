@@ -2204,7 +2204,8 @@ function activate_wall(user_name) {
                 if (comps.getAttribute("open-atr")=="close") {
                     comps.click();
                 }
-                
+                console.log(message_data);
+                document.getElementById("notification").style.display = "block";
                 //document.getElementById("mespr").src = "/static/images/mesv4_active.png";
                 
             } else if (message_data["status"]=="autocomplete") {
@@ -2407,6 +2408,7 @@ function privatMES(_type){
                     _page = "privatmes";
                 }
                 autocomplete(document.getElementById("recipient_name"));
+                document.getElementById("notification").style.display = "none";
             }
         };
         http.send(null);

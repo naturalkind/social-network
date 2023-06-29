@@ -118,8 +118,9 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                 pp = await get_partner(self.room_name, self.sender_id)
                 await self.channel_layer.send(UserChannels.get(pp.id).dict()["channels"],
                                                 {
-                                                    "type":"wallpost",
-                                                    "status" : "notification"
+                                                    "type" : "wallpost",
+                                                    "status" : "notification",
+                                                    "sender_id" : self.sender_id
                                                 }
                                              )      
             except Exception as e: 
