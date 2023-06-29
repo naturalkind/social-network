@@ -2016,7 +2016,7 @@ function activate_wall(user_name) {
                     var ttext = "<span class='arrow'> → </span><span class='message-title'>" + message_data.text+ "</span>";
                 }
                 if (message_data.image_user != "oneProf.png"){
-                    var div_image_user = `<img src="/media/data_image/${message_data.path_data}/${message_data.image_user}" width="30" height="30">`
+                    var div_image_user = `<img src="/media/data_image/${message_data.path_data}/tm_${message_data.image_user}" width="30" height="30">`
                 } else {
                     var div_image_user = `<img src="/static/images/oneProf.png" width="30" height="30">`
                 }
