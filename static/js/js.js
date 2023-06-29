@@ -2204,7 +2204,7 @@ function activate_wall(user_name) {
                 if (comps.getAttribute("open-atr")=="close") {
                     comps.click();
                 }
-                console.log(message_data);
+                console.log(message_data["sender_id"]);
                 document.getElementById("notification").style.display = "block";
                 //document.getElementById("mespr").src = "/static/images/mesv4_active.png";
                 

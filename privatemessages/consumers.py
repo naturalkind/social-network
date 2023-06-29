@@ -120,7 +120,8 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                                                 {
                                                     "type" : "wallpost",
                                                     "status" : "notification",
-                                                    "sender_id" : self.sender_id
+                                                    "sender_id" : self.sender_id,
+                                                    "thread_id" : self.room_name
                                                 }
                                              )      
             except Exception as e: 
