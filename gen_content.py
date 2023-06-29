@@ -143,9 +143,18 @@ def new_gen_img():
             _temp_dict["room_group_name"] = "wall"         
             print (i.body, i.image=="")
             send_and_get(_temp_dict, model='Kandinsky-2.0')
+        else:
+            os.system(f"rm -rf media/data_image/{user.path_data}/{i.image}")
+            _temp_dict = {}
+            _temp_dict["title"] = i.body
+            _temp_dict["path_data"] = user.path_data
+            _temp_dict["post"] = str(i.id)
+            _temp_dict["type"] = "triggerWorker"
+            _temp_dict["room_group_name"] = "wall" 
+            send_and_get(_temp_dict, model='Kandinsky-2.0')  
 
 
-#new_gen_img()
+new_gen_img()
 #gen_post() # генерация материала
 #gen_relationship_user_random() # генирация друзья random.choice
 #gen_relationship_user() # генирация друзья
