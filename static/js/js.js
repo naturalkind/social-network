@@ -11,6 +11,7 @@ var yOffset;
 var temp_position;
 var isLoading = false;
 var all_pages;
+var arr_notification = [];
 window.onload = function(){
     try {    
         topbt = document.getElementById('topbt');
@@ -2199,14 +2200,30 @@ function activate_wall(user_name) {
             
             } else if (message_data["status"]=="notification") {
                 //alert("Пришло сообщение");
-                beep();
-                let comps = document.getElementById("comps");
-                if (comps.getAttribute("open-atr")=="close") {
-                    comps.click();
-                }
-                console.log(message_data["sender_id"]);
-                document.getElementById("notification").style.display = "block";
-                //document.getElementById("mespr").src = "/static/images/mesv4_active.png";
+                console.log(message_data, history.state);
+//                if (history.state.view != "mesID" && history.state.id != message_data["thread_id"]) {
+                if (history.state.view == "privatmes") {
+                    let pos_element = document.getElementById("pm-block-"+message_data["thread_id"])
+                    const div_notification = document.createElement("div");
+                    div_notification.id = "notification-"+message_data["thread_id"];
+                    div_notification.className = "notification";
+                    div_notification.style.display = "block";
+                    div_notification.innerText = "!";
+                    pos_element.appendChild(div_notification); 
+                    arr_notification.push(message_data["thread_id"]);
+                    document.getElementById("notification-nav").style.display = "block";               
+                } else if (history.state.view != "mesID" && history.state.id != message_data["thread_id"]) {
+                    beep();
+                    let comps = document.getElementById("comps");
+                    if (comps.getAttribute("open-atr")=="close") {
+                        comps.click();
+                    }
+                    arr_notification.push(message_data["thread_id"]);
+                    document.getElementById("notification-nav").style.display = "block";
+                    //document.getElementById("mespr").src = "/static/images/mesv4_active.png";
+                } 
+
+                    
                 
             } else if (message_data["status"]=="autocomplete") {
                 countries = message_data["answer_autocomplete"];
@@ -2408,7 +2425,22 @@ function privatMES(_type){
                     _page = "privatmes";
                 }
                 autocomplete(document.getElementById("recipient_name"));
-                document.getElementById("notification").style.display = "none";
+                let arr_notification_length = arr_notification.length;
+                if (arr_notification_length == 0) {
+                    document.getElementById("notification-nav").style.display = "none";
+                } else {
+                    for (var i = 0; i < arr_notification_length; i++) {
+                        console.log(arr_notification[i], history.state);
+                        let pos_element = document.getElementById("pm-block-"+arr_notification[i])
+                        const div_notification = document.createElement("div");
+                        div_notification.id = "notification-"+arr_notification[i];
+                        div_notification.className = "notification";
+                        div_notification.style.display = "block";
+                        div_notification.innerText = "!";
+                        pos_element.appendChild(div_notification);
+    //                    <div id="notification" style="display: block;">!</div>
+                    }
+                }
             }
         };
         http.send(null);
@@ -2473,6 +2505,11 @@ function mesID(thread_id, user_name, number_of_messages, _type){
                                        "number_of_messages":number_of_messages }, null, linkfull);
                     _page = "chat";                
                 }
+                let index_notification  = arr_notification.indexOf(thread_id);
+                arr_notification.splice(index_notification, 1);
+                if (arr_notification.length == 0) {
+                    document.getElementById("notification-nav").style.display = "none";
+                } 
             }
         };
         http.send(null);

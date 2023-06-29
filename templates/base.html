@@ -17,7 +17,7 @@
             <a onclick="addPost()" id="addPost"></a>
             <a onclick="users()" id="userA"></a>
             <img src="/static/images/mesv4.png" onclick="privatMES()" id="mespr">
-            <div id="notification" onclick="privatMES()" style="display:none;">!</div>
+            <div id="notification-nav" class="notification" onclick="privatMES()" style="display:none;">!</div>
             {% if request.user.image_user !=  "oneProf.png" %}
                 <img onclick="userPROFILE('{{ username.id }}')" src="/media/data_image/{{ username.path_data }}/tm_{{ username.image_user }}" class="usPr" client-id-user="{{ username.id }}" />
             {% else %}
