@@ -1,5 +1,5 @@
 var IP_ADDR = window.location.hostname;
-var PORT = "8888";
+var PORT = "7777";
 var _page;
 var innode;
 var len;
@@ -2204,7 +2204,8 @@ function activate_wall(user_name) {
                 if (comps.getAttribute("open-atr")=="close") {
                     comps.click();
                 }
-                document.getElementById("mespr").src = "/static/images/mesv4_active.png";
+                
+                //document.getElementById("mespr").src = "/static/images/mesv4_active.png";
                 
             } else if (message_data["status"]=="autocomplete") {
                 countries = message_data["answer_autocomplete"];
