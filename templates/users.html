@@ -23,7 +23,8 @@
                 <div class="user-name">
                     <a atribut="{{x.id}}" id="user-link">{{ x.username|truncatechars:10 }}</a>
                 </div>
-                {% if x.id|onlinedetect %}
+                {# {% if x.id|onlinedetect %} #}            
+                {% if x|onlinedetect %}
                     <div class="numberCircle_users" style="background:#37b73c;"></div>
                 {% else %}
                     <div class="numberCircle_users"  style="background:#c3c3c3;"></div>

@@ -2200,7 +2200,7 @@ function activate_wall(user_name) {
             
             } else if (message_data["status"]=="notification") {
                 //alert("Пришло сообщение");
-                console.log(message_data, history.state);
+                console.log(message_data, history.state, arr_notification.indexOf(message_data["thread_id"]));
 //                if (history.state.view != "mesID" && history.state.id != message_data["thread_id"]) {
                 if (history.state.view == "privatmes") {
                     let pos_element = document.getElementById("pm-block-"+message_data["thread_id"])
@@ -2210,7 +2210,9 @@ function activate_wall(user_name) {
                     div_notification.style.display = "block";
                     div_notification.innerText = "!";
                     pos_element.appendChild(div_notification); 
-                    arr_notification.push(message_data["thread_id"]);
+                    if (arr_notification.indexOf(message_data["thread_id"]) == -1) {
+                        arr_notification.push(message_data["thread_id"]);
+                    }
                     document.getElementById("notification-nav").style.display = "block";               
                 } else if (history.state.view != "mesID" && history.state.id != message_data["thread_id"]) {
                     beep();
@@ -2218,7 +2220,9 @@ function activate_wall(user_name) {
                     if (comps.getAttribute("open-atr")=="close") {
                         comps.click();
                     }
-                    arr_notification.push(message_data["thread_id"]);
+                    if (arr_notification.indexOf(message_data["thread_id"]) == -1) {
+                        arr_notification.push(message_data["thread_id"]);
+                    }
                     document.getElementById("notification-nav").style.display = "block";
                     //document.getElementById("mespr").src = "/static/images/mesv4_active.png";
                 } 
@@ -2526,99 +2530,101 @@ function activate_chat(thread_id, user_name, number_of_messages) {
     function start_chat_ws() {
         var ws_chat = new WebSocket("ws://"+ IP_ADDR +":"+PORT+"/" + thread_id + "/");
         ws_chat.onmessage = function(event) {
-            var received = document.getElementById('received').innerText;
-            var sent = document.getElementById('sent').innerText;
-            var tev = document.getElementById('conver');
-            var message_data = JSON.parse(event.data);
-            console.log("...............", document.getElementById("chat_id").innerText, message_data["thread_id"]);
-//            console.log(document.getElementById("chat_id").innerText, message_data["thread_id"])
-            if (document.getElementById("chat_id").innerText != message_data["thread_id"]) {
-                return false;
-            }
+            if (history.state.view == 'mesID') {
+                var received = document.getElementById('received').innerText;
+                var sent = document.getElementById('sent').innerText;
+                var tev = document.getElementById('conver');
+                var message_data = JSON.parse(event.data);
+                console.log("...............", document.getElementById("chat_id").innerText, message_data["thread_id"], message_data, message_data["event"]);
+    //            console.log(document.getElementById("chat_id").innerText, message_data["thread_id"])
+                if (document.getElementById("chat_id").innerText != message_data["thread_id"]) {
+                    return false;
+                }
             
-            if (message_data["event"] == "privatemessages") {
-                var date = new Date(message_data.timestamp*1000);
-                if (message_data.image_user != "oneProf.png") {
-                    var div_image_user = `<img src="/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"
-                                             class="usPr" 
-                                             onclick="userPROFILE('${message_data.sender_id}')">`;
-                } else {
-                    var div_image_user = `<img src="/static/images/oneProf.png"
-                                             class="usPr" 
-                                             onclick="userPROFILE('${message_data.sender_id}')">`;
-                }
-                tev.innerHTML += `<div class="message">
-                                    <p class="author ${((message_data.sender == user_name) ? 'we' : 'partner')}">
-                                    ${div_image_user}
-                                    </p>
-                                    <p class="txtmessage ${((message_data.sender == user_name) ? 'we' : 'partner')}">
-                                        ${message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}
-                                        <span class="datetime" style="font-size: 15px;color: #afafaf;">${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}
-                                        </span>
-                                    </p>
-                                  </div>`;
-
-                number_of_messages++;
-                if (message_data.sender == user_name) {
-                    sent++;
-                } else {
-                    received++;
-                }
-                var tev1 = document.getElementById('messages_'+thread_id);
-                if (tev1){
-                tev1.innerHTML = '<span id="total">' + number_of_messages + '</span> ' + getNumEnding(number_of_messages, ["сообщение", "сообщения", "сообщений"]) + ' (<span id="received">' + received + '</span> получено, <span id="sent">' + sent + '</span> отправлено)';
-                }
-                var tempNewVal = parseInt(document.getElementById("wscroll").scrollHeight) + 100;
-                document.getElementById("wscroll").height = tempNewVal;
-                window.scrollBy(0, document.getElementById("conver").getBoundingClientRect()["height"]);
-                
-            } else if (message_data["event"]=="loadmore") {
-                var request_user_id = message_data["request_user_id"];
-                var g = JSON.parse(message_data.data);
-                all_pages = message_data.all_pages;
-                document.getElementById('IOP').innerText = message_data.op1;
-                var final_string = "";
-                for (var R = 0; R < g.length; ++R) {
-                    var data_path = g[R].fields.sender[1];
-                    var image_file = g[R].fields.sender[0];
-                    var sender_id = g[R].fields.sender[2];
-                    var sender_name = g[R].fields.sender[3];
-                    var temp_string = document.createElement('div');
-                    temp_string.className = "message";
-                    if (image_file != "oneProf.png") {
-                        var div_image_user = `<img src="/media/data_image/${data_path}/tm_${image_file}"
+                if (message_data["event"] == "privatemessages") {
+                    var date = new Date(message_data.timestamp*1000);
+                    if (message_data.image_user != "oneProf.png") {
+                        var div_image_user = `<img src="/media/data_image/${message_data.path_data}/tm_${message_data.image_user}"
                                                  class="usPr" 
-                                                 onclick="userPROFILE('${sender_id}')"
-                                                 style="float:none;">`;
+                                                 onclick="userPROFILE('${message_data.sender_id}')">`;
                     } else {
                         var div_image_user = `<img src="/static/images/oneProf.png"
                                                  class="usPr" 
-                                                 onclick="userPROFILE('${sender_id}')"
-                                                 style="float:none;">`;
+                                                 onclick="userPROFILE('${message_data.sender_id}')">`;
                     }
-//                        {% if message.resend != "False" %}
-//                            <a onclick="showContent({{message.text}})">СМОТРЕТЬ→</a>
-//                        {% else %}
-//                            {{ message.text|linebreaksbr }}
-//                        {% endif %}                    
-  
-                    if (g[R].fields.resend != "False") {
-                        var field_text = `<a onclick="showContent('${g[R].fields.text}')">СМОТРЕТЬ→</a>`;
+                    tev.innerHTML += `<div class="message">
+                                        <p class="author ${((message_data.sender == user_name) ? 'we' : 'partner')}">
+                                        ${div_image_user}
+                                        </p>
+                                        <p class="txtmessage ${((message_data.sender == user_name) ? 'we' : 'partner')}">
+                                            ${message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}
+                                            <span class="datetime" style="font-size: 15px;color: #afafaf;">${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}
+                                            </span>
+                                        </p>
+                                      </div>`;
+
+                    number_of_messages++;
+                    if (message_data.sender == user_name) {
+                        sent++;
                     } else {
-                        var field_text = g[R].fields.text;
+                        received++;
                     }
+                    var tev1 = document.getElementById('messages_'+thread_id);
+                    if (tev1){
+                    tev1.innerHTML = '<span id="total">' + number_of_messages + '</span> ' + getNumEnding(number_of_messages, ["сообщение", "сообщения", "сообщений"]) + ' (<span id="received">' + received + '</span> получено, <span id="sent">' + sent + '</span> отправлено)';
+                    }
+                    var tempNewVal = parseInt(document.getElementById("wscroll").scrollHeight) + 100;
+                    document.getElementById("wscroll").height = tempNewVal;
+                    window.scrollBy(0, document.getElementById("conver").getBoundingClientRect()["height"]);
                     
-                    if (request_user_id == sender_id) {
-                        temp_string.innerHTML += '<p class="author we">'+ div_image_user +'<p class="txtmessage we">'+ field_text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
-                    } else { 
-                        temp_string.innerHTML += '<p class="author partner">'+ div_image_user +'<p class="txtmessage partner">'+ field_text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
+                } else if (message_data["event"]=="loadmore") {
+                    var request_user_id = message_data["request_user_id"];
+                    var g = JSON.parse(message_data.data);
+                    all_pages = message_data.all_pages;
+                    document.getElementById('IOP').innerText = message_data.op1;
+                    var final_string = "";
+                    for (var R = 0; R < g.length; ++R) {
+                        var data_path = g[R].fields.sender[1];
+                        var image_file = g[R].fields.sender[0];
+                        var sender_id = g[R].fields.sender[2];
+                        var sender_name = g[R].fields.sender[3];
+                        var temp_string = document.createElement('div');
+                        temp_string.className = "message";
+                        if (image_file != "oneProf.png") {
+                            var div_image_user = `<img src="/media/data_image/${data_path}/tm_${image_file}"
+                                                     class="usPr" 
+                                                     onclick="userPROFILE('${sender_id}')"
+                                                     style="float:none;">`;
+                        } else {
+                            var div_image_user = `<img src="/static/images/oneProf.png"
+                                                     class="usPr" 
+                                                     onclick="userPROFILE('${sender_id}')"
+                                                     style="float:none;">`;
+                        }
+    //                        {% if message.resend != "False" %}
+    //                            <a onclick="showContent({{message.text}})">СМОТРЕТЬ→</a>
+    //                        {% else %}
+    //                            {{ message.text|linebreaksbr }}
+    //                        {% endif %}                    
+      
+                        if (g[R].fields.resend != "False") {
+                            var field_text = `<a onclick="showContent('${g[R].fields.text}')">СМОТРЕТЬ→</a>`;
+                        } else {
+                            var field_text = g[R].fields.text;
+                        }
+                        
+                        if (request_user_id == sender_id) {
+                            temp_string.innerHTML += '<p class="author we">'+ div_image_user +'<p class="txtmessage we">'+ field_text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
+                        } else { 
+                            temp_string.innerHTML += '<p class="author partner">'+ div_image_user +'<p class="txtmessage partner">'+ field_text +'<span class="datetime" style="font-size: 15px;color: #afafaf;">'+g[R].fields.datetime +'</span></p></p>';
+                        }
+                        document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild);
                     }
-                    document.getElementById("conver").insertBefore(temp_string, document.getElementById("conver").firstChild);
+                    document.getElementById("dot-loader").style.display = "none";  
+                    isLoading = false; 
+                    
+                //----------------------------------->                
                 }
-                document.getElementById("dot-loader").style.display = "none";  
-                isLoading = false; 
-                
-            //----------------------------------->                
             }
             ws_chat.onclose = function(){
                 // переподключение через 5 секунд

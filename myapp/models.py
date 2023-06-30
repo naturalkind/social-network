@@ -7,7 +7,8 @@ from django.db.models.signals import post_save
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db.models import JSONField
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.core.cache import cache 
 import base64
 import re
 import uuid, os
@@ -47,13 +48,28 @@ class User(AbstractUser):
 #    def add_online_value():
         
     
-    @property    
-    def online(self): #
-        try:
-            online = UserChannels.get(self.id).dict()["online"]
-        except Exception as e: 
-            online = False
-        return online
+#    @property    
+#    def online(self): #
+#        try:
+#            online = UserChannels.get(self.id).dict()["online"]
+#        except Exception as e: 
+#            online = False
+#        return online
+
+    def last_seen(self):
+        return cache.get('seen_%s' % self.id)
+
+    @property 
+    def online(self):
+        if self.last_seen():
+            now = datetime.now()
+            if now > self.last_seen() + timedelta(seconds=settings.USER_ONLINE_TIMEOUT):
+                return False
+            else:
+                return True
+        else:
+            return False 
+
         
     def __str__(self) -> str:
         return self.username

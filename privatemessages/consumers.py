@@ -1,6 +1,7 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from myapp.models import User, UserChannels
+#from myapp.models import User, UserChannels
+from django.core.cache import cache
 from privatemessages.models import Thread, Message
 from importlib import import_module
 from privatemessages.utils import send_message
@@ -116,7 +117,9 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
             await self.channel_layer.group_send(self.room_group_name, _data)
             try:
                 pp = await get_partner(self.room_name, self.sender_id)
-                await self.channel_layer.send(UserChannels.get(pp.id).dict()["channels"],
+#                print ("......", pp.id, cache.get('channel_%s' % pp.id))
+#                await self.channel_layer.send(UserChannels.get(pp.id).dict()["channels"],
+                await self.channel_layer.send(cache.get('channel_%s' % pp.id),
                                                 {
                                                     "type" : "wallpost",
                                                     "status" : "notification",

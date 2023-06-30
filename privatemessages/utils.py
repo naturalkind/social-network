@@ -5,7 +5,7 @@ import redis
 import json
 
 from privatemessages.models import Message
-from myapp.models import UserChannels
+from django.core.cache import cache
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -35,21 +35,11 @@ def send_message(thread_id,
     r = redis.StrictRedis()
 
     print ("send_message", sender_name)
-#    channel_layer.send(UserChannels.get(partner).dict()["channels"],
-#                                                {
-#                                                    "type" : "wallpost",
-#                                                    "status" : "notification",
-#                                                    "sender_id" : sender_id,
-#                                                    "thread_id" : thread_id
-#                                                }
-#                                             )  
-    async_to_sync(channel_layer.send)(UserChannels.get(partner).dict()["channels"],{ "type" : "wallpost",
-                                                                                     "status" : "notification",
-                                                                                     "sender_id" : sender_id,
-                                                                                     "thread_id" : thread_id
-                                                                                    })
-                                             
-                                                     
+    print ("CHANNEL_LAYER.SEND--------->", cache.get('channel_%s' % partner))
+    async_to_sync(channel_layer.send)(cache.get('channel_%s' % partner),{"type" : "wallpost",
+                                                                         "status" : "notification",
+                                                                         "sender_id" : sender_id,
+                                                                         "thread_id" : thread_id })
     for key in ("total_messages", "".join(["from_", sender_id])):
         r.hincrby(
             "".join(["private_", thread_id, "_messages"]),

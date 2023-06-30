@@ -96,6 +96,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'myapp.middleware.ActiveUserMiddleware'
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -170,6 +171,12 @@ CACHES = {
     }
 }
 
+# Number of seconds of inactivity before a user is marked offline
+USER_ONLINE_TIMEOUT = 60#300
+
+# Number of seconds that we will keep track of inactive users for before 
+# their last seen is removed from the cache
+USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
 
 # Celery
 CELERY_BROKER_URL = "redis://localhost:6379/4"

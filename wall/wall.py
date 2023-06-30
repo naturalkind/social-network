@@ -3,6 +3,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from myapp.models import User, Post, Comment, UserChannels, JsonModel, Keystroke
 from privatemessages.models import Thread, Message
 from importlib import import_module
+from django.core.cache import cache
 
 from django.conf import settings
 from django.utils import dateformat
@@ -125,11 +126,12 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             self.image_user = self.scope['user'].image_user
             self.path_data = self.scope['user'].path_data
             self.namefile = str()
-            
-        P = UserChannels(channels=self.channel_name, online=True)
-        P.pk = str(self.sender_id)
-        P_async = sync_to_async(P.save)
-        await P_async()  
+        print ("CACHES----->", cache.get('seen_%s' % self.sender_id))  
+        cache.set('channel_%s' % (self.sender_id), self.channel_name)  
+#        P = UserChannels(channels=self.channel_name, online=True)
+#        P.pk = str(self.sender_id)
+#        P_async = sync_to_async(P.save)
+#        await P_async()  
         print ("CHANNEL_LAYERS", self.channel_name, self.room_group_name, self.scope['user'])
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -145,11 +147,11 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
         
-        P = UserChannels(channels=self.channel_name, online=False)
-        P.pk = str(self.sender_id)
-        P_async = sync_to_async(P.save)
-        await P_async()
-    
+#        P = UserChannels(channels=self.channel_name, online=False)
+#        P.pk = str(self.sender_id)
+#        P_async = sync_to_async(P.save)
+#        await P_async()
+#    
     async def receive(self, text_data):
         """
         Receive message from WebSocket.
