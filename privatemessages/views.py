@@ -6,11 +6,11 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
-from myapp.models import User
+from myapp.models import User, UserChannels
 from privatemessages.models import Thread, Message
 from privatemessages.utils import send_message
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+from django.core.cache import cache
 
 def send_message_view(request):
     if not request.method == "POST":
@@ -49,7 +49,7 @@ def send_message_view(request):
     partner = thread.participants.exclude(id=request.user.id)[0]
     send_message(
                     thread.id,
-                    request.user.id,
+                    request.user,
                     message_text,
                     partner.id,
                     request.user.username
@@ -90,19 +90,24 @@ def messages_view(request):
                 thread.total_messages = r.hget(
                      "".join(["private_", str(thread.id), "_messages"]),
                      "total_messages"
-                ).decode("utf-8")                
-    print (_type)
+                ).decode("utf-8")  
+                
+    all_notification = r.hgetall('%s_notifications' % user_id)  
+    all_notification = {i.decode():all_notification[i].decode() for i in  all_notification}          
+#    print (_type, all_notification)
     if _type == "javascript":    
         return render(request, 'private_messages.html',
                                   {
                                       "threads": threads,
-                                      "username":request.user
+                                      "username":request.user,
+                                      "all_notification":all_notification
                                   })
     else:
         return render(request, '_private_messages.html',
                                   {
                                       "threads": threads,
-                                      "username":request.user
+                                      "username":request.user,
+                                      "all_notification":all_notification
                                   })
 
 
@@ -130,7 +135,15 @@ def chat_view(request, thread_id):
         "".join(["private_", str(thread.id), "_messages"]),
         "".join(["from_", user_id])
     )
-    print ("->>>>>>>>", messages_total, messages_sent)
+#    if cache.get('message_%s' % (request.user.id))==thread_id:
+#        cache.delete('message_%s' % (request.user.id)) 
+    
+    r.hdel('%s_notifications' % user_id, thread_id.encode())
+    all_notification = r.hgetall('%s_notifications' % user_id)
+#    P = UserChannels.get(str(user_id))
+#    P.notification = len(all_notification)
+#    P.save()
+    print ("->>>>>>>>", messages_total, messages_sent, len(all_notification))
     if messages_total:
         messages_total = int(messages_total)
     else:
@@ -140,7 +153,7 @@ def chat_view(request, thread_id):
         messages_sent = int(messages_sent)
     else:
         messages_sent = 0
-
+    
     messages_received = messages_total-messages_sent
 
     partner = thread.participants.exclude(id=request.user.id)[0]

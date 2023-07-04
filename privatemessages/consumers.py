@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-#from myapp.models import User, UserChannels
+from myapp.models import User, UserChannels
 from django.core.cache import cache
 from privatemessages.models import Thread, Message
 from importlib import import_module
@@ -17,7 +17,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import asyncio
 import aioredis
 import async_timeout
-
+from redis import StrictRedis
 import redis
 import time
 
@@ -53,6 +53,26 @@ def get_partner(room_name, sender_id):
     thread = get_object_or_404(Thread, id=room_name, participants__id=sender_id)
     partner = thread.participants.exclude(id=sender_id)[0]
     return partner
+
+
+# Function to add new notifications for user
+def add_notification(user_id, notification_id, data):
+    r = StrictRedis(host='localhost', port=6379)
+    r.hset('%s_notifications' % user_id, notification_id, json.dumps(data))
+
+# Function to set the notification as read, your Frontend looks at the "read" key in 
+# Notification's data to determine how to show the notification
+def set_notification_as_read(user_id, notification_id):
+    r = StrictRedis(host='localhost', port=6379)
+    data = json.loads(r.hget('%s_notifications' % user_id, notification_id))
+    data['read'] = True
+    add_notification(user_id, notification_id, data)
+
+# Gets all notifications for a user, you can sort them based on a key like "date" in Frontend
+def get_notifications(user_id):
+    r = StrictRedis(host='localhost', port=6379, decode_responses=True)
+    return r.hgetall('%s_notifications' % user_id)
+
     
 class MessagesHandler(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -115,10 +135,22 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                             1
                         ) 
             await self.channel_layer.group_send(self.room_group_name, _data)
+            pp = await get_partner(self.room_name, self.sender_id)
             try:
-                pp = await get_partner(self.room_name, self.sender_id)
+                
+#                if UserChannels.get(str(pp.id)):
+#                    P = UserChannels.get(str(pp.id))
+#                    P.notification += 1
+#                    P_async = sync_to_async(P.save)
+#                    await P_async()
+
 #                print ("......", pp.id, cache.get('channel_%s' % pp.id))
 #                await self.channel_layer.send(UserChannels.get(pp.id).dict()["channels"],
+#                cache.set('message_%s' % (pp.id), self.room_name)
+
+                # работает уведомление
+                add_notification(pp.id, self.room_name, {"read":False})
+                
                 await self.channel_layer.send(cache.get('channel_%s' % pp.id),
                                                 {
                                                     "type" : "wallpost",

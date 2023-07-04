@@ -13,11 +13,12 @@ import base64
 import re
 import uuid, os
 
-from redis_om import HashModel, JsonModel
+from redis_om import HashModel, JsonModel, Field
 
 class UserChannels(JsonModel):
     channels: str
     online: bool
+    notification: int = 0
     class Meta:
         global_key_prefix = "redis_channels"  
         model_key_prefix = "user"
@@ -44,9 +45,6 @@ class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
     
-#    @staticmethod
-#    def add_online_value():
-        
     
 #    @property    
 #    def online(self): #

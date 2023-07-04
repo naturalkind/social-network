@@ -19,3 +19,8 @@ def rupluralize(value, arg):
         return args[1]
     else:
         return args[2]
+        
+        
+@register.filter
+def get_value(dictionary, key):
+    return dictionary.get(str(key))

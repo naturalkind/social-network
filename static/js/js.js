@@ -12,6 +12,7 @@ var temp_position;
 var isLoading = false;
 var all_pages;
 var arr_notification = [];
+var arr_notification_length;
 window.onload = function(){
     try {    
         topbt = document.getElementById('topbt');
@@ -29,7 +30,27 @@ window.addEventListener('load', (event) => {
 })
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("load......")
+    console.log("load......");
+    
+    // уведомления клиенткая часть
+    let arr_temp_notification = JSON.parse(localStorage.getItem("notification"));
+    if (arr_temp_notification) {
+        arr_notification = arr_temp_notification
+    }
+    if (arr_notification.length>0){
+        document.getElementById("notification-nav").style.display = "block";
+    } else {
+        document.getElementById("notification-nav").style.display = "none";
+    }    
+    
+    // уведомление серверная
+    arr_notification_length = getCookie('notifications');
+    if (arr_notification_length>0){
+        document.getElementById("notification-nav").style.display = "block";
+    } else {
+        document.getElementById("notification-nav").style.display = "none";
+    }
+    
     // история навигации
     history.pushState({"view": "wallpost", "link": "/" }, null, "/");
     _page = "wallpost";      
@@ -2199,10 +2220,36 @@ function activate_wall(user_name) {
             
             
             } else if (message_data["status"]=="notification") {
-                //alert("Пришло сообщение");
-                console.log(message_data, history.state, arr_notification.indexOf(message_data["thread_id"]));
+                console.log(message_data, history.state);
 //                if (history.state.view != "mesID" && history.state.id != message_data["thread_id"]) {
                 if (history.state.view == "privatmes") {
+                // работает
+//                    const div_notification = document.getElementById("notification-"+message_data["thread_id"]);
+//                    console.log(div_notification);
+//                    if (div_notification) {
+//                        div_notification.style.display = "block";
+//                    } else {
+//                        const p_message_chat = document.createElement("div");
+//                        p_message_chat.id = "pm-block-"+message_data["thread_id"];
+//                        p_message_chat.className = "pm-block";
+//                        
+//                        if (message_data["image_user"] == "oneProf.png") {
+//                            var img_prof = `<img src="/static/images/oneProf.png" class="usPr" style="float:none;border: 2px solid #a9a9a9;">`
+//                        } else {
+//                            var img_prof = `<img src="/media/data_image/${message_data["path_data"]}/tm_${message_data["image_user"]}" class="usPr" style="float:none;border: 2px solid #a9a9a9;">`
+//                        }                      
+//                        p_message_chat.innerHTML = `<div class="pm" onclick="mesID('${message_data["thread_id"]}','${message_data["sender"]}','1')">
+//                                                        ${img_prof}
+//                                                        <div class="pmu">${message_data["sender"]} (1 сообщение)</div>
+//                                                    </div>    
+//                                                        
+//                                                    <div class="delete-pm" onclick="delete_pm('${message_data["thread_id"]}','${message_data["sender"]}')"></div>
+//                                                    <div id="notification-${message_data["thread_id"]}" class="notification" style="display: block;">!</div>`    
+//                        const div_partners = document.getElementsByClassName("partners")[0].insertBefore(p_message_chat, document.getElementsByClassName("partners")[0].firstChild);                   
+//                    }
+                    
+                    
+                    // для клиентской части
                     let pos_element = document.getElementById("pm-block-"+message_data["thread_id"])
                     const div_notification = document.createElement("div");
                     div_notification.id = "notification-"+message_data["thread_id"];
@@ -2212,22 +2259,24 @@ function activate_wall(user_name) {
                     pos_element.appendChild(div_notification); 
                     if (arr_notification.indexOf(message_data["thread_id"]) == -1) {
                         arr_notification.push(message_data["thread_id"]);
+                        localStorage.setItem("notification", JSON.stringify(arr_notification));
                     }
                     document.getElementById("notification-nav").style.display = "block";               
-                } else if (history.state.view != "mesID" && history.state.id != message_data["thread_id"]) {
+                } else if (history.state.id != message_data["thread_id"]) {
                     beep();
                     let comps = document.getElementById("comps");
                     if (comps.getAttribute("open-atr")=="close") {
                         comps.click();
                     }
+                    document.getElementById("notification-nav").style.display = "block";
+                    
+                    // для клиентской части
                     if (arr_notification.indexOf(message_data["thread_id"]) == -1) {
                         arr_notification.push(message_data["thread_id"]);
+                        localStorage.setItem("notification", JSON.stringify(arr_notification));
                     }
-                    document.getElementById("notification-nav").style.display = "block";
-                    //document.getElementById("mespr").src = "/static/images/mesv4_active.png";
-                } 
-
                     
+                } 
                 
             } else if (message_data["status"]=="autocomplete") {
                 countries = message_data["answer_autocomplete"];
@@ -2429,6 +2478,17 @@ function privatMES(_type){
                     _page = "privatmes";
                 }
                 autocomplete(document.getElementById("recipient_name"));
+                
+                // уведомление
+//                arr_notification_length = getCookie('notifications');
+//                if (arr_notification_length>0){
+//                    console.log(document.getElementById("notification-nav"))
+//                    document.getElementById("notification-nav").style.display = "block";
+//                } else {
+//                    document.getElementById("notification-nav").style.display = "none";
+//                }
+                // уведомление клинтская часть
+                
                 let arr_notification_length = arr_notification.length;
                 if (arr_notification_length == 0) {
                     document.getElementById("notification-nav").style.display = "none";
@@ -2442,9 +2502,9 @@ function privatMES(_type){
                         div_notification.style.display = "block";
                         div_notification.innerText = "!";
                         pos_element.appendChild(div_notification);
-    //                    <div id="notification" style="display: block;">!</div>
                     }
                 }
+                
             }
         };
         http.send(null);
@@ -2509,11 +2569,28 @@ function mesID(thread_id, user_name, number_of_messages, _type){
                                        "number_of_messages":number_of_messages }, null, linkfull);
                     _page = "chat";                
                 }
+                // уведомление серверная часть
+//                arr_notification_length = getCookie('notifications');
+//                if (arr_notification_length>0){
+//                    console.log(document.getElementById("notification-nav"))
+//                    document.getElementById("notification-nav").style.display = "block";
+//                } else {
+//                    document.getElementById("notification-nav").style.display = "none";
+//                }
+                
+                // уведомления клинтская часть
+                
                 let index_notification  = arr_notification.indexOf(thread_id);
-                arr_notification.splice(index_notification, 1);
-                if (arr_notification.length == 0) {
-                    document.getElementById("notification-nav").style.display = "none";
-                } 
+                console.log(thread_id, index_notification, arr_notification);
+                if (index_notification != -1) {
+                    arr_notification.splice(index_notification, 1);
+                    localStorage.setItem("notification", JSON.stringify(arr_notification));
+                    if (arr_notification.length == 0) {
+                        document.getElementById("notification-nav").style.display = "none";
+                    } 
+                }
+                
+                
             }
         };
         http.send(null);

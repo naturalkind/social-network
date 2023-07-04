@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from myapp.models import User, Post, Comment, UserChannels, JsonModel, Keystroke
+from myapp.models import User, Post, Comment, JsonModel, Keystroke
 from privatemessages.models import Thread, Message
 from importlib import import_module
 from django.core.cache import cache
@@ -74,15 +74,20 @@ def search_query_redis(prefix):
                 results = User.objects.filter(username=prefix)
                 results = [json.dumps({"pk": str(i.pk), "path_data": i.path_data, "username": i.username, "image_user": i.image_user}) for i in results]
                 return results  
+ 
+from redis import StrictRedis
             
 @sync_to_async
-def delete_pm(pk):
+def delete_pm(pk, sender_id):
+    r = StrictRedis()
     t = Thread.objects.get(id=pk)
-    pm = Message.objects.filter(thread=pk).all().delete()
-#    t.entry_set.clear()
+    pm = Message.objects.filter(thread=pk).all()
+    partner = t.participants.exclude(id=sender_id)[0]
+    r.hdel('%s_notifications' % sender_id, pk.encode())
+    r.hdel('%s_notifications' % partner.id, pk.encode())
+    pm.delete()
     t.delete()
-#    print (t, pm)
-    #return
+##    t.entry_set.clear()   
 
 @sync_to_async
 def delete_com(pk):
@@ -126,12 +131,10 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             self.image_user = self.scope['user'].image_user
             self.path_data = self.scope['user'].path_data
             self.namefile = str()
-        print ("CACHES----->", cache.get('seen_%s' % self.sender_id))  
-        cache.set('channel_%s' % (self.sender_id), self.channel_name)  
-#        P = UserChannels(channels=self.channel_name, online=True)
-#        P.pk = str(self.sender_id)
-#        P_async = sync_to_async(P.save)
-#        await P_async()  
+        print ("CACHES----->", cache.get('seen_%s' % self.sender_id)) 
+        cache.set('channel_%s' % (self.sender_id), self.channel_name) 
+        
+         
         print ("CHANNEL_LAYERS", self.channel_name, self.room_group_name, self.scope['user'])
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -146,12 +149,6 @@ class WallHandler(AsyncJsonWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        
-#        P = UserChannels(channels=self.channel_name, online=False)
-#        P.pk = str(self.sender_id)
-#        P_async = sync_to_async(P.save)
-#        await P_async()
-#    
     async def receive(self, text_data):
         """
         Receive message from WebSocket.
@@ -293,7 +290,7 @@ class WallHandler(AsyncJsonWebsocketConsumer):
                                              ) 
             if event == "delete_pm":
                 if response["data"]["request_user"] == str(self.sender_name):
-                    answer_delete = await delete_pm(response["data"]["thread_id"])
+                    answer_delete = await delete_pm(response["data"]["thread_id"], self.sender_id)
                     await self.channel_layer.send(self.channel_name,
                                                     {
                                                         "type":"wallpost",
