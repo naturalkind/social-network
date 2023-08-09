@@ -1023,9 +1023,13 @@ div.notification {
 /* javascript color picker end */
 
 
-
 @media only screen and (min-width : 200px){
 
+    .nav-info-img {
+        max-height: 150px;
+        border-radius: 15px;
+    
+    }
     .private_messages .notification {
         top: 0px;
         left: 190px;
@@ -1829,7 +1833,10 @@ div.notification {
     min-width: 600px;
 }
 @media screen and (min-width: 1200px)  {
-
+    .nav-info-img {
+        max-height: 100px;
+        border-radius: 15px;
+    }
     .private_messages .notification {
         top: 0px;
         left: 260px;

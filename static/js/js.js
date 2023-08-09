@@ -1,5 +1,5 @@
 var IP_ADDR = window.location.hostname;
-var PORT = "7777";
+var PORT = "8888";
 var _page;
 var innode;
 var len;
@@ -34,23 +34,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // уведомления клиенткая часть
     let arr_temp_notification = JSON.parse(localStorage.getItem("notification"));
-    if (arr_temp_notification) {
-        arr_notification = arr_temp_notification
+    let notification_nav = document.getElementById("notification-nav");
+    if (notification_nav != null) {
+        if (arr_temp_notification) {
+            arr_notification = arr_temp_notification
+        }
+        if (arr_notification.length>0){
+            notification_nav.style.display = "block";
+        } else {
+            notification_nav.style.display = "none";
+        }    
+        
+        // уведомление серверная
+        arr_notification_length = getCookie('notifications');
+        if (arr_notification_length>0){
+            notification_nav.style.display = "block";
+        } else {
+            notification_nav.style.display = "none";
+        }
     }
-    if (arr_notification.length>0){
-        document.getElementById("notification-nav").style.display = "block";
-    } else {
-        document.getElementById("notification-nav").style.display = "none";
-    }    
-    
-    // уведомление серверная
-    arr_notification_length = getCookie('notifications');
-    if (arr_notification_length>0){
-        document.getElementById("notification-nav").style.display = "block";
-    } else {
-        document.getElementById("notification-nav").style.display = "none";
-    }
-    
     // история навигации
     history.pushState({"view": "wallpost", "link": "/" }, null, "/");
     _page = "wallpost";      

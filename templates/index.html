@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="info"> 
-    <p id="post-text">Социальная сеть с открытым исходным кодом в <a href="https://github.com/naturalkind/social-network/" target="blank">github</a>. Цель проекта - создать открытую платформу, объединив простых пользователей и разработчиков. Статья о проекте в <a href="https://habr.com/ru/articles/728178/" target="blank">хабрахабр</a>. Генерация изображения по описанию. Простая навигация. 
-    </p>
+    <p id="post-text">Для <a onclick="addREG('javascript')">регистрации</a> нужно придумать логин пароль, загрузить изображение для аватара.</p>
     <img src="/static/images/demo_img.png" style="max-height: 662px; max-width: 1200px;display: block;position: relative;margin: 0px auto;" onclick="showImg(this)">
-    <p id="post-text">Для <a onclick="addREG('javascript')">регистрации</a> нужно придумать логин пароль и загрузить изображение для аватара.</p>
-    <img src="/static/images/demo_10.png" style="height: 7%; max-width: 600px;display: block;position: relative;margin: 0px auto;border-radius: 15px;">
+    <p id="post-text">Проект с открытым исходным <a class="github-link" href="https://github.com/naturalkind/social-network/" target="blank">кодом</a>. Цель - объединить пользователей и разработчиков, для запуска самоподдерживающего эволюционного процесса. 
+    </p>
+    
+    
+<!--    <p id="post-text">Социальная сеть с открытым исходным кодом в <a href="https://github.com/naturalkind/social-network/" target="blank">github</a>. Цель проекта - создать открытую платформу, объединив простых пользователей и разработчиков. Статья о проекте в <a href="https://habr.com/ru/articles/728178/" target="blank">хабрахабр</a>. Генерация изображения по описанию. Простая навигация. -->
+<!--    </p>-->
+<!--    <img src="/static/images/demo_10.png" class="nav-info-img" style="display: block; position: relative;max-width: 600px;margin: 0px auto;">-->
 </div>
 {% endblock %}
