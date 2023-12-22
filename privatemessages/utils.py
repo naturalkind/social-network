@@ -40,12 +40,15 @@ def send_message(thread_id,
 
     print (f"send_message from {sender_name} CHANNEL_LAYER.SEND--------->", cache.get('channel_%s' % partner))
 #    cache.set('message_%s' % (partner), cache.get('channel_%s' % partner))
-    # работает уведомление
-    P = UserChannels.get(str(partner))
-    P.notification += 1
-    P.save()
+    try:
+        # работает уведомление
+        P = UserChannels.get(str(partner))
+        P.notification += 1
+        P.save()
+    except Exception as e: 
+        print ("Ошибка UserChannels", e)
+        
     add_notification(partner, thread_id, {"read":False})
-
     try:
         async_to_sync(channel_layer.send)(cache.get('channel_%s' % partner),{"type" : "wallpost",
                                                                              "status" : "notification",
