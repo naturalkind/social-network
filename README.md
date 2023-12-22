@@ -55,6 +55,12 @@ python manage.py runworker nnapp
 python manage.py index   
 ```
 
+взаимодействие   
+```
+python manage.py shell < gen_content.py   #см. файл   
+python simple_api_client.py   
+```
+
 ### Пример работы:
 ![Иллюстрация к проекту](https://github.com/evilsadko/social-network/blob/v0.5/static/presentation.png)
 
@@ -70,7 +76,7 @@ python manage.py index
 - [ ] оптимизация для поисковых ботов   
 - [x] загрузка файлов   
 - [ ] CKEditor 5   
-- [ ] полнотекстовый поиск   
+- [x] полнотекстовый поиск   
 - [x] уведомление личных сообщений   
 - [x] следить за активностью пользователя   
 - [ ] ссылка на страницу пользователя по псевдониму с проверкой   

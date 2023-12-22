@@ -1,6 +1,7 @@
 import os
 import time
 import random
+import argparse
 from myapp.models import User, Post, Comment, RELATIONSHIP_FOLLOWING
 from wall.nnapp import send_and_get
 
@@ -23,7 +24,7 @@ class DATA(object):
 
 images = DATA()
 images.parseIMG("/media/sadko/1b32d2c7-3fcf-4c94-ad20-4fb130a7a7d4/FILE_APP/IMAGE")
-print (len(images.file))
+print (f"Loading data from folder len: {len(images.file)}")
 
 
 def cop(x, y):
@@ -153,14 +154,14 @@ def new_gen_img():
             _temp_dict["room_group_name"] = "wall" 
             send_and_get(_temp_dict, model='Kandinsky-2.0')  
 
-
-new_gen_img()
-#gen_post() # генерация материала
-#gen_relationship_user_random() # генирация друзья random.choice
-#gen_relationship_user() # генирация друзья
-#gen_comment() # генерация комментариев 
-#gen_like_post() # генирация 'лайков'
-#gen_repost() # генирация репоста
+if __name__ == '__main__':
+    #new_gen_img() # генерация изображения если произошла ошибка 
+    #gen_post() # генерация материала
+    #gen_relationship_user_random() # генирация друзья random.choice
+    #gen_relationship_user() # генирация друзья
+    #gen_comment() # генерация комментариев 
+    #gen_like_post() # генирация 'лайков'
+    #gen_repost() # генирация репоста
 
 
 
