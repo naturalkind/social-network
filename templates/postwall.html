@@ -19,7 +19,7 @@
                     {% endif %}
 <!--                        onclick="userPROFILE('{{message.user_post.id }}')"-->
                         <a atribut="{{message.id}}" class="postview">
-                            <span style="font-weight: bolder;" >{{message.user_post.username|truncatechars:15 }}</span>
+                            <span style="font-weight: bolder;" >{{message.user_post.username|truncatechars:10 }}</span>
                             {% if message.body != "" %}
                                 <span class="arrow"> → </span>
                                 <span class="message-title">{{ message.body|truncatechars:20 }}</span>
