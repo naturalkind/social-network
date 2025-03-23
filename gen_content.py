@@ -352,8 +352,8 @@ def delete_generated_users():
     print(f"Удалено пользователей: {deleted_count}")
     print("Все связанные данные и медиа-файлы удалены")
 
-gen_users()
-delete_generated_users()
+gen_users(count=len(images.file))
+#delete_generated_users()
 #if __name__ == '__main__':
     #gen_users()
     #delete_generated_users()

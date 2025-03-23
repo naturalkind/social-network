@@ -17,26 +17,16 @@
 
 установка нужных компонентов   
 
-Redis   
+RedisSearch   
 ```
-sudo add-apt-repository ppa:redislabs/redis
-sudo apt-get update
-sudo apt-get install redis
-
-/etc/init.d/redis-server restart
+docker run -p 6379:6379 redis/redis-stack-server:latest
 ```
 
-Виртуальная среда для работы с Django   
+виртуальная среда для работы с Django   
 ```
 python3.9 -m venv <myenvname>
 source <myenvname>/bin/activate
-```
-
-```
 pip install --upgrade pip
-```
-
-```
 pip install -r requirements.txt
 ```
 
@@ -50,15 +40,14 @@ pip install -r requirements.txt
 
 быстрый пуск   
 ```
-python manage.py runserver 192.168.1.50:8888   
-python manage.py runworker nnapp   
-python manage.py index   
+./run_.sh
 ```
 
 взаимодействие   
 ```
 python manage.py shell < gen_content.py   #см. файл   
 python simple_api_client.py   
+python manage.py index   # индексация базы данных для поиска   
 ```
 
 ### Пример работы:
