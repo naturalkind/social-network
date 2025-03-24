@@ -112,22 +112,27 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
         message_res = response.get("message", None)
         
         if event == "privatemessages":
-            pm_image = f""
-            if response['pm_image'] != "":
-                nameFile = str(uuid.uuid4())[:12]
-                imgstr = re.search(r'base64,(.*)', response['pm_image']).group(1)
-                img_file = open(f"media/data_image/{self.path_data}/{nameFile}.png", 'wb')
-                img_file.write(base64.b64decode(imgstr))
-                img_file.close()
-                pm_image = f"{self.path_data}/{nameFile}.png"
-            else:
-                nameFile = ""
-        
             message = Message()
             message.text = message_res
             message.thread_id = self.room_name
-            message.sender_id = self.sender_id
-            message.pm_image = nameFile
+            message.sender_id = self.sender_id        
+        
+        
+            pm_image = "pm_image"
+            if pm_image in response:
+                if response[pm_image] != "":
+                    nameFile = str(uuid.uuid4())[:12]
+                    imgstr = re.search(r'base64,(.*)', response['pm_image']).group(1)
+                    img_file = open(f"media/data_image/{self.path_data}/{nameFile}.png", 'wb')
+                    img_file.write(base64.b64decode(imgstr))
+                    img_file.close()
+                    pm_image = f"{self.path_data}/{nameFile}.png"
+                    message.pm_image = nameFile
+                else:
+                    message.pm_image = nameFile = ""
+        
+
+            
             message_async = sync_to_async(message.save)
             await message_async()
             _data = {

@@ -2632,7 +2632,7 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                                                  onclick="userPROFILE('${message_data.sender_id}')">`;
                     }
                     let pm_image = "";
-                    if (message_data.pm_image != "") {
+                    if (message_data.pm_image != "pm_image") {
                         pm_image = `<img id="comment-image" 
                              src="/media/data_image/${message_data.pm_image}" 
                              onclick="showImg(this)" style="width: 90px;border-radius: 15px;">`;
