@@ -16,6 +16,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     datetime = models.DateTimeField(auto_now_add=True, db_index=True)
+    pm_image = models.TextField(max_length=200, default="", verbose_name='Название картинки', blank=True)
 
 def update_last_message_datetime(sender, instance, created, **kwargs):
     """

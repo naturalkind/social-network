@@ -2631,11 +2631,24 @@ function activate_chat(thread_id, user_name, number_of_messages) {
                                                  class="usPr" 
                                                  onclick="userPROFILE('${message_data.sender_id}')">`;
                     }
+                    let pm_image = "";
+                    if (message_data.pm_image != "") {
+                        pm_image = `<img id="comment-image" 
+                             src="/media/data_image/${message_data.pm_image}" 
+                             onclick="showImg(this)" style="width: 90px;border-radius: 15px;">`;
+                    
+                    } else {
+                        pm_image = "";                
+                    }                    
+                    
+                    
+                    
                     tev.innerHTML += `<div class="message">
                                         <p class="author ${((message_data.sender == user_name) ? 'we' : 'partner')}">
                                         ${div_image_user}
                                         </p>
                                         <p class="txtmessage ${((message_data.sender == user_name) ? 'we' : 'partner')}">
+                                            ${pm_image}
                                             ${message_data.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br />')}
                                             <span class="datetime" style="font-size: 15px;color: #afafaf;">${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}
                                             </span>
@@ -2724,7 +2737,12 @@ function activate_chat(thread_id, user_name, number_of_messages) {
     
 }
 
+
+// отправить личные сообщения
 function send_message(self, link) {
+    if (typeof dataURL_v1 == 'undefined') {
+        dataURL_v1 = "";
+    }
     var textarea = document.getElementById('message_textarea');
     if (textarea.innerText == "") {
         return false;
@@ -2739,9 +2757,16 @@ function send_message(self, link) {
     if (ws_dict[link].readyState != WebSocket.OPEN) {
         return false;
     }
-    ws_dict[link].send(JSON.stringify({"event":"privatemessages", "message":textarea.innerText}));
+    ws_dict[link].send(JSON.stringify({"event":"privatemessages", "message":textarea.innerText, "pm_image": dataURL_v1}));
 
     textarea.innerText = "";
+    
+    if (typeof context !== 'undefined') {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        dataURL_v1 = "";
+        canvas.width = 0;
+        canvas.height = 0;
+    }     
 }
 
 

@@ -28,11 +28,16 @@
                         <img src="/static/images/oneProf.png" class="usPr" onclick="userPROFILE('{{ message.sender.id }}')" style="float:none;">
                     {% endif %}
                     <p class="txtmessage we">
+                        {% if message.pm_image != "" %}
+                            <img id="comment-image" src="/media/data_image/{{user.path_data}}/{{message.pm_image}}.png" onclick="showImg(this)" style="width: 90px;border-radius: 15px;">
+                        {% endif %}                      
+                    
                         {% if message.resend != "False" %}
                             <a onclick="showContent('{{message.text}}')">СМОТРЕТЬ→</a>
                         {% else %}
                             {{ message.text|linebreaksbr }}
                         {% endif %}
+                        
                         <span class="datetime" style="color: #afafaf;">{{ message.datetime|date:"d.m H:i" }}</span>
                     </p>
                 </p>
@@ -45,8 +50,11 @@
                     {% endif %}                
 <!--                    <img src="/media/data_image/{{ partner.path_data }}/tm_{{ partner.image_user }}" class="usPr" onclick="userPROFILE('{{ partner.id }}')" style="float:none;">-->
 
-
                     <p class="txtmessage partner">
+                        {% if message.pm_image != "" %}
+                            <img id="comment-image" src="/media/data_image/{{partner.path_data}}/{{message.pm_image}}.png" onclick="showImg(this)" style="width: 90px;border-radius: 15px;">
+                        {% endif %}  
+                    
                         {% if message.resend != "False" %}
                             <a onclick="showContent('{{message.text}}')">СМОТРЕТЬ→</a>
                         {% else %}
@@ -65,7 +73,7 @@
     <div id="SIMPLE"></div>
     </div>
 </div>
-    <form id="message_form">
+    <form id="message_form" style="background-color: rgba(255, 255, 255, 0.8);">
         <div class="compose">
             <div id="message_textarea" 
                  role="textbox" 
@@ -75,6 +83,13 @@
                  placeholder="Введите ваше сообщение..." 
                  contentEditable=true></div>
         </div>
+        
+        
+                <input id="id_image_{{ id }}" name="image" type="file" onchange="OnOn('{{ id }}')" style="overflow: hidden;z-index: -1;opacity: 0;display: none;">
+        <label for="id_image_{{ id }}" id="id_image_user_lb" style="width: auto;">ЗАГРУЗКА КАРТИКИ</label>
+        <div id="cn"><canvas id="canvas_{{ id }}" width="0" height="0" style="max-width: 410px;"></canvas></div>
+        
+        
         <button id="btn" type="button" onclick="send_message(this, '{{ thread_id }}');">ОТПРАВИТЬ</button>
 <!--        <div class="send">-->
 <!--        </div>-->

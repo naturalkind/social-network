@@ -36,18 +36,18 @@ pip install -r requirements.txt
 ./manage.py migrate auth   
 ./manage.py migrate --run-syncdb   
 ./manage.py createsuperuser   
+python manage.py index   # индексация базы данных для поиска   
 ```
 
 быстрый пуск   
 ```
-./run_.sh
+./run.sh
 ```
 
 взаимодействие   
 ```
 python manage.py shell < gen_content.py   #см. файл   
 python simple_api_client.py   
-python manage.py index   # индексация базы данных для поиска   
 ```
 
 ### Пример работы:

@@ -20,6 +20,8 @@ import async_timeout
 from redis import StrictRedis
 import redis
 import time
+import uuid
+import base64, io, os, re
 
 session_engine = import_module(settings.SESSION_ENGINE)
 
@@ -110,13 +112,24 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
         message_res = response.get("message", None)
         
         if event == "privatemessages":
+            pm_image = f""
+            if response['pm_image'] != "":
+                nameFile = str(uuid.uuid4())[:12]
+                imgstr = re.search(r'base64,(.*)', response['pm_image']).group(1)
+                img_file = open(f"media/data_image/{self.path_data}/{nameFile}.png", 'wb')
+                img_file.write(base64.b64decode(imgstr))
+                img_file.close()
+                pm_image = f"{self.path_data}/{nameFile}.png"
+            else:
+                nameFile = ""
+        
             message = Message()
             message.text = message_res
             message.thread_id = self.room_name
             message.sender_id = self.sender_id
+            message.pm_image = nameFile
             message_async = sync_to_async(message.save)
             await message_async()
-            
             _data = {
                        "type": "send_message",
                        "timestamp": dateformat.format(message.datetime, 'U'),
@@ -125,6 +138,7 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                        "image_user" : self.image_user, 
                        "path_data" : self.path_data,
                        "text": str(message_res),
+                       "pm_image": pm_image,
                        "thread_id" : self.room_name,
                        "event": "privatemessages"
                     }
@@ -136,6 +150,8 @@ class MessagesHandler(AsyncJsonWebsocketConsumer):
                         ) 
             await self.channel_layer.group_send(self.room_group_name, _data)
             pp = await get_partner(self.room_name, self.sender_id)
+            
+            # Ошибка возникает если пользователь создан автоматически
             try:
                 
 #                if UserChannels.get(str(pp.id)):

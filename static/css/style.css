@@ -1293,7 +1293,7 @@ div.notification {
     #SIMPLE {
         display: block;
         position: relative;
-        height: 190px;
+        height: 260px;
         width: 200px;
         float: left;
     }
@@ -2132,7 +2132,7 @@ div.notification {
     #SIMPLE {
         display: block;
         position: relative;
-        height: 130px;
+        height: 200px;
         width: 200px;
         float: left;
     }               
