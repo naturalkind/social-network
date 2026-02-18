@@ -19,15 +19,32 @@
 
 RedisSearch   
 ```
-docker run -p 6379:6379 redis/redis-stack-server:latest
+sudo systemctl disable redis redis-server
+docker run -d --name redis-stack --restart unless-stopped -p 6379:6379 redis/redis-stack-server:latest
 ```
 
 виртуальная среда для работы с Django   
 ```
-python3.9 -m venv <myenvname>
+Python3.11 -m venv <myenvname>
 source <myenvname>/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
+```
+
+установка PostgreSQL
+```
+sudo apt install postgresql postgresql-contrib
+sudo systemctl status postgresql
+sudo systemctl enable postgresql
+```
+
+создание БД PostgreSQL
+```
+sudo -u postgres psql
+CREATE USER sadko WITH PASSWORD '1qaz';
+CREATE DATABASE com OWNER sadko;
+ALTER USER sadko CREATEDB;
+\q
 ```
 
 синхронизация с postgresql   
@@ -73,4 +90,5 @@ python simple_api_client.py
 - [ ] шифрование данных   
 - [ ] хранение переписки на устройствах пользователя   
 - [ ] мультичат с настройками   
+- [x] отправка личных сообщения с изображениями   
 
