@@ -1,3 +1,4 @@
+import redis
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -10,10 +11,13 @@ import re
 import os
 import uuid
 from PIL import Image
+from privatemessages.models import Thread, Message
+from privatemessages.utils import send_message as utils_send_message
 from myapp.models import User, Post, Comment, Relationship, Relike, Keystroke
 from .serializers import (
     UserSerializer, PostSerializer, CommentSerializer,
-    RelationshipSerializer, RelikeSerializer, KeystrokeSerializer
+    RelationshipSerializer, RelikeSerializer, KeystrokeSerializer,
+    ThreadSerializer, MessageSerializer
 )
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -190,6 +194,86 @@ class UserLikedPostsView(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         return Post.objects.filter(likes__id=user_id).order_by('-date_post')
+
+
+class ThreadViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet для работы с чатами текущего пользователя.
+    """
+    serializer_class = ThreadSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Только чаты, где участвует текущий пользователь
+        return Thread.objects.filter(participants=self.request.user).order_by('-last_message')
+
+    def retrieve(self, request, *args, **kwargs):
+        """Переопределяем retrieve, чтобы добавить счётчики сообщений из Redis."""
+        thread = self.get_object()
+        serializer = self.get_serializer(thread)
+
+        # Получаем данные из Redis
+        r = redis.StrictRedis()
+        user_id = str(request.user.id)
+        thread_id = str(thread.id)
+        messages_total = r.hget(f"private_{thread_id}_messages", "total_messages")
+        messages_sent = r.hget(f"private_{thread_id}_messages", f"from_{user_id}")
+
+        total = int(messages_total) if messages_total else 0
+        sent = int(messages_sent) if messages_sent else 0
+        received = total - sent
+
+        data = serializer.data
+        data.update({
+            'messages_total': total,
+            'messages_sent': sent,
+            'messages_received': received,
+        })
+        return Response(data)
+
+    @action(detail=True, methods=['get'])
+    def messages(self, request, pk=None):
+        """
+        Возвращает список сообщений в чате (с пагинацией).
+        """
+        thread = self.get_object()
+        messages_qs = thread.message_set.order_by('-datetime')
+        page = self.paginate_queryset(messages_qs)
+        if page is not None:
+            serializer = MessageSerializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(serializer.data)
+        serializer = MessageSerializer(messages_qs, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def send_message(self, request, pk=None):
+        """
+        Отправляет сообщение в указанный чат.
+        Ожидает JSON: {"message": "текст сообщения"}
+        """
+        thread = self.get_object()
+        message_text = request.data.get('message')
+        if not message_text:
+            return Response({'error': 'Message text required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Определяем собеседника (для уведомлений)
+        partner = thread.participants.exclude(id=request.user.id).first()
+        if not partner:
+            return Response({'error': 'No partner in thread'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            utils_send_message(
+                thread_id=thread.id,
+                sender=request.user,
+                message_text=message_text,
+                partner=partner.id,
+                sender_name=request.user.username,
+                resend="False"   # можно расширить, если нужно пересылать посты
+            )
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({'status': 'message sent'}, status=status.HTTP_201_CREATED)
 
 
 # Вьюха для поиска пользователей (Redis Search) – пример

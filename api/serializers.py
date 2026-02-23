@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from myapp.models import User, Post, Comment, Relationship, Relike, Keystroke
+from privatemessages.models import Thread, Message
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from datetime import datetime, timedelta
@@ -85,3 +86,33 @@ class KeystrokeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Keystroke
         fields = '__all__'
+
+class ThreadSerializer(serializers.ModelSerializer):
+    partner = serializers.SerializerMethodField()
+    last_message_time = serializers.DateTimeField(source='last_message')
+    total_messages = serializers.IntegerField(read_only=True)  # будет заполнено из Redis в view
+
+    class Meta:
+        model = Thread
+        fields = ('id', 'participants', 'partner', 'last_message_time', 'total_messages')
+        read_only_fields = ('id', 'last_message_time')
+
+    def get_partner(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            partner = obj.participants.exclude(id=request.user.id).first()
+            if partner:
+                # используем уже существующий UserSerializer
+                from .serializers import UserSerializer
+                return UserSerializer(partner, context=self.context).data
+        return None
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    sender = UserSerializer(read_only=True)
+    thread = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Message
+        fields = '__all__'
+        read_only_fields = ('id', 'datetime')
