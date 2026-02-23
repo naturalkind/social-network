@@ -28,7 +28,8 @@ from django.conf.urls.static import static, serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', myapp.main_page),
-
+    path('api/', include('api.urls')),  # новые API
+    
     # пользовательский материал
     #re_path(r'^data/(?P<post>\d+)/$', myapp.post), # страница материала
     path(r'data/<str:post>/', myapp.post), 
