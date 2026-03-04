@@ -45,20 +45,24 @@ class PostSerializer(serializers.ModelSerializer):
             return f"/media/data_image/{obj.path_data}/{obj.image}"
         return None
 
-
 class CommentSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True, source='comment_user')
-    post = serializers.PrimaryKeyRelatedField(read_only=True, source='post_id')
+    post = serializers.PrimaryKeyRelatedField(
+        queryset=Post.objects.all(),
+        write_only=True,
+        source='post_id'  # связываем с полем модели post_id
+    )
     image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
-        fields = '__all__'
-        read_only_fields = ('id', 'timecomment')
+        fields = ('id', 'author', 'post', 'comment_text', 'comment_image', 'timecomment', 'image_url')
+        read_only_fields = ('id', 'timecomment', 'author')
 
     def get_image_url(self, obj):
-        if obj.comment_image:
-            return f"/media/data_image/{obj.comment_image}"  # путь нужно уточнить
+        if obj.comment_image and obj.comment_user:
+            # Формируем путь как в оригинале: /media/data_image/{{user.path_data}}/{{comment_image}}.png
+            return f"/media/data_image/{obj.comment_user.path_data}/{obj.comment_image}.png"
         return None
 
 

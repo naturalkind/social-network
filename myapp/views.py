@@ -803,44 +803,7 @@ def getlkpost(request, id):
 
 #@cache_page(60)
 def main_page(request):
-    if not request.user.is_authenticated:
-        return index(request)
-    thread = Post.objects.all().order_by("-date_post")
-    paginator = Paginator(thread, 6)
-    page = request.GET.get('page')
-    _type = request.GET.get('_type')
-    data = {}
-    data['us'] = auth.get_user(request).username
-    data['all_pages'] = paginator.num_pages   
-    posts = paginator.get_page(page) 
-    try:
-        data['op1'] = paginator.page(page).next_page_number()
-    except EmptyPage:
-        data['op1'] = "STOP"
-    except PageNotAnInteger:
-        data['op1'] = "STOP"
-        
-    try:
-        data['op2'] = paginator.page(page).previous_page_number()
-    except EmptyPage:
-        data['op2'] = "STOP"    
-    except PageNotAnInteger:
-        data['op2'] = "STOP"
-
-    if page:
-        data['data'] = render_to_string("walload.html", { "thread_messages": posts, "username": auth.get_user(request)}, request=request)
-        return HttpResponse(json.dumps(data), content_type = "application/json")
-
-    if _type == "javascript":    
-        return render(request, 'postwall.html', { "thread_messages": posts,
-                                                  "username": auth.get_user(request) })
-    else:
-        args = { "thread_messages": posts, "username": auth.get_user(request) }
-        t = loader.get_template('postwall.html')
-        template = Template('{%extends "' + "base.html" + '"%} ...'+t.template.source)
-        context = RequestContext(request, args)
-        result = template.render(context)
-        return HttpResponse(result)
+    return render(request, 'base.html')
     
 def addpost(request):
     _type = request.GET.get('_type')
