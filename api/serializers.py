@@ -1,12 +1,120 @@
+import os
+import uuid
+
 from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
 from myapp.models import User, Post, Comment, Relationship, Relike, Keystroke
 from privatemessages.models import Thread, Message
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from PIL import Image
 from datetime import datetime, timedelta
 from django.conf import settings
 
 User = get_user_model()
+
+# Вспомогательная функция для обрезки изображения (можно вынести в отдельный модуль)
+def crop_image(path, nameFile, size=(150, 150)):
+    """
+    Создаёт квадратную миниатюру изображения.
+    
+    Аргументы:
+        path (str): поддиректория внутри MEDIA_ROOT/data_image/
+        nameFile (str): имя оригинального файла (например, "abc123_user.png")
+        size (tuple): целевой размер (ширина, высота), по умолчанию (150, 150)
+    
+    Результат:
+        В той же папке создаётся файл с именем "tm_{nameFile}" (миниатюра).
+        Если оригинал не найден или произошла ошибка, функция ничего не делает
+        (исключение логируется, но не прерывает выполнение).
+    """
+    # Определяем фильтр ресемплинга для совместимости с разными версиями Pillow
+    try:
+        resample_filter = Image.Resampling.LANCZOS
+    except AttributeError:
+        resample_filter = Image.ANTIALIAS
+
+    original_path = os.path.join(settings.MEDIA_ROOT, 'data_image', path, nameFile)
+    thumbnail_path = os.path.join(settings.MEDIA_ROOT, 'data_image', path, f"tm_{nameFile}")
+
+    if not os.path.exists(original_path):
+        # Можно добавить логирование предупреждения
+        return
+
+    try:
+        with Image.open(original_path) as img:
+            # Конвертируем в RGB для JPEG-совместимости, сохраняя прозрачность через белый фон
+            if img.mode in ('RGBA', 'LA', 'P'):
+                # Создаём белое полотно
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'P':
+                    img = img.convert('RGBA')
+                # Вставляем изображение с учётом альфа-канала
+                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                img = background
+            elif img.mode != 'RGB':
+                img = img.convert('RGB')
+
+            # Обрезаем до квадрата по центру
+            width, height = img.size
+            new_side = min(width, height)
+            left = (width - new_side) // 2
+            top = (height - new_side) // 2
+            right = left + new_side
+            bottom = top + new_side
+
+            img_cropped = img.crop((left, top, right, bottom))
+            img_resized = img_cropped.resize(size, resample_filter)
+
+            # Сохраняем как PNG (оптимизированный)
+            img_resized.save(thumbnail_path, 'PNG', optimize=True)
+
+    except Exception as e:
+        # В реальном проекте здесь следует использовать логирование
+        print(f"Ошибка при создании миниатюры: {e}")
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+    image = serializers.ImageField(required=False, allow_null=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'password2', 'image')
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Пароли не совпадают."})
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        image = validated_data.pop('image', None)
+
+        # Создаем пользователя
+        user = User.objects.create_user(**validated_data)
+        # Обработка аватара, если он предоставлен
+        if image:
+            path = str(uuid.uuid4())[:12]
+            nameFile = f"{path}_{user.username}.png"
+            upload_dir = os.path.join(settings.MEDIA_ROOT, 'data_image', path)
+            os.makedirs(upload_dir, exist_ok=True)
+            file_path = os.path.join(upload_dir, nameFile)
+
+            # Сохраняем оригинал
+            with open(file_path, 'wb+') as destination:
+                for chunk in image.chunks():
+                    destination.write(chunk)
+
+            # Обрезка изображения
+            crop_image(path, nameFile, (150, 150))  # раскомментируйте если есть функция
+
+            # Сохраняем путь в модели
+            user.image_user = nameFile
+            user.path_data = path
+            user.save()
+
+        return user
 
 class UserSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField()
@@ -50,8 +158,9 @@ class CommentSerializer(serializers.ModelSerializer):
     post = serializers.PrimaryKeyRelatedField(
         queryset=Post.objects.all(),
         write_only=True,
-        source='post_id'  # связываем с полем модели post_id
+        source='post_id'
     )
+    comment_image = serializers.ImageField(required=False, allow_null=True, write_only=True)  # <-- изменено
     image_url = serializers.SerializerMethodField()
 
     class Meta:
@@ -61,8 +170,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         if obj.comment_image and obj.comment_user:
-            # Формируем путь как в оригинале: /media/data_image/{{user.path_data}}/{{comment_image}}.png
-            return f"/media/data_image/{obj.comment_user.path_data}/{obj.comment_image}.png"
+            # Предполагаем, что в поле хранится полное имя файла (с расширением)
+            return f"/media/data_image/{obj.comment_user.path_data}/{obj.comment_image}"
         return None
 
 
@@ -111,12 +220,25 @@ class ThreadSerializer(serializers.ModelSerializer):
                 return UserSerializer(partner, context=self.context).data
         return None
 
+    def get_last_message(self, obj):
+        last_msg = obj.message_set.order_by('-datetime').first()
+        if last_msg:
+            return MessageSerializer(last_msg, context=self.context).data
+        return None
+
+    def get_total_messages(self, obj):
+        return obj.message_set.count()
 
 class MessageSerializer(serializers.ModelSerializer):
     sender = UserSerializer(read_only=True)
-    thread = serializers.PrimaryKeyRelatedField(read_only=True)
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
-        fields = '__all__'
+        fields = ('id', 'sender', 'thread', 'text', 'pm_image', 'datetime', 'image_url')
         read_only_fields = ('id', 'datetime')
+
+    def get_image_url(self, obj):
+        if obj.pm_image and obj.sender:
+            return f"/media/data_image/{obj.sender.path_data}/{obj.pm_image}.png"
+        return None

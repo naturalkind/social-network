@@ -65,6 +65,7 @@ function getNumEnding(number, endings) {
 
 // ==================== WEB SOCKET (СТЕНА) ====================
 function initWallWebSocket() {
+    console.log("initWallWebSocket.........")
     const host = window.location.hostname;
     const port = '8888';
     store.wsWall = new WebSocket(`${CONFIG.WS_PROTOCOL}${host}:${port}/`);
@@ -328,14 +329,18 @@ const WallPostsView = {
             }
         };
 
-        const formatPost = (post) => ({
-            ...post,
-            authorName: post.author?.username || 'Anonymous',
-            authorAvatar: post.author?.avatar_url || CONFIG.DEFAULT_AVATAR,
-            imageUrl: post.image_url || CONFIG.NO_IMAGE,
-            liked: post.likes?.includes(store.user?.id),
-            reposted: post.relike?.includes(store.user?.id),
-        });
+        const formatPost = (post) => {
+            const formatted = {
+                ...post,
+                authorName: post.author?.username || 'Anonymous',
+                authorAvatar: post.author?.avatar_url || CONFIG.DEFAULT_AVATAR,
+                imageUrl: post.image_url || CONFIG.NO_IMAGE,
+                liked: post.likes?.includes(store.user?.id),
+                reposted: post.relike?.includes(store.user?.id),
+            };
+            console.log('!!!!!!!formatted post:', formatted);
+            return formatted;
+        };
 
         const goToPost = (id) => {
             window.dispatchEvent(new CustomEvent('open-post-modal', { detail: id }));
@@ -365,6 +370,7 @@ const WallPostsView = {
         onMounted(() => {
             loadPosts(1);
             window.addEventListener('new-wall-post', (e) => {
+                console.log('new-wall-post received:', e.detail)
                 const newPost = formatPost(e.detail);
                 posts.value.unshift(newPost);
             });
@@ -372,6 +378,7 @@ const WallPostsView = {
                 const index = posts.value.findIndex(p => p.id === e.detail.post_id);
                 if (index !== -1) posts.value.splice(index, 1);
             });
+            loadPosts(1);
         });
 
         const handleScroll = () => {
@@ -760,12 +767,14 @@ const UserProfileView = {
         const sendMessage = async () => {
             if (!messageText.value?.trim()) return;
             try {
-                await axios.post('/api/threads/', { 
-                    recipient: userId, 
+                const response = await axios.post('/api/threads/', { 
+                    recipient: userId.value, 
                     message: messageText.value 
                 });
                 messageText.value = '';
-                router.push('/messages');
+                const threadId = response.data.id;  // id созданного треда
+                router.push(`/messages/chat/${threadId}`);            
+//                router.push('/messages');
             } catch (error) {
                 console.error('Error sending message:', error);
             }
@@ -813,7 +822,7 @@ const UserProfileView = {
 const PrivateMessagesView = {
     template: `
         <div class="private_messages">
-            <h1>СОБЕСЕДНИКИ</h1>
+            <h1>СОБЕСЕДНИКИ {{ threads.length }}</h1>
             <div class="partners">
                 <div v-for="thread in threads" :key="thread.id" class="pm-block" :id="'pm-block-' + thread.id">
                     <div class="pm" @click="goToChat(thread.id)">
@@ -870,13 +879,15 @@ const PrivateMessagesView = {
         const createChat = async () => {
             if (!recipient.value || !newMessage.value) return;
             try {
-                await axios.post('/api/threads/', { 
+                const response = await axios.post('/api/threads/', { 
                     recipient: recipient.value, 
                     message: newMessage.value 
                 });
                 recipient.value = '';
                 newMessage.value = '';
-                fetchThreads();
+                const threadId = response.data.id;
+                router.push(`/messages/chat/${threadId}`);
+//                fetchThreads();
             } catch (error) {
                 console.error('Error creating chat:', error);
             }
@@ -911,18 +922,32 @@ const ChatView = {
                         <img :src="msg.senderAvatar" class="usPr" @click="goToUser(msg.senderId)">
                     </p>
                     <p :class="['txtmessage', msg.isMine ? 'we' : 'partner']">
+                        <!-- Изображение, если есть -->
                         <img v-if="msg.image" :src="msg.image" @click="showImage(msg.image)" style="width:90px;border-radius:15px;">
+                        <!-- Текст, если есть -->
+                        <span v-if="msg.text">{{ msg.text }}</span>
+                        <!-- Ссылка на пересланный пост, если нет ни изображения, ни текста -->
                         <span v-else-if="msg.resend" @click="goToPost(msg.resend)">СМОТРЕТЬ→</span>
-                        <span v-else>{{ msg.text }}</span>
                         <span class="datetime">{{ formatTime(msg.timestamp) }}</span>
                     </p>
                 </div>
             </div>
+
+            <!-- Блок предпросмотра и загрузки изображения -->
+            <div v-if="selectedFile" class="image-preview">
+                <img :src="previewUrl" style="max-width:200px; max-height:200px;">
+                <button @click="clearSelectedFile" :disabled="isUploading">Удалить</button>
+                <div v-if="isUploading" class="progress">Загрузка: {{ uploadProgress }}%</div>
+            </div>
+
             <form id="message_form" @submit.prevent="sendMessage">
                 <div class="compose">
-                    <div id="message_textarea" contenteditable="true" @input="e => newMessage = e.target.innerText" placeholder="Введите сообщение..."></div>
+                    <div id="message_textarea" contenteditable="true" 
+                         @input="e => newMessage = e.target.innerText" 
+                         placeholder="Введите сообщение..."></div>
                 </div>
-                <button type="submit">ОТПРАВИТЬ</button>
+                <input type="file" ref="fileInput" @change="handleFileUpload" accept="image/*" :disabled="isUploading">
+                <button type="submit" :disabled="isUploading">ОТПРАВИТЬ</button>
             </form>
         </div>
     `,
@@ -939,93 +964,271 @@ const ChatView = {
         const ws = ref(null);
         const messagesContainer = ref(null);
 
+        // Переменные для загрузки файлов
+        const selectedFile = ref(null);
+        const previewUrl = ref(null);
+        const isUploading = ref(false);
+        const uploadProgress = ref(0);
+        const tempMessageId = ref(null);
+        let moreDataResolver = null;  // для ожидания подтверждения чанка
+
+        // 1. Загружаем информацию о треде (партнёр, счётчики)
+        const fetchThread = async () => {
+            try {
+                const res = await axios.get(`/api/threads/${threadId}/`);
+                const data = res.data;
+                partnerName.value = data.partner?.username || 'Unknown';
+                messagesTotal.value = data.messages_total || 0;
+                messagesSent.value = data.messages_sent || 0;
+                messagesReceived.value = data.messages_received || 0;
+            } catch (error) {
+                console.error('Ошибка загрузки треда:', error);
+            }
+        };
+
+        // 2. Загружаем сообщения
         const fetchMessages = async () => {
             try {
                 const res = await axios.get(`/api/threads/${threadId}/messages/`);
-                const thread = res.data;
-                partnerName.value = thread.partner?.username || 'Unknown';
-                messagesTotal.value = thread.total_messages || 0;
-                messagesReceived.value = thread.messages_received || 0;
-                messagesSent.value = thread.messages_sent || 0;
-                messages.value = (thread.messages || []).map(m => ({
-                    ...m,
-                    isMine: m.sender?.id === store.user?.id,
-                    senderAvatar: m.sender?.avatar_url || CONFIG.DEFAULT_AVATAR,
-                    senderId: m.sender?.id,
-                    timestamp: m.datetime,
+                const messagesData = res.data.results || [];
+                messages.value = messagesData.map(m => ({
+                    id: m.id,
                     text: m.text,
-                    image: m.pm_image ? `/media/data_image/${m.sender?.path_data}/${m.pm_image}.png` : null,
+                    image: m.image_url,
+                    senderId: m.sender?.id,
+                    senderAvatar: m.sender?.avatar_url || CONFIG.DEFAULT_AVATAR,
+                    isMine: m.sender?.id === store.user?.id,
+                    timestamp: m.datetime,
                 }));
-                
+
                 setTimeout(() => {
                     if (messagesContainer.value) {
                         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
                     }
                 }, 100);
             } catch (error) {
-                console.error('Error fetching messages:', error);
+                console.error('Ошибка загрузки сообщений:', error);
             }
         };
 
+        // Инициализация WebSocket для чата
         const initChatWebSocket = () => {
             const host = window.location.hostname;
             const port = '8888';
             ws.value = new WebSocket(`${CONFIG.WS_PROTOCOL}${host}:${port}/${threadId}/`);
-            
+
             ws.value.onmessage = (e) => {
                 const data = JSON.parse(e.data);
+                console.log(data);
+                // Приватное сообщение
                 if (data.event === 'privatemessages') {
                     const newMsg = {
-                        id: Date.now(),
+                        id: data.message_id || Date.now(),
                         text: data.message,
                         image: data.pm_image ? `/media/data_image/${data.path_data}/${data.pm_image}.png` : null,
                         sender: { id: data.sender_id, username: data.sender },
-                        isMine: data.sender === store.user?.username,
-                        senderAvatar: data.image_user ? `/media/data_image/${data.path_data}/tm_${data.image_user}` : CONFIG.DEFAULT_AVATAR,
-                        timestamp: new Date(),
+                        isMine: data.sender_id == store.user?.id,
+                        senderAvatar: (data.image_user && data.image_user !== 'oneProf.png') 
+                            ? `/media/data_image/${data.path_data}/tm_${data.image_user}` 
+                            : CONFIG.DEFAULT_AVATAR,
+                        timestamp: new Date(parseInt(data.timestamp) * 1000),
                         senderId: data.sender_id,
                     };
                     messages.value.push(newMsg);
-                    
-                    if (data.sender !== store.user?.username) {
+
+                    if (data.sender_id != store.user?.id) {
                         messagesReceived.value++;
                     } else {
                         messagesSent.value++;
                     }
                     messagesTotal.value++;
-                    
+
                     setTimeout(() => {
                         if (messagesContainer.value) {
                             messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
                         }
                     }, 100);
                 }
+                
+                // Подтверждение получения чанка
+                else if (data.event === 'more_data' && data.temp_id === tempMessageId.value) {
+                    if (moreDataResolver) {
+                        moreDataResolver();
+                        moreDataResolver = null;
+                    }
+                }
+                
+                // Прогресс загрузки
+                else if (data.event === 'upload_progress' && data.temp_id === tempMessageId.value) {
+                    uploadProgress.value = data.progress;
+                }
+                
+                // Завершение загрузки
+                else if (data.event === 'upload_complete' && data.temp_id === tempMessageId.value) {
+                    isUploading.value = false;
+                    selectedFile.value = null;
+                    previewUrl.value = null;
+                    uploadProgress.value = 0;
+                    tempMessageId.value = null;
+                    newMessage.value = '';
+                    const textarea = document.getElementById('message_textarea');
+                    if (textarea) textarea.innerText = '';
+                }
+                
+                // Ошибка загрузки
+                else if (data.event === 'upload_error' && data.temp_id === tempMessageId.value) {
+                    alert('Ошибка загрузки: ' + data.error);
+                    isUploading.value = false;
+                    uploadProgress.value = 0;
+                    selectedFile.value = null;
+                    previewUrl.value = null;
+                    if (moreDataResolver) {
+                        moreDataResolver = null;
+                    }
+                }
             };
-            
+
             ws.value.onclose = () => {
                 setTimeout(initChatWebSocket, 5000);
             };
         };
 
-        const sendMessage = () => {
-            if (!newMessage.value?.trim() || !ws.value) return;
+        // Вспомогательная функция для чтения чанка как DataURL
+        const readChunkAsDataURL = (blob) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        };
+
+        // Функция ожидания подтверждения more_data
+        const waitForMoreData = (timeout = 10000) => {
+            return new Promise((resolve, reject) => {
+                moreDataResolver = resolve;
+                setTimeout(() => {
+                    if (moreDataResolver) {
+                        moreDataResolver = null;
+                        reject(new Error('Timeout waiting for server response'));
+                    }
+                }, timeout);
+            });
+        };
+
+        // Загрузка файла чанками
+        const uploadFileInChunks = async (file, text) => {
+            const CHUNK_SIZE = 64 * 1024; // 64 KB
+            let offset = 0;
+            const totalSize = file.size;
+            const tempId = Date.now();
+
+            isUploading.value = true;
+            uploadProgress.value = 0;
+            tempMessageId.value = tempId;
+
+            // Отправляем Start
             ws.value.send(JSON.stringify({
-                event: 'privatemessages',
-                message: newMessage.value,
-                pm_image: '',
+                event: 'chat_upload_start',
+                name: file.name,
+                thread_id: threadId,
+                temp_id: tempId
             }));
+
+            // Ждём первое подтверждение (опционально)
+            try {
+                await waitForMoreData();
+            } catch (err) {
+                console.error('Start upload timeout', err);
+                isUploading.value = false;
+                return;
+            }
+
+            while (offset < totalSize) {
+                const chunk = file.slice(offset, offset + CHUNK_SIZE);
+                const dataUrl = await readChunkAsDataURL(chunk);
+                const base64 = dataUrl.split(',')[1];
+
+                ws.value.send(JSON.stringify({
+                    event: 'chat_upload_chunk',
+                    data: base64,
+                    temp_id: tempId
+                }));
+
+                offset += CHUNK_SIZE;
+                uploadProgress.value = Math.min(100, Math.round((offset / totalSize) * 100));
+
+                // Ждём подтверждения получения чанка
+                try {
+                    await waitForMoreData();
+                } catch (err) {
+                    console.error('Chunk upload timeout', err);
+                    isUploading.value = false;
+                    return;
+                }
+            }
+
+            // Все чанки отправлены, отправляем Done
+            ws.value.send(JSON.stringify({
+                event: 'chat_upload_done',
+                text: text,
+                temp_id: tempId,
+                thread_id: threadId
+            }));
+
+            // Очистка поля ввода текста (сообщение уйдёт с изображением)
             newMessage.value = '';
-            
             const textarea = document.getElementById('message_textarea');
             if (textarea) textarea.innerText = '';
         };
 
+        // Выбор файла
+        const handleFileUpload = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            selectedFile.value = file;
+            if (previewUrl.value) {
+                URL.revokeObjectURL(previewUrl.value);
+            }
+            previewUrl.value = URL.createObjectURL(file);
+        };
+
+        // Очистка выбранного файла
+        const clearSelectedFile = () => {
+            if (previewUrl.value) {
+                URL.revokeObjectURL(previewUrl.value);
+            }
+            selectedFile.value = null;
+            previewUrl.value = null;
+            uploadProgress.value = 0;
+        };
+
+        // Отправка сообщения (текст или текст+изображение)
+        const sendMessage = () => {
+            const text = newMessage.value?.trim();
+            if (!text && !selectedFile.value) return;
+
+            if (selectedFile.value) {
+                // Загружаем файл с текстом (текст может быть пустым)
+                uploadFileInChunks(selectedFile.value, text || '');
+            } else {
+                // Только текст
+                ws.value.send(JSON.stringify({
+                    event: 'privatemessages',
+                    message: text,
+                    pm_image: '',
+                }));
+                newMessage.value = '';
+                const textarea = document.getElementById('message_textarea');
+                if (textarea) textarea.innerText = '';
+            }
+        };
+
+        // Вспомогательные функции
         const goToPartner = () => {
-            // Need to get partner ID from somewhere
-            router.push('/messages');
+            // Если нужно перейти на страницу партнёра (можно добавить partnerId)
         };
         const goToUser = (id) => router.push(`/user/${id}`);
-//        const goToPost = (id) => router.push(`/post/${id}`);
         const goToPost = (id) => {
             window.dispatchEvent(new CustomEvent('open-post-modal', { detail: id }));
         };
@@ -1034,14 +1237,19 @@ const ChatView = {
         const formatTime = (ts) => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         onMounted(() => {
+            fetchThread();
             fetchMessages();
             initChatWebSocket();
+            // Удаляем уведомление для этого треда
             const idx = store.notifications.findIndex(id => String(id) === String(threadId));
             if (idx !== -1) store.notifications.splice(idx, 1);
         });
 
         onUnmounted(() => {
             if (ws.value) ws.value.close();
+            if (previewUrl.value) {
+                URL.revokeObjectURL(previewUrl.value);
+            }
         });
 
         return {
@@ -1052,6 +1260,10 @@ const ChatView = {
             messagesSent,
             newMessage,
             messagesContainer,
+            selectedFile,
+            previewUrl,
+            isUploading,
+            uploadProgress,
             goToPartner,
             goToUser,
             goToPost,
@@ -1059,294 +1271,196 @@ const ChatView = {
             messagesWord,
             formatTime,
             sendMessage,
+            handleFileUpload,
+            clearSelectedFile,
         };
     },
 };
-
 // ==================== ДОБАВЛЕНИЕ ПОСТА ====================
 const AddPostView = {
     template: `
         <div id="node">
             <form class="message_form" @submit.prevent="submitPost">
                 <div class="field-image">
-                    <input type="file" id="image_file" @change="handleImageUpload" style="display:none;">
+                    <input type="file" id="image_file" @change="handleImageUpload" accept="image/*" style="display:none;">
                     <label for="image_file" class="image_file">ЗАГРУЗКА КАРТИНКИ</label>
-                    <canvas v-if="imagePreview" id="canvas_addpost" :width="canvasWidth" :height="canvasHeight" style="display:block;"></canvas>
+                    <div v-if="previewUrl" class="image-preview">
+                        <img :src="previewUrl" style="max-width:100%; max-height:200px;">
+                    </div>
+                    <div v-else-if="selectedFile" class="file-info">
+                        <span>Выбран файл: {{ selectedFile.name }}</span>
+                    </div>
+                    <div v-if="uploading" class="upload-progress">
+                        Загрузка: {{ uploadProgress }}%
+                    </div>
                 </div>
                 <div class="field-text">
                     <textarea id="id_body" v-model="postBody" placeholder="Сообщение..."></textarea>
                 </div>
-                <button type="submit">ОТПРАВИТЬ</button>
+                <button type="submit" :disabled="uploading">ОТПРАВИТЬ</button>
             </form>
         </div>
     `,
     setup() {
         const router = useRouter();
         const postBody = ref('');
-        const imageData = ref(null);
-        const canvasWidth = ref(0);
-        const canvasHeight = ref(0);
-        const imagePreview = ref(false);
+        const selectedFile = ref(null);
+        const previewUrl = ref(null);
+        const uploading = ref(false);
+        const uploadProgress = ref(0);
 
+        // Обработчик выбора файла
         const handleImageUpload = (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    canvasWidth.value = img.width;
-                    canvasHeight.value = img.height;
-                    imagePreview.value = true;
-                    Vue.nextTick(() => {
-                        const canvas = document.getElementById('canvas_addpost');
-                        if (canvas) {
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0);
-                            imageData.value = canvas.toDataURL('image/png');
-                        }
-                    });
+            selectedFile.value = file;
+            // Создаём URL для предпросмотра
+            if (previewUrl.value) {
+                URL.revokeObjectURL(previewUrl.value);
+            }
+            previewUrl.value = URL.createObjectURL(file);
+        };
+
+        // Функция отправки чанка с ожиданием подтверждения
+        const sendChunkWithAck = (chunkData, isLast = false) => {
+            return new Promise((resolve, reject) => {
+                const ws = store.wsWall;
+                if (!ws) {
+                    reject(new Error('WebSocket not connected'));
+                    return;
+                }
+
+                // Временный обработчик сообщений
+                const messageHandler = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.status === 'MoreData' || data.status === 'Done') {
+                        ws.removeEventListener('message', messageHandler);
+                        resolve(data.status);
+                    }
                 };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+
+                ws.addEventListener('message', messageHandler);
+
+                // Отправляем чанк
+                const eventName = isLast ? 'Done' : 'Upload';
+                ws.send(JSON.stringify({
+                    event: eventName,
+                    Data: chunkData,
+                }));
+
+                // Таймаут
+                setTimeout(() => {
+                    ws.removeEventListener('message', messageHandler);
+                    reject(new Error('Timeout waiting for server response'));
+                }, 10000);
+            });
+        };
+
+        // Загрузка файла чанками
+        const uploadFileInChunks = async (file) => {
+            const CHUNK_SIZE = 64 * 1024; // 64 KB
+            let offset = 0;
+            const totalSize = file.size;
+
+            // Отправляем Start
+            store.wsWall.send(JSON.stringify({
+                event: 'Start',
+                Name: file.name
+            }));
+
+            // Даём серверу время подготовиться (можно дождаться первого MoreData, но для простоты пауза)
+            await new Promise(r => setTimeout(r, 100));
+
+            while (offset < totalSize) {
+                const chunk = file.slice(offset, offset + CHUNK_SIZE);
+                const dataUrl = await readChunkAsDataURL(chunk);
+                const base64 = dataUrl.split(',')[1]; // убираем префикс
+
+                // Отправляем чанк и ждём подтверждения
+                await sendChunkWithAck(base64, false);
+
+                offset += CHUNK_SIZE;
+                uploadProgress.value = Math.min(100, Math.round((offset / totalSize) * 100));
+            }
+
+            // Все чанки отправлены, отправляем Done
+            await sendChunkWithAck('', true);
+            uploadProgress.value = 100;
+        };
+
+        // Вспомогательная функция для чтения chunk как DataURL
+        const readChunkAsDataURL = (blob) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
         };
 
         const submitPost = async () => {
-            if (!postBody.value && !imageData.value) return;
-            if (store.wsWall && store.wsWall.readyState === WebSocket.OPEN) {
+            if (!postBody.value && !selectedFile.value) return;
+            if (!store.wsWall || store.wsWall.readyState !== WebSocket.OPEN) {
+                alert('WebSocket не подключен');
+                return;
+            }
+
+            uploading.value = true;
+            uploadProgress.value = 0;
+
+            try {
+                if (selectedFile.value) {
+                    await uploadFileInChunks(selectedFile.value);
+                }
+
+                // Отправляем событие wallpost с текстом
                 store.wsWall.send(JSON.stringify({
                     event: 'wallpost',
                     body: postBody.value,
-                    image: imageData.value || false,
+                    image: false  // изображение уже загружено через Start/Upload/Done
                 }));
+
+                // Очищаем форму
+                postBody.value = '';
+                if (previewUrl.value) {
+                    URL.revokeObjectURL(previewUrl.value);
+                    previewUrl.value = null;
+                }
+                selectedFile.value = null;
+
+                // Переходим на главную
                 router.push('/');
-            } else {
-                alert('WebSocket не подключен');
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Ошибка при загрузке изображения');
+            } finally {
+                uploading.value = false;
+                uploadProgress.value = 0;
             }
         };
 
+        // Очистка URL при уничтожении компонента
+        onUnmounted(() => {
+            if (previewUrl.value) {
+                URL.revokeObjectURL(previewUrl.value);
+            }
+        });
+
         return {
             postBody,
-            canvasWidth,
-            canvasHeight,
-            imagePreview,
+            selectedFile,
+            previewUrl,
+            uploading,
+            uploadProgress,
             handleImageUpload,
             submitPost,
         };
-    },
+    }
 };
 
+
+
 // ==================== МОДАЛЬНОЕ ОКНО ПОСТА ====================
-//const PostModal = {
-//    template: `
-//        <div v-if="isOpen" class="modal-overlay" @click.self="close">
-//            <div class="modal-container post-modal">
-//                <button class="modal-close-btn" @click="close">×</button>
-//                
-//                <!-- Навигация между постами -->
-//                <div class="modal-nav">
-//                    <button v-if="hasPrev" class="nav-arrow prev" @click="goToPrev">←</button>
-//                    <button v-if="hasNext" class="nav-arrow next" @click="goToNext">→</button>
-//                </div>
-
-//                <!-- Контент поста -->
-//                <div v-if="loading" class="modal-loader">Загрузка...</div>
-//                <div v-else-if="post" class="post-content">
-//                    <!-- Шапка с информацией о авторе -->
-//                    <div class="post-header" style="background:#507299; color:white; padding:10px;">
-//                        <div style="display:flex; align-items:center; justify-content:space-between;">
-//                            <div style="display:flex; align-items:center;">
-//                                <img :src="post.authorAvatar" class="post-author-avatar" 
-//                                     @click.stop="goToUser(post.author.id)" style="cursor:pointer; width:40px; height:40px; border-radius:50%; margin-right:10px;">
-//                                <span @click.stop="goToUser(post.author.id)" style="cursor:pointer; font-weight:bold;">
-//                                    {{ post.authorName }}
-//                                </span>
-//                            </div>
-//                            <span>{{ formatDate(post.date_post) }}</span>
-//                        </div>
-//                    </div>
-
-//                    <!-- Изображение поста -->
-//                    <div class="post-image-container">
-//                        <img :src="post.imageUrl" class="post-image" @click="showImage(post.imageUrl)">
-//                    </div>
-
-//                    <!-- Текст поста -->
-//                    <div class="post-body" v-if="post.body">
-//                        <p>{{ post.body }}</p>
-//                    </div>
-
-//                    <!-- Действия с постом -->
-//                    <div class="post-actions">
-//                        <img class="action-icon" src="/static/images/mesvF.png" 
-//                             @click="toggleComments" 
-//                             :class="{ 'active': commentsOpen }">
-//                        <img class="action-icon" :src="post.liked ? CONFIG.LIKE_GIF : CONFIG.LIKE_PNG" 
-//                             @click="toggleLike">
-//                        <img class="action-icon" :src="post.reposted ? CONFIG.RP_OPEN : CONFIG.RP_CLOSED" 
-//                             @click="toggleRepost">
-//                    </div>
-
-//                    <!-- Комментарии -->
-//                    <div v-if="commentsOpen" class="comments-section">
-//                        <Comments :postId="post.id" />
-//                    </div>
-//                </div>
-//            </div>
-//        </div>
-//    `,
-//    components: { Comments },
-//    setup() {
-//        const isOpen = ref(false);
-//        const currentPostId = ref(null);
-//        const post = ref(null);
-//        const loading = ref(false);
-//        const commentsOpen = ref(false);
-//        
-//        // Для навигации между постами
-//        const postIds = ref([]);
-//        const currentIndex = ref(-1);
-//        
-//        const hasPrev = computed(() => currentIndex.value > 0);
-//        const hasNext = computed(() => currentIndex.value < postIds.value.length - 1);
-
-//        const open = async (postId) => {
-//            console.log('Opening post modal:', postId);
-//            currentPostId.value = postId;
-//            isOpen.value = true;
-//            store.modalOpen = true;
-//            document.body.style.overflow = 'hidden';
-//            
-//            await loadPost(postId);
-//            
-//            // Загружаем список ID для навигации (если нужно)
-//            await loadPostIds();
-//        };
-
-//        const close = () => {
-//            isOpen.value = false;
-//            currentPostId.value = null;
-//            post.value = null;
-//            commentsOpen.value = false;
-//            store.modalOpen = false;
-//            document.body.style.overflow = 'auto';
-//        };
-
-//        const loadPost = async (postId) => {
-//            loading.value = true;
-//            try {
-//                const response = await axios.get(`/api/posts/${postId}/`);
-//                post.value = {
-//                    ...response.data,
-//                    authorName: response.data.author?.username || 'Anonymous',
-//                    authorAvatar: response.data.author?.avatar_url || CONFIG.DEFAULT_AVATAR,
-//                    imageUrl: response.data.image_url || CONFIG.NO_IMAGE,
-//                    liked: response.data.likes?.includes(store.user?.id),
-//                    reposted: response.data.relike?.includes(store.user?.id),
-//                };
-//            } catch (error) {
-//                console.error('Error loading post:', error);
-//            } finally {
-//                loading.value = false;
-//            }
-//        };
-
-//        const loadPostIds = async () => {
-//            try {
-//                const response = await axios.get('/api/posts/?fields=id&limit=100');
-//                postIds.value = response.data.results.map(p => p.id);
-//                currentIndex.value = postIds.value.indexOf(parseInt(currentPostId.value));
-//            } catch (error) {
-//                console.error('Error loading post IDs:', error);
-//            }
-//        };
-
-//        const goToPrev = async () => {
-//            if (hasPrev.value) {
-//                const prevId = postIds.value[currentIndex.value - 1];
-//                await loadPost(prevId);
-//                currentPostId.value = prevId;
-//                currentIndex.value--;
-//            }
-//        };
-
-//        const goToNext = async () => {
-//            if (hasNext.value) {
-//                const nextId = postIds.value[currentIndex.value + 1];
-//                await loadPost(nextId);
-//                currentPostId.value = nextId;
-//                currentIndex.value++;
-//            }
-//        };
-
-//        const toggleComments = () => {
-//            commentsOpen.value = !commentsOpen.value;
-//        };
-
-//        const toggleLike = async () => {
-//            if (!store.user || !post.value) return;
-//            try {
-//                await axios.post(`/api/posts/${post.value.id}/like/`);
-//                post.value.liked = !post.value.liked;
-//            } catch (error) {
-//                console.error('Error toggling like:', error);
-//            }
-//        };
-
-//        const toggleRepost = async () => {
-//            if (!store.user || !post.value) return;
-//            try {
-//                await axios.post(`/api/posts/${post.value.id}/repost/`);
-//                post.value.reposted = !post.value.reposted;
-//            } catch (error) {
-//                console.error('Error toggling repost:', error);
-//            }
-//        };
-
-//        const goToUser = (userId) => {
-//            close();
-//            router.push(`/user/${userId}`);
-//        };
-
-//        const showImage = (url) => {
-//            window.dispatchEvent(new CustomEvent('show-image', { detail: url }));
-//        };
-
-//        const formatDate = (ts) => {
-//            return new Date(ts).toLocaleString();
-//        };
-
-//        onMounted(() => {
-//            window.addEventListener('open-post-modal', (e) => open(e.detail));
-//            window.addEventListener('close-modal', close);
-//        });
-
-//        onUnmounted(() => {
-//            window.removeEventListener('open-post-modal', open);
-//            window.removeEventListener('close-modal', close);
-//        });
-
-//        return {
-//            isOpen,
-//            post,
-//            loading,
-//            commentsOpen,
-//            hasPrev,
-//            hasNext,
-//            CONFIG,
-//            close,
-//            goToPrev,
-//            goToNext,
-//            toggleComments,
-//            toggleLike,
-//            toggleRepost,
-//            goToUser,
-//            showImage,
-//            formatDate,
-//        };
-//    },
-//};
 
 const PostModal = {
     template: `
@@ -1710,6 +1824,7 @@ const LoginView = {
                 <input type="text" v-model="username" placeholder="Имя пользователя" required>
                 <input type="password" v-model="password" placeholder="Пароль" required>
                 <button type="submit">Войти</button>
+                <div v-if="error" class="error-message">{{ error }}</div>
             </form>
             <p>Нет аккаунта? <a @click="goToRegister">Зарегистрироваться</a></p>
         </div>
@@ -1718,25 +1833,27 @@ const LoginView = {
         const router = useRouter();
         const username = ref('');
         const password = ref('');
+        const error = ref('');
 
         const login = async () => {
             try {
-                const formData = new FormData();
-                formData.append('username', username.value);
-                formData.append('password', password.value);
+                error.value = '';
+                const response = await axios.post('/login/', {
+                    username: username.value,
+                    password: password.value
+                });
                 
-                await axios.post('/login/', formData);
-                const userRes = await axios.get('/api/profile/');
-                store.user = userRes.data;
+                store.user = response.data;
                 router.push('/');
-            } catch (error) {
-                alert('Ошибка входа');
+            } catch (err) {
+                console.error('Login error:', err);
+                error.value = err.response?.data?.error || 'Ошибка входа';
             }
         };
 
         const goToRegister = () => router.push('/register');
 
-        return { username, password, login, goToRegister };
+        return { username, password, error, login, goToRegister };
     },
 };
 
@@ -1745,11 +1862,26 @@ const RegisterView = {
     template: `
         <div class="auth-form">
             <h2>Регистрация</h2>
-            <form @submit.prevent="register">
+            <form @submit.prevent="register" enctype="multipart/form-data">
                 <input type="text" v-model="username" placeholder="Имя пользователя" required>
                 <input type="password" v-model="password1" placeholder="Пароль" required>
                 <input type="password" v-model="password2" placeholder="Подтверждение пароля" required>
+                
+                <div class="avatar-upload">
+                    <label>Аватар (необязательно):</label>
+                    <input type="file" @change="handleAvatarUpload" accept="image/*">
+                    <div v-if="avatarPreview" class="avatar-preview">
+                        <img :src="avatarPreview" style="max-width:100px; max-height:100px;">
+                    </div>
+                </div>
+                
                 <button type="submit">Зарегистрироваться</button>
+                
+                <div v-if="errors" class="error-message">
+                    <div v-for="(err, field) in errors" :key="field">
+                        {{ field }}: {{ err.join(', ') }}
+                    </div>
+                </div>
             </form>
             <p>Уже есть аккаунт? <a @click="goToLogin">Войти</a></p>
         </div>
@@ -1759,28 +1891,54 @@ const RegisterView = {
         const username = ref('');
         const password1 = ref('');
         const password2 = ref('');
+        const avatarFile = ref(null);
+        const avatarPreview = ref(null);
+        const errors = ref(null);
+
+        const handleAvatarUpload = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                avatarFile.value = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    avatarPreview.value = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
 
         const register = async () => {
-            if (password1.value !== password2.value) {
-                alert('Пароли не совпадают');
-                return;
-            }
             try {
+                errors.value = null;
+                
                 const formData = new FormData();
                 formData.append('username', username.value);
-                formData.append('password1', password1.value);
+                formData.append('password', password1.value);
                 formData.append('password2', password2.value);
                 
-                await axios.post('/register/', formData);
-                router.push('/login');
-            } catch (error) {
-                alert('Ошибка регистрации');
+                if (avatarFile.value) {
+                    formData.append('image', avatarFile.value);
+                }
+
+                const response = await axios.post('/register/', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                
+                store.user = response.data.user;
+                router.push('/');
+            } catch (err) {
+                console.error('Registration error:', err);
+                errors.value = err.response?.data || { error: ['Ошибка регистрации'] };
             }
         };
 
         const goToLogin = () => router.push('/login');
 
-        return { username, password1, password2, register, goToLogin };
+        return { 
+            username, password1, password2, 
+            avatarPreview, errors,
+            handleAvatarUpload, register, goToLogin 
+        };
     },
 };
 
@@ -1874,6 +2032,7 @@ const AppHeader = {
         const searchQuery = ref('');
         const user = computed(() => store.user);
         const hasNotifications = computed(() => store.notifications.length > 0);
+        const isLoading = ref(false); // Для предотвращения множественных запросов
 
         const userAvatar = computed(() => {
             if (user.value && user.value.avatar_url && user.value.avatar_url !== 'oneProf.png') {
@@ -1894,15 +2053,69 @@ const AppHeader = {
         const goToLogin = () => { router.push('/login'); };
         
         const logout = async () => {
-            await axios.get('/logout');
-            store.user = null;
-            router.push('/login');
+            // Предотвращаем множественные запросы
+            if (isLoading.value) return;
+            
+            isLoading.value = true;
+            
+            try {
+                // Используем POST запрос для logout
+                await axios.post('/logout/', {}, {
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'), // Функция для получения CSRF токена
+                    }
+                });
+                
+                // Очищаем данные пользователя в сторе
+                store.user = null;
+                store.notifications = [];
+                
+                // Закрываем WebSocket соединения если они есть
+                if (store.wsWall) {
+                    store.wsWall.close();
+                    store.wsWall = null;
+                }
+                if (store.wsNotify) {
+                    store.wsNotify.close();
+                    store.wsNotify = null;
+                }
+                
+                // Перенаправляем на страницу входа
+                router.push('/login');
+                
+            } catch (error) {
+                console.error('Ошибка при выходе:', error);
+                
+                // Даже если сервер вернул ошибку, очищаем локальные данные
+                store.user = null;
+                store.notifications = [];
+                router.push('/login');
+                
+            } finally {
+                isLoading.value = false;
+            }
         };
         
         const search = () => {
             if (searchQuery.value && store.wsWall) {
                 store.wsWall.send(JSON.stringify({ event: 'search', data: searchQuery.value }));
             }
+        };
+
+        // Вспомогательная функция для получения CSRF токена
+        const getCookie = (name) => {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
         };
 
         return {
@@ -1920,6 +2133,7 @@ const AppHeader = {
             goToLogin,
             logout,
             search,
+            isLoading,
         };
     },
 };
@@ -1945,7 +2159,7 @@ const router = createRouter({
 
 // ==================== ГЛАВНОЕ ПРИЛОЖЕНИЕ ====================
 const App = {
-    components: { AppHeader, ImageModal, TopButton, PostModal },
+    components: { AppHeader, ImageModal, TopButton, PostModal},
     template: `
         <div>
             <AppHeader />

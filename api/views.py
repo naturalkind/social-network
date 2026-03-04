@@ -1,33 +1,31 @@
 import redis
+from django.contrib.auth import authenticate, login, logout
+from rest_framework.views import APIView
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 import json
 import base64
 import re
 import os
 import uuid
-from PIL import Image
 from privatemessages.models import Thread, Message
 from privatemessages.utils import send_message as utils_send_message
 from myapp.models import User, Post, Comment, Relationship, Relike, Keystroke
 from .serializers import (
     UserSerializer, PostSerializer, CommentSerializer,
     RelationshipSerializer, RelikeSerializer, KeystrokeSerializer,
-    ThreadSerializer, MessageSerializer
+    ThreadSerializer, MessageSerializer, RegisterSerializer
 )
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 User = get_user_model()
-
-# Вспомогательная функция для обрезки изображения (можно вынести в отдельный модуль)
-def crop_image(path, nameFile, size=(150,150)):
-    # аналогично функции crop из views.py
-    pass  # реализация не изменяется
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -159,7 +157,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(comment_user=self.request.user)
 
-
 # Кастомные вьюхи для специфических операций (например, загрузка изображений)
 class ProfileUpdateView(generics.RetrieveUpdateAPIView):  # ← Изменено здесь
     """
@@ -183,12 +180,81 @@ class UserLikedPostsView(generics.ListAPIView):
         return Post.objects.filter(likes__id=user_id).order_by('-date_post')
 
 
-class ThreadViewSet(viewsets.ReadOnlyModelViewSet):
+class ThreadViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с чатами текущего пользователя.
     """
     serializer_class = ThreadSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        r = redis.StrictRedis()
+        user_id = str(request.user.id)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            data = serializer.data
+            for item in data:
+                thread_id = item['id']
+                total = r.hget(f"private_{thread_id}_messages", "total_messages")
+                sent = r.hget(f"private_{thread_id}_messages", f"from_{user_id}")
+                item['total_messages'] = int(total) if total else 0
+                # также можно добавить messages_sent, messages_received при необходимости
+            return self.get_paginated_response(data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        for item in data:
+            thread_id = item['id']
+            total = r.hget(f"private_{thread_id}_messages", "total_messages")
+            sent = r.hget(f"private_{thread_id}_messages", f"from_{user_id}")
+            item['total_messages'] = int(total) if total else 0
+        return Response(data)
+        
+    def create(self, request, *args, **kwargs):
+        recipient_id = request.data.get('recipient')
+        message_text = request.data.get('message')
+
+        if not recipient_id or not message_text:
+            return Response(
+                {'error': 'Поля recipient и message обязательны'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            recipient = User.objects.get(id=recipient_id)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'Пользователь не найден'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Проверяем, существует ли уже тред между этими двумя пользователями
+        thread = Thread.objects.filter(participants=request.user).filter(participants=recipient).first()
+        if not thread:
+            thread = Thread.objects.create()
+            thread.participants.add(request.user, recipient)
+
+        # Отправляем первое сообщение
+        try:
+            utils_send_message(
+                thread_id=thread.id,
+                sender=request.user,
+                message_text=message_text,
+                partner=recipient.id,
+                sender_name=request.user.username,
+                resend="False"
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Ошибка отправки сообщения: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        serializer = self.get_serializer(thread)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         # Только чаты, где участвует текущий пользователь
@@ -262,6 +328,63 @@ class ThreadViewSet(viewsets.ReadOnlyModelViewSet):
 
         return Response({'status': 'message sent'}, status=status.HTTP_201_CREATED)
 
+class LogoutView(APIView):
+    """
+    Выход пользователя из системы.
+    """
+    permission_classes = [IsAuthenticated]  # Только для авторизованных
+    def post(self, request):
+        """
+        Завершает сессию пользователя.
+        """
+        try:
+            # Очищаем Redis данные для пользователя (если нужно)
+            r = redis.StrictRedis()
+            user_id = str(request.user.id)
+            
+            # Опционально: удаляем информацию о пользователе из Redis
+            # Например, если храните онлайн-статус или сессии
+            r.srem("online_users", user_id)
+            
+            # Стандартный logout Django
+            logout(request)
+            
+            return Response({
+                'success': True,
+                'message': 'Вы успешно вышли из системы'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'error': f'Ошибка при выходе: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class LoginView(APIView):
+    permission_classes = []  # разрешаем всем
+
+    @method_decorator(ensure_csrf_cookie)
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return Response({'success': True})
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]  # доступно всем
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        login(request, user)
+        return Response({
+            "user": UserSerializer(user).data,  # если есть UserSerializer
+            "message": "Пользователь успешно создан."
+        }, status=status.HTTP_201_CREATED)
 
 # Вьюха для поиска пользователей (Redis Search) – пример
 from myapp.ormsearch import UserDocument

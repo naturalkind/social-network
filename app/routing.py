@@ -1,9 +1,10 @@
 from django.urls import path, re_path
-
-from privatemessages.consumers import MessagesHandler
-from wall.wall import WallHandler
+from . import consumers
 
 websocket_urlpatterns = [
-    re_path(r'^(?P<room_code>\w+)/$', MessagesHandler.as_asgi()),
-    path(r'', WallHandler.as_asgi()),
+    # Стена (общая комната)
+    path(r'', consumers.SocialConsumer.as_asgi()),
+    # Приватные сообщения (комнаты с кодом)
+    re_path(r'^(?P<room_code>\w+)/$', consumers.SocialConsumer.as_asgi()),
 ]
+

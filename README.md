@@ -65,6 +65,7 @@ python manage.py index   # индексация базы данных для п�
 ```
 python manage.py shell < gen_content.py   #см. файл   
 python simple_api_client.py   
+python generate_content.py all
 ```
 
 ### Пример работы:
@@ -91,4 +92,8 @@ python simple_api_client.py
 - [ ] хранение переписки на устройствах пользователя   
 - [ ] мультичат с настройками   
 - [x] отправка личных сообщения с изображениями   
+- [x] rest_framework   
+- [ ] интерфейс vue   
+- [ ] пост формат markdown как в github
+- [ ] комментарии сделать как общение в группе ТГ, стиль отображения
 
