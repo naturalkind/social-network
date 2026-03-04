@@ -5,7 +5,7 @@
 
 #### Для запуска нужно:
 
-* Django 5.x - работа с БД
+* Django 4.x - работа с БД
 * Channels 4.x - websocket
 * Channels-redis 4.x - django channels, используют Redis в качестве резервного хранилища
 * Daphne 4.x - ASGI сервер протоколов Django

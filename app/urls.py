@@ -27,7 +27,51 @@ from myapp import views as myapp
 from django.conf.urls.static import static, serve
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^(?!api|admin|media).*$', myapp.main_page),
+    path('', myapp.main_page),
     path('api/', include('api.urls')),  # новые API
+    
+    # пользовательский материал
+    #re_path(r'^data/(?P<post>\d+)/$', myapp.post), # страница материала
+    path(r'data/<str:post>/', myapp.post), 
+    
+    # вход выход для пользователя
+    path(r'login', myapp.login), 
+    path(r'logout/', myapp.logout),
+    # регистрация
+    path(r'register/', myapp.register),  
+    # страница пользователей
+    path(r'profile/', myapp.user),
+    path(r'users/', myapp.users_all),
+#    re_path(r'user/(?P<user>\d+)/', myapp.user_page), 
+    path(r'user/<str:user>/', myapp.user_page), 
+    
+    # сообщения
+    path(r'messages/', include('privatemessages.urls')), 
+    
+    # подписки/подписчики, любимый контент
+    re_path(r'^follow/(?P<id>.*)/', myapp.follow),
+    re_path(r'^follows/(?P<id>.*)/', myapp.follows),
+    re_path(r'^getlkpost/(?P<id>.*)/', myapp.getlkpost), 
+    
+    # друзья
+    re_path(r'^friends/', myapp.friends), 
+    
+    # лайки/репосты
+    re_path(r'add_like/$', myapp.add_like, name='add_like'),
+    re_path(r'likeover/$', myapp.likeover),
+    re_path(r'^rppos/(?P<id>.*)$', myapp.rppos),
+    
+    # комментарии
+    re_path(r'^comment/(?P<post_id>.*)/', myapp.viewcom),
+    
+    # добавить материал
+    path(r'addpost/', myapp.addpost), 
+    
+    # скачать нажатия клавиш
+    path(r'cratealldata/', myapp.cratealldata)
+#    re_path(r'^media/(?P<path>.*)$', serve, {
+#                'document_root': settings.MEDIA_ROOT,
+#            }),  
+        
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -91,13 +91,6 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user_post=self.request.user)
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        author_id = self.request.query_params.get('author')
-        if author_id:
-            queryset = queryset.filter(user_post_id=author_id)
-        return queryset
-        
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def like(self, request, pk=None):
         post = self.get_object()
@@ -145,32 +138,52 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()  # Добавьте эту строку
+    queryset = Comment.objects.all().order_by('-timecomment')
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def get_queryset(self):
-        queryset = super().get_queryset()  # Используем базовый queryset
-        post_id = self.request.query_params.get('post')
-        if post_id:
-            queryset = queryset.filter(post_id=post_id)
-        return queryset.order_by('-timecomment')  # добавим сортировку
 
     def perform_create(self, serializer):
         serializer.save(comment_user=self.request.user)
 
 
 # Кастомные вьюхи для специфических операций (например, загрузка изображений)
-class ProfileUpdateView(generics.RetrieveUpdateAPIView):  # ← Изменено здесь
+class ProfileUpdateView(generics.UpdateAPIView):
     """
-    Получение и обновление профиля текущего пользователя.
-    GET — получить данные, PUT/PATCH — обновить.
+    Обновление профиля (аватар, цвет).
     """
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user  # Всегда возвращаем текущего пользователя
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        data = request.data
+        image_data = data.get('my_image')
+        color = data.get('color')
+
+        if image_data and image_data != "undefined":
+            # Обработка base64 изображения
+            imgstr = re.search(r'base64,(.*)', image_data).group(1)
+            nameFile = f"{str(uuid.uuid4())[:12]}_{user.username}.png"
+            path = user.path_data
+            if not path:
+                path = str(user.id)[:12]
+                os.makedirs(f"media/data_image/{path}", exist_ok=True)
+                user.path_data = path
+
+            with open(f"media/data_image/{path}/{nameFile}", 'wb') as f:
+                f.write(base64.b64decode(imgstr))
+            crop_image(path, nameFile)  # ваша функция кропа
+            user.image_user = nameFile
+
+        if color:
+            user.color = color
+
+        user.save()
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
 
 
 # Вьюха для получения лайкнутых постов пользователя
