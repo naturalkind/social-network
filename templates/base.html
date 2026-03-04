@@ -1,77 +1,15 @@
+<!DOCTYPE html>
+<html>
 <head>
-<title>СООБЩЕСТВО</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="description" content="создавай с нами" id="description">
-<meta name="keywords" content="community, image, messages, fun, multimedia" id="keywords">
-<link rel="shortcut icon" href="/static/images/rpvF.png" type="image/png">
-<link rel="stylesheet" type="text/css" media="all" href="/static/css/style.css" />
-<!--<script type="text/javascript" defer src="/static/js/js.js" ></script>-->
-<script type="text/javascript" src="/static/js/js.js" ></script>
-<script type="text/javascript" src="/static/js/PatienceDiff.js" ></script>
-<script type="text/javascript" src="/static/js/keystroke.js" ></script>
-<script type="text/javascript" src="/static/js/colorpicker.js"></script>
+    <title>СООБЩЕСТВО</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/work_app.js" defer></script>
 </head>
-{% if request.user.is_authenticated %}
-    <div id="header" style="background-size: contain;display: block;">
-        <div class="butNav" id="butMen" style="display: none;">
-            <a onclick="addPost()" id="addPost"></a>
-            <a onclick="users()" id="userA"></a>
-            <img src="/static/images/mesv4.png" onclick="privatMES()" id="mespr">
-            <div id="notification-nav" class="notification" onclick="privatMES()">!</div>
-            {% if request.user.image_user !=  "oneProf.png" %}
-                <img onclick="userPROFILE('{{ username.id }}')" src="/media/data_image/{{ username.path_data }}/tm_{{ username.image_user }}" class="usPr" client-id-user="{{ username.id }}" />
-            {% else %}
-                <img onclick="userPROFILE('{{ username.id }}')" src="/static/images/oneProf.png"  class="usPr" client-id-user="{{ username.id }}"/>
-            {% endif %}
-        </div>
-        <div id="logo">
-            <img src="/static/images/compasv3.png" class="compas" onclick="openMenu(this)" id="comps" open-atr="close">
-            <a href="/"  class="aLogo">СООБЩЕСТВО <img class="logoF" src="/static/images/famaly_logo.png"></a>
-            <img src="/static/images/EXITv1.png" onclick="quit()" class="enter" style="display:none;">
-            
-<!--            <img src="/static/images/EXITv1.png" onclick="quit()" class="enter">-->
-        </div>
-    </div>
-    
-    
-<div id="search-box" style="display:none;">
-    <form class="search-bar" autocomplete="off" action="javascript:void(0);">
-        <div class="autocomplete">
-            <input id="search-input" type="search" name="search" placeholder="Поиск" pattern=".*\S.*" required>
-            <button class="search" onclick="search_func()">Найти</button>
-        </div>
-        
-    </form>
-
-<!--    <form autocomplete="off" action="">-->
-<!--      <div class="autocomplete" style="width:300px;">-->
-<!--        <input id="myInput" type="text" name="myCountry" placeholder="Country">-->
-<!--      </div>-->
-<!--      <input type="submit">-->
-<!--    </form>-->
-<!--<script>-->
-<!--autocomplete(document.getElementById("myInput"), countries);-->
-<!--</script>-->
-
-
-</div>   
-
-{% else %}
-    <div id="header" style="background-color: #507299;background-size: inherit; text-align: center;">
-        <a href="/"  class="aLogo">СООБЩЕСТВО <img class="logoF" src="/static/images/famaly_logo.png"></a>
-        <img src="/static/images/EXITv4png.png" class="enter" id="enter" onclick="enter()">
-    </div>
-{% endif %}
-<div id="main-wrapper">
-    {% block login %}{% endblock %}
-    {% block addpost %}{% endblock %}
-    {% block user %}{% endblock %}
-    {% block wall %}{% endblock %}
-    {% block content %}{% endblock %}
-    {% block user_page %}{% endblock %}
-    {% block users_all %}{% endblock %}
-</div>
-<img src="/static/images/topv1.png" class="topbt" style="cursor:pointer;z-index: 9999" id="topbt" onclick="event_topbt(this)">
-<div id="wscroll"></div>
-<div id="block-post" style="display: none;background-color: rgba(0,0,0,.75);" atr="con"></div>
-
+<body>
+    <div id="app"></div>
+</body>
+</html>
